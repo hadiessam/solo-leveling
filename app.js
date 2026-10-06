@@ -704,10 +704,37 @@ function save(){
 }
 
 /* ---------------------------------------------------------------------
+   ADD XP MANUALLY — let the player add XP directly when the system
+   misses something. Simple, transparent, no hidden math.
+   --------------------------------------------------------------------- */
+function addXPManual(){
+  const input = document.getElementById('xpInput');
+  if(!input) return;
+  const val = parseInt(input.value, 10);
+  if(isNaN(val) || val <= 0){
+    alert('Please enter a positive XP amount.');
+    return;
+  }
+  const oldXP = S.xp;
+  S.xp += val;
+  S.level = Math.floor(S.xp / LEVEL_XP) + 1;
+  S.xpSource = S.xpSource || {};
+  S.xpSource.manual = (S.xpSource.manual || 0) + val;
+  save();
+  const diff = S.xp - oldXP;
+  log('XP ADDED', 'Manually added <b>'+val+' XP</b>. Total: <b>'+S.xp+' XP</b> (Level '+S.level+').');
+  sfx('badge');
+  overlay('XP ADDED', '+' + val + ' XP', 'Total: ' + S.xp + ' XP · Level ' + S.level, false);
+  renderAll();
+  input.value = '';
+}
+
+/* ---------------------------------------------------------------------
    CLOUD SYNC — push/pull progress to JSONBin.io so all devices share
    the same save. LocalStorage stays as the fast local cache.
    --------------------------------------------------------------------- */
 function cloudSave(){
+  if(typeof fetch === 'undefined') return;
   try{
     fetch(JSONBIN_URL, {
       method:'PUT',
@@ -718,6 +745,7 @@ function cloudSave(){
 }
 
 function cloudLoad(){
+  if(typeof fetch === 'undefined') return Promise.resolve(false);
   return fetch(JSONBIN_URL + '/latest', {
     headers:{'X-Master-Key':JSONBIN_KEY}
   }).then(r=>r.json()).then(j=>{
@@ -1206,7 +1234,7 @@ function toggleStep(bossId, i){
   if(on){
     S.sDone++;
     S.bossXp = true;
-    addXP(b.xp, null, false, 'boss');
+    addXP(b.xp, null, true, 'boss');
     S.bossXp = false;
     log('RAID','<b>'+b.name+'</b> &mdash; '+b.steps[i] + ' <b>+'+b.xp+' XP</b>');
     if(bossDone(bossId)){

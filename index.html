@@ -464,6 +464,15 @@
     </div>
 
     <div class="panel">
+      <div class="st"><h2>Add XP</h2><span class="tag">MANUAL</span></div>
+      <div class="hint">Add XP to your total directly. Use this if the system missed something or you want to correct your XP.</div>
+      <div style="display:flex;gap:10px;margin-top:14px;align-items:center">
+        <input type="number" id="xpInput" placeholder="Enter XP to add" min="0" style="flex:1;padding:10px 14px;background:rgba(10,17,34,.9);border:1px solid var(--line);border-radius:4px;color:#fff;font-family:var(--hud);font-size:16px">
+        <button class="btn warn" onclick="addXPManual()">Add XP</button>
+      </div>
+    </div>
+
+    <div class="panel">
       <div class="st"><h2>Records</h2><span class="tag">ALL TIME</span></div>
       <div class="grid">
         <div class="stat"><div class="h"><span class="n">Missions Completed</span><span class="lv" id="rQ">0</span></div><div class="sb">Daily and weekly combined</div></div>
