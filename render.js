@@ -1545,7 +1545,11 @@ function boot(){
   buildGuideIndex();
   resets();
   autoBackup();
-  renderAll();
+  /* pull cloud save first, then render */
+  cloudLoad().then(function(pulled){
+    if(pulled) renderAll();
+    else renderAll();
+  });
   resumePomodoro();
 
   showPhrase();

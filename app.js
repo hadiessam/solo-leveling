@@ -9,6 +9,11 @@ const TIER_LEVELS = {1:1, 2:5, 3:15};
 const STAGE_LEVELS= {1:1, 2:10, 3:30};
 const SAVE_KEY    = 'soloV6';
 
+/* CLOUD SYNC — JSONBin.io (syncs progress across devices) */
+const JSONBIN_ID   = '6ac48da3ac6210605a17e2dd';
+const JSONBIN_KEY  = '$2a$10$jgpu4pY.Ko3o5V7S4noudO0kC9/.KL0macRsDFNx8CwMGuFO9bHKS';
+const JSONBIN_URL  = 'https://api.jsonbin.io/v3/b/' + JSONBIN_ID;
+
 /* streak multiplier: consistency pays, but it is capped */
 const MULT_MAX    = 1.5;   /* +50% XP at a 100-day streak */
 const MULT_SPAN   = 200;   /* days needed to reach the cap */
@@ -693,7 +698,42 @@ function learnAllVocab(){
   renderAll();
 }
 
-function save(){ try{ localStorage.setItem(SAVE_KEY, JSON.stringify(S)); }catch(e){} }
+function save(){
+  try{ localStorage.setItem(SAVE_KEY, JSON.stringify(S)); }catch(e){}
+  cloudSave();   /* sync to cloud in the background */
+}
+
+/* ---------------------------------------------------------------------
+   CLOUD SYNC — push/pull progress to JSONBin.io so all devices share
+   the same save. LocalStorage stays as the fast local cache.
+   --------------------------------------------------------------------- */
+function cloudSave(){
+  try{
+    fetch(JSONBIN_URL, {
+      method:'PUT',
+      headers:{'Content-Type':'application/json','X-Master-Key':JSONBIN_KEY},
+      body: JSON.stringify(S)
+    }).catch(()=>{});
+  }catch(e){}
+}
+
+function cloudLoad(){
+  return fetch(JSONBIN_URL + '/latest', {
+    headers:{'X-Master-Key':JSONBIN_KEY}
+  }).then(r=>r.json()).then(j=>{
+    if(j && j.record && j.record.xp !== undefined){
+      const cloud = j.record;
+      /* cloud wins if it has more XP (prevents stale overwrites) */
+      if(cloud.xp >= S.xp){
+        S = Object.assign(blank(), cloud);
+        S.ver = 6;
+        try{ localStorage.setItem(SAVE_KEY, JSON.stringify(S)); }catch(e){}
+        return true;
+      }
+    }
+    return false;
+  }).catch(()=>false);
+}
 
 /* ---------------------------------------------------------------------
    DATE HELPERS
