@@ -365,6 +365,15 @@ function rankFanfare(){
    --------------------------------------------------------------------- */
 let phraseIdx = 0;
 let guideTimer = null;
+let currentEvent = null;
+
+/* React to what just happened on the site */
+function reactTo(event){
+  currentEvent = event;
+  showPhrase();
+  popGuide();
+  currentEvent = null;
+}
 
 function nextPhrase(silent){
   showPhrase();
@@ -396,6 +405,28 @@ function toggleGuide(){
   const g = $('guidePop');
   g.classList.toggle('hidden');
   save();
+}
+
+/* Let the player set their own Jin-Woo line */
+function setCustomPhrase(){
+  const input = document.getElementById('customPhraseInput');
+  if(!input) return;
+  const val = input.value.trim();
+  if(!val){ alert('Write something first.'); return; }
+  S.customPhrase = val;
+  save();
+  input.value = '';
+  showPhrase();
+  popGuide();
+  log('CUSTOM','Jin-Woo now says: <b>"'+esc(val)+'"</b>');
+}
+
+/* Clear the custom line and return to the system */
+function clearCustomPhrase(){
+  S.customPhrase = '';
+  save();
+  showPhrase();
+  log('CUSTOM','Custom phrase cleared. The System speaks again.');
 }
 
 /* ---------------------------------------------------------------------
@@ -1665,7 +1696,8 @@ function boot(){
   setBG('assets/bg/bg-dashboard.jpg');
 
   /* the guide changes his line every 10 minutes, and pops up on its own */
-  guideTimer = setInterval(() => { nextPhrase(true); popGuide(); }, 10*60*1000);
+  /* rotate every 3 minutes — fast enough to feel alive */
+  guideTimer = setInterval(() => { nextPhrase(true); popGuide(); }, 3*60*1000);
 
   if(!S.hist.length){
     setTimeout(() => log('SYSTEM',

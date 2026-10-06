@@ -47,6 +47,7 @@ function doPrestige(){
     'You have awakened again. Badges kept. Multiplier increased.',
     false);
   log('PRESTIGE', 'Prestige <b>' + S.prestige + '</b>. Multiplier is now <b>x' + S.prestigeMult.toFixed(1) + '</b>.');
+  if(typeof reactTo === 'function') reactTo('prestige');
   renderAll();
 }
 
@@ -74,6 +75,7 @@ function togglePause(){
     sfx('success');
     overlay('SYSTEM RESUMED', 'PAUSED: OFF', 'The System is watching again. Missed missions carry penalties.', false);
     log('SYSTEM', 'System <b>resumed</b>. Penalties are active again.');
+    if(typeof reactTo === 'function') reactTo('unpaused');
   } else {
     /* pause */
     S.paused = true;
@@ -83,6 +85,7 @@ function togglePause(){
     sfx('close');
     overlay('SYSTEM PAUSED', 'PAUSED: ON', 'No penalties. No streak loss. Missions will not reset.', false);
     log('SYSTEM', 'System <b>paused</b>. No penalties while paused.');
+    if(typeof reactTo === 'function') reactTo('paused');
   }
   renderAll();
 }

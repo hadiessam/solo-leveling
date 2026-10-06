@@ -76,7 +76,9 @@ function blank(){
     /* Negative Habits */
     negativeHabits:{}, negHabitDamage:0,
     /* Skill Tree */
-    skillTree:{}
+    skillTree:{},
+    /* Jin-Woo custom phrase */
+    customPhrase:''
   };
 }
 
@@ -1058,8 +1060,10 @@ function addXP(n, statKey, raw, source){
 
   if(rk1 > rk0){
     rankCeremony(rk0, rk1);
+    if(typeof reactTo === 'function') reactTo('rankUp');
   } else if(S.level > lv0){
     levelCeremony(lv0, S.level);
+    if(typeof reactTo === 'function') reactTo('levelUp');
   } else {
     sfx('success');
   }
@@ -1295,6 +1299,7 @@ function markActive(){
       log('FREEZE USED','Missed one day — freeze spent. Streak preserved. Debt: <b>'+S.punishment+' XP</b>.', true);
     } else if(gap > 1){
       S.streak = 0;
+      if(typeof reactTo === 'function') reactTo('streakLost');
     }
     S.lastActive = t;
     /* first day ever: streak becomes 1, not 2 */
@@ -1302,6 +1307,7 @@ function markActive(){
     else S.streak++;
     if(S.streak > S.best) S.best = S.streak;
     log('SYSTEM','Streak: <b>'+S.streak+' day'+(S.streak>1?'s':'')+'</b>.');
+    if(typeof reactTo === 'function') reactTo('streakUp');
   }
 }
 
@@ -1343,6 +1349,7 @@ function toggleMission(kind, id, ev){
     unbankPerfectDay();
     S.qDone = Math.max(0, S.qDone - 1);
     sfx('uncheck');
+    if(typeof reactTo === 'function') reactTo('missionUnchecked');
   } else {
     /* re-checking a mission that was already unchecked */
     /* the first ever completion starts the System */
@@ -1367,6 +1374,7 @@ function toggleMission(kind, id, ev){
     growShadow();
     regenMana(3);
     maybeDropLoot();
+    if(typeof reactTo === 'function') reactTo('missionDone');
     checkPerfectDay();
     checkEggDrops();
   }
@@ -1394,6 +1402,7 @@ function toggleStep(bossId, i){
     addXP(b.xp, null, true, 'boss');
     S.bossXp = false;
     log('RAID','<b>'+b.name+'</b> &mdash; '+b.steps[i] + ' <b>+'+b.xp+' XP</b>');
+    if(typeof reactTo === 'function') reactTo('bossStep');
     if(bossDone(bossId)){
       /* clearing a whole raid is a big moment and pays a big bonus */
       const bonus = b.reward || 0;
@@ -1407,6 +1416,7 @@ function toggleStep(bossId, i){
         });
         if(bonus) addXP(bonus, null, true, 'boss');
         log('BOSS CLEARED','<b>'+b.name+'</b> has fallen.' + (bonus ? ' <b>+'+bonus.toLocaleString()+' XP</b> bonus.' : ''));
+        if(typeof reactTo === 'function') reactTo('bossComplete');
       }, 700);
     }
   } else {
@@ -1456,6 +1466,7 @@ function toggleCourse(id){
     S.courses[id] = true;
     addXP(60, 'selfdev', false, 'course');
     log('COURSE','Completed: <b>'+c.name+'</b> (+60 XP)');
+    if(typeof reactTo === 'function') reactTo('courseDone');
   }
   save();
   renderAll();
@@ -1528,6 +1539,15 @@ function booksRead(){ return S.books ? Object.keys(S.books).length : 0; }
    --------------------------------------------------------------------- */
 let lastLine = '';
 function smartPhrase(){
+  /* player's own line always wins */
+  if(S.customPhrase) return S.customPhrase;
+
+  /* event-driven lines take priority over everything else */
+  if(currentEvent && EVENT_PHRASES[currentEvent]){
+    const lines = EVENT_PHRASES[currentEvent];
+    return lines[Math.floor(Math.random() * lines.length)];
+  }
+
   const av = available(DAILY);
   const done = av.filter(m => S.daily[m.id]).length;
   const pct = av.length ? done/av.length : 0;
@@ -1572,10 +1592,11 @@ function smartPhrase(){
   if(booksRead() === 0 && Math.random() < .2) return GUIDE_CONTEXT.bookWaiting;
 
   /* otherwise a random motivational line, avoiding an immediate repeat */
-  let line = GUIDE_PHRASES[Math.floor(Math.random() * GUIDE_PHRASES.length)];
+  const pool = GENERAL_PHRASES.length > 0 ? GENERAL_PHRASES : GUIDE_PHRASES;
+  let line = pool[Math.floor(Math.random() * pool.length)];
   let guard = 0;
   while(line === lastLine && guard++ < 12){
-    line = GUIDE_PHRASES[Math.floor(Math.random() * GUIDE_PHRASES.length)];
+    line = pool[Math.floor(Math.random() * pool.length)];
   }
   lastLine = line;
   return line;
