@@ -58,7 +58,23 @@ function blank(){
     eggs:{}, eggsTotal:0, eggDay:'', eggMissionsToday:0, eggMissionTotal:0,
     eggStreakMark:0, eggLevelMark:0,
     pomoRunning:false, pomoEndsAt:0, pomoMode:'work',
-    hist:[]
+    hist:[],
+    /* Prestige System */
+    prestige:0, prestigeMult:1, prestigeBadges:[],
+    /* Pause System */
+    paused:false, pauseDate:'', pauseReason:'',
+    /* Character Stats */
+    str:0, int:0, agi:0, end:0, statPoints:0,
+    /* Monthly Boss Challenge */
+    monthlyBoss:{active:false, progress:0, target:0, reward:0, month:''},
+    /* Equipment */
+    equipment:{weapon:null, armor:null, accessory:null},
+    /* AI Coach */
+    coachMsg:'', coachDate:'',
+    /* Habit Strength */
+    habitStrength:{},
+    /* Negative Habits */
+    negativeHabits:{}, negHabitDamage:0
   };
 }
 
