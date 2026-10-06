@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SOLO LEVELING &mdash; Player System</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div id="bgLayer"></div>
+<div id="veil"></div>
+<div id="lines"></div>
+<div id="log"></div>
+
+<div id="ov"><div class="ovb" id="ovb">
+  <div class="t" id="ovT">SYSTEM</div>
+  <div class="n" id="ovN">LEVEL 2</div>
+  <div class="s" id="ovS">Your strength has increased.</div>
+</div></div>
+
+<div id="modal"><div class="mbox">
+  <h3 id="mT">Guide</h3>
+  <div class="msub" id="mS">How to do it</div>
+  <div class="mtxt" id="mX"></div>
+  <button class="btn mclose" onclick="closeModal()">Close</button>
+</div></div>
+
+<div class="wrap">
+
+  <!-- ============ HUD ============ -->
+  <div class="panel">
+    <div class="hud">
+      <div class="avatar"><img src="assets/avatar.jpg" alt="Hadi"></div>
+      <div class="hudid">
+        <div class="nm">HADI</div>
+        <div class="rk">PLAYER &middot; <span id="rankName">E-RANK HUNTER</span></div>
+      </div>
+      <div class="badges">
+        <div class="badge"><div class="k">Level</div><div class="v" id="bLevel">1</div></div>
+        <div class="badge"><div class="k">Total XP</div><div class="v" id="bXP">0</div></div>
+        <div class="badge"><div class="k">Streak</div><div class="v" id="bStreak">0</div></div>
+        <div class="badge"><div class="k">Missions</div><div class="v" id="bQuests">0</div></div>
+      </div>
+    </div>
+    <div class="xpbox">
+      <div class="meta"><span>LEVEL PROGRESS</span><span><b id="xpNow">0</b> / <span id="xpNeed">250</span> XP</span></div>
+      <div class="bar"><i id="xpBar"></i></div>
+      <div class="meta" style="margin-top:12px"><span>NEXT RANK: <b id="nextRank">D-RANK</b></span><span><b id="rankNow">0</b> / <span id="rankNeed">800</span> XP</span></div>
+      <div class="bar thin"><i id="rankBar"></i></div>
+      <div class="meta" style="margin-top:12px"><span>DAILY QUEST</span><span><b id="penLabel">CLEAN</b></span></div>
+      <div class="bar thin pen"><i id="penBar"></i></div>
+    </div>
+  </div>
+
+  <!-- ============ TABS ============ -->
+  <div class="tabs">
+    <div class="tab active" data-page="dash"    data-bg="assets/bg/bg-dashboard.jpg">Dashboard</div>
+    <div class="tab"        data-page="daily"   data-bg="assets/bg/bg-daily.jpg">Daily</div>
+    <div class="tab"        data-page="weekly"  data-bg="assets/bg/bg-weekly.jpg">Weekly</div>
+    <div class="tab"        data-page="boss"    data-bg="assets/bg/bg-boss.jpg">Boss Raids</div>
+    <div class="tab"        data-page="roadmap" data-bg="assets/bg/bg-roadmap.jpg">Roadmap</div>
+    <div class="tab"        data-page="vault"   data-bg="assets/bg/bg-vault.jpg">Reward Vault</div>
+    <div class="tab"        data-page="library" data-bg="assets/bg/bg-guide.jpg">Library</div>
+    <div class="tab"        data-page="coach"   data-bg="assets/bg/bg-hunter.jpg">Coach</div>
+    <div class="tab"        data-page="stats"   data-bg="assets/bg/bg-status.jpg">Status</div>
+  </div>
+
+  <!-- ============ DASHBOARD ============ -->
+  <div class="page active" id="dash">
+    <div class="panel">
+      <div class="st"><h2>Jin-Woo</h2><span class="tag">GUIDE</span></div>
+      <div class="guide">
+        <div class="gimg"><img src="assets/guide.jpg" alt="Jin-Woo"></div>
+        <div class="gtxt">
+          <div class="gname">SUNG JIN-WOO</div>
+          <div class="gsay" id="gSay">Loading&hellip;</div>
+          <div class="gactions">
+            <button class="btn" onclick="nextPhrase()">Another Line</button>
+            <button class="btn" onclick="showBriefing()">Daily Briefing</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="st"><h2>Today's Missions</h2><span class="tag" id="todayTag">TODAY</span></div>
+      <div class="hint" id="dashNote">Complete missions to earn XP. The daily quest resets at midnight.</div>
+      <div class="bar thin" style="margin-bottom:14px"><i id="dashBar"></i></div>
+      <div id="dashList"></div>
+    </div>
+
+    <div class="panel">
+      <div class="st"><h2>System Log</h2><span class="tag">RECENT</span></div>
+      <div id="history" class="hint">No activity recorded yet. Start your first mission.</div>
+    </div>
+  </div>
+
+  <!-- ============ DAILY ============ -->
+  <div class="page" id="daily">
+    <div class="panel">
+      <div class="st"><h2>Daily Missions</h2><span class="tag" id="dailyTag">RESETS MIDNIGHT</span></div>
+      <div class="hint">Tap a mission to complete it. Tap the <b>?</b> for full instructions on exactly what to do.</div>
+      <div id="dailyList"></div>
+    </div>
+  </div>
+
+  <!-- ============ WEEKLY ============ -->
+  <div class="page" id="weekly">
+    <div class="panel">
+      <div class="st"><h2>Weekly Missions</h2><span class="tag">RESETS MONDAY</span></div>
+      <div class="hint">Bigger actions, bigger rewards. These are the moves that actually change your rank.</div>
+      <div id="weeklyList"></div>
+    </div>
+  </div>
+
+  <!-- ============ BOSS ============ -->
+  <div class="page" id="boss">
+    <div class="panel">
+      <div class="st"><h2>Boss Raids</h2><span class="tag">LONG TERM</span></div>
+      <div class="hint">Each raid is a real goal, split into steps. Clear every step and the boss falls.</div>
+      <div id="bossList"></div>
+    </div>
+  </div>
+
+  <!-- ============ ROADMAP ============ -->
+  <div class="page" id="roadmap">
+    <div class="panel">
+      <div class="st"><h2>Life Roadmap</h2><span class="tag">THE PLAN</span></div>
+      <div class="hint">Your missions change as you progress. Each chapter unlocks new work and retires what is already done.</div>
+      <div id="roadList"></div>
+    </div>
+  </div>
+
+  <!-- ============ VAULT ============ -->
+  <div class="page" id="vault">
+    <div class="panel">
+      <div class="st"><h2>Reward Vault</h2><span class="tag">YOU DECIDE</span></div>
+      <div class="hint">You write every reward yourself. When you reach the level it unlocks. When you actually take it, come back and record it &mdash; an unrecorded reward is not a reward.</div>
+      <div id="rwList"></div>
+      <button class="btn" style="margin-top:14px" onclick="openRewardForm()">+ Write a New Reward</button>
+    </div>
+  </div>
+
+  <!-- ============ LIBRARY ============ -->
+  <div class="page" id="library">
+    <div class="panel">
+      <div class="st"><h2>Library</h2><span class="tag">READING LIST</span></div>
+      <div class="hint">Pick one book and finish it. Do not start five.</div>
+      <div id="libList"></div>
+    </div>
+  </div>
+
+  <!-- ============ COACH ============ -->
+  <div class="page" id="coach">
+    <div class="panel">
+      <div class="st"><h2>Send to Hermes</h2><span class="tag">YOUR COACH</span></div>
+      <div class="hint">Report what you did, ask what to do next, or flag a mission that is not working. Your message is saved here and copied to the clipboard &mdash; paste it to Hermes in chat and he answers and updates the System.</div>
+      <div class="frm">
+        <input id="cName" placeholder="Subject &mdash; e.g. Finished the CV rebuild">
+        <textarea id="cBody" placeholder="What I did, what worked, what I could not finish, what I want next&hellip;"></textarea>
+        <div style="display:flex;gap:9px;flex-wrap:wrap">
+          <button class="btn" onclick="sendToHermes()">Save &amp; Copy Message</button>
+          <button class="btn" onclick="quickReport()">Quick Progress Report</button>
+        </div>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="st"><h2>Message History</h2><span class="tag" id="msgCount">0</span></div>
+      <div id="msgList" class="hint">Nothing sent yet.</div>
+    </div>
+  </div>
+
+  <!-- ============ STATUS ============ -->
+  <div class="page" id="stats">
+    <div class="panel">
+      <div class="st"><h2>Status Window</h2><span class="tag">LIVE</span></div>
+      <div class="hint">Your six domains. Each one levels up from the missions you complete in it.</div>
+      <div class="grid" id="statGrid"></div>
+    </div>
+
+    <div class="panel">
+      <div class="st"><h2>Hunter Rank</h2><span class="tag">E &rarr; S</span></div>
+      <div id="rankList"></div>
+    </div>
+
+    <div class="panel">
+      <div class="st"><h2>Records</h2><span class="tag">ALL TIME</span></div>
+      <div class="grid">
+        <div class="stat"><div class="h"><span class="n">Missions Completed</span><span class="lv" id="rQ">0</span></div><div class="sb">Daily and weekly combined</div></div>
+        <div class="stat"><div class="h"><span class="n">Raid Steps Cleared</span><span class="lv" id="rS">0</span></div><div class="sb">Progress on the long-term goals</div></div>
+        <div class="stat"><div class="h"><span class="n">Best Streak</span><span class="lv" id="rB">0</span></div><div class="sb">Consecutive active days</div></div>
+        <div class="stat"><div class="h"><span class="n">Rewards Claimed</span><span class="lv" id="rR">0</span></div><div class="sb">Real rewards you actually took</div></div>
+        <div class="stat"><div class="h"><span class="n">Penalties Taken</span><span class="lv" id="rP">0</span></div><div class="sb">Failed daily quests</div></div>
+        <div class="stat"><div class="h"><span class="n">XP Lost</span><span class="lv" id="rL">0</span></div><div class="sb">The cost of missed days</div></div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="st"><h2>What the System Still Needs</h2><span class="tag">TO BE EXACT</span></div>
+      <div class="hint">Right now your stats start from an honest estimate. Give Hermes these and the System becomes exact instead of approximate.</div>
+      <div id="missList"></div>
+    </div>
+
+    <div class="panel">
+      <div class="st"><h2>Danger Zone</h2></div>
+      <button class="btn warn" onclick="resetAll()">Reset All Data</button>
+    </div>
+  </div>
+
+  <div class="foot">
+    <b>&ldquo;ARISE.&rdquo;</b><br>
+    Solo Leveling Player System &middot; built for Hadi &middot; v3.0
+  </div>
+</div>
+
+<script src="data.js"></script>
+<script src="app.js"></script>
+<script src="render.js"></script>
+<script>boot();</script>
+</body>
+</html>

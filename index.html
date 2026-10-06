@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>SOLO LEVELING &mdash; Player System</title>
+
+<!-- install as a phone app -->
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#04060c">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="SOLO LEVELING">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="64x64" href="icons/favicon.png">
+<meta name="description" content="Gamified self-development system. Missions, levels, ranks and boss raids.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div id="bgLayer"></div>
+<div id="veil"></div>
+<div id="lines"></div>
+<div id="log"></div>
+
+<!-- ============ JIN-WOO FLOATING GUIDE ============ -->
+<div id="guidePop">
+  <div id="gBubble">
+    <div class="gbHead">SUNG JIN-WOO</div>
+    <div id="gBubbleText">&nbsp;</div>
+    <div class="gbFoot">
+      <button class="gbtn" onclick="nextPhrase()">&#8635;</button>
+      <button class="gbtn" onclick="showBriefing()">BRIEF</button>
+      <button class="gbtn" onclick="toggleGuide()">&#10005;</button>
+    </div>
+  </div>
+  <img src="assets/jinwoo.png" alt="Jin-Woo" id="gFig">
+</div>
+
+<!-- ============ FLOATING POMODORO ============ -->
+<div id="pomoFloat">
+  <div id="pomoRing"></div>
+  <div class="pomoInner">
+    <div id="pomoLabel">FOCUS</div>
+    <div id="pomoTime">25:00</div>
+    <button class="pomoX" onclick="stopPomodoro()" title="Stop">&#10005;</button>
+  </div>
+</div>
+
+<div id="ov"><div class="ovb" id="ovb">
+  <div class="t" id="ovT">SYSTEM</div>
+  <div class="n" id="ovN">LEVEL 2</div>
+  <div class="s" id="ovS">Your strength has increased.</div>
+</div></div>
+
+<div id="modal"><div class="mbox">
+  <h3 id="mT">Guide</h3>
+  <div class="msub" id="mS">How to do it</div>
+  <div class="mtxt" id="mX"></div>
+  <button class="btn mclose" onclick="closeModal()">Close</button>
+</div></div>
+
+<div class="wrap">
+
+  <!-- ============ HUD ============ -->
+  <div class="panel">
+    <div class="hud">
+      <div class="avatar"><img src="assets/avatar.jpg" alt="Hadi"></div>
+      <div class="hudid">
+        <div class="nm">HADI</div>
+        <div class="rk">PLAYER &middot; <span id="rankName">E-RANK HUNTER</span></div>
+      </div>
+      <div class="badges">
+        <div class="badge"><div class="k">Level</div><div class="v" id="bLevel">1</div></div>
+        <div class="badge"><div class="k">Total XP</div><div class="v" id="bXP">0</div></div>
+        <div class="badge"><div class="k">Streak</div><div class="v" id="bStreak">0</div></div>
+        <div class="badge"><div class="k">Multiplier</div><div class="v" id="multBadge">x1.00</div></div>
+        <div class="badge"><div class="k">Freezes</div><div class="v" id="bFreeze">1</div></div>
+        <div class="badge"><div class="k">Missions</div><div class="v" id="bQuests">0</div></div>
+      </div>
+      <button class="muteBtn" id="muteBtn" onclick="toggleMute()" title="Toggle sound">Sound On</button>
+    </div>
+    <div class="rankTease" id="rankTease">&nbsp;</div>
+    <div class="xpbox">
+      <div class="meta"><span>LEVEL PROGRESS</span><span><b id="xpNow">0</b> / <span id="xpNeed">250</span> XP</span></div>
+      <div class="bar"><i id="xpBar"></i></div>
+      <div class="meta" style="margin-top:12px"><span>NEXT RANK: <b id="nextRank">D-RANK</b></span><span><b id="rankNow">0</b> / <span id="rankNeed">800</span> XP</span></div>
+      <div class="bar thin"><i id="rankBar"></i></div>
+      <div class="meta" style="margin-top:12px"><span>DAILY QUEST</span><span><b id="penLabel">0 / 10</b></span></div>
+      <div class="bar thin pen"><i id="penBar"></i></div>
+      <div class="meta" id="debtRow" style="margin-top:12px;display:none">
+        <span style="color:var(--red)">FREEZE DEBT OUTSTANDING</span>
+        <span style="color:var(--red)"><b id="debtVal">0</b> XP TO REPAY</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel" id="startBanner" style="border-color:var(--gold);background:rgba(255,204,77,.06)">
+    <div class="st"><h2 style="color:var(--gold)">System Dormant</h2><span class="tag">NOT STARTED</span></div>
+    <div class="hint" style="margin-bottom:12px">No penalties apply yet. The System only starts judging you once you complete your first mission &mdash; so you can fix your sleep and your surroundings first, then begin clean.</div>
+    <button class="btn" style="border-color:var(--gold);color:var(--gold);background:rgba(255,204,77,.12)" onclick="startSystem()">Begin Day 1 Now</button>
+  </div>
+
+  <!-- ============ TABS ============ -->
+  <div class="tabs">
+    <div class="tab active" data-page="dash"    data-bg="assets/bg/bg-dashboard.jpg">Dashboard</div>
+    <div class="tab"        data-page="daily"   data-bg="assets/bg/bg-daily.jpg">Daily</div>
+    <div class="tab"        data-page="weekly"  data-bg="assets/bg/bg-weekly.jpg">Weekly</div>
+    <div class="tab"        data-page="boss"    data-bg="assets/bg/bg-boss.jpg">Boss Raids</div>
+    <div class="tab"        data-page="courses" data-bg="assets/bg/bg-hunter.jpg">Course Track</div>
+    <div class="tab"        data-page="roadmap" data-bg="assets/bg/bg-roadmap.jpg">Roadmap</div>
+    <div class="tab"        data-page="vault"   data-bg="assets/bg/bg-vault.jpg">Reward Vault</div>
+    <div class="tab"        data-page="library" data-bg="assets/bg/bg-guide.jpg">Library</div>
+    <div class="tab"        data-page="typing"  data-bg="assets/bg/bg-hunter.jpg">Typing</div>
+    <div class="tab"        data-page="skills"  data-bg="assets/bg/bg-boss.jpg">Skills</div>
+    <div class="tab"        data-page="review"  data-bg="assets/bg/bg-status.jpg">Review</div>
+    <div class="tab"        data-page="insight" data-bg="assets/bg/bg-dashboard.jpg">Insights</div>
+    <div class="tab"        data-page="coach"   data-bg="assets/bg/bg-status.jpg">Coach</div>
+    <div class="tab"        data-page="vocab"   data-bg="assets/bg/bg-guide.jpg">Vocabulary</div>
+    <div class="tab"        data-page="hunter"  data-bg="assets/bg/bg-boss.jpg">Hunter</div>
+    <div class="tab"        data-page="eggs"    data-bg="assets/bg/bg-boss.jpg">Eggs</div>
+    <div class="tab"        data-page="shadow"  data-bg="assets/bg/bg-guide.jpg">Shadow</div>
+    <div class="tab"        data-page="stats"   data-bg="assets/bg/bg-status.jpg">Status</div>
+  </div>
+
+  <!-- ============ DASHBOARD ============ -->
+  <div class="page active" id="dash">
+    <div class="panel">
+      <div class="st"><h2>Today's Missions</h2><span class="tag" id="todayTag">TODAY</span></div>
+      <div class="hint">Complete missions to earn XP. The daily quest resets at midnight. Your streak starts at <b>1</b> on your first day and grows by one each day you complete at least one mission. Tap <b>?</b> on any mission for exact instructions.</div>
+      <div class="bar thin" style="margin-bottom:14px"><i id="dashBar"></i></div>
+      <div id="dashList"></div>
+    </div>
+
+    <div class="panel">
+      <div class="st"><h2>Boss Raid Progress</h2><span class="tag">LINKED TO MISSIONS</span></div>
+      <div class="hint">Completing daily and weekly missions automatically advances your boss raids. Watch the bars fill as you work.</div>
+      <div id="bossProgress"></div>
+    </div>
+
+    <div class="panel" id="streakDanger" style="border-color:var(--red);background:rgba(255,77,94,.07);display:none">
+    <div class="st"><h2 style="color:var(--red)">Streak In Danger</h2><span class="tag" style="color:var(--red);border-color:rgba(255,77,94,.5)">ACT NOW</span></div>
+    <div class="hint" style="margin-bottom:0">Your <b id="sdStreak">0</b>-day streak has nothing logged today and there are <b id="sdHours">4 hours</b> left. Clear one mission &mdash; any mission &mdash; and the streak survives. Skip it and you start again from zero.</div>
+  </div>
+
+  <div class="panel" id="reviewBanner" style="border-color:var(--gold);background:rgba(255,204,77,.06);display:none">
+      <div class="st"><h2 style="color:var(--gold)">Weekly Review Is Due</h2><span class="tag">SUNDAY CHECKPOINT</span></div>
+      <div class="hint" style="margin-bottom:12px">Five questions about the week you just finished. Worth <b>+120 XP</b>, and it is the only thing that stops you repeating the same mistakes.</div>
+      <button class="btn" style="border-color:var(--gold);color:var(--gold);background:rgba(255,204,77,.12)" onclick="goTab('review')">Open Weekly Review</button>
+    </div>
+
+    <div class="panel">
+      <div class="st"><h2>System Log</h2><span class="tag">RECENT</span></div>
+      <div id="history" class="hint">No activity recorded yet. Start your first mission.</div>
+    </div>
+  </div>
+
+  <!-- ============ DAILY ============ -->
+  <div class="page" id="daily">
+    <div class="panel">
+      <div class="st"><h2>Daily Missions</h2><span class="tag" id="dailyTag">RESETS MIDNIGHT</span></div>
+      <div class="hint">Tap a mission to complete it. Tap <b>?</b> for the full instructions &mdash; every mission tells you exactly what to do.</div>
+      <div id="dailyList"></div>
+    </div>
+  </div>
+
+  <!-- ============ WEEKLY ============ -->
+  <div class="page" id="weekly">
+    <div class="panel">
+      <div class="st"><h2>Weekly Missions</h2><span class="tag">RESETS FRIDAY</span></div>
+      <div class="hint">Bigger actions, bigger rewards. These are the moves that change your rank.</div>
+      <div id="weeklyList"></div>
+    </div>
+  </div>
+
+  <!-- ============ BOSS ============ -->
+  <div class="page" id="boss">
+    <div class="panel">
+      <div class="st"><h2>Boss Raids</h2><span class="tag">LONG TERM</span></div>
+      <div class="hint">Each raid is a real goal, split into steps. Clear every step and the boss falls.</div>
+      <div id="bossList"></div>
+    </div>
+  </div>
+
+  <!-- ============ COURSES ============ -->
+  <div class="page" id="courses">
+    <div class="panel">
+      <div class="st"><h2>Course Track</h2><span class="tag" id="courseTag">0 / 27 DONE</span></div>
+      <div class="hint">All free, all verified, and chosen from what your CV is actually missing &mdash; not a generic list. Stage 1 opens now, stage 2 at level 10, stage 3 at level 30. Tick one when you finish it for <b>+60 XP</b>.</div>
+      <div id="courseList"></div>
+    </div>
+  </div>
+
+  <!-- ============ ROADMAP ============ -->
+  <div class="page" id="roadmap">
+    <div class="panel">
+      <div class="st"><h2>Life Roadmap</h2><span class="tag">THE PLAN</span></div>
+      <div class="hint">Your missions change as you progress. Each chapter unlocks new work and retires what is already done.</div>
+      <div id="roadList"></div>
+    </div>
+  </div>
+
+  <!-- ============ VAULT ============ -->
+  <div class="page" id="vault">
+    <div class="panel">
+      <div class="st"><h2>Reward Vault</h2><span class="tag">YOU DECIDE</span></div>
+      <div class="hint">You write every reward yourself. When you reach the level it unlocks. When you actually take it, come back and record it &mdash; an unrecorded reward is not a reward.</div>
+      <div id="rwList"></div>
+      <button class="btn" style="margin-top:14px" onclick="openRewardForm()">+ Write a New Reward</button>
+    </div>
+  </div>
+
+  <!-- ============ LIBRARY ============ -->
+  <div class="page" id="library">
+    <div class="panel">
+      <div class="st"><h2>Library</h2><span class="tag" id="libTag">0 / 15 READ</span></div>
+      <div class="hint">Real books, free and legal, readable right now. Open one with <b>READ FREE</b>, then come back and mark it done for XP. Start with <b>As a Man Thinketh</b> &mdash; it takes 35 minutes.</div>
+      <div id="libList"></div>
+    </div>
+    <div class="panel">
+      <div class="st"><h2>English &mdash; Your Measured Profile</h2><span class="tag">EF SET 4-SKILL</span></div>
+      <div class="hint">Scored separately, not one blended number. This is what actually tells you where to work.</div>
+      <div id="skillGrid"></div>
+      <div class="hint" style="margin-top:16px;margin-bottom:0" id="skillMath"></div>
+    </div>
+
+    <div class="panel">
+      <div class="st"><h2>English Tools</h2><span class="tag">FREE</span></div>
+      <div class="hint">Ordered by what actually moves your score. The first one is the only one that matters right now.</div>
+      <div id="engList"></div>
+    </div>
+  </div>
+
+  <!-- ============ TYPING ============ -->
+  <div class="page" id="typing">
+    <div class="panel">
+      <div class="st"><h2>Typing Speed</h2><span class="tag" id="typeTag">NOT MEASURED</span></div>
+      <div class="hint" id="typeWhy"></div>
+      <div class="frm" style="grid-template-columns:1fr 1fr;gap:12px">
+        <div>
+          <label style="display:block;font-size:12px;color:var(--glow);letter-spacing:1px;margin-bottom:6px">CURRENT WPM</label>
+          <input id="typeNow" type="number" min="0" max="250" placeholder="e.g. 32">
+        </div>
+        <div>
+          <label style="display:block;font-size:12px;color:var(--glow);letter-spacing:1px;margin-bottom:6px">TARGET WPM</label>
+          <input id="typeTarget" type="number" min="10" max="250" value="60">
+        </div>
+      </div>
+      <button class="btn" style="margin-top:12px" onclick="saveTyping()">Save My Speed</button>
+      <div id="typeProgress" style="margin-top:18px"></div>
+    </div>
+
+    <div class="panel">
+      <div class="st"><h2>Speed Levels</h2><span class="tag">WHERE YOU ARE</span></div>
+      <div id="typeLevels"></div>
+    </div>
+
+    <div class="panel">
+      <div class="st"><h2>Practice Tools</h2><span class="tag">FREE</span></div>
+      <div id="typeTools"></div>
+    </div>
+  </div>
+
+  <!-- ============ SKILLS ============ -->
+  <div class="page" id="skills">
+    <div class="panel">
+      <div class="st"><h2>Skills You Need But Did Not Ask For</h2><span class="tag">GAPS I SPOTTED</span></div>
+      <div class="hint">These are not in your CV and not in your daily missions. They are the things that will quietly cost you money, time or a client if you skip them.</div>
+      <div id="extraList"></div>
+    </div>
+  </div>
+
+  <!-- ============ REVIEW ============ -->
+  <div class="page" id="review">
+    <div class="panel">
+      <div class="st"><h2>Weekly Review</h2><span class="tag" id="reviewTag">NOT DONE</span></div>
+      <div class="hint">Five questions, every Sunday. Write the answers down &mdash; a week that is not reviewed is a week that is repeated. Worth <b>+120 XP</b>.</div>
+      <div class="frm" id="reviewForm"></div>
+      <button class="btn" style="margin-top:14px" onclick="submitReview()">Save This Week's Review</button>
+    </div>
+    <div class="panel">
+      <div class="st"><h2>Past Reviews</h2><span class="tag" id="reviewCount">0</span></div>
+      <div id="reviewList" class="hint">No reviews saved yet.</div>
+    </div>
+  </div>
+
+  <!-- ============ INSIGHTS ============ -->
+  <div class="page" id="insight">
+    <div class="panel">
+      <div class="st"><h2>Consistency</h2><span class="tag">LAST 30 DAYS</span></div>
+      <div class="hint">One square per day. Green means you did something that day. This is the whole game &mdash; not how much you did, but that you showed up.</div>
+      <div id="heatMap"></div>
+      <div id="streakStats" class="grid" style="margin-top:18px"></div>
+    </div>
+
+    <div class="panel">
+      <div class="st"><h2>Where Your XP Comes From</h2><span class="tag">BREAKDOWN</span></div>
+      <div id="xpBreak"></div>
+    </div>
+
+    <div class="panel">
+      <div class="st"><h2>Progress to Next Rank</h2><span class="tag" id="rankProgTag">E-RANK</span></div>
+      <div id="rankProg"></div>
+    </div>
+
+    <div class="panel">
+      <div class="st"><h2>Domain Balance</h2><span class="tag">ARE YOU NEGLECTING SOMETHING?</span></div>
+      <div class="hint">If one bar is far shorter than the rest, that part of your life is being ignored. The System notices.</div>
+      <div id="domainBal"></div>
+    </div>
+  </div>
+
+  <!-- ============ COACH ============ -->
+  <div class="page" id="coach">
+    <div class="panel">
+      <div class="st"><h2>Send to Hermes</h2><span class="tag">YOUR COACH</span></div>
+      <div class="hint">Report what you did, ask what to do next, or flag a mission that is not working. Your message is saved here and copied to the clipboard &mdash; paste it to Hermes in chat and he answers and updates the System.</div>
+      <div class="frm">
+        <input id="cName" placeholder="Subject &mdash; e.g. Finished the Google Ads cert">
+        <textarea id="cBody" placeholder="What I did, what worked, what I could not finish, what I want next&hellip;"></textarea>
+        <div style="display:flex;gap:9px;flex-wrap:wrap">
+          <button class="btn" onclick="sendToHermes()">Save &amp; Copy Message</button>
+          <button class="btn" onclick="quickReport()">Quick Progress Report</button>
+        </div>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="st"><h2>Message History</h2><span class="tag" id="msgCount">0</span></div>
+      <div id="msgList" class="hint">Nothing sent yet.</div>
+    </div>
+  </div>
+
+  <!-- ============ VOCABULARY ============ -->
+  <div class="page" id="vocab">
+    <div class="panel">
+      <div class="st"><h2>Today's Vocabulary</h2><span class="tag" id="vocabTag">0 / 5</span></div>
+      <div class="hint">Five words a day, chosen for your actual job &mdash; media buying, reporting, client work and the interview room. Tap a word when you have learned it. <b>+8 XP</b> each.</div>
+      <div id="vocabToday"></div>
+      <button class="btn" style="margin-top:14px" onclick="learnAllVocab()">Mark All Learned &mdash; +40 XP</button>
+    </div>
+    <div class="panel">
+      <div class="st"><h2>Progress</h2><span class="tag" id="vocabTotalTag">0 WORDS</span></div>
+      <div class="grid">
+        <div class="stat"><div class="h"><span class="n">Words Learned</span><span class="lv" id="vTotal">0</span></div><div class="sb">All time, across every day</div></div>
+        <div class="stat"><div class="h"><span class="n">Today</span><span class="lv" id="vToday">0 / 5</span></div><div class="sb">Resets at midnight</div></div>
+        <div class="stat"><div class="h"><span class="n">Days Completed</span><span class="lv" id="vDays">0</span></div><div class="sb">Days where all five were learned</div></div>
+        <div class="stat"><div class="h"><span class="n">Vocabulary Pool</span><span class="lv" id="vPool">0</span></div><div class="sb">Total words available in the system</div></div>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="st"><h2>Word Bank</h2><span class="tag" id="bankTag">ALL</span></div>
+      <div class="hint">Every word in the system, grouped by category. Search or scan it &mdash; you will meet them again in the daily five.</div>
+      <div id="vocabBank"></div>
+    </div>
+  </div>
+
+  <!-- ============ HUNTER (class + focus + vision) ============ -->
+  <div class="page" id="hunter">
+    <div class="panel">
+      <div class="st"><h2>Focus Timer</h2><span class="tag" id="focusTag">0 / 4 TODAY</span></div>
+      <div class="hint">25 minutes of deep work, then a 5-minute break. The timer floats in the corner so you can keep working while it runs. Each finished session is <b>+15 XP</b>.</div>
+      <div style="text-align:center;padding:18px 0">
+        <div class="focusBig" id="focusTimer">25:00</div>
+        <div class="focusState" id="focusStatus">Ready when you are</div>
+        <div style="display:flex;gap:10px;justify-content:center;margin-top:18px;flex-wrap:wrap">
+          <button class="btn" onclick="startPomodoro()">Start Focus Session</button>
+          <button class="btn" onclick="stopPomodoro()">Stop</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="st"><h2>Your Class</h2><span class="tag">LEVEL 10+</span></div>
+      <div class="hint">At level 10 you pick a path. Each class has a passive bonus that applies automatically and an ability you spend mana on. This is permanent.</div>
+      <div id="classList"></div>
+    </div>
+
+    <div class="panel">
+      <div class="st"><h2>Health &amp; Mana</h2><span class="tag">CLASS RESOURCES</span></div>
+      <div class="grid">
+        <div class="stat">
+          <div class="h"><span class="n">Health</span><span class="lv" id="hpVal">100/100</span></div>
+          <div class="bar thin"><i id="hpBar"></i></div>
+          <div class="sb">Missed missions cost HP. Heal with potions from loot, or by completing a full day.</div>
+        </div>
+        <div class="stat">
+          <div class="h"><span class="n">Mana</span><span class="lv" id="manaVal">50/50</span></div>
+          <div class="bar thin"><i id="manaBar"></i></div>
+          <div class="sb">+3 mana per completed mission. Spend it on your class ability.</div>
+        </div>
+      </div>
+      <button class="btn" style="margin-top:14px" onclick="useAbility()">Use Class Ability</button>
+    </div>
+
+    <div class="panel">
+      <div class="st"><h2>Vision Board</h2><span class="tag" id="visionTag">0 / 6 SET</span></div>
+      <div class="hint">The six things you are actually working toward. Tap to pin the ones that matter most &mdash; they stay lit on this board.</div>
+      <div id="visionGrid" class="grid" style="margin-top:14px;"></div>
+    </div>
+  </div>
+
+  <!-- ============ SHADOW ============ -->
+  <div class="page" id="shadow">
+    <div class="panel">
+      <div class="st"><h2>Shadow Soldier</h2><span class="tag" id="shadowTag">LEVEL 0</span></div>
+      <div class="hint">Your Shadow grows automatically as you complete missions &mdash; one level every 8 missions. Keep working and it evolves.</div>
+      <div id="shadowDisplay" style="text-align:center;padding:20px;"></div>
+    </div>
+    <div class="panel">
+      <div class="st"><h2>Shadow Army</h2><span class="tag" id="charTag">0 / 14 UNLOCKED</span></div>
+      <div class="hint">Every character you have summoned. Duplicates raise a character's star rating instead of going to waste &mdash; five stars is the ceiling.</div>
+      <div id="charList"></div>
+    </div>
+  </div>
+
+  <!-- ============ EGGS ============ -->
+  <div class="page" id="eggs">
+    <div class="panel">
+      <div class="st"><h2>Eggs</h2><span class="tag" id="eggTag">0 READY</span></div>
+      <div class="hint">Eggs are earned by playing &mdash; they cost nothing and there is nothing to farm. Clear missions, keep your streak, finish raids, and they pile up on their own. Open them whenever you like.</div>
+      <div id="eggList"></div>
+    </div>
+  </div>
+
+  <!-- ============ STATUS ============ -->
+  <div class="page" id="stats">
+    <div class="panel">
+      <div class="st"><h2>Status Window</h2><span class="tag">HONEST</span></div>
+      <div class="hint">Built from your real CV, income, health data and English level. The starting levels are an assessment, not a guess.</div>
+      <div class="grid" id="statGrid"></div>
+    </div>
+
+    <div class="panel">
+      <div class="st"><h2>Straight Assessment</h2><span class="tag">NO FLATTERY</span></div>
+      <div id="assessList"></div>
+    </div>
+
+    <div class="panel">
+      <div class="st"><h2>Hunter Rank</h2><span class="tag">E &rarr; S</span></div>
+      <div id="rankList"></div>
+    </div>
+
+    <div class="panel">
+      <div class="st"><h2>Badges</h2><span class="tag" id="badgeTag">0 / 32 EARNED</span></div>
+      <div class="hint">Earned once, kept forever. They are not tied to your level &mdash; you cannot lose them.</div>
+      <div class="badgeGrid" id="badgeGrid"></div>
+    </div>
+
+    <div class="panel">
+      <div class="st"><h2>Streak Protection</h2><span class="tag">FREEZE</span></div>
+      <div class="hint">A freeze saves your streak if you miss a day by accident. You start with <b>zero</b> freezes, earn another every 21-day streak, and can hold a maximum of two. The catch: using one costs HP and leaves a debt you have to earn back in missions.</div>
+      <div class="grid">
+        <div class="stat"><div class="h"><span class="n">Freezes Held</span><span class="lv" id="rF">1</span></div><div class="sb">Maximum 2 at a time</div></div>
+        <div class="stat"><div class="h"><span class="n">Cost to Buy</span><span class="lv" id="fCost">300</span></div><div class="sb">XP per freeze</div></div>
+        <div class="stat"><div class="h"><span class="n">Debt per Use</span><span class="lv" id="fDebt">150</span></div><div class="sb">XP you must earn back</div></div>
+        <div class="stat"><div class="h"><span class="n">Earned Every</span><span class="lv" id="fEvery">21</span></div><div class="sb">Days of unbroken streak</div></div>
+      </div>
+      <button class="btn" style="margin-top:14px" onclick="buyFreeze()">Buy a Freeze</button>
+    </div>
+
+    <div class="panel">
+      <div class="st"><h2>Records</h2><span class="tag">ALL TIME</span></div>
+      <div class="grid">
+        <div class="stat"><div class="h"><span class="n">Missions Completed</span><span class="lv" id="rQ">0</span></div><div class="sb">Daily and weekly combined</div></div>
+        <div class="stat"><div class="h"><span class="n">Raid Steps Cleared</span><span class="lv" id="rS">0</span></div><div class="sb">Progress on long-term goals</div></div>
+        <div class="stat"><div class="h"><span class="n">Best Streak</span><span class="lv" id="rB">0</span></div><div class="sb">Consecutive active days</div></div>
+        <div class="stat"><div class="h"><span class="n">Courses Finished</span><span class="lv" id="rC">0</span></div><div class="sb">From the Course Track</div></div>
+        <div class="stat"><div class="h"><span class="n">Rewards Claimed</span><span class="lv" id="rR">0</span></div><div class="sb">Real rewards you actually took</div></div>
+        <div class="stat"><div class="h"><span class="n">Penalties Taken</span><span class="lv" id="rP">0</span></div><div class="sb">Failed daily quests</div></div>
+        <div class="stat"><div class="h"><span class="n">XP Lost</span><span class="lv" id="rL">0</span></div><div class="sb">The cost of missed days</div></div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="st"><h2>Backup &amp; Restore</h2><span class="tag" id="backupTag">NEVER</span></div>
+      <div class="hint">Your level, XP, streak, badges and rewards live in this browser only. The System keeps an automatic snapshot of the last 7 days on this device, but that snapshot dies with the browser data too. Export a file and keep it somewhere else &mdash; it is the only real safety net.</div>
+      <div style="display:flex;gap:9px;flex-wrap:wrap;align-items:center">
+        <button class="btn" onclick="exportProgress()">Export Backup File</button>
+        <button class="btn" onclick="document.getElementById('restoreFile').click()">Restore From File</button>
+        <button class="btn" onclick="recoverAutoBackup()">Recover Auto-Backup</button>
+        <input type="file" id="restoreFile" accept=".json,application/json" style="display:none"
+               onchange="importProgress(this.files[0]); this.value='';">
+      </div>
+      <div class="hint" id="backupHint" style="margin-top:12px;margin-bottom:0"></div>
+      <div id="snapList" style="margin-top:14px"></div>
+    </div>
+
+    <div class="panel">
+      <div class="st"><h2>Danger Zone</h2></div>
+      <div style="display:flex;gap:9px;flex-wrap:wrap">
+        <button class="btn" onclick="clearDebt()">Clear Penalty Record</button>
+        <button class="btn warn" onclick="resetAll()">Reset All Data</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="foot">
+    <b>&ldquo;ARISE.&rdquo;</b><br>
+    Solo Leveling Player System &middot; built for Hadi &middot; v4.0
+  </div>
+</div>
+
+<script src="data.js"></script>
+<script src="vocab.js"></script>
+<script src="icons.js"></script>
+<script src="app.js"></script>
+<script src="render.js"></script>
+<script>
+boot();
+
+/* register the service worker so the app installs and works offline */
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('sw.js').catch(() => {});
+  });
+}
+
+/* open a specific tab straight from the URL, e.g. #daily */
+window.addEventListener('load', () => {
+  const h = (location.hash || '').replace('#','');
+  if (!h) return;
+  const t = document.querySelector('.tab[data-page="' + h + '"]');
+  if (t) t.click();
+});
+</script>
+</body>
+</html>
