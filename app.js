@@ -720,6 +720,58 @@ function save(){
 }
 
 /* ---------------------------------------------------------------------
+   AUTO-UPDATE SYSTEM — checks for new features and applies them
+   --------------------------------------------------------------------- */
+const APP_VERSION = 22;
+function checkForUpdates(){
+  const lastVer = parseInt(localStorage.getItem('soloAppVer') || '0', 10);
+  if(lastVer >= APP_VERSION) return;
+
+  /* v22: fix XP ledger on old saves */
+  if(lastVer < 22){
+    let xp = 0;
+    const ledger = {};
+    if(S.daily) Object.keys(S.daily).forEach(id => {
+      const m = DAILY.find(x => x.id === id);
+      if(m && S.daily[id]){ xp += m.xp; ledger.mission = (ledger.mission||0) + m.xp; }
+    });
+    if(S.weekly) Object.keys(S.weekly).forEach(id => {
+      const m = WEEKLY.find(x => x.id === id);
+      if(m && S.weekly[id]){ xp += m.xp; ledger.mission = (ledger.mission||0) + m.xp; }
+    });
+    if(S.boss) Object.keys(S.boss).forEach(bid => {
+      const b = BOSSES.find(x => x.id === bid);
+      if(b && S.boss[bid]) S.boss[bid].forEach((done, i) => {
+        if(done && b.steps[i]){ xp += b.steps[i].xp; ledger.boss = (ledger.boss||0) + b.steps[i].xp; }
+      });
+    });
+    if(S.courses) Object.keys(S.courses).forEach(cid => {
+      const c = COURSES.find(x => x.id === cid);
+      if(c && S.courses[cid]){ xp += c.xp; ledger.course = (ledger.course||0) + c.xp; }
+    });
+    if(S.books) Object.keys(S.books).forEach(key => {
+      const bk = allBooks().find(b => b.key === key);
+      if(bk && S.books[key]){ xp += bk.xp; ledger.bonus = (ledger.bonus||0) + bk.xp; }
+    });
+    if(S.vocab) Object.keys(S.vocab).forEach(key => {
+      if(S.vocab[key]){ xp += 8; ledger.vocab = (ledger.vocab||0) + 8; }
+    });
+    if(S.perfectDays && S.perfectDays.length){
+      xp += S.perfectDays.length * PERFECT_BONUS;
+      ledger.bonus = (ledger.bonus||0) + S.perfectDays.length * PERFECT_BONUS;
+    }
+    S.xp = xp;
+    S.level = Math.floor(S.xp / LEVEL_XP) + 1;
+    S.xpSource = ledger;
+    S.missionXP = {};
+  }
+
+  localStorage.setItem('soloAppVer', APP_VERSION);
+  save();
+  log('UPDATE', 'System updated to version <b>' + APP_VERSION + '</b>. XP recalculated.');
+}
+
+/* ---------------------------------------------------------------------
    ADD XP MANUALLY — let the player add XP directly when the system
    misses something. Simple, transparent, no hidden math.
    --------------------------------------------------------------------- */
@@ -994,12 +1046,25 @@ function checkPerfectDay(){
 /* if a mission is unchecked after a perfect day was banked, take the bonus back */
 function unbankPerfectDay(){
   const today = dayKey();
-  /* cancel a bonus that has not landed yet */
-  if(S.perfectPending === today) S.perfectPending = '';
+  /* if the bonus hasn't landed yet, just cancel it */
+  if(S.perfectPending === today){
+    S.perfectPending = '';
+    if(S.perfectDays && S.perfectDays.includes(today)){
+      const i = S.perfectDays.indexOf(today);
+      S.perfectDays.splice(i, 1);
+    }
+    log('PERFECT DAY CANCELLED','A mission was unchecked before the bonus landed.', true);
+    return true;
+  }
+  /* bonus has already been added — remove it */
   if(!S.perfectDays || !S.perfectDays.includes(today)) return false;
   const i = S.perfectDays.indexOf(today);
   S.perfectDays.splice(i, 1);
-  subXP(PERFECT_BONUS, null, 'bonus');
+  S.xp = Math.max(0, S.xp - PERFECT_BONUS);
+  S.level = Math.floor(S.xp / LEVEL_XP) + 1;
+  if(S.xpSource && S.xpSource.bonus){
+    S.xpSource.bonus = Math.max(0, S.xpSource.bonus - PERFECT_BONUS);
+  }
   log('PERFECT DAY LOST','A mission was unchecked — the Perfect Day bonus was removed.', true);
   return true;
 }
@@ -1204,6 +1269,7 @@ function toggleMission(kind, id, ev){
     S.qDone = Math.max(0, S.qDone - 1);
     sfx('uncheck');
   } else {
+    /* re-checking a mission that was already unchecked */
     /* the first ever completion starts the System */
     if(!S.started){
       S.started = true;
