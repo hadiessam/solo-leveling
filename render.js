@@ -854,6 +854,53 @@ function drawExtras(){
     + '</div>').join('');
 }
 
+/* ---- SKILL TREE — ordered by importance, with prerequisites ---- */
+function drawSkillTree(){
+  const el = $('skillTree');
+  if(!el) return;
+  const done = S.skillTree || {};
+  const next = getNextSkill();
+
+  el.innerHTML = SKILL_TREE.map(s => {
+    const unlocked = isSkillUnlocked(s.id);
+    const completed = !!done[s.id];
+    const isNext = next && next.id === s.id;
+    const reqNames = (s.requires||[]).map(r => {
+      const rs = SKILL_TREE.find(x => x.id === r);
+      return rs ? rs.n : r;
+    });
+
+    let status, statusColor;
+    if(completed){ status = 'COMPLETED'; statusColor = 'var(--green)'; }
+    else if(isNext){ status = 'NEXT UP'; statusColor = 'var(--gold)'; }
+    else if(unlocked){ status = 'AVAILABLE'; statusColor = 'var(--glow)'; }
+    else { status = 'LOCKED'; statusColor = 'var(--muted)'; }
+
+    return '<div class="skillTreeRow ' + (completed?'stDone':unlocked?'stOpen':'stLocked') + '">'
+      + '<div class="stHead">'
+      +   '<span class="stPriority">#' + s.priority + '</span>'
+      +   '<span class="stName">' + esc(s.n) + '</span>'
+      +   '<span class="stType">' + esc(s.type) + '</span>'
+      +   '<span class="stStatus" style="color:' + statusColor + '">' + status + '</span>'
+      + '</div>'
+      + '<div class="stTarget">TARGET: ' + esc(s.target) + '</div>'
+      + '<div class="stWhy">' + esc(s.why) + '</div>'
+      + (reqNames.length ? '<div class="stReq">REQUIRES: ' + reqNames.map(esc).join(' + ') + '</div>' : '')
+      + '<div class="stLearn">'
+      +   '<div class="stLearnHead">WHERE TO LEARN</div>'
+      +   (s.learn||[]).map(l =>
+        '<div class="stItem">'
+        + '<a class="stLink" href="' + l.u + '" target="_blank" rel="noopener">' + esc(l.n) + ' &#8599;</a>'
+        + '<div class="stWhy">' + esc(l.w) + '</div>'
+        + '</div>').join('')
+      + '</div>'
+      + (unlocked && !completed
+          ? '<button class="btn small" style="margin-top:10px" onclick="completeSkill(\'' + s.id + '\')">Mark Complete</button>'
+          : '')
+      + '</div>';
+  }).join('');
+}
+
 /* ---- the four skills, side by side, with the B2 line ---- */
 function drawSkills(){
   const max = 70;
@@ -1526,7 +1573,7 @@ function renderAll(){
   drawHUD(); drawDaily(); drawWeekly(); drawBosses();
   drawCourses(); drawRoadmap(); drawRewards();
   drawLibrary(); drawCoach(); drawStats(); drawHistory();
-  drawReview(); drawInsights(); drawTyping(); drawExtras();
+  drawReview(); drawInsights(); drawTyping(); drawExtras(); drawSkillTree();
   drawClass(); drawShadow(); drawFocus(); drawVision();
   drawEggs(); drawCharacters(); drawVocab();
   /* dynamic freeze numbers — never hardcode these in the HTML */

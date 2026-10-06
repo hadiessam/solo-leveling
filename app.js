@@ -74,7 +74,9 @@ function blank(){
     /* Habit Strength */
     habitStrength:{},
     /* Negative Habits */
-    negativeHabits:{}, negHabitDamage:0
+    negativeHabits:{}, negHabitDamage:0,
+    /* Skill Tree */
+    skillTree:{}
   };
 }
 
@@ -772,9 +774,43 @@ function checkForUpdates(){
 }
 
 /* ---------------------------------------------------------------------
-   ADD XP MANUALLY — let the player add XP directly when the system
-   misses something. Simple, transparent, no hidden math.
+   SKILL TREE — ordered by importance, with prerequisites.
+   Complete a skill to unlock the ones that depend on it.
    --------------------------------------------------------------------- */
+function isSkillUnlocked(skillId){
+  const skill = SKILL_TREE.find(s => s.id === skillId);
+  if(!skill) return false;
+  if(!skill.requires || !skill.requires.length) return true;
+  return skill.requires.every(req => !!(S.skillTree && S.skillTree[req]));
+}
+
+function completeSkill(skillId){
+  const skill = SKILL_TREE.find(s => s.id === skillId);
+  if(!skill) return;
+  if(!isSkillUnlocked(skillId)){
+    sfx('error');
+    alert('This skill is locked. Complete the required skills first.');
+    return;
+  }
+  if(S.skillTree && S.skillTree[skillId]){
+    sfx('error');
+    alert('You already completed this skill.');
+    return;
+  }
+  S.skillTree = S.skillTree || {};
+  S.skillTree[skillId] = true;
+  save();
+  sfx('badge');
+  overlay('SKILL COMPLETED', skill.n, 'You unlocked new skills. Check the Skill Tree.', false);
+  log('SKILL', 'Completed: <b>' + skill.n + '</b>.');
+  renderAll();
+}
+
+function getNextSkill(){
+  const available = SKILL_TREE.filter(s => isSkillUnlocked(s.id) && !(S.skillTree && S.skillTree[s.id]));
+  if(!available.length) return null;
+  return available.sort((a,b) => a.priority - b.priority)[0];
+}
 function addXPManual(){
   const input = document.getElementById('xpInput');
   if(!input) return;

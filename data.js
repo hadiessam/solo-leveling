@@ -601,8 +601,27 @@ const TYPING = {
    SKILLS YOU DID NOT ASK FOR BUT NEED
    Each one has real places to learn it, with links.
    --------------------------------------------------------------- */
-const EXTRAS = [
-  {n:'Touch Typing', tag:'Skill', target:'60 WPM',
+/* EXTRAS kept for backward compatibility — now empty, all skills are in SKILL_TREE */
+const EXTRAS = [];
+
+/* ---------------------------------------------------------------------
+   SKILL TREE — ordered by importance, with prerequisites.
+   Each skill has: priority (1 = most important), requires (skill keys that
+   must be completed first), type (skill or course), and learning links.
+   --------------------------------------------------------------------- */
+const SKILL_TREE = [
+  /* ---- TIER 1: FOUNDATION (no prerequisites) ---- */
+  {id:'english_writing', n:'English Writing (B2)', type:'course', priority:1, requires:[],
+   target:'EF SET Writing 43+ (currently 33)',
+   why:'THE gap. Your writing is A2 while everything else is B1/C1. This is the single highest-return skill for your career \u2014 it unlocks better emails, reports, proposals, and client communication.',
+   learn:[
+     {n:'Write & Improve (Cambridge) \u2014 YOUR #1 TOOL', u:'https://writeandimprove.com/', w:'Free, from Cambridge. Write a task, get instant feedback, rewrite and resubmit. 15 min/day.'},
+     {n:'EF SET quick check (15 min)', u:'https://www.efset.org/quick-check/', w:'Fast 20-question practice test. Use it weekly to track progress.'},
+     {n:'British Council level test', u:'https://learnenglish.britishcouncil.org/english-levels/online-english-test', w:'Grammar, vocabulary and phrasing. Use it if W&I feedback is not specific enough.'}
+   ]},
+
+  {id:'touch_typing', n:'Touch Typing', type:'skill', priority:2, requires:[],
+   target:'60 WPM',
    why:'The highest-return skill on this list. A 1,000-word report takes 40 minutes at 25 WPM and 16 minutes at 60. That is 24 minutes back on every document, forever.',
    learn:[
      {n:'Keybr \u2014 start here', u:'https://www.keybr.com/', w:'Adaptive drills. It finds your slow letters and trains them. 10 min/day.'},
@@ -610,7 +629,8 @@ const EXTRAS = [
      {n:'TypingClub', u:'https://www.typingclub.com/', w:'Full structured course from zero, if you prefer lessons over drills.'}
    ]},
 
-  {n:'Google Sheets & Excel', tag:'Tool', target:'Pivot tables + reporting',
+  {id:'google_sheets', n:'Google Sheets & Excel', type:'tool', priority:3, requires:[],
+   target:'Pivot tables + reporting',
    why:'Every performance marketing role in Riyadh tests this. Recruiters assume it, they do not teach it. You already handle TL 171K of spend \u2014 this is how you present it properly.',
    learn:[
      {n:'Google\u2019s official Sheets training', u:'https://support.google.com/a/users/answer/9282959', w:'Free, straight from Google. Covers everything from basics to pivot tables.'},
@@ -618,7 +638,9 @@ const EXTRAS = [
      {n:'Excel Pivot Tables (Coursera)', u:'https://www.coursera.org/learn/data-analysis-with-excel-pivot-tables', w:'Free to audit. 1 hour, focused on turning raw campaign data into insight.'}
    ]},
 
-  {n:'Presentation & Slide Design', tag:'Skill', target:'A clean deck in 20 minutes',
+  /* ---- TIER 2: COMMUNICATION (requires English Writing) ---- */
+  {id:'presentation', n:'Presentation & Slide Design', type:'skill', priority:4, requires:['english_writing'],
+   target:'A clean deck in 20 minutes',
    why:'You will pitch to clients. Bad slides kill good campaigns \u2014 the client judges the deck before they judge the numbers. This is a 20-hour skill that pays back on every pitch for the rest of your career.',
    learn:[
      {n:'Google Slides \u2014 official help', u:'https://support.google.com/docs/topic/9054603', w:'Free, complete, from Google. Start with "Get started with Slides".'},
@@ -627,29 +649,8 @@ const EXTRAS = [
      {n:'SlidesCarnival \u2014 free templates', u:'https://www.slidescarnival.com/', w:'Free professional templates. Never present on the default theme again.'}
    ]},
 
-  {n:'Basic HTML & Landing Pages', tag:'Tech', target:'Fix a broken page yourself',
-   why:'You will need to fix a broken landing page at 11pm before a launch. Knowing basic HTML means you fix it in ten minutes instead of losing the client.',
-   learn:[
-     {n:'MDN \u2014 Learn HTML', u:'https://developer.mozilla.org/en-US/docs/Learn/HTML', w:'The official reference. Start with the "Getting started" modules.'},
-     {n:'freeCodeCamp \u2014 Responsive Web Design', u:'https://www.freecodecamp.org/learn/2022/responsive-web-design/', w:'Free, hands-on, certificate at the end. ~20 hours.'}
-   ]},
-
-  {n:'Reading a P&L and Cash Flow', tag:'Business', target:'Know your own numbers',
-   why:'Before you open an agency. An owner who cannot read their own numbers does not stay an owner long. Also feeds the Money domain in your Status.',
-   learn:[
-     {n:'OpenStax \u2014 Principles of Finance', u:'https://openstax.org/details/books/principles-finance', w:'Free full textbook. Read the cash-flow and budgeting chapters.'},
-     {n:'Investopedia \u2014 P&L explained', u:'https://www.investopedia.com/terms/i/incomestatement.asp', w:'Short, clear, and free. Read it before the textbook.'}
-   ]},
-
-  {n:'Negotiation', tag:'Skill', target:'A better salary offer',
-   why:'Your salary in Riyadh is negotiable. One good conversation can be worth a year of savings. This is the highest hourly rate you will ever earn.',
-   learn:[
-     {n:'Never Split the Difference \u2014 summary', u:'https://www.blackswanltd.com/never-split-the-difference', w:'Chris Voss\u2019 own site. Free articles on tactical empathy.'},
-     {n:'Harvard PON \u2014 free negotiation resources', u:'https://www.pon.harvard.edu/free-reports/', w:'Free reports from Harvard\u2019s Program on Negotiation. Genuinely useful.'},
-     {n:'Khan Academy \u2014 Negotiation', u:'https://www.khanacademy.org/economics-finance-domain/core-finance', w:'Free foundation on the economics behind any deal.'}
-   ]},
-
-  {n:'Public Speaking', tag:'Skill', target:'Present without fear',
+  {id:'public_speaking', n:'Public Speaking', type:'skill', priority:5, requires:['english_writing'],
+   target:'Present without fear',
    why:'You will present to clients and teams. Speaking in front of people is a skill, not a personality trait \u2014 and it is trainable.',
    learn:[
      {n:'Yoodli \u2014 AI speech coach', u:'https://yoodli.ai/', w:'Free tier. Records you and counts filler words, pacing, eye contact. Practise alone first.'},
@@ -657,7 +658,36 @@ const EXTRAS = [
      {n:'Speaking.io \u2014 public speaking practice', u:'https://speaking.io/', w:'Free, practical, no fluff. Built by people who speak for a living.'}
    ]},
 
-  {n:'Saudi Business Culture', tag:'Gulf', target:'Learn before you land',
+  /* ---- TIER 3: TECHNICAL (requires Google Sheets) ---- */
+  {id:'html_landing', n:'Basic HTML & Landing Pages', type:'tech', priority:6, requires:['google_sheets'],
+   target:'Fix a broken page yourself',
+   why:'You will need to fix a broken landing page at 11pm before a launch. Knowing basic HTML means you fix it in ten minutes instead of losing the client.',
+   learn:[
+     {n:'MDN \u2014 Learn HTML', u:'https://developer.mozilla.org/en-US/docs/Learn/HTML', w:'The official reference. Start with the "Getting started" modules.'},
+     {n:'freeCodeCamp \u2014 Responsive Web Design', u:'https://www.freecodecamp.org/learn/2022/responsive-web-design/', w:'Free, hands-on, certificate at the end. ~20 hours.'}
+   ]},
+
+  /* ---- TIER 4: BUSINESS (requires Presentation) ---- */
+  {id:'pl_cashflow', n:'Reading a P&L and Cash Flow', type:'business', priority:7, requires:['presentation'],
+   target:'Know your own numbers',
+   why:'Before you open an agency. An owner who cannot read their own numbers does not stay an owner long. Also feeds the Money domain in your Status.',
+   learn:[
+     {n:'OpenStax \u2014 Principles of Finance', u:'https://openstax.org/details/books/principles-finance', w:'Free full textbook. Read the cash-flow and budgeting chapters.'},
+     {n:'Investopedia \u2014 P&L explained', u:'https://www.investopedia.com/terms/i/incomestatement.asp', w:'Short, clear, and free. Read it before the textbook.'}
+   ]},
+
+  {id:'negotiation', n:'Negotiation', type:'skill', priority:8, requires:['public_speaking'],
+   target:'A better salary offer',
+   why:'Your salary in Riyadh is negotiable. One good conversation can be worth a year of savings. This is the highest hourly rate you will ever earn.',
+   learn:[
+     {n:'Never Split the Difference \u2014 summary', u:'https://www.blackswanltd.com/never-split-the-difference', w:'Chris Voss\u2019 own site. Free articles on tactical empathy.'},
+     {n:'Harvard PON \u2014 free negotiation resources', u:'https://www.pon.harvard.edu/free-reports/', w:'Free reports from Harvard\u2019s Program on Negotiation. Genuinely useful.'},
+     {n:'Khan Academy \u2014 Negotiation', u:'https://www.khanacademy.org/economics-finance-domain/core-finance', w:'Free foundation on the economics behind any deal.'}
+   ]},
+
+  /* ---- TIER 5: MARKET (requires all above) ---- */
+  {id:'saudi_culture', n:'Saudi Business Culture', type:'gulf', priority:9, requires:['negotiation','pl_cashflow'],
+   target:'Learn before you land',
    why:'How meetings actually run, how decisions get made, what the hierarchy means, what is expected of you. Learning this before you arrive is worth a month of awkward mistakes.',
    learn:[
      {n:'Expatica \u2014 Saudi business culture', u:'https://www.expatica.com/sa/working/employment-law/saudi-arabia-business-culture-217246/', w:'Practical, honest, free. Read it before your first interview.'},
@@ -665,7 +695,8 @@ const EXTRAS = [
      {n:'Saudi Press Agency \u2014 business news', u:'https://www.spa.gov.sa/en', w:'Follow it weekly. Walking into an interview knowing current events is a real edge.'}
    ]},
 
-  {n:'LinkedIn & Personal Branding', tag:'Career', target:'Be findable',
+  {id:'linkedin', n:'LinkedIn & Personal Branding', type:'career', priority:10, requires:['saudi_culture'],
+   target:'Be findable',
    why:'You have the profile, the logo and the portfolio. The only missing piece is output. Recruiters in Riyadh search before they post \u2014 being visible is how they find you.',
    learn:[
      {n:'LinkedIn \u2014 official creator resources', u:'https://www.linkedin.com/help/linkedin/answer/a549033', w:'Free guidance straight from LinkedIn on what the algorithm rewards.'},

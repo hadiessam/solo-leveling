@@ -459,6 +459,25 @@ body{font-family:var(--body);background:var(--bg);color:var(--text);min-height:1
 
 /* ---------- CHARACTER CARDS ---------- */
 
+/* ---------- SKILL TREE ---------- */
+.skillTreeRow{border:1px solid var(--line);border-left:3px solid var(--glow);border-radius:5px;padding:14px 16px;margin-bottom:12px;transition:.25s}
+.skillTreeRow:hover{background:rgba(0,102,255,.04)}
+.skillTreeRow.stDone{border-left-color:var(--green);background:rgba(37,224,122,.05)}
+.skillTreeRow.stLocked{opacity:.55;border-left-color:var(--muted)}
+.stHead{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.stPriority{font-family:var(--hud);font-size:11px;color:var(--gold);letter-spacing:1px}
+.stName{font-family:var(--hud);font-size:15px;font-weight:700;color:#fff;flex:1}
+.stType{font-size:10px;font-family:var(--hud);letter-spacing:1px;color:var(--muted);border:1px solid var(--line);padding:2px 8px;border-radius:3px}
+.stStatus{font-family:var(--hud);font-size:10px;letter-spacing:1.5px}
+.stTarget{font-size:11px;color:var(--gold);margin-top:6px;font-family:var(--hud);letter-spacing:.5px}
+.stWhy{font-size:13px;color:var(--muted);line-height:1.6;margin-top:8px}
+.stReq{font-size:11px;color:var(--red);margin-top:6px;font-family:var(--hud);letter-spacing:.5px}
+.stLearn{margin-top:10px}
+.stLearnHead{font-family:var(--hud);font-size:10px;letter-spacing:2px;color:var(--glow);margin-bottom:6px}
+.stItem{margin-bottom:6px}
+.stLink{color:var(--glow);text-decoration:none;font-size:13px}
+.stLink:hover{text-decoration:underline}
+
 /* ---------- ICONS ---------- */
 .ico{display:inline-block;vertical-align:-.16em;flex:0 0 auto}
 .st h2 .ico,.exTop .t .ico{margin-right:2px}
