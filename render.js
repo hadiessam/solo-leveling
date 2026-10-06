@@ -1565,9 +1565,6 @@ function boot(){
   $('todayTag').textContent = new Date()
     .toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short'}).toUpperCase();
 
-  /* Initialize 3D characters */
-  if(typeof initCharacters === 'function') initCharacters();
-
   document.querySelectorAll('.tab[data-page]').forEach(t => {
     t.addEventListener('click', () => {
       document.querySelectorAll('.tab[data-page]').forEach(x => x.classList.remove('active'));
@@ -1578,7 +1575,7 @@ function boot(){
       sfx('tab');
       window.scrollTo({top:0,behavior:'smooth'});
       /* Show character for this tab */
-      if(typeof showTabCharacter === 'function') showTabCharacter(t.dataset.page);
+
     });
   });
 
