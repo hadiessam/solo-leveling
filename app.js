@@ -811,6 +811,45 @@ function getNextSkill(){
   if(!available.length) return null;
   return available.sort((a,b) => a.priority - b.priority)[0];
 }
+
+/* ---------------------------------------------------------------------
+   COURSE TREE — same lock/unlock system as skills, for courses.
+   --------------------------------------------------------------------- */
+function isCourseUnlocked(courseId){
+  const course = COURSES.find(c => c.id === courseId);
+  if(!course) return false;
+  if(!course.requires || !course.requires.length) return true;
+  return course.requires.every(req => !!(S.courses && S.courses[req]));
+}
+
+function completeCourseById(courseId){
+  const course = COURSES.find(c => c.id === courseId);
+  if(!course) return;
+  if(!isCourseUnlocked(courseId)){
+    sfx('error');
+    alert('This course is locked. Complete the required courses first.');
+    return;
+  }
+  if(S.courses[courseId]){
+    sfx('error');
+    alert('You already completed this course.');
+    return;
+  }
+  S.courses[courseId] = true;
+  addXP(60, 'selfdev', false, 'course');
+  log('COURSE','Completed: <b>'+course.name+'</b> (+60 XP)');
+  save();
+  sfx('badge');
+  overlay('COURSE COMPLETED', course.name, '+60 XP · Check what unlocked!', false);
+  renderAll();
+}
+
+function getNextCourse(){
+  const available = COURSES.filter(c => isCourseUnlocked(c.id) && !S.courses[c.id]);
+  if(!available.length) return null;
+  /* stage 1 first, then by array order */
+  return available.sort((a,b) => (a.stage||9) - (b.stage||9))[0];
+}
 function addXPManual(){
   const input = document.getElementById('xpInput');
   if(!input) return;

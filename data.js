@@ -170,7 +170,53 @@ const COURSES = [
   {id:'c27', stage:3, name:'Saudi Business Culture', platform:'Expatica',
    url:'https://www.expatica.com/sa/working/employment-law/saudi-arabia-business-culture-217246/', hours:'~1h',
    why:'How meetings actually run, how decisions get made, what the hierarchy means, and what is expected of you. Read it before you land, not after your first awkward week.',
-   proof:'Free.'}
+   proof:'Free.'},
+
+  /* --- NEW: PERFORMANCE MARKETING DEPTH --- */
+  {id:'c28', stage:1, name:'Performance Marketing Manager (Full Path)', platform:'Markampus',
+   url:'https://markampus.com/learn/performance-marketing-manager/', hours:'50h, 19 modules, 90 lessons',
+   why:'The most complete free performance marketing course available. Covers the full paid media stack — Google, Meta, programmatic — with multi-channel attribution, incrementality testing, and budget forecasting. This is the course that takes you from "I run ads" to "I manage performance marketing at scale".',
+   proof:'Free verified certificate on completion. 100% free, forever.'},
+
+  {id:'c29', stage:1, name:'PPC Specialist (Google + Meta)', platform:'Markampus',
+   url:'https://markampus.com/learn/ppc-specialist/', hours:'45h, 18 modules, 87 lessons',
+   why:'Deep-dive into paid search and paid social. Keyword strategy, bid management, audience targeting, creative testing, ROAS optimization. Complements the Google Ads and Meta certifications with the strategic layer underneath them.',
+   proof:'Free verified certificate on completion.'},
+
+  {id:'c30', stage:2, name:'AI Marketing Automation', platform:'Coursera · LearnKartS',
+   url:'https://www.coursera.org/learn/ai-marketing-automation', hours:'~10h, 3 modules',
+   why:'AI-fueled marketing automation — email workflows, chatbots, content creation, social media scheduling. This is what agencies will be selling in 2027. Learn it now and you are early.',
+   proof:'Free to audit. Shareable certificate.'},
+
+  {id:'c31', stage:2, name:'AI-Powered Marketing & CRM', platform:'Coursera · University of Rochester',
+   url:'https://www.coursera.org/programs/coursera-for-university-of-rochester-mdtfv/learn/ai-powered-marketing-and-crm', hours:'14 modules',
+   why:'Generative AI for marketing — personalized email copy, prompt libraries, CRM data optimization, AI lead scoring, CLV analysis. The most comprehensive AI-for-marketing course available.',
+   proof:'Free to audit. Shareable certificate.'},
+
+  {id:'c32', stage:2, name:'AI for Marketing', platform:'HubSpot Academy',
+   url:'https://academy.hubspot.com/courses/AI-for-Marketers', hours:'~2h, 5 lessons',
+   why:'Practical AI for marketers — content creation, personalization, prompt engineering, AI tools evaluation. Fast, current, and directly applicable to your daily work.',
+   proof:'Free course. HubSpot Academy badge.'},
+
+  {id:'c33', stage:2, name:'Marketing Automation with AI', platform:'HubSpot Academy',
+   url:'https://academy.hubspot.com/lessons/marketing-automation-and-artificial-intelligence', hours:'35 min',
+   how:'How AI streamlines inbound marketing, data-driven decisions, automation workflows. Quick but dense — the AI layer on top of everything you already know.',
+   proof:'Free lesson. HubSpot Academy.'},
+
+  {id:'c34', stage:3, name:'Digital Media Planning and Buying', platform:'HubSpot Academy',
+   url:'https://academy.hubspot.com/courses/digital-marketing', hours:'~6h',
+   why:'The strategic framework behind media planning — budget allocation, multi-channel planning, campaign optimization, reporting. This is the course that separates a media buyer from a media planner.',
+   proof:'Free badge, valid 2 years.'},
+
+  {id:'c35', stage:3, name:'Performance Marketing (Google + Meta)', platform:'LearnTube',
+   url:'https://learntube.ai/learn/course/performance-marketing-google-and-meta-ad', hours:'4h, 18 video lessons',
+   why:'Free structured course with AI tutor. Covers Google Ads setup, campaign creation, targeting, bidding, and Meta Ads fundamentals. Good supplement to the official certifications.',
+   proof:'Free. Optional paid certificate. Recognised by 900+ hiring partners.'},
+
+  {id:'c36', stage:3, name:'Performance Marketing & Media Buying', platform:'Elevify',
+   url:'https://www.elevify.com/en/courses/arts-design-and-communication/digital-marketing/performance-marketing-and-media-buying-course-7a3a4', hours:'4-360h (self-paced)',
+   why:'Complete performance marketing system — paid search, paid social, programmatic, CRO, tracking infrastructure, analytics, reporting. 8 chapters, 40 lessons. Free tier available.',
+   proof:'Free tier. Pro certificate available.'}
 ];
 
 /* ---------------------------------------------------------------

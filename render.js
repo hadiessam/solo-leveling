@@ -901,6 +901,42 @@ function drawSkillTree(){
   }).join('');
 }
 
+/* ---- COURSE TREE — same lock/unlock system as skills ---- */
+function drawCourseTree(){
+  const el = $('courseTree');
+  if(!el) return;
+  const next = getNextCourse();
+
+  el.innerHTML = COURSES.map(c => {
+    const unlocked = isCourseUnlocked(c.id);
+    const completed = !!S.courses[c.id];
+    const isNext = next && next.id === c.id;
+
+    let status, statusColor;
+    if(completed){ status = 'COMPLETED'; statusColor = 'var(--green)'; }
+    else if(isNext){ status = 'NEXT UP'; statusColor = 'var(--gold)'; }
+    else if(unlocked){ status = 'AVAILABLE'; statusColor = 'var(--glow)'; }
+    else { status = 'LOCKED'; statusColor = 'var(--muted)'; }
+
+    return '<div class="skillTreeRow ' + (completed?'stDone':unlocked?'stOpen':'stLocked') + '">'
+      + '<div class="stHead">'
+      +   '<span class="stPriority">S' + c.stage + '</span>'
+      +   '<span class="stName">' + esc(c.name) + '</span>'
+      +   '<span class="stType">' + esc(c.platform) + '</span>'
+      +   '<span class="stStatus" style="color:' + statusColor + '">' + status + '</span>'
+      + '</div>'
+      + '<div class="stTarget">' + esc(c.hours || '') + '</div>'
+      + '<div class="stWhy">' + esc(c.why) + '</div>'
+      + '<div class="stLearn">'
+      +   '<a class="stLink" href="' + c.url + '" target="_blank" rel="noopener">Start Course &#8599;</a>'
+      + '</div>'
+      + (unlocked && !completed
+          ? '<button class="btn small" style="margin-top:10px" onclick="completeCourseById(\'' + c.id + '\')">Mark Complete (+60 XP)</button>'
+          : '')
+      + '</div>';
+  }).join('');
+}
+
 /* ---- the four skills, side by side, with the B2 line ---- */
 function drawSkills(){
   const max = 70;
@@ -1573,7 +1609,7 @@ function renderAll(){
   drawHUD(); drawDaily(); drawWeekly(); drawBosses();
   drawCourses(); drawRoadmap(); drawRewards();
   drawLibrary(); drawCoach(); drawStats(); drawHistory();
-  drawReview(); drawInsights(); drawTyping(); drawExtras(); drawSkillTree();
+  drawReview(); drawInsights(); drawTyping(); drawExtras(); drawSkillTree(); drawCourseTree();
   drawClass(); drawShadow(); drawFocus(); drawVision();
   drawEggs(); drawCharacters(); drawVocab();
   /* dynamic freeze numbers — never hardcode these in the HTML */
