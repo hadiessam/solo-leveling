@@ -911,7 +911,17 @@ function cloudLoad(){
 /* ---------------------------------------------------------------------
    DATE HELPERS
    --------------------------------------------------------------------- */
-const dayKey = () => new Date().toISOString().slice(0,10);
+/* dayKey uses Cairo time (UTC+3) so the daily reset happens at midnight
+   in Egypt, not at 22:00 the previous day like raw UTC would do. */
+const dayKey = () => {
+  const d = new Date();
+  const utc = d.getTime() + d.getTimezoneOffset() * 60000;
+  const cairo = new Date(utc + 3 * 3600000); /* UTC+3 */
+  const y = cairo.getFullYear();
+  const mo = String(cairo.getMonth()+1).padStart(2,'0');
+  const da = String(cairo.getDate()).padStart(2,'0');
+  return y + '-' + mo + '-' + da;
+};
 function weekKey(){
   /* Week starts on FRIDAY — weekly missions reset every Friday */
   const d = new Date();

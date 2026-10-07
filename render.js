@@ -1158,7 +1158,7 @@ function drawCharacters(){
     const isMythic = char.rarity === 'mythic';
     return '<div class="charCard' + (isMythic ? ' mythicCard' : '') + '" style="border-left-color:' + col + '">'
       + '<div class="charTop">'
-      +   '<div class="charPic"><img src="' + char.img + '" alt="' + esc(char.name) + '">'
+      +   '<div class="charPic">' + ic(char.icon || 'soldier', 44) + '</div>'
       +     (isMythic ? '<div class="charGlow"></div>' : '') + '</div>'
       +   '<div class="charBody">'
       +     '<div class="charHead">'
