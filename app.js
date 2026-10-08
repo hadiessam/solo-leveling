@@ -19,7 +19,7 @@ const MULT_MAX    = 1.5;   /* +50% XP at a 100-day streak */
 const MULT_SPAN   = 200;   /* days needed to reach the cap */
 
 /* perfect-day bonus: clear every mission and get paid for it */
-const PERFECT_BONUS = 150;
+const PERFECT_BONUS = 75;
 
 /* milestone levels that get a bigger celebration */
 const MILESTONES  = {5:'TIER 2 UNLOCKED', 10:'COURSE STAGE 2', 15:'TIER 3 UNLOCKED',
@@ -78,7 +78,9 @@ function blank(){
     /* Skill Tree */
     skillTree:{},
     /* Jin-Woo custom phrase */
-    customPhrase:''
+    customPhrase:'',
+    /* 21-Day Habit Tracker */
+    habits:{}
   };
 }
 

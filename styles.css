@@ -720,6 +720,48 @@ body{font-family:var(--body);background:var(--bg);color:var(--text);min-height:1
   .foot{padding-bottom:calc(22px + env(safe-area-inset-bottom,0px))}
 }
 
+/* ---------- 21-DAY HABIT TRACKER ---------- */
+.habit-card{display:flex;align-items:center;gap:14px;padding:14px 12px;border-bottom:1px solid rgba(29,59,107,.5);
+  transition:.2s;border-radius:3px;position:relative;overflow:hidden}
+.habit-card:last-child{border-bottom:0}
+.habit-card::before{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;
+  background:linear-gradient(90deg,transparent,rgba(0,102,255,.08),transparent);transition:.5s}
+.habit-card:hover::before{left:100%}
+.habit-card:hover{background:rgba(0,102,255,.07)}
+.habit-card.done{background:rgba(37,224,122,.05)}
+.habit-card.done .habit-name{color:var(--green)}
+.habit-main{display:flex;align-items:center;gap:12px;flex:1;min-width:0}
+.habit-icon{width:36px;height:36px;flex:0 0 36px;border:1px solid var(--line);border-radius:4px;
+  display:flex;align-items:center;justify-content:center;color:var(--glow);
+  background:rgba(63,169,255,.06)}
+.habit-card.done .habit-icon{color:var(--green);border-color:rgba(37,224,122,.4);
+  background:rgba(37,224,122,.08)}
+.habit-info{flex:1;min-width:0}
+.habit-name{font-size:15px;font-weight:600;transition:.2s}
+.habit-why{font-size:12px;color:var(--muted);margin-top:3px;line-height:1.4}
+.habit-progress-area{flex:0 0 140px}
+.habit-stats{display:flex;justify-content:space-between;font-size:11px;letter-spacing:1px;
+  color:var(--muted);text-transform:uppercase;margin-bottom:4px}
+.habit-streak{font-family:var(--hud);font-weight:700;color:var(--glow)}
+.habit-card.done .habit-streak{color:var(--green)}
+.habit-pct{font-family:var(--hud);font-weight:700;color:var(--gold)}
+.habit-bar{height:6px}
+.habit-bar>i{background:linear-gradient(90deg,var(--glow),var(--glow2));
+  box-shadow:0 0 10px rgba(63,169,255,.5)}
+.habit-card.done .habit-bar>i{background:linear-gradient(90deg,var(--green),var(--glow));
+  box-shadow:0 0 10px rgba(37,224,122,.5)}
+.habit-actions{display:flex;align-items:center;gap:8px;flex:0 0 auto}
+.habit-check{width:32px;height:32px;border:2px solid var(--glow);border-radius:4px;
+  background:transparent;color:var(--glow);font-size:16px;font-weight:700;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;transition:.2s;font-family:var(--hud)}
+.habit-check:hover{background:rgba(0,102,255,.15);transform:scale(1.05)}
+.habit-check.checked{background:var(--green);border-color:var(--green);color:#04070f;
+  box-shadow:0 0 14px rgba(37,224,122,.5)}
+.habit-remove{width:28px;height:28px;border:1px solid var(--line);border-radius:4px;
+  background:transparent;color:var(--muted);font-size:12px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;transition:.2s}
+.habit-remove:hover{border-color:var(--red);color:var(--red);background:rgba(255,77,94,.1)}
+
 /* respect users who turn off animation */
 @media(prefers-reduced-motion:reduce){
   *{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important}

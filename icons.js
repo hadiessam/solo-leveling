@@ -106,7 +106,8 @@ const ICO_PATHS = {
   sleep:      '<path d="M20 13.5A8.5 8.5 0 0 1 10.5 4a8.5 8.5 0 1 0 9.5 9.5Z"/>',
   smile:      '<circle cx="12" cy="12" r="8.5"/><path d="M8.5 14c1.8 2 5.2 2 7 0"/><path d="M9 9.5h.01M15 9.5h.01"/>',
   meh:        '<circle cx="12" cy="12" r="8.5"/><path d="M8.5 15h7"/><path d="M9 9.5h.01M15 9.5h.01"/>',
-  frown:      '<circle cx="12" cy="12" r="8.5"/><path d="M8.5 15.5c1.8-2 5.2-2 7 0"/><path d="M9 9.5h.01M15 9.5h.01"/>'
+  frown:      '<circle cx="12" cy="12" r="8.5"/><path d="M8.5 15.5c1.8-2 5.2-2 7 0"/><path d="M9 9.5h.01M15 9.5h.01"/>',
+  moon:       '<path d="M20 13.5A8.5 8.5 0 0 1 10.5 4a8.5 8.5 0 1 0 9.5 9.5Z"/>'
 };
 
 /* ---- the renderer: one function, any size, any colour ---- */

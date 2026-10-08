@@ -713,7 +713,7 @@ function drawRewards(){
 function openRewardForm(){
   const name = prompt('What is the reward?');
   if(!name || !name.trim()) return;
-  const type = (prompt('Unlock by typing: level, streak, or xp','level')||'').trim().toLowerCase();
+  const type = (prompt('Unlock by: level, streak, or xp','level')||'').trim().toLowerCase();
   if(!['level','streak','xp'].includes(type)){ alert('Please type level, streak, or xp.'); return; }
   const val = parseInt(prompt('Required '+type+' value:'),10);
   if(!val || val < 1){ alert('Please enter a number greater than zero.'); return; }
@@ -726,6 +726,7 @@ function openRewardForm(){
   save();
   log('SYSTEM','Reward added: <b>'+esc(name.trim())+'</b>.');
   renderAll();
+  sfx('badge');
 }
 
 function delReward(id){
@@ -1634,6 +1635,187 @@ function showBriefing(){
 }
 
 /* ---------------------------------------------------------------------
+   21-DAY HABIT TRACKER — UI Functions
+   --------------------------------------------------------------------- */
+
+/* ADD HABIT — add a custom habit to track */
+function addHabit(name) {
+  if (!name || !name.trim()) {
+    alert('Please enter a habit name.');
+    return null;
+  }
+
+  var habitId = 'custom_' + Date.now();
+  var newHabit = {
+    id: habitId,
+    name: name.trim(),
+    icon: 'target',
+    category: 'Career',
+    why: 'Custom habit added by you.',
+    custom: true
+  };
+
+  /* Add to HABITS array */
+  HABITS.push(newHabit);
+
+  /* Initialize state */
+  HABIT_TRACKER.ensureHabitState(habitId);
+
+  save();
+  renderHabits();
+  sfx('success');
+  log('HABIT', 'New habit added: <b>' + esc(name) + '</b>');
+  return habitId;
+}
+
+/* CHECK / UNCHECK HABIT — toggle today's completion */
+function checkHabit(habitId) {
+  var state = HABIT_TRACKER.ensureHabitState(habitId);
+  var today = dayKey();
+  var idx = state.days.indexOf(today);
+  var wasDone = idx !== -1;
+
+  if (wasDone) {
+    /* Uncheck: remove today from days array */
+    state.days.splice(idx, 1);
+    sfx('uncheck');
+    log('HABIT', 'Unchecked: <b>' + esc(getHabitName(habitId)) + '</b>');
+
+    /* Recalculate streaks */
+    recalculateStreaks(state);
+
+    save();
+    renderHabits();
+  } else {
+    /* Check: add today to days array */
+    state.days.push(today);
+
+    /* Recalculate streaks */
+    recalculateStreaks(state);
+
+    /* Award XP for completing this habit */
+    var gained = addXP(HABIT_TRACKER.xpPerHabit, null, false, 'habit');
+
+    sfx('success');
+    log('HABIT', 'Completed: <b>' + esc(getHabitName(habitId)) + '</b> — <b>+' + gained + ' XP</b>');
+
+    /* Check if all habits are now done — award bonus */
+    if (HABIT_TRACKER.allDoneToday()) {
+      var bonusGained = addXP(HABIT_TRACKER.xpAllHabitsBonus, null, false, 'habitBonus');
+      setTimeout(function() {
+        log('ALL HABITS', 'Perfect day! All habits completed — <b>+' + bonusGained + ' XP</b> bonus!');
+        sfx('levelup');
+      }, 300);
+    }
+
+    save();
+    renderHabits();
+  }
+}
+
+/* REMOVE HABIT — remove a custom habit */
+function removeHabit(habitId) {
+  var habit = HABITS.find(function(h) { return h.id === habitId; });
+  if (!habit) return;
+
+  if (!confirm('Remove "' + habit.name + '" from tracking?')) return;
+
+  /* Remove from HABITS array */
+  var idx = HABITS.indexOf(habit);
+  if (idx !== -1) HABITS.splice(idx, 1);
+
+  /* Remove from state */
+  if (S.habits && S.habits[habitId]) {
+    delete S.habits[habitId];
+  }
+
+  save();
+  renderHabits();
+  log('HABIT', 'Removed: <b>' + esc(habit.name) + '</b>');
+}
+
+/* DRAW HABITS — renders the full habit tracker UI */
+function drawHabits() {
+  var container = $('habitList');
+  if (!container) return;
+
+  var html = '';
+
+  /* Overall progress summary */
+  var totalHabits = HABITS.length;
+  var doneToday = HABIT_TRACKER.getTodayCount();
+  var overallPct = totalHabits > 0 ? Math.round((doneToday / totalHabits) * 100) : 0;
+
+  html += '<div class="panel">';
+  html += '  <div class="st"><h2>21-Day Habit Tracker</h2><span class="tag">' + doneToday + ' / ' + totalHabits + ' TODAY</span></div>';
+  html += '  <div class="hint">Build career-changing habits over 21 days. Each completed habit earns <b>+10 XP</b>. Complete all habits in a day for a <b>+25 XP</b> bonus.</div>';
+  html += '  <div class="bar thin" style="margin-bottom:6px"><i id="habitOverallBar" style="width:' + overallPct + '%"></i></div>';
+  html += '  <div class="meta"><span>OVERALL COMPLETION</span><span><b>' + overallPct + '%</b> today</span></div>';
+  html += '</div>';
+
+  /* Habit cards grouped by category */
+  var categories = ['Career', 'Health', 'Learning', 'Mindset'];
+  categories.forEach(function(cat) {
+    var catHabits = HABITS.filter(function(h) { return h.category === cat; });
+    if (catHabits.length === 0) return;
+
+    html += '<div class="panel">';
+    html += '  <div class="st"><h2>' + esc(cat) + '</h2><span class="tag">' + catHabits.length + ' HABITS</span></div>';
+
+    catHabits.forEach(function(habit) {
+      var state = HABIT_TRACKER.ensureHabitState(habit.id);
+      var progress = getHabitProgress(habit.id);
+      var streak = getHabitStreak(habit.id);
+      var doneToday = HABIT_TRACKER.isDoneToday(habit.id);
+      var pct = progress.percentage;
+
+      html += '<div class="habit-card' + (doneToday ? ' done' : '') + '" data-habit-id="' + esc(habit.id) + '">';
+      html += '  <div class="habit-main">';
+      html += '    <div class="habit-icon">' + ic(habit.icon, 20) + '</div>';
+      html += '    <div class="habit-info">';
+      html += '      <div class="habit-name">' + esc(habit.name) + '</div>';
+      html += '      <div class="habit-why">' + esc(habit.why) + '</div>';
+      html += '    </div>';
+      html += '  </div>';
+      html += '  <div class="habit-progress-area">';
+      html += '    <div class="habit-stats">';
+      html += '      <span class="habit-streak">' + streak + '/' + HABIT_TRACKER.targetDays + ' days</span>';
+      html += '      <span class="habit-pct">' + pct + '%</span>';
+      html += '    </div>';
+      html += '    <div class="bar thin habit-bar"><i style="width:' + pct + '%"></i></div>';
+      html += '  </div>';
+      html += '  <div class="habit-actions">';
+      html += '    <button class="habit-check' + (doneToday ? ' checked' : '') + '" onclick="checkHabit(\'' + esc(habit.id) + '\')" title="' + (doneToday ? 'Uncheck for today' : 'Mark done for today') + '">';
+      html += doneToday ? '&#10003;' : '&#9744;';
+      html += '    </button>';
+      if (habit.custom) {
+        html += '    <button class="habit-remove" onclick="removeHabit(\'' + esc(habit.id) + '\')" title="Remove habit">&#10005;</button>';
+      }
+      html += '  </div>';
+      html += '</div>';
+    });
+
+    html += '</div>';
+  });
+
+  /* Add custom habit form */
+  html += '<div class="panel">';
+  html += '  <div class="st"><h2>Add Custom Habit</h2><span class="tag">YOURS</span></div>';
+  html += '  <div class="frm" style="display:flex;gap:10px;align-items:center">';
+  html += '    <input type="text" id="newHabitName" placeholder="e.g. Meditate for 10 minutes" style="flex:1;padding:10px 14px;background:rgba(10,17,34,.9);border:1px solid var(--line);border-radius:4px;color:#fff;font-family:var(--body);font-size:15px">';
+  html += '    <button class="btn" onclick="addHabit(document.getElementById(\'newHabitName\').value);document.getElementById(\'newHabitName\').value=\'\';">+ Add</button>';
+  html += '  </div>';
+  html += '</div>';
+
+  container.innerHTML = html;
+}
+
+/* RENDER HABITS — updates the habit display (called by renderAll) */
+function renderHabits() {
+  drawHabits();
+}
+
+/* ---------------------------------------------------------------------
    MASTER RENDER
    --------------------------------------------------------------------- */
 function renderAll(){
@@ -1643,6 +1825,7 @@ function renderAll(){
   drawReview(); drawInsights(); drawTyping(); drawExtras(); drawSkillTree(); drawCourseTree();
   drawClass(); drawShadow(); drawFocus(); drawVision();
   drawEggs(); drawCharacters(); drawVocab();
+  renderHabits();
   /* dynamic freeze numbers — never hardcode these in the HTML */
   if($('fCost'))  $('fCost').textContent  = FREEZE.costXP;
   if($('fDebt'))  $('fDebt').textContent  = FREEZE.punishmentXP;

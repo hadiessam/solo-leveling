@@ -224,71 +224,71 @@ const COURSES = [
    --------------------------------------------------------------- */
 const DAILY = [
   /* ---------- TIER 1 : FOUNDATION ---------- */
-  {id:'d1', t:1, name:'Fajr on time',              sub:'Faith',      stat:null,      xp:10,
+  {id:'d1', t:1, name:'Fajr on time',              sub:'Faith',      stat:null,      xp:5,
    guide:'Wake for Fajr and pray it on time. Then five minutes of morning adhkar.\n\nThis is the anchor of the whole day. If it holds, everything else holds. If it slips, everything else follows it down.'},
 
-  {id:'d2', t:1, name:'Brush teeth \u2014 morning',  sub:'Health',     stat:'health',  xp:5,
+  {id:'d2', t:1, name:'Brush teeth \u2014 morning',  sub:'Health',     stat:'health',  xp:2,
    guide:'Two full minutes, morning. Non-negotiable, every single day.'},
 
-  {id:'d3', t:1, name:'Brush teeth \u2014 night',    sub:'Health',     stat:'health',  xp:5,
+  {id:'d3', t:1, name:'Brush teeth \u2014 night',    sub:'Health',     stat:'health',  xp:2,
    guide:'Two full minutes before sleep. No exceptions, no "I am too tired".'},
 
-  {id:'d4', t:1, name:'Drink 2 litres of water',    sub:'Health',     stat:'health',  xp:5,
+  {id:'d4', t:1, name:'Drink 2 litres of water',    sub:'Health',     stat:'health',  xp:2,
    guide:'Fill a 1-litre bottle in the morning and finish it before Dhuhr. Fill it again and finish it before Maghrib.\n\nTwo bottles, done. At 85 kg this is the cheapest change available to you.'},
 
-  {id:'d5', t:1, name:'15-minute home workout',     sub:'Health',     stat:'health',  xp:15,
+  {id:'d5', t:1, name:'15-minute home workout',     sub:'Health',     stat:'health',  xp:7,
    guide:'BUILD FROM ZERO \u2014 15 minutes, no equipment, no jumping (knee-friendly at 85 kg).\n\nWarm-up (2 min): 30s arm circles \u00b7 30s marching in place \u00b7 30s hip circles \u00b7 30s slow bodyweight squats.\n\nCircuit \u2014 3 rounds, 40s work / 30s rest:\n  1. Incline push-ups (hands on a chair or wall)\n  2. Chair-assisted squats\n  3. Knee plank (build to full plank)\n  4. Glute bridge\n  5. Dead bug (core, back-safe)\n\nCool-down (3 min): stretch quads, hamstrings, chest, lower back.\n\nWeek 1 you will struggle. Week 3 you will not. Do not skip rest days \u2014 3 to 4 sessions a week, not 7.'},
 
-  {id:'d6', t:1, name:'English Training \u2014 30 min', sub:'Self-Development', stat:'selfdev', xp:40,
+  {id:'d6', t:1, name:'English Training \u2014 30 min', sub:'Self-Development', stat:'selfdev', xp:20,
    guide:'YOUR REAL PROFILE (EF SET 4-skill, measured):\n  Listening 63 \u2014 C1 ADVANCED\n  Speaking  50 \u2014 B1\n  Reading   48 \u2014 B1\n  Writing   33 \u2014 A2 ELEMENTARY  \u2190 THIS IS THE PROBLEM\n\nAverage 49 = B1. B2 needs 51. The whole gap is in WRITING.\n\nTHE MATH: if writing goes from 33 to 43, your average hits 51 and you are B2. One skill. Ten points.\n\n\u2500\u2500\u2500 THE 30 MINUTES \u2500\u2500\u2500\n\n\u2022 15 min \u2014 WRITE AND GET CORRECTED: use writeandimprove.com (free, Cambridge University). Pick a B1/B2 task, write at least 200 words, and the tool returns instant feedback on grammar, spelling and vocabulary plus a CEFR score. Rewrite using the feedback. This is the single highest-value 15 minutes available to you.\n\n\u2022 10 min \u2014 GRAMMAR DRILL: fix the errors Write & Improve keeps flagging. Same mistake three times = that is your drill for the week.\n\n\u2022 5 min \u2014 SPEAK ALOUD: read your corrected text out loud. Speaking is already 50, one point from B2 \u2014 this keeps it there while you fix writing.\n\n\u2500\u2500\u2500 VOCABULARY \u2500\u2500\u2500\n\nLearn 5 new English words. Write each one in a sentence about your work or life. Use a notebook or a notes app. Review them tomorrow. This builds vocabulary without feeling like studying.\n\nWHY NOT MORE LISTENING: you are C1 at listening. Watching more English content is the most comfortable thing to do and the least useful. Do not spend your 30 minutes there.\n\nYou are not learning English. You are fixing one skill.'},
 
-  {id:'d7', t:1, name:'30 minutes of reading',      sub:'Self-Development', stat:'selfdev', xp:10,
+  {id:'d7', t:1, name:'30 minutes of reading',      sub:'Self-Development', stat:'selfdev', xp:5,
    guide:'You read about 5 pages per 15 minutes, so 30 minutes is roughly 10 pages. Aim for 10 pages, not for 30 minutes.\n\nRead in English when you can \u2014 it compounds with the English work. Arabic is fine for the mindset books.\n\nThe Library tab now has REAL books you can open and read right now, free and legal: As a Man Thinketh (35 min, start tonight), The Art of War, Meditations, The Richest Man in Babylon, and full university textbooks on marketing and business writing.'},
 
-  {id:'d18', t:1, name:'10 minutes of touch typing', sub:'Skills', stat:'skills', xp:10,
+  {id:'d18', t:1, name:'10 minutes of touch typing', sub:'Skills', stat:'skills', xp:5,
    guide:'THE HIGHEST-RETURN 10 MINUTES IN THIS LIST.\n\nGo to keybr.com and do one session. It finds the letters you are slow at and drills them automatically. No setup, no account needed.\n\nWHY IT MATTERS: you will write client reports, campaign summaries, proposals and ad copy for the rest of your career. At 25 words per minute a 1,000-word report takes 40 minutes. At 60 WPM it takes 16. That is 24 minutes back on every single document, forever.\n\nOnce a week, test yourself on monkeytype.com and write the number down. You will be at 60 WPM in about 8 weeks.'},
 
-  {id:'d8', t:1, name:'No phone for the first 30 min', sub:'Discipline', stat:null,   xp:10,
+  {id:'d8', t:1, name:'No phone for the first 30 min', sub:'Discipline', stat:null,   xp:5,
    guide:'From waking until 30 minutes later: no phone. Not for the time, not for messages, not for anything.\n\nPut it across the room before you sleep so you must physically get up to reach it.'},
 
-  {id:'d9', t:1, name:'No phone for the last 30 min',  sub:'Discipline', stat:null,   xp:10,
+  {id:'d9', t:1, name:'No phone for the last 30 min',  sub:'Discipline', stat:null,   xp:5,
    guide:'Phone away 30 minutes before sleep. Charge it outside the bedroom if you can.\n\nThis single habit will fix your Fajr more than any alarm will.'},
 
-  {id:'d10',t:1, name:'Phone-free hour',  sub:'Discipline', stat:null,      xp:15,
+  {id:'d10',t:1, name:'Phone-free hour',  sub:'Discipline', stat:null,      xp:7,
    guide:'One full hour with the phone completely off or in another room. Not "I will not scroll" \u2014 physically away.\n\nPick a fixed time every day (e.g. 9pm-10pm). During that hour: read, study, walk, or just sit. The goal is to prove to yourself that you can exist without it.\n\nStart with one hour. If that feels easy, extend to two.'},
 
-  {id:'d21',t:1, name:'Practice a skill for 15 min', sub:'Skills', stat:'skills', xp:10,
+  {id:'d21',t:1, name:'Practice a skill for 15 min', sub:'Skills', stat:'skills', xp:5,
    guide:'Spend 15 minutes practicing any skill: typing, Excel, presentation design, HTML, or anything from the Skills tab.\n\nUse the phone-free hour for this. The goal is to replace scrolling with learning.'},
 
-  {id:'d22',t:1, name:'Plan tomorrow\'s top 3', sub:'Discipline', stat:null, xp:5,
+  {id:'d22',t:1, name:'Plan tomorrow\'s top 3', sub:'Discipline', stat:null, xp:2,
    guide:'Before sleeping, write down the 3 most important things to do tomorrow. Not 10 \u2014 just 3.\n\nThis takes 2 minutes and makes tomorrow 10x easier. Do it on paper, not on your phone.'},
 
-  {id:'d24',t:1, name:'Course work \u2014 20 min', sub:'Self-Development', stat:'selfdev', xp:20,
+  {id:'d24',t:1, name:'Course work \u2014 20 min', sub:'Self-Development', stat:'selfdev', xp:10,
    guide:'Open the Course Track tab and work on ONE course for 20 minutes.\n\nNot browsing the list \u2014 actual work. Watch a lesson, do the exercise, take notes.\n\nStage 1 courses open right now:\n  \u2022 Google Ads Search Certification\n  \u2022 Google Analytics 4 Certification\n  \u2022 Meta Pixel & Conversions API Setup\n  \u2022 TikTok Media Buying Certification\n  \u2022 Snapchat Ads Certification\n  \u2022 Touch Typing \u2014 Reach 60 WPM\n\nFinish a whole course and tick it on the Course Track for +60 XP \u2014 and it advances the "Clear the certification stack" boss raid automatically.\n\nOne course at a time. Finishing one beats starting five.'},
 
 
 
   /* ---------- TIER 2 : HUNTING (level 5) ---------- */
-  {id:'d11',t:2, name:'Log today\'s expenses',      sub:'Money',      stat:'money',   xp:5, unlock:{level:5},
+  {id:'d11',t:2, name:'Log today\'s expenses',      sub:'Money',      stat:'money',   xp:2, unlock:{level:5},
    guide:'Every pound you spent today. One line each: what, how much.\n\nNotes app or notebook. The point is not budgeting yet \u2014 it is seeing where the money actually goes. Most people are shocked in week one.'},
 
-  {id:'d12',t:2, name:'Save a fixed amount',        sub:'Money',      stat:'money',   xp:10, unlock:{level:5},
+  {id:'d12',t:2, name:'Save a fixed amount',        sub:'Money',      stat:'money',   xp:5, unlock:{level:5},
    guide:'Move a fixed amount into a separate pot today. Any amount, but fixed.\n\nName the pot SAUDI FUND. Nothing else touches it. This is the money that buys the ticket.'},
 
-  {id:'d13',t:2, name:'Saudi market study \u2014 20 min', sub:'Career', stat:'career', xp:15, unlock:{level:5},
+  {id:'d13',t:2, name:'Saudi market study \u2014 20 min', sub:'Career', stat:'career', xp:7, unlock:{level:5},
    guide:'You are targeting PERFORMANCE MARKETING / MEDIA BUYER roles in RIYADH. Research exactly that:\n\n\u2022 Search LinkedIn Jobs and Bayt for "performance marketing Riyadh" and "media buyer Riyadh". Read 5 ads properly.\n\u2022 Note the salary bands quoted.\n\u2022 Note which tools they ask for that you do not list.\n\u2022 Note which industries are hiring most (e-commerce, real estate, government, agencies).\n\nWrite down one gap you found. That gap is tomorrow\'s work.'},
 
-  {id:'d14',t:2, name:'Practise interview answers', sub:'Career',     stat:'career',  xp:15, unlock:{level:5},
+  {id:'d14',t:2, name:'Practise interview answers', sub:'Career',     stat:'career',  xp:7, unlock:{level:5},
    guide:'Out loud, not in your head. You are a strong candidate with real numbers \u2014 the job is presenting them without hesitating.\n\nToday: "Tell me about yourself."\nStructure: who you are \u2192 what you do \u2192 your strongest number \u2192 why this role.\n90 seconds. Use your real figures: 27 programs, 11,406 leads, TL 15.06 blended CPL.\n\nRecord it, listen back, cut the filler. New question each day.'},
 
   /* ---------- TIER 3 : AWAKENED (level 15) ---------- */
-  {id:'d15',t:3, name:'English speaking \u2014 15 min', sub:'Self-Development', stat:'selfdev', xp:20, unlock:{level:15},
+  {id:'d15',t:3, name:'English speaking \u2014 15 min', sub:'Self-Development', stat:'selfdev', xp:10, unlock:{level:15},
    guide:'15 minutes of spoken English. Not reading, not listening \u2014 speaking.\n\nOptions: talk to yourself about a campaign you ran, use an AI voice chat, or book a conversation tutor.\n\nThe goal is fluency under pressure, which is exactly what a Riyadh interview will test.'},
 
-  {id:'d16',t:3, name:'Study one course module',    sub:'Self-Development', stat:'selfdev', xp:20, unlock:{level:15},
+  {id:'d16',t:3, name:'Study one course module',    sub:'Self-Development', stat:'selfdev', xp:10, unlock:{level:15},
    guide:'One module of your current course from the Course Track tab.\n\nNot "study a course" \u2014 one specific module, finished. One course at a time. Do not start five.\n\nPick from the Course Track tab. Stage 1 opens now. Each completed course is +60 XP and advances the certification boss raid.'},
 
-  {id:'d17',t:3, name:'Post or comment on LinkedIn',sub:'Career',     stat:'career',  xp:20, unlock:{level:15},
+  {id:'d17',t:3, name:'Post or comment on LinkedIn',sub:'Career',     stat:'career',  xp:10, unlock:{level:15},
    guide:'You have the profile, the logo and the portfolio built. The only thing missing is output.\n\nEither a short post about something you learned, or a real comment on someone\'s post in your field. Three lines is enough.\n\nYou manage 27 programs and TL 171K of spend. You have more to say than most people posting in your niche.'}
 ];
 
@@ -296,25 +296,25 @@ const DAILY = [
    WEEKLY MISSIONS
    --------------------------------------------------------------- */
 const WEEKLY = [
-  {id:'w1', t:1, name:'Publish one LinkedIn post',      sub:'Career',           stat:'career',    xp:50, unlock:null,
+  {id:'w1', t:1, name:'Publish one LinkedIn post',      sub:'Career',           stat:'career',    xp:25, unlock:null,
    guide:'One post a week, about your actual work.\n\nFormat: hook \u2192 the problem \u2192 what you did \u2192 the result with a number \u2192 one question.\n\nYour material is unusually strong: the CPL recovery from 130.62 to 50.79, the 1,544-lead campaign at TL 4.62. Those are real case studies \u2014 post them.'},
 
-  {id:'w2', t:1, name:'Contact one new person',         sub:'Relationships',    stat:'relations', xp:50, unlock:null,
+  {id:'w2', t:1, name:'Contact one new person',         sub:'Relationships',    stat:'relations', xp:25, unlock:null,
    guide:'One person you do not already talk to \u2014 ideally someone working in performance marketing in Riyadh.\n\nOne honest message: who you are, what you are working toward, one specific question they can answer in two lines. Not "can you help me".'},
 
-  {id:'w3', t:1, name:'Call family or meet a friend',   sub:'Relationships',    stat:'relations', xp:50, unlock:null,
+  {id:'w3', t:1, name:'Call family or meet a friend',   sub:'Relationships',    stat:'relations', xp:25, unlock:null,
    guide:'A real conversation, not a text. Call your parents. Meet a friend.\n\nThis is one of the few things on this list that will still matter to you in ten years.'},
 
-  {id:'w4', t:1, name:'Summarise a book or chapter',    sub:'Self-Development', stat:'selfdev',   xp:50, unlock:null,
+  {id:'w4', t:1, name:'Summarise a book or chapter',    sub:'Self-Development', stat:'selfdev',   xp:25, unlock:null,
    guide:'Five bullet points on what you read this week, in your own words.\n\nBonus: turn those bullets into the LinkedIn post and you clear two weekly missions with one piece of work.'},
 
-  {id:'w5', t:1, name:'Review and update CV',           sub:'Career',           stat:'career',    xp:50, unlock:null,
+  {id:'w5', t:1, name:'Review and update CV',           sub:'Career',           stat:'career',    xp:25, unlock:null,
    guide:'Your CV is already strong. Change one thing: a stronger verb, a number added to a result, a section reordered.\n\nSmall weekly edits beat one big rewrite.'},
 
-  {id:'w6', t:2, name:'One company research session',   sub:'Career',           stat:'career',    xp:100, unlock:{level:8},
+  {id:'w6', t:2, name:'One company research session',   sub:'Career',           stat:'career',    xp:50, unlock:{level:8},
    guide:'One hour, one Riyadh company you want to work for.\n\n\u2022 What they actually do, in plain words\n\u2022 Who their clients are\n\u2022 Who their competitors are\n\u2022 Recent campaigns or news\n\u2022 Who you would need to talk to\n\nWalk into an interview knowing this and you are ahead of most candidates.'},
 
-  {id:'w7', t:3, name:'Weekly review \u2014 Sunday',       sub:'System',           stat:null,        xp:50, unlock:{level:15},
+  {id:'w7', t:3, name:'Weekly review \u2014 Sunday',       sub:'System',           stat:null,        xp:25, unlock:{level:15},
    guide:'Fifteen minutes, every Sunday, five questions:\n\n1. How many missions did I complete?\n2. What did I learn?\n3. What failed, and why \u2014 honestly?\n4. What is the ONE thing that matters most next week?\n5. What am I changing?\n\nWrite the answers down. A week that is not reviewed is a week that is repeated.'}
 ];
 
@@ -324,7 +324,7 @@ const WEEKLY = [
    reward = what clearing the whole raid gives you on top
    --------------------------------------------------------------- */
 const BOSSES = [
-  {id:'b1', name:'Land the job in Riyadh', desc:'The first gate. Everything else waits behind it.', xp:250, reward:1500,
+  {id:'b1', name:'Land the job in Riyadh', desc:'The first gate. Everything else waits behind it.', xp:125, reward:1500,
    steps:[
      'Rebuild the CV from zero \u2014 English, one page, results with numbers',
      'Build a portfolio that proves the work, not describes it',
@@ -336,7 +336,7 @@ const BOSSES = [
      'Reach a final-stage interview',
      'Sign the offer']},
 
-  {id:'b2', name:'Reach English B2', desc:'Listening C1 \u00b7 Speaking 50 \u00b7 Reading 48 \u00b7 Writing 33. Writing is the whole gap.', xp:200, reward:1200,
+  {id:'b2', name:'Reach English B2', desc:'Listening C1 \u00b7 Speaking 50 \u00b7 Reading 48 \u00b7 Writing 33. Writing is the whole gap.', xp:100, reward:1200,
    steps:[
      'Baseline recorded: EF SET 4-skill = 49 (Listening 63, Speaking 50, Reading 48, Writing 33)',
      'Write 30 pieces on Write & Improve and act on every correction',
@@ -345,7 +345,7 @@ const BOSSES = [
      'Raise reading from 48 to 51',
      'Retake the EF SET and cross 51 overall']},
 
-  {id:'b3', name:'Clear the certification stack', desc:'Every free credential that closes a real gap on your CV.', xp:180, reward:1000,
+  {id:'b3', name:'Clear the certification stack', desc:'Every free credential that closes a real gap on your CV.', xp:90, reward:1000,
    steps:[
      'Google Ads Search Certification',
      'Google Analytics 4 Certification',
@@ -355,7 +355,7 @@ const BOSSES = [
      'HubSpot Digital Advertising Certification',
      'One HubSpot certification from stage 2']},
 
-  {id:'b9', name:'Become an S-Tier Meta Specialist', desc:'Pixel, Conversions API, Marketing API. The skills almost no media buyer in the Gulf has.', xp:350, reward:2000,
+  {id:'b9', name:'Become an S-Tier Meta Specialist', desc:'Pixel, Conversions API, Marketing API. The skills almost no media buyer in the Gulf has.', xp:175, reward:2000,
    steps:[
      'Install a Meta Pixel on a real site and verify it with Pixel Helper',
      'Set up standard and custom events correctly',
@@ -365,7 +365,7 @@ const BOSSES = [
      'Build an automated reporting dashboard with no manual exports',
      'Diagnose a deliberately broken tracking setup and fix it']},
 
-  {id:'b10', name:'Master automation', desc:'One person doing the work of three. This is the agency leverage.', xp:300, reward:1800,
+  {id:'b10', name:'Master automation', desc:'One person doing the work of three. This is the agency leverage.', xp:150, reward:1800,
    steps:[
      'Complete the Make Academy foundation track',
      'Build a client reporting workflow that runs itself',
@@ -375,7 +375,7 @@ const BOSSES = [
      'Rebuild one Make scenario in n8n and compare cost',
      'Sell one automation as a paid add-on service']},
 
-  {id:'b4', name:'Travel to Saudi Arabia', desc:'The moment the plan becomes real.', xp:400, reward:2500,
+  {id:'b4', name:'Travel to Saudi Arabia', desc:'The moment the plan becomes real.', xp:200, reward:2500,
    steps:[
      'Reach the SAUDI FUND savings target',
      'Passport and documents in order',
@@ -384,7 +384,7 @@ const BOSSES = [
      'Book the flight',
      'Land in Riyadh']},
 
-  {id:'b5', name:'Master content creation', desc:'Your gear is a good phone camera. That is genuinely enough to start.', xp:250, reward:1500,
+  {id:'b5', name:'Master content creation', desc:'Your gear is a good phone camera. That is genuinely enough to start.', xp:125, reward:1500,
    steps:[
      'Learn manual control on the phone camera: exposure lock, focus lock, white balance',
      'Learn one-light and window-light setups using what you already own',
@@ -393,7 +393,7 @@ const BOSSES = [
      'Edit a complete video from start to finish',
      'Build a portfolio of 20 finished pieces']},
 
-  {id:'b6', name:'Launch the agency', desc:'Advertising and marketing, Gulf market.', xp:450, reward:3000,
+  {id:'b6', name:'Launch the agency', desc:'Advertising and marketing, Gulf market.', xp:225, reward:3000,
    steps:[
      'Define the service and the pricing',
      'Build the brand identity (the logo is already done)',
@@ -401,10 +401,10 @@ const BOSSES = [
      'Register the business',
      'Land the first paying client']},
 
-  {id:'b7', name:'Reach 10 clients', desc:'A real book of business, not a side hustle.', xp:500, reward:3500,
+  {id:'b7', name:'Reach 10 clients', desc:'A real book of business, not a side hustle.', xp:250, reward:3500,
    steps:['First client','Third client','Fifth client','Tenth client']},
 
-  {id:'b8', name:'MBA in Germany', desc:'The final raid. The long game.', xp:600, reward:5000,
+  {id:'b8', name:'MBA in Germany', desc:'The final raid. The long game.', xp:300, reward:5000,
    steps:[
      'Shortlist 8 universities and compare them properly',
      'Prepare for the GMAT or equivalent requirement',
@@ -1333,5 +1333,32 @@ const ENGLISH_TOOLS = [
   {n:'British Council level test', u:'https://learnenglish.britishcouncil.org/english-levels/online-english-level-test',
    w:'Grammar, vocabulary and phrasing. Use it if Write & Improve feedback is not specific enough about a grammar rule.'},
   {n:'EF SET 2-skill (50 min)', u:'https://www.efset.org/ef-set-50/',
-   w:'Reading and listening only, with a LinkedIn certificate. Optional \u2014 you already have both numbers.'}
+   w:'Reading and listening only, with a LinkedIn certificate. Optional — you already have both numbers.'}
+];
+
+/* ---------------------------------------------------------------
+   21-DAY HABIT TRACKER — career-beneficial habits
+   Each habit has: name, icon, category, why (description)
+   --------------------------------------------------------------- */
+const HABITS = [
+  {id:'h1', icon:'target', category:'Career', name:'Morning review of top 3 priorities',
+   why:'Starting the day with clarity on what matters most prevents reactive work and keeps you focused on high-impact tasks.'},
+  {id:'h2', icon:'chart', category:'Career', name:'Read industry news for 10 minutes',
+   why:'Staying current with marketing and industry trends keeps your skills relevant and gives you conversation topics for interviews and networking.'},
+  {id:'h3', icon:'pen', category:'Career', name:'Write one LinkedIn post or comment',
+   why:'Consistent LinkedIn activity builds your personal brand, attracts recruiters, and positions you as a thought leader in your field.'},
+  {id:'h4', icon:'globe', category:'Learning', name:'Practice English for 15 minutes',
+   why:'Your writing is at A2 while listening is C1. Daily practice closes this gap, which is critical for interviews and client communication.'},
+  {id:'h5', icon:'arrowUp', category:'Career', name:'Review and update CV/portfolio',
+   why:'A living CV means you are always ready for opportunities. Regular updates ensure you never lose track of achievements and skills.'},
+  {id:'h6', icon:'users', category:'Career', name:'Network with one person',
+   why:'One meaningful connection per day compounds into a powerful network. Most jobs are filled through referrals, not applications.'},
+  {id:'h7', icon:'book', category:'Learning', name:'Read a business/marketing book for 20 minutes',
+   why:'Books provide depth that articles cannot. Regular reading builds strategic thinking and gives you frameworks to apply in your work.'},
+  {id:'h8', icon:'bolt', category:'Learning', name:'Practice a new skill for 15 minutes',
+   why:'Deliberate practice compounds. Whether it is Excel, copywriting, or a new tool, 15 minutes daily creates real skill growth over 21 days.'},
+  {id:'h9', icon:'moon', category:'Mindset', name:'Evening review of the day',
+   why:'Reflection consolidates learning and helps you identify what worked and what did not. Without review, you repeat the same mistakes.'},
+  {id:'h10', icon:'calendar', category:'Mindset', name:"Plan tomorrow's tasks",
+   why:'Planning tomorrow tonight reduces decision fatigue in the morning and lets you start the day with momentum instead of uncertainty.'}
 ];
