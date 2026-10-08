@@ -557,6 +557,56 @@ function drawDaily(){
   const av = available(DAILY), lk = lockedOf(DAILY);
   let html = av.map(m => missionRow(m,'daily')).join('');
   if(lk.length) html += lk.map(lockRow).join('');
+
+  /* habits are part of the daily quest — they live right below the missions */
+  html += '<div class="st" style="margin-top:22px"><h2>Daily Habits</h2><span class="tag">' + HABIT_TRACKER.getTodayCount() + ' / ' + HABITS.length + ' TODAY</span></div>';
+  html += '<div class="hint" style="margin-bottom:14px">Build career-changing habits over 21 days. Each completed habit earns <b>+10 XP</b>. Complete all habits in a day for a <b>+25 XP</b> bonus.</div>';
+  html += '<div class="bar thin" style="margin-bottom:14px"><i id="habitOverallBar" style="width:' + (HABITS.length ? Math.round(HABIT_TRACKER.getTodayCount()/HABITS.length*100) : 0) + '%"></i></div>';
+
+  const categories = ['Career', 'Health', 'Learning', 'Mindset'];
+  categories.forEach(function(cat) {
+    const catHabits = HABITS.filter(function(h) { return h.category === cat; });
+    if (catHabits.length === 0) return;
+    html += '<div class="st" style="margin-top:18px"><h2>' + esc(cat) + '</h2><span class="tag">' + catHabits.length + ' HABITS</span></div>';
+    catHabits.forEach(function(habit) {
+      const state = HABIT_TRACKER.ensureHabitState(habit.id);
+      const progress = getHabitProgress(habit.id);
+      const streak = getHabitStreak(habit.id);
+      const doneToday = HABIT_TRACKER.isDoneToday(habit.id);
+      const pct = progress.percentage;
+      html += '<div class="habit-card' + (doneToday ? ' done' : '') + '">'
+        + '<div class="habit-main">'
+        +   '<div class="habit-icon">' + ic(habit.icon, 20) + '</div>'
+        +   '<div class="habit-info">'
+        +     '<div class="habit-name">' + esc(habit.name) + '</div>'
+        +     '<div class="habit-why">' + esc(habit.why) + '</div>'
+        +   '</div>'
+        + '</div>'
+        + '<div class="habit-progress-area">'
+        +   '<div class="habit-stats">'
+        +     '<span class="habit-streak">' + streak + '/' + HABIT_TRACKER.targetDays + ' days</span>'
+        +     '<span class="habit-pct">' + pct + '%</span>'
+        +   '</div>'
+        +   '<div class="bar thin habit-bar"><i style="width:' + pct + '%"></i></div>'
+        + '</div>'
+        + '<div class="habit-actions">'
+        +   '<button class="habit-check' + (doneToday ? ' checked' : '') + '" onclick="checkHabit(\'' + esc(habit.id) + '\')" title="' + (doneToday ? 'Uncheck for today' : 'Mark done for today') + '">'
+        +   (doneToday ? '✓' : '○') + '</button>'
+        +   (habit.custom ? '<button class="habit-remove" onclick="removeHabit(\'' + esc(habit.id) + '\')" title="Remove habit">✕</button>' : '')
+        + '</div>'
+        + '</div>';
+    });
+  });
+
+  /* add custom habit form */
+  html += '<div class="panel" style="margin-top:18px">'
+    + '<div class="st"><h2>Add Custom Habit</h2><span class="tag">YOURS</span></div>'
+    + '<div style="display:flex;gap:10px;align-items:center">'
+    +   '<input type="text" id="newHabitName" placeholder="e.g. Meditate for 10 minutes" style="flex:1;padding:10px 14px;background:rgba(10,17,34,.9);border:1px solid var(--line);border-radius:4px;color:#fff;font-size:15px">'
+    +   '<button class="btn" onclick="addHabit(document.getElementById(\'newHabitName\').value);document.getElementById(\'newHabitName\').value=\'\';">+ Add</button>'
+    + '</div>'
+    + '</div>';
+
   $('dailyList').innerHTML = html;
 
   const pend = av.filter(m => !S.daily[m.id]);
@@ -1662,7 +1712,6 @@ function addHabit(name) {
   HABIT_TRACKER.ensureHabitState(habitId);
 
   save();
-  renderHabits();
   sfx('success');
   log('HABIT', 'New habit added: <b>' + esc(name) + '</b>');
   return habitId;
@@ -1685,8 +1734,7 @@ function checkHabit(habitId) {
     recalculateStreaks(state);
 
     save();
-    renderHabits();
-  } else {
+    } else {
     /* Check: add today to days array */
     state.days.push(today);
 
@@ -1709,8 +1757,7 @@ function checkHabit(habitId) {
     }
 
     save();
-    renderHabits();
-  }
+    }
 }
 
 /* REMOVE HABIT — remove a custom habit */
@@ -1730,89 +1777,7 @@ function removeHabit(habitId) {
   }
 
   save();
-  renderHabits();
   log('HABIT', 'Removed: <b>' + esc(habit.name) + '</b>');
-}
-
-/* DRAW HABITS — renders the full habit tracker UI */
-function drawHabits() {
-  var container = $('habitList');
-  if (!container) return;
-
-  var html = '';
-
-  /* Overall progress summary */
-  var totalHabits = HABITS.length;
-  var doneToday = HABIT_TRACKER.getTodayCount();
-  var overallPct = totalHabits > 0 ? Math.round((doneToday / totalHabits) * 100) : 0;
-
-  html += '<div class="panel">';
-  html += '  <div class="st"><h2>21-Day Habit Tracker</h2><span class="tag">' + doneToday + ' / ' + totalHabits + ' TODAY</span></div>';
-  html += '  <div class="hint">Build career-changing habits over 21 days. Each completed habit earns <b>+10 XP</b>. Complete all habits in a day for a <b>+25 XP</b> bonus.</div>';
-  html += '  <div class="bar thin" style="margin-bottom:6px"><i id="habitOverallBar" style="width:' + overallPct + '%"></i></div>';
-  html += '  <div class="meta"><span>OVERALL COMPLETION</span><span><b>' + overallPct + '%</b> today</span></div>';
-  html += '</div>';
-
-  /* Habit cards grouped by category */
-  var categories = ['Career', 'Health', 'Learning', 'Mindset'];
-  categories.forEach(function(cat) {
-    var catHabits = HABITS.filter(function(h) { return h.category === cat; });
-    if (catHabits.length === 0) return;
-
-    html += '<div class="panel">';
-    html += '  <div class="st"><h2>' + esc(cat) + '</h2><span class="tag">' + catHabits.length + ' HABITS</span></div>';
-
-    catHabits.forEach(function(habit) {
-      var state = HABIT_TRACKER.ensureHabitState(habit.id);
-      var progress = getHabitProgress(habit.id);
-      var streak = getHabitStreak(habit.id);
-      var doneToday = HABIT_TRACKER.isDoneToday(habit.id);
-      var pct = progress.percentage;
-
-      html += '<div class="habit-card' + (doneToday ? ' done' : '') + '" data-habit-id="' + esc(habit.id) + '">';
-      html += '  <div class="habit-main">';
-      html += '    <div class="habit-icon">' + ic(habit.icon, 20) + '</div>';
-      html += '    <div class="habit-info">';
-      html += '      <div class="habit-name">' + esc(habit.name) + '</div>';
-      html += '      <div class="habit-why">' + esc(habit.why) + '</div>';
-      html += '    </div>';
-      html += '  </div>';
-      html += '  <div class="habit-progress-area">';
-      html += '    <div class="habit-stats">';
-      html += '      <span class="habit-streak">' + streak + '/' + HABIT_TRACKER.targetDays + ' days</span>';
-      html += '      <span class="habit-pct">' + pct + '%</span>';
-      html += '    </div>';
-      html += '    <div class="bar thin habit-bar"><i style="width:' + pct + '%"></i></div>';
-      html += '  </div>';
-      html += '  <div class="habit-actions">';
-      html += '    <button class="habit-check' + (doneToday ? ' checked' : '') + '" onclick="checkHabit(\'' + esc(habit.id) + '\')" title="' + (doneToday ? 'Uncheck for today' : 'Mark done for today') + '">';
-      html += doneToday ? '&#10003;' : '&#9744;';
-      html += '    </button>';
-      if (habit.custom) {
-        html += '    <button class="habit-remove" onclick="removeHabit(\'' + esc(habit.id) + '\')" title="Remove habit">&#10005;</button>';
-      }
-      html += '  </div>';
-      html += '</div>';
-    });
-
-    html += '</div>';
-  });
-
-  /* Add custom habit form */
-  html += '<div class="panel">';
-  html += '  <div class="st"><h2>Add Custom Habit</h2><span class="tag">YOURS</span></div>';
-  html += '  <div class="frm" style="display:flex;gap:10px;align-items:center">';
-  html += '    <input type="text" id="newHabitName" placeholder="e.g. Meditate for 10 minutes" style="flex:1;padding:10px 14px;background:rgba(10,17,34,.9);border:1px solid var(--line);border-radius:4px;color:#fff;font-family:var(--body);font-size:15px">';
-  html += '    <button class="btn" onclick="addHabit(document.getElementById(\'newHabitName\').value);document.getElementById(\'newHabitName\').value=\'\';">+ Add</button>';
-  html += '  </div>';
-  html += '</div>';
-
-  container.innerHTML = html;
-}
-
-/* RENDER HABITS — updates the habit display (called by renderAll) */
-function renderHabits() {
-  drawHabits();
 }
 
 /* ---------------------------------------------------------------------
@@ -1825,7 +1790,6 @@ function renderAll(){
   drawReview(); drawInsights(); drawTyping(); drawExtras(); drawSkillTree(); drawCourseTree();
   drawClass(); drawShadow(); drawFocus(); drawVision();
   drawEggs(); drawCharacters(); drawVocab();
-  renderHabits();
   /* dynamic freeze numbers — never hardcode these in the HTML */
   if($('fCost'))  $('fCost').textContent  = FREEZE.costXP;
   if($('fDebt'))  $('fDebt').textContent  = FREEZE.punishmentXP;
