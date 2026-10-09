@@ -132,6 +132,8 @@
     <div class="tab"        data-page="shadow"  data-bg="assets/bg/bg-guide.jpg">Shadow</div>
     <div class="tab"        data-page="stats"   data-bg="assets/bg/bg-status.jpg">Status</div>
     <div class="tab"        data-page="money"   data-bg="assets/bg/bg-vault.jpg">Money</div>
+    <div class="tab"        data-page="speaking" data-bg="assets/bg/bg-vocab.jpg">Speaking</div>
+    <div class="tab"        data-page="uptodate" data-bg="assets/bg/bg-dashboard.jpg">Up to Date</div>
   </div>
 
   <!-- ============ DASHBOARD ============ -->
@@ -299,6 +301,45 @@
       <div class="st"><h2>Money From Home</h2><span class="tag">UNTIL RIYADH</span></div>
       <div class="hint">Practical ways to earn income from home while you prepare for Saudi Arabia. Each idea has steps — complete them to earn <b>+50 XP</b> per idea.</div>
       <div id="moneyList"></div>
+    </div>
+  </div>
+
+  <!-- ============ SPEAKING ============ -->
+  <div class="page" id="speaking">
+    <div class="panel">
+      <div class="st"><h2>Speaking & Pronunciation</h2><span class="tag" id="speakingProgressTag">0%</span></div>
+      <div class="hint">Practice the sounds that Arabic speakers find hardest. Use the tools, repeat the words, record yourself, and track your progress.</div>
+      <div id="speakingProgress"></div>
+    </div>
+
+    <div class="panel">
+      <div class="st"><h2>Pronunciation Tools</h2><span class="tag">FREE</span></div>
+      <div id="speakingTools"></div>
+    </div>
+
+    <div class="panel">
+      <div class="st"><h2>Difficult Words</h2><span class="tag" id="speakingWordsTag">0 / 20 DONE</span></div>
+      <div id="speakingWords"></div>
+    </div>
+
+    <div class="panel">
+      <div class="st"><h2>Hardest Sounds for Arabic Speakers</h2><span class="tag">6 SOUNDS</span></div>
+      <div id="speakingSounds"></div>
+    </div>
+
+    <div class="panel">
+      <div class="st"><h2>Practice Sentences</h2><span class="tag">BY SOUND GROUP</span></div>
+      <div id="speakingSentences"></div>
+    </div>
+
+    <div class="panel">
+      <div class="st"><h2>Daily 15-Minute Plan</h2><span class="tag">EVERY DAY</span></div>
+      <div id="speakingDailyPlan"></div>
+    </div>
+
+    <div class="panel">
+      <div class="st"><h2>4-Week Schedule</h2><span class="tag">BUILD UP</span></div>
+      <div id="speakingSchedule"></div>
     </div>
   </div>
 
@@ -535,6 +576,11 @@
     </div>
   </div>
 
+  <!-- ============ UP TO DATE ============ -->
+  <div class="page" id="uptodate">
+    <div id="uptodateList"></div>
+  </div>
+
   <!-- ============ HABITS ============ -->
   <div class="page" id="habits">
     <div id="habitList"></div>
@@ -551,10 +597,12 @@
 <script src="icons.js"></script>
 <script src="app.js"></script>
 <script src="habits.js"></script>
+<script src="speaking.js"></script>
 <script src="render.js"></script>
 <script src="_features1.js"></script>
 <script src="_features2.js"></script>
 <script src="_features3.js"></script>
+<script src="uptodate.js"></script>
 <script>
 boot();
 

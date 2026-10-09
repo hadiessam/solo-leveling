@@ -495,6 +495,84 @@ body{font-family:var(--body);background:var(--bg);color:var(--text);min-height:1
 .moneyProgress span{font-size:11px;color:var(--muted);font-family:var(--hud)}
 .moneyActions{display:flex;gap:8px;margin-top:10px}
 
+/* ---------- SPEAKING ---------- */
+.speakTool{display:flex;align-items:center;gap:12px;padding:12px 16px;border:1px solid var(--line);border-radius:5px;margin-bottom:8px;text-decoration:none;transition:.25s}
+.speakTool:hover{background:rgba(0,102,255,.05);border-color:var(--glow)}
+.speakToolIcon{width:36px;height:36px;flex:0 0 36px;border-radius:50%;background:var(--glow);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px}
+.speakToolName{font-family:var(--hud);font-size:14px;font-weight:700;color:#fff;flex:1}
+.speakToolDesc{font-size:12px;color:var(--muted);flex:2}
+.speakToolLink{font-size:11px;color:var(--glow);font-family:var(--hud);letter-spacing:1px}
+.wordCard{border:1px solid var(--line);border-radius:5px;padding:12px 16px;margin-bottom:10px;transition:.25s}
+.wordCard:hover{background:rgba(0,102,255,.03)}
+.wordCard.wordDone{border-color:var(--green);background:rgba(37,224,122,.03)}
+.wordHead{display:flex;align-items:center;gap:10px}
+.wordName{font-family:var(--hud);font-size:15px;font-weight:700;color:#fff;flex:1}
+.wordPhonetic{font-size:12px;color:var(--gold);font-family:var(--hud)}
+.playBtn{width:32px;height:32px;flex:0 0 32px;border-radius:50%;border:1px solid var(--glow);background:rgba(0,102,255,.1);color:var(--glow);cursor:pointer;font-size:12px;transition:.2s}
+.playBtn:hover{background:var(--glow);color:#fff}
+.playBtn.small{width:24px;height:24px;font-size:10px}
+.wordCheck{width:32px;height:32px;flex:0 0 32px;border-radius:50%;border:1px solid var(--line);background:transparent;color:var(--muted);cursor:pointer;font-size:14px;transition:.2s}
+.wordCheck:hover{border-color:var(--green);color:var(--green)}
+.wordCheck.checked{border-color:var(--green);background:rgba(37,224,122,.1);color:var(--green)}
+.wordMistake{font-size:12px;color:var(--red);margin-top:6px}
+.wordExample{font-size:13px;color:var(--muted);margin-top:4px;font-style:italic}
+.soundCard{border:1px solid var(--line);border-radius:5px;padding:14px 16px;margin-bottom:10px}
+.soundPair{font-family:var(--hud);font-size:14px;font-weight:700;color:var(--gold)}
+.soundDesc{font-size:13px;color:var(--muted);margin-top:6px}
+.soundPairs{display:flex;gap:16px;margin-top:10px}
+.soundCol{flex:1}
+.soundLabel{font-size:11px;font-family:var(--hud);letter-spacing:1px;color:var(--glow);margin-bottom:6px}
+.soundWord{display:inline-block;padding:3px 8px;margin:2px;border:1px solid var(--line);border-radius:3px;font-size:12px;color:var(--muted)}
+.soundTip{font-size:12px;color:var(--green);margin-top:10px}
+.sentenceGroup{margin-bottom:14px}
+.sentenceGroupTitle{font-family:var(--hud);font-size:13px;font-weight:700;color:var(--gold);margin-bottom:8px}
+.sentenceItem{display:flex;align-items:center;gap:10px;padding:6px 0}
+.sentenceNum{width:20px;height:20px;flex:0 0 20px;border-radius:50%;border:1px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--muted)}
+.sentenceText{flex:1;font-size:13px;color:var(--text)}
+.planList{display:flex;flex-direction:column;gap:8px}
+.planItem{display:flex;gap:12px;align-items:flex-start}
+.planTime{font-family:var(--hud);font-size:12px;color:var(--glow);flex:0 0 80px;padding-top:2px}
+.planTitle{font-family:var(--hud);font-size:13px;font-weight:700;color:#fff}
+.planDesc{font-size:12px;color:var(--muted)}
+.weekCard{border:1px solid var(--line);border-radius:5px;padding:14px 16px;margin-bottom:10px}
+.weekHeader{display:flex;align-items:center;gap:10px}
+.weekNumber{font-family:var(--hud);font-size:12px;color:var(--glow);letter-spacing:1px}
+.weekTitle{font-family:var(--hud);font-size:14px;font-weight:700;color:#fff}
+.weekFocus{font-size:12px;color:var(--gold);margin-top:6px}
+.weekTasks{margin-top:8px}
+.weekTask{display:flex;align-items:center;gap:8px;padding:3px 0;font-size:13px;color:var(--muted)}
+.weekTaskCheck{color:var(--glow);font-size:12px}
+.recordingArea{margin-top:14px;padding:14px;border:1px solid var(--line);border-radius:5px;text-align:center}
+.recBtn{padding:10px 24px;border-radius:5px;border:1px solid var(--red);background:rgba(255,77,90,.1);color:var(--red);font-family:var(--hud);font-size:14px;cursor:pointer;transition:.2s}
+.recBtn:hover{background:var(--red);color:#fff}
+.recBtn.recActive{background:var(--red);color:#fff;animation:pulse 1.5s infinite}
+.recStatus{font-size:12px;color:var(--muted);margin-top:8px}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+
+/* ---------- UP TO DATE ---------- */
+.platformCard{border:1px solid var(--line);border-radius:5px;padding:14px 16px;margin-bottom:12px;transition:.25s}
+.platformCard:hover{background:rgba(0,102,255,.03)}
+.platformHead{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.platformName{font-family:var(--hud);font-size:15px;font-weight:700;color:#fff;flex:1}
+.platformCat{font-size:10px;font-family:var(--hud);letter-spacing:1px;color:var(--muted);border:1px solid var(--line);padding:2px 8px;border-radius:3px}
+.platformUnread{font-size:10px;font-family:var(--hud);letter-spacing:1px;color:var(--red);border:1px solid rgba(255,77,90,.3);padding:2px 8px;border-radius:3px}
+.platformWhy{font-size:13px;color:var(--muted);line-height:1.6;margin-top:8px}
+.platformNews{margin-top:10px}
+.newsItem{display:flex;align-items:flex-start;gap:8px;padding:6px 0;font-size:13px;color:var(--muted);border-bottom:1px solid rgba(255,255,255,.03)}
+.newsItem:last-child{border-bottom:none}
+.newsItem.done{color:var(--green)}
+.newsCheck{width:18px;height:18px;flex:0 0 18px;border:1px solid var(--line);border-radius:3px;display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--muted);cursor:pointer;margin-top:1px}
+.newsItem.done .newsCheck{border-color:var(--green);color:var(--green)}
+.newsText{flex:1}
+.newsDate{font-size:11px;color:var(--muted);font-family:var(--hud)}
+.platformProgress{display:flex;align-items:center;gap:10px;margin-top:10px}
+.platformProgress span{font-size:11px;color:var(--muted);font-family:var(--hud)}
+.platformActions{display:flex;gap:8px;margin-top:10px}
+.filterBar{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap}
+.filterBtn{padding:6px 14px;border-radius:20px;border:1px solid var(--line);background:transparent;color:var(--muted);font-size:12px;font-family:var(--hud);cursor:pointer;transition:.2s}
+.filterBtn:hover{border-color:var(--glow);color:var(--glow)}
+.filterBtn.active{border-color:var(--glow);background:rgba(0,102,255,.1);color:var(--glow)}
+
 /* ---------- FORMED HABITS ---------- */
 .habitList{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
 .habitChip{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border:1px solid rgba(37,224,122,.3);border-radius:20px;font-size:12px;color:var(--green);background:rgba(37,224,122,.05)}
@@ -782,6 +860,49 @@ body{font-family:var(--body);background:var(--bg);color:var(--text);min-height:1
   background:transparent;color:var(--muted);font-size:12px;cursor:pointer;
   display:flex;align-items:center;justify-content:center;transition:.2s}
 .habit-remove:hover{border-color:var(--red);color:var(--red);background:rgba(255,77,94,.1)}
+
+/* ---------- UP TO DATE — SOCIAL PLATFORM NEWS ---------- */
+.utd-filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+.utd-filters .btn{font-size:11px;padding:7px 12px;letter-spacing:1px;text-transform:uppercase}
+.utd-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:16px}
+.utd-card{background:var(--panel2);border:1px solid var(--line);border-radius:6px;padding:18px;
+  position:relative;overflow:hidden;transition:.25s}
+.utd-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;
+  background:var(--platform,var(--glow));opacity:.7}
+.utd-card:hover{border-color:var(--platform,var(--glow));transform:translateY(-2px);
+  box-shadow:0 8px 30px rgba(0,0,0,.4)}
+.utd-card-head{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.utd-icon{width:44px;height:44px;flex:0 0 44px;border:1px solid var(--line);border-radius:6px;
+  display:flex;align-items:center;justify-content:center;color:var(--platform,var(--glow));
+  background:rgba(255,255,255,.03)}
+.utd-card-head h3{font-family:var(--hud);font-size:15px;font-weight:700;letter-spacing:1.5px;
+  text-transform:uppercase;color:#fff}
+.utd-category{font-size:10px;letter-spacing:1.2px;color:var(--muted);text-transform:uppercase}
+.utd-unread{margin-left:auto;font-size:10px;letter-spacing:1px;padding:3px 8px;border-radius:2px;
+  border:1px solid var(--line);color:var(--muted);text-transform:uppercase}
+.utd-unread:not(.is-read){color:var(--gold);border-color:rgba(220,161,90,.4);background:rgba(220,161,90,.08)}
+.utd-card h4{font-family:var(--hud);font-size:11px;font-weight:700;letter-spacing:1.5px;
+  text-transform:uppercase;color:var(--glow);margin:14px 0 8px}
+.utd-news{padding:10px 12px;border:1px solid rgba(29,59,107,.5);border-radius:4px;margin-bottom:8px;
+  cursor:pointer;transition:.2s;position:relative}
+.utd-news:hover{background:rgba(0,102,255,.06);border-color:var(--glow)}
+.utd-news.is-read{opacity:.55}
+.utd-news.is-read .utd-news-title span{text-decoration:line-through}
+.utd-news-title{display:flex;align-items:flex-start;gap:8px;font-size:14px;font-weight:600;color:var(--text)}
+.utd-dot{width:7px;height:7px;flex:0 0 7px;border-radius:50%;background:var(--gold);margin-top:5px}
+.utd-news.is-read .utd-dot{background:var(--muted)}
+.utd-news small{font-size:10px;letter-spacing:1px;color:var(--muted);text-transform:uppercase}
+.utd-news p{font-size:13px;color:var(--muted);margin:6px 0 4px;line-height:1.5}
+.utd-news b{font-size:12px;color:var(--green);font-weight:500;line-height:1.4}
+.utd-card ul{list-style:none;padding:0}
+.utd-card ul li{font-size:13px;color:var(--muted);padding:4px 0 4px 16px;position:relative}
+.utd-card ul li::before{content:'';position:absolute;left:0;top:10px;width:6px;height:6px;
+  border-radius:50%;background:var(--platform,var(--glow))}
+.utd-card p{font-size:13px;color:var(--muted);line-height:1.5}
+.utd-link{display:inline-flex;align-items:center;gap:6px;margin-top:14px;font-size:12px;
+  letter-spacing:1px;text-transform:uppercase;color:var(--glow);text-decoration:none;
+  border:1px solid var(--line);padding:8px 14px;border-radius:3px;transition:.2s}
+.utd-link:hover{border-color:var(--glow);background:rgba(0,102,255,.1);color:#fff}
 
 /* respect users who turn off animation */
 @media(prefers-reduced-motion:reduce){

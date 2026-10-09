@@ -4,7 +4,7 @@
    Bump CACHE when you change any file, otherwise the phone serves the old one.
    ===================================================================== */
 
-const CACHE = 'solo-leveling-v31';
+const CACHE = 'solo-leveling-v32';
 
 const ASSETS = [
   './',

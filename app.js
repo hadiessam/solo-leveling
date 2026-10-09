@@ -83,8 +83,12 @@ function blank(){
     habitDays:{}, formedHabits:{},
     /* Money ideas progress */
     moneyProgress:{},
+    /* Speaking / pronunciation */
+    speaking:{wordsDone:[], recordings:[]},
     /* 21-Day Habit Tracker */
-    habits:{}
+    habits:{},
+    /* Up to Date — social platform news tracker */
+    uptodate:{readNews:[]}
   };
 }
 
@@ -140,6 +144,7 @@ function read(){
         if(!o.eggMissionTotal) o.eggMissionTotal = 0;
         if(!o.eggStreakMark) o.eggStreakMark = 0;
         if(!o.eggLevelMark) o.eggLevelMark = 0;
+        if(!o.uptodate) o.uptodate = {readNews:[]};
         /* older saves stored a character 'level' — convert it to a star */
         o.shadowChars = (o.shadowChars || []).map(c => ({
           id:c.id,
@@ -186,6 +191,7 @@ function read(){
     if(!o.eggMissionTotal) o.eggMissionTotal = 0;
     if(!o.eggStreakMark) o.eggStreakMark = 0;
     if(!o.eggLevelMark) o.eggLevelMark = 0;
+    if(!o.uptodate) o.uptodate = {readNews:[]};
     o.shadowChars = (o.shadowChars || []).map(c => ({
       id:c.id,
       star: c.star || Math.min(MAX_STARS, c.level || 1),
