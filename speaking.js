@@ -250,20 +250,23 @@ function drawSpeakingSounds(){
     html += '<div class="soundCard">'
       + '<div class="soundPair">' + esc(s.pair) + '</div>'
       + '<div class="soundDesc">' + esc(s.desc) + '</div>'
-      + '<div class="soundPairs">'
-      + '<div class="soundCol">'
-      + '<div class="soundLabel">' + esc(s.pair.split('vs')[0].trim()) + '</div>';
-    s.pWords.forEach(function(w){
-      html += '<span class="soundWord">' + esc(w) + '</span>';
-    });
-    html += '</div>'
-      + '<div class="soundCol">'
-      + '<div class="soundLabel">' + esc(s.pair.split('vs')[1].trim()) + '</div>';
-    s.bWords.forEach(function(w){
-      html += '<span class="soundWord">' + esc(w) + '</span>';
-    });
-    html += '</div>'
-      + '</div>'
+      var firstKey = Object.keys(s).find(function(k){ return k !== 'id' && k !== 'pair' && k !== 'desc' && k !== 'tip' && Array.isArray(s[k]); });
+      var secondKey = Object.keys(s).find(function(k){ return k !== 'id' && k !== 'pair' && k !== 'desc' && k !== 'tip' && Array.isArray(s[k]) && k !== firstKey; });
+
+      html += '<div class="soundPairs">'
+        + '<div class="soundCol">'
+        + '<div class="soundLabel">' + esc(s.pair.split('vs')[0].trim()) + '</div>';
+      if(firstKey) s[firstKey].forEach(function(w){
+        html += '<span class="soundWord">' + esc(w) + '</span>';
+      });
+      html += '</div>'
+        + '<div class="soundCol">'
+        + '<div class="soundLabel">' + esc(s.pair.split('vs')[1].trim()) + '</div>';
+      if(secondKey) s[secondKey].forEach(function(w){
+        html += '<span class="soundWord">' + esc(w) + '</span>';
+      });
+      html += '</div>'
+        + '</div>'
       + '<div class="soundTip">💡 ' + esc(s.tip) + '</div>'
       + '</div>';
   });
