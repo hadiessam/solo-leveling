@@ -478,6 +478,27 @@ body{font-family:var(--body);background:var(--bg);color:var(--text);min-height:1
 .stLink{color:var(--glow);text-decoration:none;font-size:13px}
 .stLink:hover{text-decoration:underline}
 
+/* ---------- MONEY IDEAS ---------- */
+.moneyCard{border:1px solid var(--line);border-left:3px solid var(--gold);border-radius:5px;padding:14px 16px;margin-bottom:12px;transition:.25s}
+.moneyCard:hover{background:rgba(220,161,90,.04)}
+.moneyHead{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.moneyName{font-family:var(--hud);font-size:15px;font-weight:700;color:#fff;flex:1}
+.moneyCat{font-size:10px;font-family:var(--hud);letter-spacing:1px;color:var(--muted);border:1px solid var(--line);padding:2px 8px;border-radius:3px}
+.moneyDiff{font-size:10px;font-family:var(--hud);letter-spacing:1px;color:var(--green);border:1px solid rgba(37,224,122,.3);padding:2px 8px;border-radius:3px}
+.moneyWhy{font-size:13px;color:var(--muted);line-height:1.6;margin-top:8px}
+.moneySteps{margin-top:10px}
+.moneyStep{display:flex;align-items:flex-start;gap:8px;padding:4px 0;font-size:13px;color:var(--muted)}
+.moneyStep.done{color:var(--green)}
+.msCheck{width:18px;height:18px;flex:0 0 18px;border:1px solid var(--line);border-radius:3px;display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--muted)}
+.moneyStep.done .msCheck{border-color:var(--green);color:var(--green)}
+.moneyProgress{display:flex;align-items:center;gap:10px;margin-top:10px}
+.moneyProgress span{font-size:11px;color:var(--muted);font-family:var(--hud)}
+.moneyActions{display:flex;gap:8px;margin-top:10px}
+
+/* ---------- FORMED HABITS ---------- */
+.habitList{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.habitChip{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border:1px solid rgba(37,224,122,.3);border-radius:20px;font-size:12px;color:var(--green);background:rgba(37,224,122,.05)}
+
 /* ---------- ICONS ---------- */
 .ico{display:inline-block;vertical-align:-.16em;flex:0 0 auto}
 .st h2 .ico,.exTop .t .ico{margin-right:2px}

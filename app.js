@@ -79,6 +79,10 @@ function blank(){
     skillTree:{},
     /* Jin-Woo custom phrase */
     customPhrase:'',
+    /* Habit formation tracking */
+    habitDays:{}, formedHabits:{},
+    /* Money ideas progress */
+    moneyProgress:{},
     /* 21-Day Habit Tracker */
     habits:{}
   };
@@ -775,6 +779,123 @@ function checkForUpdates(){
   localStorage.setItem('soloAppVer', APP_VERSION);
   save();
   log('UPDATE', 'System updated to version <b>' + APP_VERSION + '</b>. XP recalculated.');
+}
+
+/* ---------------------------------------------------------------------
+   FORMED HABITS — missions that ran 21 days straight become habits.
+   They leave the daily quest and join the "Formed Habits" list.
+   --------------------------------------------------------------------- */
+function formedHabits(){
+  if(!S.formedHabits) S.formedHabits = {};
+  const out = [];
+  DAILY.forEach(m => {
+    if(S.formedHabits[m.id]) out.push(m);
+  });
+  return out;
+}
+
+function checkHabitFormation(){
+  if(!S.habitDays) S.habitDays = {};
+  const today = dayKey();
+  DAILY.forEach(m => {
+    if(!S.habitDays[m.id]) S.habitDays[m.id] = [];
+    const days = S.habitDays[m.id];
+    if(S.daily[m.id] && days.indexOf(today) === -1){
+      days.push(today);
+      if(days.length >= 21){
+        S.formedHabits = S.formedHabits || {};
+        S.formedHabits[m.id] = true;
+        log('HABIT FORMED', '<b>' + esc(m.name) + '</b> ran 21 days straight. It is a habit now — no longer in your daily quest.');
+        sfx('levelup');
+        overlay('HABIT FORMED', m.name, '21 days straight. This is now automatic — it no longer appears in your daily quest.', false);
+      }
+    }
+  });
+  save();
+}
+
+/* ---------------------------------------------------------------------
+   MONEY TRACKER — practical ideas to earn from home until Riyadh.
+   --------------------------------------------------------------------- */
+const MONEY_IDEAS = [
+  {id:'m1', n:'Freelance on Mostaql/Upwork', cat:'Freelance', diff:'Easy', time:'1-2 weeks',
+   why:'You already have Meta ads experience. Offer campaign setup and management on Mostaql (Saudi platform) or Upwork. Start with small projects, build reviews, raise prices.',
+   steps:['Create profile on Mostaql and Upwork','List 3 services you can offer (Meta Ads, GA4 setup, reporting)','Apply to 5 jobs daily for 1 week','Deliver excellent work to get 5-star reviews','Raise prices after 10 completed jobs']},
+  {id:'m2', n:'Sell digital products on Gumroad', cat:'Digital', diff:'Medium', time:'2-4 weeks',
+   why:'Create once, sell forever. Make a Meta Ads checklist, a GA4 setup guide, or a media buying template. You know this stuff — package it.',
+   steps:['Pick one skill you are confident in','Create a checklist/template/guide (Canva is free)','List it on Gumroad for $10-25','Share on LinkedIn and Twitter','Iterate based on buyer feedback']},
+  {id:'m3', n:'Content creation for Saudi brands', cat:'Content', diff:'Medium', time:'2-4 weeks',
+   why:'Saudi brands need Arabic + English content. You understand the Gulf market. Offer social media management or content creation.',
+   steps:['Identify 10 Saudi brands with weak social media','Create sample posts for 3 of them','Reach out with your samples','Offer a 1-month trial at a discount','Scale to monthly retainers']},
+  {id:'m4', n:'Online tutoring (English/Meta)', cat:'Teaching', diff:'Easy', time:'1-2 weeks',
+   why:'Your English is B1/C1. Teach English to Arabic speakers, or teach Meta ads to beginners. Platforms: Preply, Italki, or even WhatsApp groups.',
+   steps:['Choose what to teach (English or Meta Ads)','Create a simple curriculum','List on Preply/Italki or advertise in Facebook groups','Offer first session free to get reviews','Charge $10-20/hour after 5 students']},
+  {id:'m5', n:'Affiliate marketing', cat:'Affiliate', diff:'Medium', time:'1-3 months',
+   why:'Recommend tools you already use (Canva, Make, hosting). Earn commission on every sale. Start with a LinkedIn post or a simple landing page.',
+   steps:['Pick 3 tools you use and love','Sign up for their affiliate programs','Create content reviewing/comparing tools','Share on LinkedIn and Twitter','Track clicks and optimize']},
+  {id:'m6', n:'Remote part-time for a company', cat:'Remote Job', diff:'Hard', time:'1-2 months',
+   why:'Many companies hire remote part-time. Your Meta ads experience is valuable. Look for "remote" + "media buyer" or "performance marketing" on LinkedIn and Indeed.',
+   steps:['Update LinkedIn headline to include "Remote"','Set job alerts on LinkedIn and Indeed','Apply to 5 remote jobs daily','Tailor CV for each application','Follow up after 1 week']},
+  {id:'m7', n:'Build a personal brand on LinkedIn', cat:'Brand', diff:'Easy', time:'Ongoing',
+   why:'Post daily about what you are learning. Document your journey to Riyadh. People hire people they know. Your content attracts opportunities.',
+   steps:['Post 1 LinkedIn post daily (even a short one)','Comment on 5 posts daily in your niche','Share your learning journey honestly','Engage with comments on your posts','Review monthly: what worked?']},
+  {id:'m8', n:'Offer local services (social media)', cat:'Local', diff:'Easy', time:'1-2 weeks',
+   why:'Local businesses need social media help. Offer to manage their Instagram/Facebook for a monthly fee. Start with 1-2 clients.',
+   steps:['Identify 5 local businesses with weak social media','Create sample content for them','Offer 1-month trial at 500-1000 EGP','Deliver results and testimonials','Scale to 5+ clients at 2000-3000 EGP/month']}
+];
+
+function drawMoney(){
+  const el = $('moneyList');
+  if(!el) return;
+  const ideas = MONEY_IDEAS;
+  el.innerHTML = ideas.map(idea => {
+    const progress = S.moneyProgress && S.moneyProgress[idea.id] || 0;
+    const pct = Math.round(progress / idea.steps.length * 100);
+    return '<div class="moneyCard">'
+      + '<div class="moneyHead">'
+      +   '<span class="moneyName">' + esc(idea.n) + '</span>'
+      +   '<span class="moneyCat">' + esc(idea.cat) + '</span>'
+      +   '<span class="moneyDiff">' + esc(idea.diff) + '</span>'
+      + '</div>'
+      + '<div class="moneyWhy">' + esc(idea.why) + '</div>'
+      + '<div class="moneySteps">'
+      +   idea.steps.map((step, i) =>
+          '<div class="moneyStep' + (i < progress ? ' done' : '') + '">'
+          + '<span class="msCheck">' + (i < progress ? '✓' : (i+1)) + '</span>'
+          + '<span class="msText">' + esc(step) + '</span>'
+          + '</div>'
+        ).join('')
+      + '</div>'
+      + '<div class="moneyProgress">'
+      +   '<div class="bar thin"><i style="width:' + pct + '%"></i></div>'
+      +   '<span>' + progress + '/' + idea.steps.length + ' steps</span>'
+      + '</div>'
+      + '<div class="moneyActions">'
+      +   '<button class="btn small" onclick="advanceMoneyStep(\'' + idea.id + '\')">Next Step</button>'
+      +   '<button class="btn small" onclick="resetMoneyIdea(\'' + idea.id + '\')">Reset</button>'
+      + '</div>'
+      + '</div>';
+  }).join('');
+}
+
+function advanceMoneyStep(ideaId){
+  S.moneyProgress = S.moneyProgress || {};
+  S.moneyProgress[ideaId] = (S.moneyProgress[ideaId] || 0) + 1;
+  const idea = MONEY_IDEAS.find(m => m.id === ideaId);
+  if(idea && S.moneyProgress[ideaId] >= idea.steps.length){
+    addXP(50, 'money', false, 'money');
+    overlay('MONEY IDEA COMPLETE', idea.n, '+50 XP — You are building income from home!', false);
+    log('MONEY', 'Completed: <b>' + esc(idea.n) + '</b> (+50 XP)');
+  }
+  save();
+  renderAll();
+}
+
+function resetMoneyIdea(ideaId){
+  S.moneyProgress = S.moneyProgress || {};
+  S.moneyProgress[ideaId] = 0;
+  save();
+  renderAll();
 }
 
 /* ---------------------------------------------------------------------

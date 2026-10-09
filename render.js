@@ -558,54 +558,15 @@ function drawDaily(){
   let html = av.map(m => missionRow(m,'daily')).join('');
   if(lk.length) html += lk.map(lockRow).join('');
 
-  /* habits are part of the daily quest — they live right below the missions */
-  html += '<div class="st" style="margin-top:22px"><h2>Daily Habits</h2><span class="tag">' + HABIT_TRACKER.getTodayCount() + ' / ' + HABITS.length + ' TODAY</span></div>';
-  html += '<div class="hint" style="margin-bottom:14px">Build career-changing habits over 21 days. Each completed habit earns <b>+10 XP</b>. Complete all habits in a day for a <b>+25 XP</b> bonus.</div>';
-  html += '<div class="bar thin" style="margin-bottom:14px"><i id="habitOverallBar" style="width:' + (HABITS.length ? Math.round(HABIT_TRACKER.getTodayCount()/HABITS.length*100) : 0) + '%"></i></div>';
-
-  const categories = ['Career', 'Health', 'Learning', 'Mindset'];
-  categories.forEach(function(cat) {
-    const catHabits = HABITS.filter(function(h) { return h.category === cat; });
-    if (catHabits.length === 0) return;
-    html += '<div class="st" style="margin-top:18px"><h2>' + esc(cat) + '</h2><span class="tag">' + catHabits.length + ' HABITS</span></div>';
-    catHabits.forEach(function(habit) {
-      const state = HABIT_TRACKER.ensureHabitState(habit.id);
-      const progress = getHabitProgress(habit.id);
-      const streak = getHabitStreak(habit.id);
-      const doneToday = HABIT_TRACKER.isDoneToday(habit.id);
-      const pct = progress.percentage;
-      html += '<div class="habit-card' + (doneToday ? ' done' : '') + '">'
-        + '<div class="habit-main">'
-        +   '<div class="habit-icon">' + ic(habit.icon, 20) + '</div>'
-        +   '<div class="habit-info">'
-        +     '<div class="habit-name">' + esc(habit.name) + '</div>'
-        +     '<div class="habit-why">' + esc(habit.why) + '</div>'
-        +   '</div>'
-        + '</div>'
-        + '<div class="habit-progress-area">'
-        +   '<div class="habit-stats">'
-        +     '<span class="habit-streak">' + streak + '/' + HABIT_TRACKER.targetDays + ' days</span>'
-        +     '<span class="habit-pct">' + pct + '%</span>'
-        +   '</div>'
-        +   '<div class="bar thin habit-bar"><i style="width:' + pct + '%"></i></div>'
-        + '</div>'
-        + '<div class="habit-actions">'
-        +   '<button class="habit-check' + (doneToday ? ' checked' : '') + '" onclick="checkHabit(\'' + esc(habit.id) + '\')" title="' + (doneToday ? 'Uncheck for today' : 'Mark done for today') + '">'
-        +   (doneToday ? '✓' : '○') + '</button>'
-        +   (habit.custom ? '<button class="habit-remove" onclick="removeHabit(\'' + esc(habit.id) + '\')" title="Remove habit">✕</button>' : '')
-        + '</div>'
-        + '</div>';
-    });
-  });
-
-  /* add custom habit form */
-  html += '<div class="panel" style="margin-top:18px">'
-    + '<div class="st"><h2>Add Custom Habit</h2><span class="tag">YOURS</span></div>'
-    + '<div style="display:flex;gap:10px;align-items:center">'
-    +   '<input type="text" id="newHabitName" placeholder="e.g. Meditate for 10 minutes" style="flex:1;padding:10px 14px;background:rgba(10,17,34,.9);border:1px solid var(--line);border-radius:4px;color:#fff;font-size:15px">'
-    +   '<button class="btn" onclick="addHabit(document.getElementById(\'newHabitName\').value);document.getElementById(\'newHabitName\').value=\'\';">+ Add</button>'
-    + '</div>'
-    + '</div>';
+  /* after 21 days a mission becomes a habit automatically — no extra tracking */
+  const formed = formedHabits();
+  if(formed.length){
+    html += '<div class="st" style="margin-top:22px"><h2>Formed Habits</h2><span class="tag">' + formed.length + ' AUTOMATIC</span></div>';
+    html += '<div class="hint" style="margin-bottom:14px">These missions ran for 21 days straight. They are habits now — they no longer appear in your daily quest. They just happen.</div>';
+    html += '<div class="habitList">' + formed.map(h =>
+      '<div class="habitChip">' + ic(h.icon || 'check', 16) + esc(h.name) + '</div>'
+    ).join('') + '</div>';
+  }
 
   $('dailyList').innerHTML = html;
 
@@ -1789,7 +1750,8 @@ function renderAll(){
   drawLibrary(); drawCoach(); drawStats(); drawHistory();
   drawReview(); drawInsights(); drawTyping(); drawExtras(); drawSkillTree(); drawCourseTree();
   drawClass(); drawShadow(); drawFocus(); drawVision();
-  drawEggs(); drawCharacters(); drawVocab();
+  drawEggs(); drawCharacters(); drawVocab(); drawMoney();
+  checkHabitFormation();
   /* dynamic freeze numbers — never hardcode these in the HTML */
   if($('fCost'))  $('fCost').textContent  = FREEZE.costXP;
   if($('fDebt'))  $('fDebt').textContent  = FREEZE.punishmentXP;
