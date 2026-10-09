@@ -1751,7 +1751,7 @@ function renderAll(){
   drawReview(); drawInsights(); drawTyping(); drawExtras(); drawSkillTree(); drawCourseTree();
   drawClass(); drawShadow(); drawFocus(); drawVision();
   drawEggs(); drawCharacters(); drawVocab(); drawMoney();
-  drawSpeaking(); drawUpToDate();
+  drawSpeaking(); drawUpToDate(); drawExpenses();
   checkHabitFormation();
   /* dynamic freeze numbers — never hardcode these in the HTML */
   if($('fCost'))  $('fCost').textContent  = FREEZE.costXP;

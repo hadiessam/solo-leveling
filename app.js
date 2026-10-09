@@ -88,7 +88,9 @@ function blank(){
     /* 21-Day Habit Tracker */
     habits:{},
     /* Up to Date — social platform news tracker */
-    uptodate:{readNews:[]}
+    uptodate:{readNews:[]},
+    /* Money Expenses calendar */
+    expenses:{}
   };
 }
 

@@ -37,7 +37,27 @@ const SPEAKING_DATA = {
     { id:'w17', word:'impression',       phonetic:'/ɪmˈprɛʃən/',        mistake:'Stress the second syllable (im-PRESS-ion).', example:'The ad received 50,000 impressions.' },
     { id:'w18', word:'funnel',           phonetic:'/ˈfʌnəl/',            mistake:'Two syllables (FUN-nel), not three. The "u" is /ʌ/.', example:'The marketing funnel has five stages.' },
     { id:'w19', word:'milestone',        phonetic:'/ˈmaɪlstoʊn/',        mistake:'Stress the first syllable (MILE-stone).', example:'Hitting 10,000 leads was a real milestone.' },
-    { id:'w20', word:'collaborate',      phonetic:'/kəˈlæbəreɪt/',       mistake:'Stress the second syllable (col-LAB-orate), not the first.', example:'The design team collaborates with media buyers.' }
+    { id:'w20', word:'collaborate',      phonetic:'/kəˈlæbəreɪt/',       mistake:'Stress the second syllable (col-LAB-orate), not the first.', example:'The design team collaborates with media buyers.' },
+    { id:'w21', word:'funnel',           phonetic:'/ˈfʌnəl/',            mistake:'Two syllables (FUN-nel), not three. The "u" is /ʌ/.', example:'The marketing funnel has five stages.' },
+    { id:'w22', word:'milestone',        phonetic:'/ˈmaɪlstoʊn/',        mistake:'Stress the first syllable (MILE-stone).', example:'Hitting 10,000 leads was a real milestone.' },
+    { id:'w23', word:'attribution',      phonetic:'/ˌætrɪˈbjuːʃən/',     mistake:'Stress the third syllable (at-tri-BYOO-shun).', example:'Attribution models help us understand the customer journey.' },
+    { id:'w24', word:'psychographics',   phonetic:'/ˌsaɪkəˈɡræfɪks/',    mistake:'The "psy" is /saɪ/, not /psiː/ or /sɪk/.', example:'Psychographics reveal attitudes and values.' },
+    { id:'w25', word:'remarketing',      phonetic:'/ˌriːˈmɑːrkɪtɪŋ/',    mistake:'Stress the SECOND syllable (ree-MAR-ket-ing), not the first.', example:'Remarketing brings back visitors who did not convert.' },
+    { id:'w26', word:'segmentation',     phonetic:'/ˌsɛɡmənˈteɪʃən/',    mistake:'The "men" is /mən/, not /meɪn/ or /mɛn/.', example:'Audience segmentation improves conversion rates.' },
+    { id:'w27', word:'benchmark',        phonetic:'/ˈbɛntʃmɑːrk/',        mistake:'Only two syllables (BENCH-mark), not three.', example:'What is the industry benchmark for CTR?' },
+    { id:'w28', word:'engagement',       phonetic:'/ɪnˈɡeɪdʒmənt/',      mistake:'Stress the second syllable (in-GAGE-ment).', example:'Engagement rate matters more than follower count.' },
+    { id:'w29', word:'conversion',       phonetic:'/kənˈvɜːrʒən/',       mistake:'Stress the second syllable (con-VER-zhun), not the first.', example:'The conversion rate doubled last month.' },
+    { id:'w30', word:'revenue',          phonetic:'/ˈrɛvənuː/',           mistake:'Three syllables (REV-enn-yoo), not two. The "e" is /ɛ/.', example:'Revenue grew 18% quarter on quarter.' },
+    { id:'w31', word:'analytics',        phonetic:'/ˌænəˈlɪtɪks/',       mistake:'Stress the third syllable (an-uh-LIT-iks).', example:'Google Analytics shows the traffic sources.' },
+    { id:'w32', word:'impression',       phonetic:'/ɪmˈprɛʃən/',         mistake:'Stress the second syllable (im-PRESS-ion).', example:'The ad received 50,000 impressions.' },
+    { id:'w33', word:'programmatic',    phonetic:'/ˌproʊɡrəˈmætɪk/',    mistake:'Stress the third syllable (pro-gram-MAT-ic).', example:'Programmatic buying automates ad placement.' },
+    { id:'w34', word:'viewability',      phonetic:'/ˌvjuːəˈbɪləti/',      mistake:'Stress the second syllable (view-AB-il-ity).', example:'Viewability measures if the ad was actually seen.' },
+    { id:'w35', word:'frequency',        phonetic:'/ˈfriːkwənsi/',        mistake:'Stress the first syllable (FRE-quen-cy).', example:'Frequency capping prevents ad fatigue.' },
+    { id:'w36', word:'lookalike',        phonetic:'/ˈlʊkəlaɪk/',          mistake:'Stress the first syllable (LOOK-a-like).', example:'Lookalike audiences find similar users.' },
+    { id:'w37', word:'bid strategy',     phonetic:'/ˈbɪd ˌstrætədʒi/',    mistake:'Two words: BID STRATEGY. Stress both.', example:'Bid strategy determines how much you pay per click.' },
+    { id:'w38', word:'landing page',     phonetic:'/ˈlændɪŋ ˌpeɪdʒ/',     mistake:'Two words: LANDING PAGE. Stress the first of each.', example:'The landing page must match the ad promise.' },
+    { id:'w39', word:'call to action',   phonetic:'/ˈkɔːl tuː ˈækʃən/',   mistake:'Three words: CALL TO ACTION. Stress CALL and AC-.', example:'A clear call to action improves conversion rates.' },
+    { id:'w40', word:'cost per lead',    phonetic:'/ˈkɔːst pər ˈliːd/',   mistake:'Three words: COST PER LEAD. Stress COST and LEAD.', example:'Our cost per lead dropped to 15 Turkish lira.' }
   ],
 
   /* Difficult sounds for Arabic speakers — minimal pairs */
@@ -87,6 +107,27 @@ const SPEAKING_DATA = {
       'The weather in December is rather mild.',
       'Breathe deeply before you either answer or ask.',
       'My mother and brother gathered together.'
+    ]},
+    { id:'sent7', group:'Client meeting sentences', sentences:[
+      'Our cost per lead decreased from 25 to 15 Turkish lira over three months.',
+      'The client wants to increase the budget for the next campaign.',
+      'I recommend we focus on lookalike audiences for this product.',
+      'The landing page needs a stronger call to action to improve conversions.',
+      'We should test three different ad creatives before scaling the budget.'
+    ]},
+    { id:'sent8', group:'Interview and career sentences', sentences:[
+      'I managed over 27 performance campaigns across multiple industries.',
+      'My background in media buying helps me understand the full funnel.',
+      'I am comfortable presenting results to clients and stakeholders.',
+      'I use analytics to make data-driven decisions every day.',
+      'I am looking for a role where I can grow and contribute to the team.'
+    ]},
+    { id:'sent9', group:'Advanced marketing terms', sentences:[
+      'Programmatic buying allows us to reach specific audiences at scale.',
+      'Viewability is becoming a major concern for brand safety.',
+      'Frequency capping prevents users from seeing the same ad too often.',
+      'The attribution model shows which channels drive the most conversions.',
+      'A higher bid strategy can improve our ad placement and reach.'
     ]}
   ],
 
