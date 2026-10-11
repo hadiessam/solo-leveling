@@ -57,7 +57,27 @@ const SPEAKING_DATA = {
     { id:'w37', word:'bid strategy',     phonetic:'/ˈbɪd ˌstrætədʒi/',    mistake:'Two words: BID STRATEGY. Stress both.', example:'Bid strategy determines how much you pay per click.' },
     { id:'w38', word:'landing page',     phonetic:'/ˈlændɪŋ ˌpeɪdʒ/',     mistake:'Two words: LANDING PAGE. Stress the first of each.', example:'The landing page must match the ad promise.' },
     { id:'w39', word:'call to action',   phonetic:'/ˈkɔːl tuː ˈækʃən/',   mistake:'Three words: CALL TO ACTION. Stress CALL and AC-.', example:'A clear call to action improves conversion rates.' },
-    { id:'w40', word:'cost per lead',    phonetic:'/ˈkɔːst pər ˈliːd/',   mistake:'Three words: COST PER LEAD. Stress COST and LEAD.', example:'Our cost per lead dropped to 15 Turkish lira.' }
+    { id:'w40', word:'cost per lead',    phonetic:'/ˈkɔːst pər ˈliːd/',   mistake:'Three words: COST PER LEAD. Stress COST and LEAD.', example:'Our cost per lead dropped to 15 Turkish lira.' },
+    { id:'w41', word:'creative testing', phonetic:'/kriˈeɪtɪv ˈtestɪŋ/',   mistake:'Stress cre-A-tive and TEST-ing.', example:'Creative testing shows which ad performs best.' },
+    { id:'w42', word:'audience',         phonetic:'/ˈɔːdiəns/',            mistake:'Stress the first syllable (AU-di-ence). Three syllables.', example:'The audience responds better to video content.' },
+    { id:'w43', word:'budget',           phonetic:'/ˈbʌdʒɪt/',             mistake:'Two syllables (BUDG-et). The "u" is /ʌ/.', example:'We increased the budget for the best campaigns.' },
+    { id:'w44', word:'insights',         phonetic:'/ˈɪnsaɪts/',            mistake:'Two syllables (IN-sights). Stress the first.', example:'The insights show where users drop off.' },
+    { id:'w45', word:'strategy',         phonetic:'/ˈstrætədʒi/',          mistake:'Three syllables (STRAT-e-gy). The "th" is /t/.', example:'Our strategy focuses on retargeting warm leads.' },
+    { id:'w46', word:'advertising',      phonetic:'/ˈædvərtaɪzɪŋ/',        mistake:'Four syllables (AD-ver-tis-ing). Stress the first.', example:'Advertising costs rose during the holiday season.' },
+    { id:'w47', word:'performance',      phonetic:'/pərˈfɔːrməns/',        mistake:'Start with /p/ not /b/. Stress the second syllable.', example:'Performance marketing gives measurable results.' },
+    { id:'w48', word:'campaign',         phonetic:'/kæmˈpeɪn/',            mistake:'Start with /k/ not /sh/. Two syllables.', example:'The campaign generated 1,200 qualified leads.' },
+    { id:'w49', word:'marketing',        phonetic:'/ˈmɑːrkɪtɪŋ/',          mistake:'Three syllables (MAR-ket-ing). Stress the first.', example:'Marketing and sales must work together.' },
+    { id:'w50', word:'management',       phonetic:'/ˈmænɪdʒmənt/',         mistake:'Three syllables (MAN-age-ment). The "a" is /æ/.', example:'Campaign management takes daily attention.' },
+    { id:'w51', word:'measurement',      phonetic:'/ˈmeʒərmənt/',          mistake:'Three syllables (MEAS-ure-ment). The "s" is /ʒ/.', example:'Accurate measurement is the foundation of optimization.' },
+    { id:'w52', word:'authentication',   phonetic:'/ɔːˌθentɪˈkeɪʃn/',      mistake:'Five syllables. Stress the fourth (au-then-ti-CA-tion).', example:'Two-factor authentication protects ad accounts.' },
+    { id:'w53', word:'integration',      phonetic:'/ˌɪntɪˈɡreɪʃn/',        mistake:'Four syllables. Stress the third (in-te-GRA-tion).', example:'The CRM integration syncs leads automatically.' },
+    { id:'w54', word:'automation',       phonetic:'/ˌɔːtəˈmeɪʃn/',         mistake:'Four syllables. Stress the third (au-to-MA-tion).', example:'Marketing automation saves hours every week.' },
+    { id:'w55', word:'acquisition',      phonetic:'/ˌækwɪˈzɪʃn/',          mistake:'Four syllables. Stress the third (ac-qui-SI-tion).', example:'Customer acquisition cost must stay below revenue.' },
+    { id:'w56', word:'retention',        phonetic:'/rɪˈtenʃn/',            mistake:'Three syllables (re-TEN-tion). Stress the second.', example:'Retention is cheaper than acquisition.' },
+    { id:'w57', word:'placement',        phonetic:'/ˈpleɪsmənt/',          mistake:'Two syllables (PLACE-ment). Stress the first.', example:'Ad placement affects how many people see your ad.' },
+    { id:'w58', word:'tracking',         phonetic:'/ˈtrækɪŋ/',             mistake:'Two syllables (TRACK-ing). Short "a" sound.', example:'Pixel tracking shows which ads convert.' },
+    { id:'w59', word:'scaling',          phonetic:'/ˈskeɪlɪŋ/',            mistake:'Two syllables (SCAL-ing). Long "a" sound.', example:'Scaling the winning campaign doubled our leads.' },
+    { id:'w60', word:'reporting',        phonetic:'/rɪˈpɔːrtɪŋ/',          mistake:'Three syllables (re-PORT-ing). Stress the second.', example:'Weekly reporting keeps the client informed.' }
   ],
 
   /* Difficult sounds for Arabic speakers — minimal pairs */

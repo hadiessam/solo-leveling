@@ -365,6 +365,7 @@ function rankFanfare(){
    --------------------------------------------------------------------- */
 let phraseIdx = 0;
 let guideTimer = null;
+let dayTimer = null;
 let currentEvent = null;
 
 /* React to what just happened on the site */
@@ -1808,6 +1809,34 @@ function boot(){
   /* the guide changes his line every 10 minutes, and pops up on its own */
   /* rotate every 3 minutes — fast enough to feel alive */
   guideTimer = setInterval(() => { nextPhrase(true); popGuide(); }, 3*60*1000);
+
+  /* ------------------------------------------------------------------
+     MIDNIGHT ROLLOVER — the daily quest must reset at 00:00 Cairo time
+     even when the page stays open all night. We check every 30 seconds
+     and also whenever the tab becomes visible again.
+     ------------------------------------------------------------------ */
+  dayTimer = setInterval(function(){
+    const t = dayKey();
+    if(S.lastDay !== t){
+      resets();
+      autoBackup();
+      renderAll();
+      log('SYSTEM', 'A new day has begun. Daily quests reset. Prove yourself again, Hunter.');
+      sfx('boot');
+    }
+  }, 30*1000);
+
+  document.addEventListener('visibilitychange', function(){
+    if(!document.hidden){
+      const t = dayKey();
+      if(S.lastDay !== t){
+        resets();
+        autoBackup();
+        renderAll();
+        log('SYSTEM', 'A new day has begun. Daily quests reset.');
+      }
+    }
+  });
 
   if(!S.hist.length){
     setTimeout(() => log('SYSTEM',
