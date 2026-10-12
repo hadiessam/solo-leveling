@@ -98,7 +98,15 @@ let S = read();
 
 function read(){
   try{
-    const raw = localStorage.getItem(SAVE_KEY);
+    /* first try to load from the primary save key */
+    let raw = localStorage.getItem(SAVE_KEY);
+    /* if that fails, try the auto-backup */
+    if(!raw) raw = localStorage.getItem('soloAutoState');
+    /* if that fails too, migrate from any older version */
+    if(!raw){
+      const old = localStorage.getItem('soloV5') || localStorage.getItem('soloV4') || localStorage.getItem('soloV3');
+      if(old) raw = old;
+    }
     if(!raw){
       /* migrate forward from any older version — progress is never lost */
       const old = localStorage.getItem('soloV5') || localStorage.getItem('soloV4') || localStorage.getItem('soloV3');
@@ -733,6 +741,17 @@ function learnAllVocab(){
 }
 
 function save(){
+  /* safety net: if any critical field is missing, restore it from blank() */
+  const b = blank();
+  let dirty = false;
+  if(!S.speaking){ S.speaking = {wordsDone:[], recordings:[]}; dirty = true; }
+  if(!S.expenses){ S.expenses = {}; dirty = true; }
+  if(!S.uptodate){ S.uptodate = {readNews:[]}; dirty = true; }
+  if(!S.habits){ S.habits = {}; dirty = true; }
+  if(!S.habitDays){ S.habitDays = {}; dirty = true; }
+  if(!S.formedHabits){ S.formedHabits = {}; dirty = true; }
+  if(!S.moneyProgress){ S.moneyProgress = {}; dirty = true; }
+  if(dirty) log('SYSTEM', 'Save integrity check: restored missing fields.');
   try{ localStorage.setItem(SAVE_KEY, JSON.stringify(S)); }catch(e){}
   cloudSave();   /* sync to cloud in the background */
 }
@@ -1029,7 +1048,17 @@ function cloudLoad(){
       const cloud = j.record;
       /* cloud wins if it has more XP (prevents stale overwrites) */
       if(cloud.xp >= S.xp){
-        S = Object.assign(blank(), cloud);
+        /* merge: keep all new blank() fields, override with cloud data */
+        const fresh = blank();
+        S = Object.assign(fresh, cloud);
+        /* ensure all new fields exist even if cloud has old data */
+        if(!S.speaking) S.speaking = {wordsDone:[], recordings:[]};
+        if(!S.expenses) S.expenses = {};
+        if(!S.uptodate) S.uptodate = {readNews:[]};
+        if(!S.habits) S.habits = {};
+        if(!S.habitDays) S.habitDays = {};
+        if(!S.formedHabits) S.formedHabits = {};
+        if(!S.moneyProgress) S.moneyProgress = {};
         S.ver = 6;
         try{ localStorage.setItem(SAVE_KEY, JSON.stringify(S)); }catch(e){}
         return true;
