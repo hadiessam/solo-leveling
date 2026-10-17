@@ -4,7 +4,7 @@
    Bump CACHE when you change any file, otherwise the phone serves the old one.
    ===================================================================== */
 
-const CACHE = 'solo-leveling-v36';
+const CACHE = 'solo-leveling-v37';
 
 const ASSETS = [
   './',
@@ -15,6 +15,13 @@ const ASSETS = [
   './icons.js',
   './app.js',
   './render.js',
+  './habits.js',
+  './speaking.js',
+  './uptodate.js',
+  './expenses.js',
+  './_features1.js',
+  './_features2.js',
+  './_features3.js',
   './manifest.json',
   './assets/avatar.jpg',
   './assets/jinwoo.png',
@@ -52,7 +59,17 @@ self.addEventListener('activate', e => {
   );
 });
 
-/* cache-first for our own files, network fallback */
+/* ---------------------------------------------------------------------
+   STRATEGY — stale-while-revalidate.
+
+   Why not cache-first: a cache-first service worker serves the OLD file
+   indefinitely, which is what made the app appear frozen and out of date
+   until the user hard-reloaded it several times. Now we return something
+   instantly AND silently refresh it in the background for next time.
+
+   Why not network-first: the app must still work offline, so we fall back
+   to cache when the network is unavailable.
+   --------------------------------------------------------------------- */
 self.addEventListener('fetch', e => {
   const req = e.request;
   if (req.method !== 'GET') return;
@@ -61,15 +78,24 @@ self.addEventListener('fetch', e => {
   if (url.origin !== location.origin) return;   /* let fonts/CDN go to network */
 
   e.respondWith(
-    caches.match(req).then(hit => {
-      if (hit) return hit;
-      return fetch(req).then(res => {
-        if (res && res.status === 200 && res.type === 'basic') {
-          const copy = res.clone();
-          caches.open(CACHE).then(c => c.put(req, copy));
-        }
-        return res;
-      }).catch(() => caches.match('./index.html'));
+    caches.open(CACHE).then(cache => {
+      return cache.match(req).then(cached => {
+        const networkFetch = fetch(req).then(res => {
+          if (res && res.status === 200 && res.type === 'basic') {
+            const copy = res.clone();
+            cache.put(req, copy);
+          }
+          return res;
+        }).catch(() => null);
+
+        /* instant answer if we have it; otherwise wait for the network */
+        if (cached) return cached;
+        return networkFetch.then(fresh => {
+          if (fresh) return fresh;
+          if (req.mode === 'navigate') return cache.match('./index.html');
+          return new Response('', { status: 408, statusText: 'Offline' });
+        });
+      });
     })
   );
 });

@@ -77,7 +77,51 @@ const SPEAKING_DATA = {
     { id:'w57', word:'placement',        phonetic:'/ˈpleɪsmənt/',          mistake:'Two syllables (PLACE-ment). Stress the first.', example:'Ad placement affects how many people see your ad.' },
     { id:'w58', word:'tracking',         phonetic:'/ˈtrækɪŋ/',             mistake:'Two syllables (TRACK-ing). Short "a" sound.', example:'Pixel tracking shows which ads convert.' },
     { id:'w59', word:'scaling',          phonetic:'/ˈskeɪlɪŋ/',            mistake:'Two syllables (SCAL-ing). Long "a" sound.', example:'Scaling the winning campaign doubled our leads.' },
-    { id:'w60', word:'reporting',        phonetic:'/rɪˈpɔːrtɪŋ/',          mistake:'Three syllables (re-PORT-ing). Stress the second.', example:'Weekly reporting keeps the client informed.' }
+    { id:'w60', word:'reporting',        phonetic:'/rɪˈpɔːrtɪŋ/',          mistake:'Three syllables (re-PORT-ing). Stress the second.', example:'Weekly reporting keeps the client informed.' },
+
+    /* ---- FIELD WORDS: media buying & advertising (the /p/ problem lives here) ---- */
+    { id:'w61', word:'public',           phonetic:'/ˈpʌblɪk/',             mistake:'Pronounce /p/, NOT /b/. Say PUB-lic, never BUB-lic.', example:'Public companies report their revenue quarterly.' },
+    { id:'w62', word:'publish',          phonetic:'/ˈpʌblɪʃ/',             mistake:'/p/ not /b/. PUB-lish, not BUB-lish.', example:'We publish a weekly performance report.' },
+    { id:'w63', word:'purchase',         phonetic:'/ˈpɜːrtʃəs/',           mistake:'/p/ not /b/. PUR-chase.', example:'The purchase completed after three clicks.' },
+    { id:'w64', word:'pay per click',    phonetic:'/ˌpeɪ pər ˈklɪk/',      mistake:'The PAY is /p/ and the PER is a soft schwa. Do not say BAY.', example:'Pay per click pricing is common in search.' },
+    { id:'w65', word:'page',             phonetic:'/peɪdʒ/',               mistake:'Starts with /p/, not /b/. PAGE, not BAGE.', example:'The landing page loaded slowly on mobile.' },
+    { id:'w66', word:'platform',         phonetic:'/ˈplætfɔːrm/',          mistake:'/p/ + /l/. The /l/ is clear, not dropped.', example:'Each platform has different auction rules.' },
+    { id:'w67', word:'price',            phonetic:'/praɪs/',               mistake:'/p/ not /b/. PRICE, not BRICE.', example:'We tested three different price points.' },
+    { id:'w68', word:'profit',           phonetic:'/ˈprɒfɪt/',             mistake:'/p/ not /b/. PROFIT, not BROFIT. This is the most commonly mispronounced word in your field.', example:'Profit margin improved after we cut waste.' },
+    { id:'w69', word:'proper',           phonetic:'/ˈprɒpər/',             mistake:'/p/ not /b/. PROP-er, not BROP-er.', example:'Set up the proper event before launching.' },
+    { id:'w70', word:'performance',      phonetic:'/pərˈfɔːrməns/',        mistake:'THE classic Arabic error: BER-formance. It is /p/, always.', example:'The campaign performance declined in week three.' },
+    { id:'w71', word:'personal',         phonetic:'/ˈpɜːrsənl/',           mistake:'/p/ not /b/. PER-sonal, not BER-sonal.', example:'Build a personal brand, not just a company page.' },
+    { id:'w72', word:'present',          phonetic:'/ˈpreznt/',             mistake:'/p/ not /b/. PRE-sent.', example:'I will present the results to the client.' },
+    { id:'w73', word:'percentage',       phonetic:'/pərˈsentɪdʒ/',         mistake:'/p/ not /b/. per-CENT-age.', example:'The conversion percentage rose to 4.2%.' },
+    { id:'w74', word:'possibility',      phonetic:'/ˌpɒsəˈbɪləti/',        mistake:'/p/ not /b/. pos-si-BIL-ity.', example:'There is a possibility the budget will increase.' },
+    { id:'w75', word:'potential',        phonetic:'/pəˈtenʃl/',            mistake:'/p/ not /b/. po-TEN-shul.', example:'The potential client asked for a proposal.' },
+    { id:'w76', word:'promotion',        phonetic:'/prəˈməʊʃn/',           mistake:'/p/ not /b/. pro-MO-tion.', example:'The promotion ran for two weeks.' },
+    { id:'w77', word:'process',          phonetic:'/ˈprəʊses/',            mistake:'/p/ not /b/. PRO-cess.', example:'We documented the reporting process.' },
+    { id:'w78', word:'product',          phonetic:'/ˈprɒdʌkt/',            mistake:'/p/ not /b/. PRO-duct.', example:'The product page had a clear call to action.' },
+    { id:'w79', word:'project',          phonetic:'/ˈprɒdʒekt/',           mistake:'/p/ not /b/. PRO-ject.', example:'The project timeline was three months.' },
+    { id:'w80', word:'plan',             phonetic:'/plæn/',                mistake:'/p/ not /b/. PLAN, not BLAN. Short and sharp.', example:'Plan the campaign before you spend a pound.' },
+    { id:'w81', word:'play',             phonetic:'/pleɪ/',                mistake:'/p/ not /b/. PLAY, not BLAY.', example:'The video will play automatically on mute.' },
+    { id:'w82', word:'please',           phonetic:'/pliːz/',               mistake:'/p/ not /b/. PLEASE, not BLEEZE.', example:'Please send the report by Friday.' },
+    { id:'w83', word:'practice',         phonetic:'/ˈpræktɪs/',            mistake:'/p/ not /b/. PRAC-tice.', example:'Daily practice is what builds the skill.' },
+    { id:'w84', word:'point',            phonetic:'/pɔɪnt/',               mistake:'/p/ not /b/. POINT, not BOINT.', example:'There is one point I want to raise.' },
+    { id:'w85', word:'put',              phonetic:'/pʊt/',                 mistake:'/p/ not /b/. PUT, not BUT. Very short vowel.', example:'Put the budget into the best ad set.' },
+    { id:'w86', word:'people',           phonetic:'/ˈpiːpl/',              mistake:'/p/ not /b/. PEE-ple.', example:'People scroll past weak creative in one second.' },
+    { id:'w87', word:'problem',          phonetic:'/ˈprɒbləm/',            mistake:'/p/ not /b/. PROB-lem.', example:'The problem was the landing page, not the ad.' },
+    { id:'w88', word:'provide',          phonetic:'/prəˈvaɪd/',            mistake:'/p/ not /b/. pro-VIDE.', example:'We provide monthly reporting to clients.' },
+    { id:'w89', word:'purpose',          phonetic:'/ˈpɜːrpəs/',            mistake:'/p/ not /b/. PUR-pose.', example:'Every ad needs one clear purpose.' },
+    { id:'w90', word:'partnership',      phonetic:'/ˈpɑːrtnərʃɪp/',        mistake:'/p/ not /b/. PART-ner-ship.', example:'We signed a partnership with a local agency.' },
+
+    /* ---- more field vocabulary ---- */
+    { id:'w91', word:'analytics',        phonetic:'/ˌænəˈlɪtɪks/',        mistake:'an-uh-LIT-iks. Do not say ana-LY-tics.', example:'Analytics shows the drop came from iOS traffic.' },
+    { id:'w92', word:'benchmark',        phonetic:'/ˈbentʃmɑːrk/',         mistake:'BENCH-mark. Two syllables only.', example:'Our cost per lead beats the industry benchmark.' },
+    { id:'w93', word:'cart',             phonetic:'/kɑːrt/',               mistake:'One syllable. CART, not KA-RET.', example:'Cart abandonment is highest on mobile.' },
+    { id:'w94', word:'checkout',         phonetic:'/ˈtʃekaʊt/',            mistake:'CHECK-out. Two clear parts.', example:'The checkout page took four seconds to load.' },
+    { id:'w95', word:'collateral',       phonetic:'/kəˈlætərəl/',          mistake:'col-LAT-er-al. Stress the second syllable.', example:'We produced the ad collateral in-house.' },
+    { id:'w96', word:'commission',       phonetic:'/kəˈmɪʃn/',             mistake:'com-MIS-sion. Stress the second.', example:'The platform takes no commission on leads.' },
+    { id:'w97', word:'competitor',       phonetic:'/kəmˈpetɪtər/',         mistake:'com-PET-i-tor. Stress the second.', example:'Our competitor bid twice our budget.' },
+    { id:'w98', word:'compliance',       phonetic:'/kəmˈplaɪəns/',         mistake:'com-PLI-ance. Not com-PLAY-ance.', example:'Ad compliance rules differ by country.' },
+    { id:'w99', word:'conversion',       phonetic:'/kənˈvɜːrʒn/',          mistake:'con-VER-zhun. The "v" is voiced \u2014 lips touch.', example:'The conversion rate doubled after the redesign.' },
+    { id:'w100',word:'credibility',      phonetic:'/ˌkredəˈbɪləti/',       mistake:'cred-i-BIL-i-ty. Stress the third.', example:'Case studies build credibility faster than claims.' }
   ],
 
   /* Difficult sounds for Arabic speakers — minimal pairs */
@@ -201,6 +245,7 @@ let speakingAudioURL = null;
    RENDER — master draw function
    --------------------------------------------------------------------- */
 function drawSpeaking(){
+  drawBP();
   drawSpeakingTools();
   drawSpeakingWords();
   drawSpeakingSounds();
@@ -208,6 +253,73 @@ function drawSpeaking(){
   drawSpeakingDailyPlan();
   drawSpeakingSchedule();
   drawSpeakingProgress();
+}
+
+/* ---------------------------------------------------------------------
+   SECTION: The B / P problem — the single most common Arabic error
+   --------------------------------------------------------------------- */
+const BP_PAIRS = [
+  {wrong:'berformance', right:'performance',    ex:'Campaign performance improved after the creative change.'},
+  {wrong:'campaign',    right:'campaign',       ex:'The campaign reached 500,000 people in one week.'},
+  {wrong:'bublic',      right:'public',         ex:'Public data shows the trend clearly.'},
+  {wrong:'bublish',     right:'publish',        ex:'We publish a weekly performance report.'},
+  {wrong:'purchase',    right:'purchase',       ex:'The purchase happened on the second click.'},
+  {wrong:'bay',         right:'pay per click',  ex:'Pay per click pricing is standard in search.'},
+  {wrong:'bage',        right:'page',           ex:'The landing page needs a stronger headline.'},
+  {wrong:'brice',       right:'price',          ex:'We tested three price points.'},
+  {wrong:'brofit',      right:'profit',         ex:'Profit margin improved after we cut waste.'},
+  {wrong:'bersonal',    right:'personal',       ex:'Your personal brand is an asset.'},
+  {wrong:'percentage',  right:'percentage',     ex:'The conversion percentage rose to 4.2%'},
+  {wrong:'possibility', right:'possibility',    ex:'There is a possibility the budget will grow.'},
+  {wrong:'potential',   right:'potential',      ex:'The potential client asked for a proposal.'},
+  {wrong:'promotion',   right:'promotion',      ex:'The promotion ran for two weeks.'},
+  {wrong:'brocess',     right:'process',        ex:'We documented the reporting process.'},
+  {wrong:'broduct',     right:'product',        ex:'The product page had a clear call to action.'},
+  {wrong:'broject',     right:'project',        ex:'The project timeline was three months.'},
+  {wrong:'blan',        right:'plan',           ex:'Plan the campaign before you spend.'},
+  {wrong:'beople',      right:'people',         ex:'People scroll past weak creative in a second.'},
+  {wrong:'problem',     right:'problem',        ex:'The problem was the page, not the ad.'},
+  {wrong:'provide',     right:'provide',        ex:'We provide monthly reporting.'},
+  {wrong:'partnership', right:'partnership',    ex:'We signed a partnership with an agency.'},
+  {wrong:'blease',      right:'please',         ex:'Please send the report by Friday.'},
+  {wrong:'point',       right:'point',          ex:'There is one point I want to raise.'},
+  {wrong:'put',         right:'put',            ex:'Put the budget into the best ad set.'}
+];
+
+function drawBP(){
+  const el = $('bpDrill');
+  if(!el) return;
+
+  let html = '<div class="bpHow">'
+    + '<div class="bpRule"><b>1.</b> Put your lips together firmly and push air out &mdash; <b>/p/</b> is a small explosion. No voice.'
+    + '<div class="bpFeel">Hold your hand an inch from your mouth. You should feel a puff of air on /p/ and <b>nothing</b> on /b/.</div></div>'
+    + '<div class="bpRule"><b>2.</b> /b/ is the same mouth position but with your voice switched on &mdash; you feel it buzz in your throat.'
+    + '<div class="bpFeel">Touch your throat. /b/ vibrates, /p/ does not. That is the whole difference.</div></div>'
+    + '<div class="bpRule"><b>3.</b> Drill the pairs below out loud, slow then fast: <b>p</b>... <b>b</b>... <b>p</b>... <b>b</b>... then the word.'
+    + '<div class="bpFeel">Do this for 3 minutes every day. It takes about two weeks to rewire.</div></div>'
+    + '</div>';
+
+  html += '<div class="bpGrid">';
+
+  BP_PAIRS.forEach(function(pr, i){
+    html += '<div class="bpPair">'
+      + '<div class="bpHead">'
+      +   '<button class="bpPlay" onclick="playWord(\'' + esc(pr.right) + '\')" title="Hear it">&#9654;</button>'
+      +   '<span class="bpRight">' + esc(pr.right) + '</span>'
+      + '</div>'
+      + '<div class="bpWrong"><span class="bpWrongTag">YOU SAY</span>' + esc(pr.wrong) + '</div>'
+      + '<div class="bpEx">&ldquo;' + esc(pr.ex) + '&rdquo;</div>'
+      + '</div>';
+  });
+
+  html += '</div>';
+
+  html += '<div class="bpTip">'
+    + '<b>Why this matters so much:</b> in your field, /p/ words are everywhere &mdash; <i>performance, campaign, page, price, profit, product, platform, placement, pixel, click-through</i>. '
+    + 'A native speaker will understand you anyway, but the moment you say <i>berformance</i> in an interview the impression is set. Fix this one sound and your spoken English jumps a level.'
+    + '</div>';
+
+  el.innerHTML = html;
 }
 
 /* ---------------------------------------------------------------------

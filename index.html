@@ -119,18 +119,13 @@
     <div class="tab"        data-page="boss"    data-bg="assets/bg/bg-boss.jpg">Boss Raids</div>
     <div class="tab"        data-page="courses" data-bg="assets/bg/bg-hunter.jpg">Course Track</div>
     <div class="tab"        data-page="roadmap" data-bg="assets/bg/bg-roadmap.jpg">Roadmap</div>
-    <div class="tab"        data-page="vault"   data-bg="assets/bg/bg-vault.jpg">Reward Vault</div>
     <div class="tab"        data-page="library" data-bg="assets/bg/bg-guide.jpg">Library</div>
-    <div class="tab"        data-page="typing"  data-bg="assets/bg/bg-hunter.jpg">Typing</div>
     <div class="tab"        data-page="skills"  data-bg="assets/bg/bg-boss.jpg">Skills</div>
     <div class="tab"        data-page="review"  data-bg="assets/bg/bg-status.jpg">Review</div>
     <div class="tab"        data-page="insight" data-bg="assets/bg/bg-dashboard.jpg">Insights</div>
-    <div class="tab"        data-page="coach"   data-bg="assets/bg/bg-status.jpg">Coach</div>
     <div class="tab"        data-page="vocab"   data-bg="assets/bg/bg-guide.jpg">Vocabulary</div>
     <div class="tab"        data-page="hunter"  data-bg="assets/bg/bg-boss.jpg">Hunter</div>
-    <div class="tab"        data-page="eggs"    data-bg="assets/bg/bg-boss.jpg">Eggs</div>
     <div class="tab"        data-page="shadow"  data-bg="assets/bg/bg-guide.jpg">Shadow</div>
-    <div class="tab"        data-page="stats"   data-bg="assets/bg/bg-status.jpg">Status</div>
     <div class="tab"        data-page="money"   data-bg="assets/bg/bg-vault.jpg">Money</div>
     <div class="tab"        data-page="speaking" data-bg="assets/bg/bg-vocab.jpg">Speaking</div>
     <div class="tab"        data-page="uptodate" data-bg="assets/bg/bg-dashboard.jpg">Up to Date</div>
@@ -220,23 +215,59 @@
     </div>
   </div>
 
-  <!-- ============ VAULT ============ -->
-  <div class="page" id="vault">
-    <div class="panel">
-      <div class="st"><h2>Reward Vault</h2><span class="tag">YOU DECIDE</span></div>
-      <div class="hint">You write every reward yourself. When you reach the level it unlocks. When you actually take it, come back and record it &mdash; an unrecorded reward is not a reward.</div>
-      <div id="rwList"></div>
-      <button class="btn" style="margin-top:14px" onclick="openRewardForm()">+ Write a New Reward</button>
-    </div>
-  </div>
-
   <!-- ============ LIBRARY ============ -->
   <div class="page" id="library">
-    <div class="panel">
-      <div class="st"><h2>Library</h2><span class="tag" id="libTag">0 / 15 READ</span></div>
-      <div class="hint">Real books, free and legal, readable right now. Open one with <b>READ FREE</b>, then come back and mark it done for XP. Start with <b>As a Man Thinketh</b> &mdash; it takes 35 minutes.</div>
-      <div id="libList"></div>
-    </div>
+      <div class="panel">
+        <div class="st"><h2>How to Actually Get Something Out of a Book</h2><span class="tag">READ THIS FIRST</span></div>
+        <div class="hint">Reading a book is not the goal. Changing how you work is the goal. These are the rules that make the difference between finishing a book and using it.</div>
+
+        <div class="readMethod">
+          <div class="rmStep"><span class="rmNum">1</span>
+            <div><div class="rmTitle">Read with a pen, never without</div>
+            <div class="rmBody">Underline. Write in the margin. A book you have written in is a book you will use. A clean book is a book you will forget.</div></div>
+          </div>
+
+          <div class="rmStep"><span class="rmNum">2</span>
+            <div><div class="rmTitle">Stop at every idea and say it in your own words</div>
+            <div class="rmBody">If you cannot explain it back to yourself, you did not understand it. Close the book, say it out loud, then open it again. This single habit is worth more than reading ten books.</div></div>
+          </div>
+
+          <div class="rmStep"><span class="rmNum">3</span>
+            <div><div class="rmTitle">Turn one idea into one action before you read the next</div>
+            <div class="rmBody">Do not finish a book with 40 highlights and no change. Pick <b>one</b> thing and do it this week. One used idea beats fifty collected ones.</div></div>
+          </div>
+
+          <div class="rmStep"><span class="rmNum">4</span>
+            <div><div class="rmTitle">For English books: read at 95% understanding, not 100%</div>
+            <div class="rmBody">If you need a dictionary for every third word, the book is too hard. If you need it once a page, it is perfect. Stop looking up every unknown word &mdash; guess from context, check later.</div></div>
+          </div>
+
+          <div class="rmStep"><span class="rmNum">5</span>
+            <div><div class="rmTitle">Read the same paragraph out loud once</div>
+            <div class="rmBody">Reading silently trains reading. Reading out loud trains speaking, pronunciation and rhythm. Your speaking is 50/B1 and needs the work &mdash; every book is a speaking exercise if you let it be.</div></div>
+          </div>
+
+          <div class="rmStep"><span class="rmNum">6</span>
+            <div><div class="rmTitle">Summarise the chapter in three sentences &mdash; in English</div>
+            <div class="rmBody">This is the most valuable habit on this list for you. Three sentences, written down, in English. It trains writing (your A2 gap), comprehension and recall all at once. Put them in a notebook.</div></div>
+          </div>
+
+          <div class="rmStep"><span class="rmNum">7</span>
+            <div><div class="rmTitle">Re-read the best book twice</div>
+            <div class="rmBody">The second read of a good book teaches more than the first read of a new one. The only books worth re-reading are the ones you acted on the first time.</div></div>
+          </div>
+        </div>
+
+        <div class="rmWarning">
+          <b>The trap:</b> it feels productive to collect books, download them, and mark them "read". It is not. You are not building a library. You are building a skill set. One book, applied, is worth a hundred on this list.
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="st"><h2>Library</h2><span class="tag" id="libTag">0 / 15 READ</span></div>
+        <div class="hint">Real books, free and legal, readable right now. Open one with <b>READ FREE</b>, then come back and mark it done for XP. Start with <b>As a Man Thinketh</b> &mdash; it takes 35 minutes.</div>
+        <div id="libList"></div>
+      </div>
     <div class="panel">
       <div class="st"><h2>English &mdash; Your Measured Profile</h2><span class="tag">EF SET 4-SKILL</span></div>
       <div class="hint">Scored separately, not one blended number. This is what actually tells you where to work.</div>
@@ -248,36 +279,6 @@
       <div class="st"><h2>English Tools</h2><span class="tag">FREE</span></div>
       <div class="hint">Ordered by what actually moves your score. The first one is the only one that matters right now.</div>
       <div id="engList"></div>
-    </div>
-  </div>
-
-  <!-- ============ TYPING ============ -->
-  <div class="page" id="typing">
-    <div class="panel">
-      <div class="st"><h2>Typing Speed</h2><span class="tag" id="typeTag">NOT MEASURED</span></div>
-      <div class="hint" id="typeWhy"></div>
-      <div class="frm" style="grid-template-columns:1fr 1fr;gap:12px">
-        <div>
-          <label style="display:block;font-size:12px;color:var(--glow);letter-spacing:1px;margin-bottom:6px">CURRENT WPM</label>
-          <input id="typeNow" type="number" min="0" max="250" placeholder="e.g. 32">
-        </div>
-        <div>
-          <label style="display:block;font-size:12px;color:var(--glow);letter-spacing:1px;margin-bottom:6px">TARGET WPM</label>
-          <input id="typeTarget" type="number" min="10" max="250" value="60">
-        </div>
-      </div>
-      <button class="btn" style="margin-top:12px" onclick="saveTyping()">Save My Speed</button>
-      <div id="typeProgress" style="margin-top:18px"></div>
-    </div>
-
-    <div class="panel">
-      <div class="st"><h2>Speed Levels</h2><span class="tag">WHERE YOU ARE</span></div>
-      <div id="typeLevels"></div>
-    </div>
-
-    <div class="panel">
-      <div class="st"><h2>Practice Tools</h2><span class="tag">FREE</span></div>
-      <div id="typeTools"></div>
     </div>
   </div>
 
@@ -314,12 +315,18 @@
     </div>
 
     <div class="panel">
+      <div class="st"><h2>The B / P Problem &mdash; Fix This First</h2><span class="tag">YOUR #1 ISSUE</span></div>
+      <div class="hint">Arabic does not have a <b>/p/</b> sound, so Arabic speakers almost always say <b>/b/</b> instead. You say <i>berformance</i> instead of <i>performance</i>. This is the single most common pronunciation error in your field, and it is the first thing a native speaker notices. Every word below is one you actually use at work.</div>
+      <div id="bpDrill"></div>
+    </div>
+
+    <div class="panel">
       <div class="st"><h2>Pronunciation Tools</h2><span class="tag">FREE</span></div>
       <div id="speakingTools"></div>
     </div>
 
     <div class="panel">
-      <div class="st"><h2>Difficult Words</h2><span class="tag" id="speakingWordsTag">0 / 20 DONE</span></div>
+      <div class="st"><h2>Difficult Words</h2><span class="tag" id="speakingWordsTag">0 / 100 DONE</span></div>
       <div id="speakingWords"></div>
     </div>
 
@@ -358,11 +365,11 @@
     </div>
   </div>
 
-  <!-- ============ INSIGHTS ============ -->
+  <!-- ============ INSIGHTS (merged with Status) ============ -->
   <div class="page" id="insight">
     <div class="panel">
-      <div class="st"><h2>Consistency</h2><span class="tag">LAST 30 DAYS</span></div>
-      <div class="hint">One square per day. Green means you did something that day. This is the whole game &mdash; not how much you did, but that you showed up.</div>
+      <div class="st"><h2>Streak Calendar</h2><span class="tag">THIS MONTH</span></div>
+      <div class="hint">Every day you complete at least one mission lights up. The colour shows how much you did. Your streak is the run of lit days ending today &mdash; that is what the multiplier is built on.</div>
       <div id="heatMap"></div>
       <div id="streakStats" class="grid" style="margin-top:18px"></div>
     </div>
@@ -378,29 +385,56 @@
     </div>
 
     <div class="panel">
+      <div class="st"><h2>Hunter Rank</h2><span class="tag">E &rarr; S</span></div>
+      <div id="rankList"></div>
+    </div>
+
+    <div class="panel">
+      <div class="st"><h2>Status Window</h2><span class="tag">HONEST</span></div>
+      <div class="hint">Built from your real CV, income, health data and English level. The starting levels are an assessment, not a guess.</div>
+      <div class="grid" id="statGrid"></div>
+    </div>
+
+    <div class="panel">
+      <div class="st"><h2>Straight Assessment</h2><span class="tag">NO FLATTERY</span></div>
+      <div id="assessList"></div>
+    </div>
+
+    <div class="panel">
+      <div class="st"><h2>Badges</h2><span class="tag" id="badgeTag">0 / 32 EARNED</span></div>
+      <div class="hint">Earned once, kept forever. They are not tied to your level &mdash; you cannot lose them.</div>
+      <div class="badgeGrid" id="badgeGrid"></div>
+    </div>
+
+    <div class="panel">
       <div class="st"><h2>Domain Balance</h2><span class="tag">ARE YOU NEGLECTING SOMETHING?</span></div>
       <div class="hint">If one bar is far shorter than the rest, that part of your life is being ignored. The System notices.</div>
       <div id="domainBal"></div>
     </div>
-  </div>
 
-  <!-- ============ COACH ============ -->
-  <div class="page" id="coach">
     <div class="panel">
-      <div class="st"><h2>Send to Hermes</h2><span class="tag">YOUR COACH</span></div>
-      <div class="hint">Report what you did, ask what to do next, or flag a mission that is not working. Your message is saved here and copied to the clipboard &mdash; paste it to Hermes in chat and he answers and updates the System.</div>
-      <div class="frm">
-        <input id="cName" placeholder="Subject &mdash; e.g. Finished the Google Ads cert">
-        <textarea id="cBody" placeholder="What I did, what worked, what I could not finish, what I want next&hellip;"></textarea>
-        <div style="display:flex;gap:9px;flex-wrap:wrap">
-          <button class="btn" onclick="sendToHermes()">Save &amp; Copy Message</button>
-          <button class="btn" onclick="quickReport()">Quick Progress Report</button>
-        </div>
+      <div class="st"><h2>Streak Protection</h2><span class="tag">FREEZE</span></div>
+      <div class="hint">A freeze saves your streak if you miss a day by accident. You start with <b>zero</b> freezes, earn another every 21-day streak, and can hold a maximum of two. The catch: using one costs HP and leaves a debt you have to earn back in missions.</div>
+      <div class="grid">
+        <div class="stat"><div class="h"><span class="n">Freezes Held</span><span class="lv" id="rF">1</span></div><div class="sb">Maximum 2 at a time</div></div>
+        <div class="stat"><div class="h"><span class="n">Cost to Buy</span><span class="lv" id="fCost">300</span></div><div class="sb">XP per freeze</div></div>
+        <div class="stat"><div class="h"><span class="n">Debt per Use</span><span class="lv" id="fDebt">150</span></div><div class="sb">XP you must earn back</div></div>
+        <div class="stat"><div class="h"><span class="n">Earned Every</span><span class="lv" id="fEvery">21</span></div><div class="sb">Days of unbroken streak</div></div>
       </div>
+      <button class="btn" style="margin-top:14px" onclick="buyFreeze()">Buy a Freeze</button>
     </div>
+
     <div class="panel">
-      <div class="st"><h2>Message History</h2><span class="tag" id="msgCount">0</span></div>
-      <div id="msgList" class="hint">Nothing sent yet.</div>
+      <div class="st"><h2>Records</h2><span class="tag">ALL TIME</span></div>
+      <div class="grid">
+        <div class="stat"><div class="h"><span class="n">Missions Completed</span><span class="lv" id="rQ">0</span></div><div class="sb">Daily and weekly combined</div></div>
+        <div class="stat"><div class="h"><span class="n">Raid Steps Cleared</span><span class="lv" id="rS">0</span></div><div class="sb">Progress on long-term goals</div></div>
+        <div class="stat"><div class="h"><span class="n">Best Streak</span><span class="lv" id="rB">0</span></div><div class="sb">Consecutive active days</div></div>
+        <div class="stat"><div class="h"><span class="n">Courses Finished</span><span class="lv" id="rC">0</span></div><div class="sb">From the Course Track</div></div>
+        <div class="stat"><div class="h"><span class="n">Rewards Claimed</span><span class="lv" id="rR">0</span></div><div class="sb">Real rewards you actually took</div></div>
+        <div class="stat"><div class="h"><span class="n">Penalties Taken</span><span class="lv" id="rP">0</span></div><div class="sb">Failed daily quests</div></div>
+        <div class="stat"><div class="h"><span class="n">XP Lost</span><span class="lv" id="rL">0</span></div><div class="sb">The cost of missed days</div></div>
+      </div>
     </div>
   </div>
 
@@ -428,23 +462,10 @@
     </div>
   </div>
 
-  <!-- ============ HUNTER (class + focus + vision) ============ -->
+  <!-- ============ HUNTER (merged: class + HP/mana + vision) ============ -->
   <div class="page" id="hunter">
     <div class="panel">
-      <div class="st"><h2>Focus Timer</h2><span class="tag" id="focusTag">0 / 4 TODAY</span></div>
-      <div class="hint">25 minutes of deep work, then a 5-minute break. The timer floats in the corner so you can keep working while it runs. Each finished session is <b>+15 XP</b>.</div>
-      <div style="text-align:center;padding:18px 0">
-        <div class="focusBig" id="focusTimer">25:00</div>
-        <div class="focusState" id="focusStatus">Ready when you are</div>
-        <div style="display:flex;gap:10px;justify-content:center;margin-top:18px;flex-wrap:wrap">
-          <button class="btn" onclick="startPomodoro()">Start Focus Session</button>
-          <button class="btn" onclick="stopPomodoro()">Stop</button>
-        </div>
-      </div>
-    </div>
-
-    <div class="panel">
-      <div class="st"><h2>Your Class</h2><span class="tag">LEVEL 10+</span></div>
+      <div class="st"><h2>Your Class</h2><span class="tag" id="classTag">LEVEL 10+</span></div>
       <div class="hint">At level 10 you pick a path. Each class has a passive bonus that applies automatically and an ability you spend mana on. This is permanent.</div>
       <div id="classList"></div>
     </div>
@@ -473,107 +494,24 @@
     </div>
   </div>
 
-  <!-- ============ SHADOW ============ -->
+  <!-- ============ SHADOW ARMY (merged: eggs + shadow + characters) ============ -->
   <div class="page" id="shadow">
-    <div class="panel">
-      <div class="st"><h2>Shadow Soldier</h2><span class="tag" id="shadowTag">LEVEL 0</span></div>
-      <div class="hint">Your Shadow grows automatically as you complete missions &mdash; one level every 8 missions. Keep working and it evolves.</div>
-      <div id="shadowDisplay" style="text-align:center;padding:20px;"></div>
-    </div>
-    <div class="panel">
-      <div class="st"><h2>Shadow Army</h2><span class="tag" id="charTag">0 / 14 UNLOCKED</span></div>
-      <div class="hint">Every character you have summoned. Duplicates raise a character's star rating instead of going to waste &mdash; five stars is the ceiling.</div>
-      <div id="charList"></div>
-    </div>
-  </div>
-
-  <!-- ============ EGGS ============ -->
-  <div class="page" id="eggs">
     <div class="panel">
       <div class="st"><h2>Eggs</h2><span class="tag" id="eggTag">0 READY</span></div>
       <div class="hint">Eggs are earned by playing &mdash; they cost nothing and there is nothing to farm. Clear missions, keep your streak, finish raids, and they pile up on their own. Open them whenever you like.</div>
       <div id="eggList"></div>
     </div>
-  </div>
 
-  <!-- ============ STATUS ============ -->
-  <div class="page" id="stats">
     <div class="panel">
-      <div class="st"><h2>Status Window</h2><span class="tag">HONEST</span></div>
-      <div class="hint">Built from your real CV, income, health data and English level. The starting levels are an assessment, not a guess.</div>
-      <div class="grid" id="statGrid"></div>
+      <div class="st"><h2>Shadow Soldier</h2><span class="tag" id="shadowTag">LEVEL 0</span></div>
+      <div class="hint">Your Shadow grows automatically as you complete missions &mdash; one level every 8 missions. Keep working and it evolves.</div>
+      <div id="shadowDisplay" style="text-align:center;padding:20px;"></div>
     </div>
 
     <div class="panel">
-      <div class="st"><h2>Straight Assessment</h2><span class="tag">NO FLATTERY</span></div>
-      <div id="assessList"></div>
-    </div>
-
-    <div class="panel">
-      <div class="st"><h2>Hunter Rank</h2><span class="tag">E &rarr; S</span></div>
-      <div id="rankList"></div>
-    </div>
-
-    <div class="panel">
-      <div class="st"><h2>Badges</h2><span class="tag" id="badgeTag">0 / 32 EARNED</span></div>
-      <div class="hint">Earned once, kept forever. They are not tied to your level &mdash; you cannot lose them.</div>
-      <div class="badgeGrid" id="badgeGrid"></div>
-    </div>
-
-    <div class="panel">
-      <div class="st"><h2>Streak Protection</h2><span class="tag">FREEZE</span></div>
-      <div class="hint">A freeze saves your streak if you miss a day by accident. You start with <b>zero</b> freezes, earn another every 21-day streak, and can hold a maximum of two. The catch: using one costs HP and leaves a debt you have to earn back in missions.</div>
-      <div class="grid">
-        <div class="stat"><div class="h"><span class="n">Freezes Held</span><span class="lv" id="rF">1</span></div><div class="sb">Maximum 2 at a time</div></div>
-        <div class="stat"><div class="h"><span class="n">Cost to Buy</span><span class="lv" id="fCost">300</span></div><div class="sb">XP per freeze</div></div>
-        <div class="stat"><div class="h"><span class="n">Debt per Use</span><span class="lv" id="fDebt">150</span></div><div class="sb">XP you must earn back</div></div>
-        <div class="stat"><div class="h"><span class="n">Earned Every</span><span class="lv" id="fEvery">21</span></div><div class="sb">Days of unbroken streak</div></div>
-      </div>
-      <button class="btn" style="margin-top:14px" onclick="buyFreeze()">Buy a Freeze</button>
-    </div>
-
-    <div class="panel">
-      <div class="st"><h2>Add XP</h2><span class="tag">MANUAL</span></div>
-      <div class="hint">Add XP to your total directly. Use this if the system missed something or you want to correct your XP.</div>
-      <div style="display:flex;gap:10px;margin-top:14px;align-items:center">
-        <input type="number" id="xpInput" placeholder="Enter XP to add" min="0" style="flex:1;padding:10px 14px;background:rgba(10,17,34,.9);border:1px solid var(--line);border-radius:4px;color:#fff;font-family:var(--hud);font-size:16px">
-        <button class="btn warn" onclick="addXPManual()">Add XP</button>
-      </div>
-    </div>
-
-    <div class="panel">
-      <div class="st"><h2>Records</h2><span class="tag">ALL TIME</span></div>
-      <div class="grid">
-        <div class="stat"><div class="h"><span class="n">Missions Completed</span><span class="lv" id="rQ">0</span></div><div class="sb">Daily and weekly combined</div></div>
-        <div class="stat"><div class="h"><span class="n">Raid Steps Cleared</span><span class="lv" id="rS">0</span></div><div class="sb">Progress on long-term goals</div></div>
-        <div class="stat"><div class="h"><span class="n">Best Streak</span><span class="lv" id="rB">0</span></div><div class="sb">Consecutive active days</div></div>
-        <div class="stat"><div class="h"><span class="n">Courses Finished</span><span class="lv" id="rC">0</span></div><div class="sb">From the Course Track</div></div>
-        <div class="stat"><div class="h"><span class="n">Rewards Claimed</span><span class="lv" id="rR">0</span></div><div class="sb">Real rewards you actually took</div></div>
-        <div class="stat"><div class="h"><span class="n">Penalties Taken</span><span class="lv" id="rP">0</span></div><div class="sb">Failed daily quests</div></div>
-        <div class="stat"><div class="h"><span class="n">XP Lost</span><span class="lv" id="rL">0</span></div><div class="sb">The cost of missed days</div></div>
-      </div>
-    </div>
-
-    <div class="panel">
-      <div class="st"><h2>Backup &amp; Restore</h2><span class="tag" id="backupTag">NEVER</span></div>
-      <div class="hint">Your level, XP, streak, badges and rewards live in this browser only. The System keeps an automatic snapshot of the last 7 days on this device, but that snapshot dies with the browser data too. Export a file and keep it somewhere else &mdash; it is the only real safety net.</div>
-      <div style="display:flex;gap:9px;flex-wrap:wrap;align-items:center">
-        <button class="btn" onclick="exportProgress()">Export Backup File</button>
-        <button class="btn" onclick="document.getElementById('restoreFile').click()">Restore From File</button>
-        <button class="btn" onclick="recoverAutoBackup()">Recover Auto-Backup</button>
-        <input type="file" id="restoreFile" accept=".json,application/json" style="display:none"
-               onchange="importProgress(this.files[0]); this.value='';">
-      </div>
-      <div class="hint" id="backupHint" style="margin-top:12px;margin-bottom:0"></div>
-      <div id="snapList" style="margin-top:14px"></div>
-    </div>
-
-    <div class="panel">
-      <div class="st"><h2>Danger Zone</h2></div>
-      <div style="display:flex;gap:9px;flex-wrap:wrap">
-        <button class="btn" onclick="clearDebt()">Clear Penalty Record</button>
-        <button class="btn warn" onclick="resetAll()">Reset All Data</button>
-      </div>
+      <div class="st"><h2>Shadow Army</h2><span class="tag" id="charTag">0 / 15 UNLOCKED</span></div>
+      <div class="hint">Every character you have summoned. Duplicates raise a character's star rating instead of going to waste &mdash; five stars is the ceiling.</div>
+      <div id="charList"></div>
     </div>
   </div>
 

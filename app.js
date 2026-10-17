@@ -417,7 +417,6 @@ function stopPomodoro(silent){
   if(pomoTick){ clearInterval(pomoTick); pomoTick = null; }
   if(!silent) sfx('close');
   hidePomo();
-  drawFocus();
 }
 
 function runPomoTick(){
@@ -742,7 +741,6 @@ function learnAllVocab(){
 
 function save(){
   /* safety net: if any critical field is missing, restore it from blank() */
-  const b = blank();
   let dirty = false;
   if(!S.speaking){ S.speaking = {wordsDone:[], recordings:[]}; dirty = true; }
   if(!S.expenses){ S.expenses = {}; dirty = true; }
@@ -751,9 +749,13 @@ function save(){
   if(!S.habitDays){ S.habitDays = {}; dirty = true; }
   if(!S.formedHabits){ S.formedHabits = {}; dirty = true; }
   if(!S.moneyProgress){ S.moneyProgress = {}; dirty = true; }
-  if(dirty) log('SYSTEM', 'Save integrity check: restored missing fields.');
+
+  /* every save gets a timestamp so devices can compare fairly */
+  S.lastModified = Date.now();
+
   try{ localStorage.setItem(SAVE_KEY, JSON.stringify(S)); }catch(e){}
   cloudSave();   /* sync to cloud in the background */
+  if(dirty) log('SYSTEM', 'Save integrity check: restored missing fields.');
 }
 
 /* ---------------------------------------------------------------------
@@ -1002,28 +1004,6 @@ function getNextCourse(){
   /* stage 1 first, then by array order */
   return available.sort((a,b) => (a.stage||9) - (b.stage||9))[0];
 }
-function addXPManual(){
-  const input = document.getElementById('xpInput');
-  if(!input) return;
-  const val = parseInt(input.value, 10);
-  if(isNaN(val) || val <= 0){
-    alert('Please enter a positive XP amount.');
-    return;
-  }
-  const oldXP = S.xp;
-  S.xp += val;
-  S.level = Math.floor(S.xp / LEVEL_XP) + 1;
-  S.xpSource = S.xpSource || {};
-  S.xpSource.manual = (S.xpSource.manual || 0) + val;
-  save();
-  const diff = S.xp - oldXP;
-  log('XP ADDED', 'Manually added <b>'+val+' XP</b>. Total: <b>'+S.xp+' XP</b> (Level '+S.level+').');
-  sfx('badge');
-  overlay('XP ADDED', '+' + val + ' XP', 'Total: ' + S.xp + ' XP · Level ' + S.level, false);
-  renderAll();
-  input.value = '';
-}
-
 /* ---------------------------------------------------------------------
    CLOUD SYNC — push/pull progress to JSONBin.io so all devices share
    the same save. LocalStorage stays as the fast local cache.
@@ -1046,8 +1026,12 @@ function cloudLoad(){
   }).then(r=>r.json()).then(j=>{
     if(j && j.record && j.record.xp !== undefined){
       const cloud = j.record;
-      /* cloud wins if it has more XP (prevents stale overwrites) */
-      if(cloud.xp >= S.xp){
+      /* the most recently changed save wins. XP is the tiebreaker. */
+      const cloudTime = cloud.lastModified || 0;
+      const localTime = S.lastModified || 0;
+
+      const cloudWins = (cloudTime > localTime) || (cloudTime === localTime && cloud.xp >= S.xp);
+      if(cloudWins){
         /* merge: keep all new blank() fields, override with cloud data */
         const fresh = blank();
         S = Object.assign(fresh, cloud);
@@ -1784,87 +1768,7 @@ function saveMsg(subject, body){
 /* ---------------------------------------------------------------------
    CLEAR THE DEBT — fresh start
    --------------------------------------------------------------------- */
-function clearDebt(){
-  const owed = S.punishment;
-  if(owed <= 0 && S.xpLost === 0){ alert('Nothing to clear. You are clean.'); return; }
-  if(!confirm('Clear ' + owed + ' XP of freeze debt and reset the penalty record?')) return;
-  S.punishment = 0;
-  S.xpLost = 0;
-  S.penCount = 0;
-  save();
-  overlay('DEBT CLEARED','0 XP','A clean slate. What happened before does not count against you.', false);
-  log('SYSTEM','Debt cleared. The slate is clean \u2014 go and earn it.');
-  renderAll();
-}
 
-/* ---------------------------------------------------------------------
-   BACKUP & RESTORE — the safety net for your progress
-   --------------------------------------------------------------------- */
-function exportProgress(){
-  const data = {
-    app:'solo-leveling', ver:S.ver, exported:new Date().toISOString(),
-    summary:{ level:S.level, xp:S.xp, rank:RANKS[rankIdx(S.xp)].name, streak:S.streak, badges:S.badges.length },
-    state:S
-  };
-  const name = 'solo-leveling-backup-' + dayKey() + '.json';
-  const blob = new Blob([JSON.stringify(data, null, 2)], {type:'application/json'});
-  const url  = URL.createObjectURL(blob);
-  const a    = document.createElement('a');
-  a.href = url; a.download = name;
-  document.body.appendChild(a); a.click(); a.remove();
-  setTimeout(()=>URL.revokeObjectURL(url), 1500);
-
-  S.lastBackup = dayKey();
-  save();
-  log('BACKUP','Progress exported to <b>'+name+'</b>. Keep it somewhere safe.');
-  renderAll();
-}
-
-function importProgress(file){
-  if(!file) return;
-  const r = new FileReader();
-  r.onload = () => {
-    let parsed;
-    try{ parsed = JSON.parse(r.result); }
-    catch(e){ alert('That file is not a valid backup.'); return; }
-
-    const state = parsed && parsed.state ? parsed.state : parsed;
-    if(!state || typeof state.xp !== 'number'){ alert('That file does not look like a SOLO LEVELING backup.'); return; }
-
-    const s = parsed.summary || {};
-    const msg = 'Restore this backup?\n\n'
-      + 'Level ' + (s.level != null ? s.level : state.level)
-      + '  \u00b7  ' + (s.xp != null ? s.xp : state.xp) + ' XP'
-      + (s.rank ? '  \u00b7  ' + s.rank : '')
-      + (s.streak != null ? '\nStreak: ' + s.streak + ' days' : '')
-      + (parsed.exported ? '\nExported: ' + new Date(parsed.exported).toLocaleString() : '')
-      + '\n\nThis REPLACES your current progress.';
-
-    if(!confirm(msg)) return;
-
-    S = Object.assign(blank(), state);
-    if(!S.statXP) S.statXP = {};
-    if(!S.courses) S.courses = {};
-    if(!S.freezeUsed) S.freezeUsed = [];
-    if(!S.milestones) S.milestones = [];
-    if(!S.badges) S.badges = [];
-    save();
-    renderAll();
-    showPhrase();
-    overlay('RESTORED','BACKUP LOADED','Your progress has been recovered.', false);
-    log('RESTORE','Progress restored from backup.');
-  };
-  r.readAsText(file);
-}
-
-function backupStatus(){
-  if(!S.lastBackup) return {text:'never', warn:true};
-  const d = daysBetween(S.lastBackup, dayKey());
-  if(d === 0) return {text:'today', warn:false};
-  if(d === 1) return {text:'yesterday', warn:false};
-  if(d < 7)   return {text:d + ' days ago', warn:false};
-  return {text:d + ' days ago', warn:true};
-}
 
 /* ---------------------------------------------------------------------
    AUTO-BACKUP — quietly writes a rolling snapshot so a wiped browser
@@ -1892,21 +1796,6 @@ function autoBackupInfo(){
     const hist = JSON.parse(localStorage.getItem('soloSnapshots') || '[]');
     return hist;
   }catch(e){ return []; }
-}
-
-/* recover the auto-saved state if the main save is ever lost */
-function recoverAutoBackup(){
-  let raw = null;
-  try{ raw = localStorage.getItem('soloAutoState'); }catch(e){}
-  if(!raw){ sfx('error'); alert('No automatic backup was found on this device.'); return; }
-  if(!confirm('Restore the last automatic backup? This replaces your current progress.')) return;
-  try{
-    const o = Object.assign(blank(), JSON.parse(raw));
-    S = o;
-    save(); renderAll();
-    overlay('RECOVERED','AUTO BACKUP','Your progress has been restored from the daily snapshot.', false);
-    log('RESTORE','Recovered from the automatic backup.');
-  }catch(e){ alert('That backup could not be read.'); }
 }
 
 /* ---------------------------------------------------------------------

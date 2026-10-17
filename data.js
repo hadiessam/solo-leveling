@@ -20,7 +20,7 @@ const STATS = [
   {key:'health',   name:'Health',           icon:'health', start:2,
    why:'167 cm, 85 kg. BMI 30.5 \u2014 clinically obese. No established training habit yet.'},
   {key:'relations',name:'Relationships',    icon:'relations', start:4,
-   why:'Agency internship and client work give you a network. It needs to be activated deliberately for the Saudi move.'}
+   why:'Agency internship and client work give you a network. It needs to be activated deliberately for the career you are building.'}
 ];
 
 /* ---------------------------------------------------------------
@@ -30,7 +30,7 @@ const STATS = [
 const COURSES = [
   {id:'c1', stage:1, name:'Google Ads Search Certification', platform:'Google Skillshop',
    url:'https://skillshop.withgoogle.com/', hours:'4-6h',
-   why:'You list Google Ads on your CV but your experience is Meta-first. This closes that gap and is the most expected credential for a media buyer in Saudi Arabia.',
+   why:'You list Google Ads on your CV but your experience is Meta-first. This closes that gap and is the most expected credential for a media buyer in Egypt and the Gulf.',
    proof:'Free certificate, add to LinkedIn.'},
 
   {id:'c2', stage:1, name:'Google Analytics Certification (GA4)', platform:'Google Skillshop',
@@ -50,7 +50,7 @@ const COURSES = [
 
   {id:'c5', stage:1, name:'Snapchat Ads Certification (Snap Focus)', platform:'Snapchat for Business',
    url:'https://forbusiness.snapchat.com/resources/snapfocus', hours:'2-4h',
-   why:'Snapchat is a major channel in Saudi Arabia specifically \u2014 far bigger there than in Egypt. Knowing it before you land is a genuine advantage.',
+   why:'Snapchat is a major channel in the Gulf specifically \u2014 far bigger there than in Egypt. Knowing it before you land is a genuine advantage.',
    proof:'Free certification.'},
 
   {id:'c6', stage:2, name:'Digital Advertising Certification', platform:'HubSpot Academy',
@@ -70,7 +70,7 @@ const COURSES = [
 
   {id:'c9', stage:2, name:'Excel Skills for Business', platform:'Coursera \u00b7 Macquarie University',
    url:'https://www.coursera.org/specializations/excel', hours:'~20h',
-   why:'Every performance marketing job in Saudi Arabia will test Excel. Pivot tables and reporting are assumed, not taught. Feeds directly into the automated reporting you will build in Make.',
+   why:'Every performance marketing job in Egypt and the Gulf will test Excel. Pivot tables and reporting are assumed, not taught. Feeds directly into the automated reporting you will build in Make.',
    proof:'Free to audit.'},
 
   {id:'c10', stage:3, name:'Inbound Marketing Certification', platform:'HubSpot Academy',
@@ -110,7 +110,7 @@ const COURSES = [
   {id:'c16', stage:1, name:'Meta Blueprint Certification Path', platform:'Meta Blueprint',
    url:'https://www.facebook.com/business/learn/certification',
    hours:'study + exam',
-   why:'The formal Media Buying Professional credential. You already run Meta daily \u2014 this makes it official on paper for a Saudi recruiter who does not know your name yet.',
+   why:'The formal Media Buying Professional credential. You already run Meta daily \u2014 this makes it official on paper for a recruiter who does not know your name yet.',
    proof:'Study guide and practice tests free; exam is paid.'},
 
   /* --- STAGE 2 (continues): AUTOMATION --- */
@@ -245,8 +245,8 @@ const DAILY = [
   {id:'d7', t:1, name:'30 minutes of reading',      sub:'Self-Development', stat:'selfdev', xp:5,
    guide:'You read about 5 pages per 15 minutes, so 30 minutes is roughly 10 pages. Aim for 10 pages, not for 30 minutes.\n\nRead in English when you can \u2014 it compounds with the English work. Arabic is fine for the mindset books.\n\nThe Library tab now has REAL books you can open and read right now, free and legal: As a Man Thinketh (35 min, start tonight), The Art of War, Meditations, The Richest Man in Babylon, and full university textbooks on marketing and business writing.'},
 
-  {id:'d18', t:1, name:'10 minutes of touch typing', sub:'Skills', stat:'skills', xp:5,
-   guide:'THE HIGHEST-RETURN 10 MINUTES IN THIS LIST.\n\nGo to keybr.com and do one session. It finds the letters you are slow at and drills them automatically. No setup, no account needed.\n\nWHY IT MATTERS: you will write client reports, campaign summaries, proposals and ad copy for the rest of your career. At 25 words per minute a 1,000-word report takes 40 minutes. At 60 WPM it takes 16. That is 24 minutes back on every single document, forever.\n\nOnce a week, test yourself on monkeytype.com and write the number down. You will be at 60 WPM in about 8 weeks.'},
+  {id:'d18', t:1, name:'Touch typing practice \u2014 20 min', sub:'Skills', stat:'skills', xp:8,
+   guide:'THE HIGHEST-RETURN 20 MINUTES IN THIS LIST.\n\nGo to keybr.com and do a full session. It finds the letters you are slow at and drills them automatically. No setup, no account needed.\n\nWHY IT MATTERS: you will write client reports, campaign summaries, proposals and ad copy for the rest of your career. At 25 words per minute a 1,000-word report takes 40 minutes. At 60 WPM it takes 16. That is 24 minutes back on every single document, forever.\n\nOnce a week, test yourself on monkeytype.com and write the number down. You will be at 60 WPM in about 8 weeks.\n\n20 minutes beats two separate 10-minute sessions \u2014 typing is a physical skill and it needs uninterrupted time to build.'},
 
   {id:'d8', t:1, name:'No phone for the first 30 min', sub:'Discipline', stat:null,   xp:5,
    guide:'From waking until 30 minutes later: no phone. Not for the time, not for messages, not for anything.\n\nPut it across the room before you sleep so you must physically get up to reach it.'},
@@ -256,9 +256,6 @@ const DAILY = [
 
   {id:'d10',t:1, name:'Phone-free hour',  sub:'Discipline', stat:null,      xp:7,
    guide:'One full hour with the phone completely off or in another room. Not "I will not scroll" \u2014 physically away.\n\nPick a fixed time every day (e.g. 9pm-10pm). During that hour: read, study, walk, or just sit. The goal is to prove to yourself that you can exist without it.\n\nStart with one hour. If that feels easy, extend to two.'},
-
-  {id:'d21',t:1, name:'Practice a skill for 15 min', sub:'Skills', stat:'skills', xp:5,
-   guide:'Spend 15 minutes practicing any skill: typing, Excel, presentation design, HTML, or anything from the Skills tab.\n\nUse the phone-free hour for this. The goal is to replace scrolling with learning.'},
 
   {id:'d22',t:1, name:'Plan tomorrow\'s top 3', sub:'Discipline', stat:null, xp:2,
    guide:'Before sleeping, write down the 3 most important things to do tomorrow. Not 10 \u2014 just 3.\n\nThis takes 2 minutes and makes tomorrow 10x easier. Do it on paper, not on your phone.'},
@@ -273,9 +270,9 @@ const DAILY = [
    guide:'Every pound you spent today. One line each: what, how much.\n\nNotes app or notebook. The point is not budgeting yet \u2014 it is seeing where the money actually goes. Most people are shocked in week one.'},
 
   {id:'d12',t:2, name:'Save a fixed amount',        sub:'Money',      stat:'money',   xp:5, unlock:{level:5},
-   guide:'Move a fixed amount into a separate pot today. Any amount, but fixed.\n\nName the pot SAUDI FUND. Nothing else touches it. This is the money that buys the ticket.'},
+   guide:'Move a fixed amount into a separate pot today. Any amount, but fixed.\n\nName the pot EGYPT FUND. Nothing else touches it. This is the money that buys the stability \u2014 and later, the ticket. Pay yourself first: move a fixed amount the day money comes in, before anything else.'},
 
-  {id:'d13',t:2, name:'Saudi market study \u2014 20 min', sub:'Career', stat:'career', xp:7, unlock:{level:5},
+  {id:'d13',t:2, name:'Egypt market study \u2014 20 min', sub:'Career', stat:'career', xp:7, unlock:{level:5},
    guide:'You are targeting PERFORMANCE MARKETING / MEDIA BUYER roles in RIYADH. Research exactly that:\n\n\u2022 Search LinkedIn Jobs and Bayt for "performance marketing Riyadh" and "media buyer Riyadh". Read 5 ads properly.\n\u2022 Note the salary bands quoted.\n\u2022 Note which tools they ask for that you do not list.\n\u2022 Note which industries are hiring most (e-commerce, real estate, government, agencies).\n\nWrite down one gap you found. That gap is tomorrow\'s work.'},
 
   {id:'d14',t:2, name:'Practise interview answers', sub:'Career',     stat:'career',  xp:7, unlock:{level:5},
@@ -283,7 +280,7 @@ const DAILY = [
 
   /* ---------- TIER 3 : AWAKENED (level 15) ---------- */
   {id:'d15',t:3, name:'English speaking \u2014 15 min', sub:'Self-Development', stat:'selfdev', xp:10, unlock:{level:15},
-   guide:'15 minutes of spoken English. Not reading, not listening \u2014 speaking.\n\nOptions: talk to yourself about a campaign you ran, use an AI voice chat, or book a conversation tutor.\n\nThe goal is fluency under pressure, which is exactly what a Riyadh interview will test.'},
+   guide:'15 minutes of spoken English. Not reading, not listening \u2014 speaking.\n\nOptions: talk to yourself about a campaign you ran, use an AI voice chat, or book a conversation tutor.\n\nThe goal is fluency under pressure, which is exactly what an interview in Cairo or Dubai will test.'},
 
   {id:'d16',t:3, name:'Study one course module',    sub:'Self-Development', stat:'selfdev', xp:10, unlock:{level:15},
    guide:'One module of your current course from the Course Track tab.\n\nNot "study a course" \u2014 one specific module, finished. One course at a time. Do not start five.\n\nPick from the Course Track tab. Stage 1 opens now. Each completed course is +60 XP and advances the certification boss raid.'},
@@ -300,7 +297,7 @@ const WEEKLY = [
    guide:'One post a week, about your actual work.\n\nFormat: hook \u2192 the problem \u2192 what you did \u2192 the result with a number \u2192 one question.\n\nYour material is unusually strong: the CPL recovery from 130.62 to 50.79, the 1,544-lead campaign at TL 4.62. Those are real case studies \u2014 post them.'},
 
   {id:'w2', t:1, name:'Contact one new person',         sub:'Relationships',    stat:'relations', xp:25, unlock:null,
-   guide:'One person you do not already talk to \u2014 ideally someone working in performance marketing in Riyadh.\n\nOne honest message: who you are, what you are working toward, one specific question they can answer in two lines. Not "can you help me".'},
+   guide:'One person you do not already talk to \u2014 ideally someone working in performance marketing in Egypt or Dubai.\n\nOne honest message: who you are, what you are working toward, one specific question they can answer in two lines. Not "can you help me".'},
 
   {id:'w3', t:1, name:'Call family or meet a friend',   sub:'Relationships',    stat:'relations', xp:25, unlock:null,
    guide:'A real conversation, not a text. Call your parents. Meet a friend.\n\nThis is one of the few things on this list that will still matter to you in ten years.'},
@@ -312,7 +309,7 @@ const WEEKLY = [
    guide:'Your CV is already strong. Change one thing: a stronger verb, a number added to a result, a section reordered.\n\nSmall weekly edits beat one big rewrite.'},
 
   {id:'w6', t:2, name:'One company research session',   sub:'Career',           stat:'career',    xp:50, unlock:{level:8},
-   guide:'One hour, one Riyadh company you want to work for.\n\n\u2022 What they actually do, in plain words\n\u2022 Who their clients are\n\u2022 Who their competitors are\n\u2022 Recent campaigns or news\n\u2022 Who you would need to talk to\n\nWalk into an interview knowing this and you are ahead of most candidates.'},
+   guide:'One hour, one Egyptian or Dubai company you want to work for.\n\n\u2022 What they actually do, in plain words\n\u2022 Who their clients are\n\u2022 Who their competitors are\n\u2022 Recent campaigns or news\n\u2022 Who you would need to talk to\n\nWalk into an interview knowing this and you are ahead of most candidates.'},
 
   {id:'w7', t:3, name:'Weekly review \u2014 Sunday',       sub:'System',           stat:null,        xp:25, unlock:{level:15},
    guide:'Fifteen minutes, every Sunday, five questions:\n\n1. How many missions did I complete?\n2. What did I learn?\n3. What failed, and why \u2014 honestly?\n4. What is the ONE thing that matters most next week?\n5. What am I changing?\n\nWrite the answers down. A week that is not reviewed is a week that is repeated.'}
@@ -324,17 +321,18 @@ const WEEKLY = [
    reward = what clearing the whole raid gives you on top
    --------------------------------------------------------------- */
 const BOSSES = [
-  {id:'b1', name:'Land the job in Riyadh', desc:'The first gate. Everything else waits behind it.', xp:125, reward:1500,
+  {id:'b1', name:'Land a Paid Marketing Job in Egypt', desc:'THE PRIMARY GOAL RIGHT NOW. A stable salary in EGP, on the ground, while the Saudi situation settles.', xp:150, reward:1500,
    steps:[
-     'Rebuild the CV from zero \u2014 English, one page, results with numbers',
+     'Rebuild the CV \u2014 English, one page, results with numbers (27 campaigns, 11,400 leads)',
      'Build a portfolio that proves the work, not describes it',
      'Rewrite the LinkedIn profile: headline, about, featured work',
-     'Get the CV reviewed by someone already working in Saudi Arabia',
-     'Apply to 20 relevant roles',
-     'Apply to 50 relevant roles',
+     'Get the CV reviewed by a working media buyer in Egypt',
+     'Set alerts on Wuzzuf + LinkedIn for "media buyer" and "performance marketer"',
+     'Apply to 20 Egypt-based roles',
+     'Apply to 50 Egypt-based roles',
      'Complete 3 mock interviews out loud',
      'Reach a final-stage interview',
-     'Sign the offer']},
+     'Sign the offer \u2014 take the salary, whatever stabilises the month']},
 
   {id:'b2', name:'Reach English B2', desc:'Listening C1 \u00b7 Speaking 50 \u00b7 Reading 48 \u00b7 Writing 33. Writing is the whole gap.', xp:100, reward:1200,
    steps:[
@@ -375,14 +373,50 @@ const BOSSES = [
      'Rebuild one Make scenario in n8n and compare cost',
      'Sell one automation as a paid add-on service']},
 
-  {id:'b4', name:'Travel to Saudi Arabia', desc:'The moment the plan becomes real.', xp:200, reward:2500,
+  {id:'b4', name:'Saudi Arabia \u2014 PHASED PLAN (ON HOLD)', desc:'Saudi is currently under a Level 3 travel advisory (US State Dept) with a Level 4 zone near Yemen and an incident at King Khalid Airport on 10 Oct 2026. Do NOT move now. Build the alternative paths first, revisit this when it is safe.', xp:175, reward:2500,
    steps:[
-     'Reach the SAUDI FUND savings target',
-     'Passport and documents in order',
-     'Complete the medical and any required paperwork',
-     'Sign the work contract',
-     'Book the flight',
-     'Land in Riyadh']},
+     'Track the situation monthly: US State Dept advisory + FCDO + Saudi press',
+     'Build the Egypt salary path to stability first (boss raid b1)',
+     'Grow freelance dollar income until it exceeds a Saudi salary',
+     'Keep the EGYPT FUND growing \u2014 it buys options, not just tickets',
+     'Passport and documents in order (valid 6+ months)',
+     'When advisory drops to Level 1-2 and airport is stable: sign contract',
+     'Book the flight and land in Riyadh']},
+
+  {id:'b11', name:'Earn in Dollars from Egypt', desc:'The alternative to moving: foreign clients, paid in USD, while you live at home. Cheapest path to real income without leaving Egypt.', xp:175, reward:2000,
+   steps:[
+     'Create profiles on Upwork, Mostaql and Khamsat (all three)',
+     'Build 3 portfolio pieces written for foreign buyers, not local ones',
+     'Send 5 proposals daily on Upwork for 2 weeks',
+     'Close the first paid client (any size)',
+     'Deliver it well enough to get a 5-star review',
+     'Repeat until you have 5 reviews',
+     'Raise prices by 30%',
+     'Reach $500/month in freelance income',
+     'Reach $1,000/month in freelance income']},
+
+  {id:'b12', name:'Move to the UAE (Dubai/Abu Dhabi)', desc:'The realistic Gulf option while Saudi is unstable. Media buyer salaries run AED 8,000\u201315,000. No visa needed to apply \u2014 the employer sponsors you.', xp:200, reward:2500,
+   steps:[
+     'Research the Dubai market: Dubai Media City + Dubai Internet City agencies',
+     'Adapt the CV to Gulf standards \u2014 no photo, no age, results first',
+     'Set alerts on Bayt, LinkedIn Gulf and GulfTalent',
+     'Apply to 20 UAE media buyer roles',
+     'Apply to 50 UAE media buyer roles',
+     'Complete 3 mock interviews with a Gulf recruiter',
+     'Reach a final-stage interview',
+     'Sign the offer (AED 8,000+)',
+     'Relocate: visa, Emirates ID, housing']},
+
+  {id:'b13', name:'Build the Freelance Agency', desc:'The real destination. One client becomes five, five becomes ten, then you hire people. This works from Egypt OR Dubai.', xp:250, reward:3500,
+   steps:[
+     'Define ONE service you can sell repeatedly (e.g. Meta Ads management)',
+     'Write the pricing: 3 packages, no hourly rate',
+     'Build the brand: name, logo, one-page site',
+     'Land the first paying client',
+     'Land the third client',
+     'Land the fifth client \u2014 or reach AED 30K/year revenue',
+     'Hire the first freelancer to help you deliver',
+     'Reach 10 clients on retainer']},
 
   {id:'b5', name:'Master content creation', desc:'Your gear is a good phone camera. That is genuinely enough to start.', xp:125, reward:1500,
    steps:[
@@ -423,7 +457,7 @@ const RANKS = [
   {name:'E-RANK HUNTER', xp:0,     note:'Foundation stage. Habits not yet formed. This is where everyone starts and most people stop.'},
   {name:'D-RANK HUNTER', xp:2000,  note:'The habit has formed. You are no longer relying on motivation.'},
   {name:'C-RANK HUNTER', xp:6000,  note:'Competent and consistent. This is roughly where your CV already puts you professionally.'},
-  {name:'B-RANK HUNTER', xp:14000, note:'Dangerous. You would now be a strong hire in Riyadh, not a gamble.'},
+  {name:'B-RANK HUNTER', xp:14000, note:'Dangerous. You would now be a strong hire in Cairo or Dubai, not a gamble.'},
   {name:'A-RANK HUNTER', xp:28000, note:'National level. Offers come to you now, not the other way round.'},
   {name:'S-RANK HUNTER', xp:52000, note:'The Shadow Monarch. There is nothing left to prove.'}
 ];
@@ -433,7 +467,7 @@ const RANKS = [
    --------------------------------------------------------------- */
 const ASSESSMENT = [
   {title:'What is genuinely strong',
-   body:'You are not a beginner pretending to be experienced \u2014 you are experienced and underselling it. TL 171,000 managed, 11,406 leads, 27 concurrent programs, and a documented CPL recovery from 130.62 to 50.79. Most people applying for media buyer roles in Riyadh cannot show a recovery case study. You can. Your CV and portfolio are already better than the average applicant\'s.'},
+   body:'You are not a beginner pretending to be experienced \u2014 you are experienced and underselling it. TL 171,000 managed, 11,406 leads, 27 concurrent programs, and a documented CPL recovery from 130.62 to 50.79. Most people applying for media buyer roles in Egypt cannot show a recovery case study. You can. Your CV and portfolio are already better than the average applicant\'s.'},
   {title:'Your English, measured properly',
    body:'EF SET scored all four skills separately. This is the most useful thing you have learned about yourself this year:\n\nLISTENING 63 \u2014 C1 Advanced. You understand extended speech, films, idiomatic expressions. This is a genuinely strong skill and it is the reason you believed your English was fine. It is \u2014 one part of it.\n\nSPEAKING 50 \u2014 B1. One point from B2. Closer than you thought.\n\nREADING 48 \u2014 B1. Three points from B2.\n\nWRITING 33 \u2014 A2 Elementary. This is the problem. It is a full two levels below your listening.\n\nAverage 49, which reads as B1. But you are not a uniform B1. You are a C1 listener wearing a B1 label because of one skill.\n\nThe math: raise writing from 33 to 43 and your average hits 51. That is B2. One skill. Ten points.'},
   {title:'What is actually blocking you',
@@ -479,7 +513,7 @@ const GUIDE_PHRASES = [
   /* --- when you want to quit --- */
   "Nobody is coming to save you. Good. That means nobody can stop you either.",
   "Do you remember why you started? Say it out loud.",
-  "You asked for a job in Riyadh. So why are you on your phone?",
+  "You asked for a job in Egypt. So why are you on your phone?",
   "The daily quest is not optional. Ask anyone who ignored it.",
   "One more day of discipline and you are stronger than yesterday's version of you.",
   "Motivation is a visitor. Discipline lives here.",
@@ -487,7 +521,7 @@ const GUIDE_PHRASES = [
 
   /* --- about the long game --- */
   "You are not behind. You are early in a very long game.",
-  "The version of you that lives in Riyadh is built by the version of you that studies tonight.",
+  "The version of you that gets hired is built by the version of you that studies tonight.",
   "Nobody remembers the level you started at. They remember where you finished.",
   "They will not see you coming. That is your advantage.",
   "The English, the CV, the portfolio. One at a time. Not all at once.",
@@ -513,7 +547,7 @@ const GUIDE_PHRASES = [
   "Your CV is stronger than you think. The problem is that nobody knows it exists yet.",
   "Two months without income is not a failure. It is a deadline.",
   "The agency does not start when you register it. It starts the day you decide.",
-  "Someone in Riyadh is doing the job you want right now. Why not you?",
+  "Someone in Cairo is doing the job you want right now. Why not you?",
 
   /* --- short, sharp --- */
   "Arise. Not tomorrow. Now.",
@@ -883,7 +917,7 @@ const BOOKS = [
 
   {cat:'Money \u2014 Read These Two First', items:[
     {t:'The Richest Man in Babylon', a:'George S. Clason', yr:1926, mins:150, xp:300,
-     why:'The best book ever written on the basics: pay yourself first, live below your means, make money work. Told as short parables set in ancient Babylon. This is where your SAUDI FUND comes from.',
+     why:'The best book ever written on the basics: pay yourself first, live below your means, make money work. Told as short parables set in ancient Babylon. This is where your EGYPT FUND comes from.',
      read:'https://en.wikisource.org/wiki/The_Richest_Man_In_Babylon', src:'Wikisource'},
 
     {t:'The Wealth of Nations (selected chapters)', a:'Adam Smith', yr:1776, mins:'long', xp:250,
@@ -921,6 +955,106 @@ const BOOKS = [
     {t:'English Grammar and Composition', a:'Various', yr:'public domain', mins:'reference', xp:200,
      why:'A free grammar reference for when Write & Improve flags something you do not understand. Look things up, do not read it front to back.',
      read:'https://www.gutenberg.org/ebooks/14006', src:'Project Gutenberg'}
+  ]},
+
+  {cat:'Performance Marketing & Media \u2014 Your Field', items:[
+    {t:'Influence: The Psychology of Persuasion', a:'Robert Cialdini', yr:1984, mins:240, xp:400,
+     why:'The six principles that make people say yes. Every ad you write, every landing page you build, every pitch you make \u2014 this is the psychology underneath all of it. Read the chapters on social proof and scarcity twice.',
+     read:'https://www.hindawi.org/books/60214065/', src:'Hindawi'},
+
+    {t:'This Is Marketing', a:'Seth Godin', yr:2018, mins:180, xp:350,
+     why:'You are not reaching "everyone". Godin explains positioning, trust and the smallest viable audience. Directly changes how you think about your own personal brand and your agency clients.',
+     read:'https://www.hindawi.org/books/71990714/', src:'Hindawi'},
+
+    {t:'Ogilvy on Advertising', a:'David Ogilvy', yr:1983, mins:300, xp:450,
+     why:'The classic. Headlines, research, how to brief a creative, how to sell. Old but nothing has replaced it. Every rule in modern performance creative traces back to this book.',
+     read:'https://www.hindawi.org/books/60629290/', src:'Hindawi'},
+
+    {t:'The 22 Immutable Laws of Marketing', a:'Al Ries & Jack Trout', yr:1993, mins:150, xp:300,
+     why:'Short, sharp, and mostly right. The laws of positioning and category. When you launch the agency this is the framework for deciding what you actually sell.',
+     read:'https://www.hindawi.org/books/63377176/', src:'Hindawi'}
+  ]},
+
+  {cat:'English Novels \u2014 Learn the Language by Reading', items:[
+    {t:'The Great Gatsby', a:'F. Scott Fitzgerald', yr:1925, mins:120, xp:250,
+     why:'Short, beautiful, and written in clear modern English. The best first novel for a B1/B2 reader. Finish it in a week at 20 pages a day.',
+     read:'https://www.gutenberg.org/ebooks/64317', src:'Project Gutenberg'},
+
+    {t:'Animal Farm', a:'George Orwell', yr:1945, mins:120, xp:250,
+     why:'Orwell wrote it in deliberately simple English \u2014 every sentence short and clear. Perfect for you. Also teaches you how persuasion works, which is half of marketing.',
+     read:'https://www.gutenberg.org/ebooks/16119', src:'Project Gutenberg'},
+
+    {t:'The Adventures of Sherlock Holmes', a:'Arthur Conan Doyle', yr:1892, mins:240, xp:350,
+     why:'Twelve short stories, each self-contained. Natural spoken English, rich vocabulary, and you can stop after any one story. Ideal for reading in the 30-minute reading mission.',
+     read:'https://www.gutenberg.org/ebooks/1661', src:'Project Gutenberg'},
+
+    {t:'A Christmas Carol', a:'Charles Dickens', yr:1843, mins:120, xp:250,
+     why:'Short, familiar, and written to be read aloud. Great for working on rhythm and pronunciation while you follow the story you already know.',
+     read:'https://www.gutenberg.org/ebooks/46', src:'Project Gutenberg'},
+
+    {t:'The Time Machine', a:'H. G. Wells', yr:1895, mins:150, xp:300,
+     why:'One of the first science fiction novels ever written. Clear English, short chapters, and genuinely gripping \u2014 you will finish it without noticing you are "studying".',
+     read:'https://www.gutenberg.org/ebooks/35', src:'Project Gutenberg'},
+
+    {t:'Frankenstein', a:'Mary Shelley', yr:1818, mins:210, xp:350,
+     why:'The book that invented science fiction. Longer sentences than the others here, so it stretches you from B1 toward B2 without feeling like a textbook.',
+     read:'https://www.gutenberg.org/ebooks/84', src:'Project Gutenberg'},
+
+    {t:'The Prince', a:'Niccol\u00f2 Machiavelli', yr:1532, mins:150, xp:300,
+     why:'Short, direct, and brutally practical about power, negotiation and reputation. Read it alongside the negotiation skill \u2014 it is the same subject written 500 years earlier.',
+     read:'https://www.gutenberg.org/ebooks/1232', src:'Project Gutenberg'},
+
+    {t:'Walden', a:'Henry David Thoreau', yr:1854, mins:300, xp:400,
+     why:'About choosing deliberately how to live and work. Beautiful, slow, and worth it. Read it when you are tired of self-help and want something real.',
+     read:'https://www.gutenberg.org/ebooks/205', src:'Project Gutenberg'}
+  ]},
+
+  {cat:'Self-Development \u2014 Discipline & Focus', items:[
+    {t:'Atomic Habits', a:'James Clear', yr:2018, mins:210, xp:400,
+     why:'The modern version of what you are already doing with the System. Read it and compare his method to yours \u2014 then steal the parts he does better.',
+     read:'https://www.hindawi.org/books/68210124/', src:'Hindawi'},
+
+    {t:'Deep Work', a:'Cal Newport', yr:2016, mins:240, xp:400,
+     why:'Your attention is the only resource that actually matters. This is the argument for long, undistracted work \u2014 and the case against the phone habits you are fighting.',
+     read:'https://www.hindawi.org/books/70711014/', src:'Hindawi'},
+
+    {t:'The War of Art', a:'Steven Pressfield', yr:2002, mins:150, xp:300,
+     why:'Short and blunt about the thing that stops you every day: Resistance. The book you read when you have skipped three days in a row.',
+     read:'https://www.hindawi.org/books/60502010/', src:'Hindawi'},
+
+    {t:'Mindset', a:'Carol Dweck', yr:2006, mins:210, xp:350,
+     why:'Fixed vs growth mindset, explained clearly and with evidence. It changes how you interpret every failure \u2014 including the two months without income.',
+     read:'https://www.hindawi.org/books/64256191/', src:'Hindawi'},
+
+    {t:'Grit', a:'Angela Duckworth', yr:2016, mins:240, xp:400,
+     why:'Talent is not what wins. Sustained effort is. Read this when your streak feels meaningless and you need the research that proves otherwise.',
+     read:'https://www.hindawi.org/books/66787173/', src:'Hindawi'},
+
+    {t:'The Richest Engineer', a:'Abhishek Kumar', yr:2021, mins:180, xp:350,
+     why:'Written for people starting from nothing. Income, saving, investing and building skills \u2014 practical and unglamorous in the right way.',
+     read:'https://www.hindawi.org/books/74807845/', src:'Hindawi'}
+  ]},
+
+  {cat:'Career & Work \u2014 Get Hired and Paid', items:[
+    {t:'So Good They Cannot Ignore You', a:'Cal Newport', yr:2012, mins:210, xp:350,
+     why:'"Follow your passion" is bad advice. Skills create freedom, not the other way round. Read this before you decide what to specialise in.',
+     read:'https://www.hindawi.org/books/68796150/', src:'Hindawi'},
+
+    {t:'Never Split the Difference', a:'Chris Voss', yr:2016, mins:240, xp:400,
+     why:'Negotiation from a former FBI hostage negotiator. Tactics, mirroring, calibrated questions. You will use this on your salary, your clients and your rent.',
+     read:'https://www.hindawi.org/books/67800266/', src:'Hindawi'},
+
+    {t:'The Lean Startup', a:'Eric Ries', yr:2011, mins:240, xp:400,
+     why:'Build, measure, learn. The same loop as a media buyer testing creative \u2014 applied to building a business. Read it before you register the agency.',
+     read:'https://www.hindawi.org/books/53608103/', src:'Hindawi'},
+
+    {t:'Crushing It!', a:'Gary Vaynerchuk', yr:2018, mins:180, xp:350,
+     why:'Personal brand as a business asset, told by someone who actually built one. Read it for the LinkedIn and content strategy, ignore the volume.',
+     read:'https://www.hindawi.org/books/65985016/', src:'Hindawi'},
+
+    {t:'The 4-Hour Workweek', a:'Tim Ferriss', yr:2007, mins:210, xp:350,
+     why:'Outsourcing, automation and escaping the location trap. The parts about remote work and freelancing are genuinely useful; the lifestyle parts are not for you.',
+     read:'https://www.hindawi.org/books/48847073/', src:'Hindawi'}
   ]},
 
   {cat:'Arabic \u2014 \u0627\u0644\u0639\u0631\u0628\u064a\u0629', items:[
@@ -981,9 +1115,10 @@ const SKILL_TREE = [
    target:'60 WPM',
    why:'The highest-return skill on this list. A 1,000-word report takes 40 minutes at 25 WPM and 16 minutes at 60. That is 24 minutes back on every document, forever.',
    learn:[
-     {n:'Keybr \u2014 start here', u:'https://www.keybr.com/', w:'Adaptive drills. It finds your slow letters and trains them. 10 min/day.'},
-     {n:'Monkeytype \u2014 measure weekly', u:'https://monkeytype.com/', w:'The cleanest speed test. One 60-second test a week is enough.'},
-     {n:'TypingClub', u:'https://www.typingclub.com/', w:'Full structured course from zero, if you prefer lessons over drills.'}
+     {n:'Keybr \u2014 start here (YOUR DAILY TOOL)', u:'https://www.keybr.com/', w:'Adaptive drills. It finds your slow letters and trains them. 20 minutes of this is your daily typing mission \u2014 do it here, not on the old Typing tab.'},
+     {n:'Monkeytype \u2014 measure weekly', u:'https://monkeytype.com/', w:'The cleanest speed test. One 60-second test a week is enough \u2014 write the number down and watch it climb.'},
+     {n:'TypingClub', u:'https://www.typingclub.com/', w:'Full structured course from zero, if you prefer lessons over drills.'},
+     {n:'10FastFingers', u:'https://10fastfingers.com/', w:'Quick test plus multi-language practice. Good for a second opinion on your speed.'}
    ]},
 
   {id:'google_sheets', n:'Google Sheets & Excel', type:'tool', priority:3, requires:[],

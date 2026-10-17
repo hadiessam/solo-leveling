@@ -22,7 +22,6 @@ function log(hdr, txt, bad){
   $('log').appendChild(el);
   setTimeout(()=>{ el.style.transition='opacity .5s'; el.style.opacity='0';
     setTimeout(()=>el.remove(),500); }, 4500);
-  drawHistory();
 }
 
 function beep(f, d, type){
@@ -657,98 +656,103 @@ function drawCourses(){
    ROADMAP
    --------------------------------------------------------------------- */
 const CHAPTERS = [
-  {id:'c1', lvl:1,  name:'Chapter 1 &mdash; The Awakening',
+  {id:'c1', lvl:1,  name:'Chapter 1 \u2014 The Awakening',
    req:'Where you are now. Build the foundation: faith, health, English, reading, phone discipline.',
-   missions:['Fajr on time','15-minute home workout','30 minutes of English','30 minutes of reading','No phone in the morning']},
-  {id:'c2', lvl:5,  name:'Chapter 2 &mdash; The Hunt',
-   req:'Money starts moving and the Riyadh market research begins. Habits are set; now build leverage.',
-   missions:['Log daily expenses','Save into the SAUDI FUND','Saudi market study','Practise interview answers']},
-  {id:'c3', lvl:15, name:'Chapter 3 &mdash; Awakened',
+   missions:['Fajr on time','15-minute home workout','30 minutes of English','30 minutes of reading','No phone in the morning'],
+   paths:[
+     {n:'EGYPT', w:'Stay and build. Land the first paid local job \u2014 salary in EGP, stability first. This is the primary path right now.'},
+     {n:'UAE', w:'The Gulf option that is NOT Saudi. Dubai media buyer roles pay AED 8,000\u201315,000 and the employer sponsors the visa.'},
+     {n:'REMOTE', w:'Dollar income from home. Upwork + Mostaql + Khamsat. No visa, no flight, no risk.'},
+     {n:'SAUDI', w:'ON HOLD. Travel advisory Level 3, Level 4 near Yemen, airport incident 10 Oct 2026. Revisit when safe.'}]},
+
+  {id:'c2', lvl:5,  name:'Chapter 2 \u2014 The Hunt',
+   req:'Money starts moving. The Egypt job search begins and the freelance income grows alongside it.',
+   missions:['Log daily expenses','Save into the EGYPT FUND','Egypt market study','Practise interview answers'],
+   paths:[
+     {n:'EGYPT', w:'Apply to 50 Egypt media buyer roles on Wuzzuf, LinkedIn and Bayt. Target EGP 12,000\u201320,000.'},
+     {n:'UAE', w:'Build a Gulf-ready CV now. Gulf recruiters value Arabic + English + Meta certifications.'},
+     {n:'REMOTE', w:'First three Upwork proposals sent. Build the profile while the local job search runs.'},
+     {n:'SAUDI', w:'Track the advisory monthly. Build the savings so you can move in weeks if it clears.'}]},
+
+  {id:'c3', lvl:15, name:'Chapter 3 \u2014 Awakened',
    req:'Speaking, courses, publishing. The market starts to notice you exist.',
-   missions:['English speaking practice','Study one course module','Post on LinkedIn daily','Weekly review every Sunday']},
-  {id:'c4', lvl:25, name:'Chapter 4 &mdash; Riyadh',
-   req:'You are on the ground in Saudi Arabia. The job is secured. Now the reputation gets built.',
-   missions:['Grow the local professional network','Build the personal brand in the Gulf market','Study the Gulf advertising market','Build the first Gulf client relationships']},
-  {id:'c5', lvl:40, name:'Chapter 5 &mdash; The Craft',
+   missions:['English speaking practice','Study one course module','Post on LinkedIn daily','Weekly review every Sunday'],
+   paths:[
+     {n:'EGYPT', w:'English speaking practice is what makes the Egypt interviews land. Egyptian agencies serve Gulf clients \u2014 they need English.'},
+     {n:'UAE', w:'The certification stack (Google Ads, GA4, Meta Blueprint) is what Gulf recruiters filter on.'},
+     {n:'REMOTE', w:'Your LinkedIn is your Upwork profile is your CV. One strong profile serves all three.'},
+     {n:'SAUDI', w:'Keep the SAUDI FUND growing. It buys the option, not the ticket.'}]},
+
+  {id:'c4', lvl:25, name:'Chapter 4 \u2014 The Income',
+   req:'The income is now real and stable. Whether that is a salary or freelance, the floor is set.',
+   missions:['Land the first paid job or client','Reach a stable monthly income','Build the savings cushion','Grow the client list'],
+   paths:[
+     {n:'EGYPT', w:'You have the salary. Now build savings and reputation inside the company.'},
+     {n:'UAE', w:'Apply to 50 UAE roles. AED 8,000+ is life-changing money from Egypt.'},
+     {n:'REMOTE', w:'Reach $1,000/month. That is more than most Egyptian salaries and it is in dollars.'},
+     {n:'SAUDI', w:'Re-evaluate. If the advisory is Level 1\u20132 and airports are stable, the offer becomes possible.'}]},
+
+  {id:'c5', lvl:40, name:'Chapter 5 \u2014 The Craft',
    req:'Content creation becomes the priority. Phone-first, professional standard.',
-   missions:['Master manual control on the phone camera','Learn one-light and window-light setups','Learn phone-first audio','Shoot 10 practice projects','Build a 20-piece portfolio']},
-  {id:'c6', lvl:55, name:'Chapter 6 &mdash; The Agency',
-   req:'Your own advertising agency in the Gulf. From freelancer to founder.',
-   missions:['Define services and pricing','Build the brand identity','Register the business','Land the first paying client']},
-  {id:'c7', lvl:70, name:'Chapter 7 &mdash; Ten Clients',
+   missions:['Master manual control on the phone camera','Learn one-light and window-light setups','Learn phone-first audio','Shoot 10 practice projects','Build a 20-piece portfolio'],
+   paths:[
+     {n:'EGYPT', w:'Content skills make you the person who can both buy media AND make the ads. Rare combination.'},
+     {n:'UAE', w:'Dubai agencies want people who can do performance AND content. This is the differentiator.'},
+     {n:'REMOTE', w:'Content is what sells your freelance services. Show the work, not the claims.'},
+     {n:'SAUDI', w:'Saudi brands need Arabic content most of all. This is the highest-leverage skill for that market.'}]},
+
+  {id:'c6', lvl:55, name:'Chapter 6 \u2014 The Agency',
+   req:'Your own advertising agency. From freelancer to founder.',
+   missions:['Define services and pricing','Build the brand identity','Register the business','Land the first paying client'],
+   paths:[
+     {n:'EGYPT', w:'Register in Egypt. Egyptian agencies serving Gulf clients earn in dollars while paying local costs.'},
+     {n:'UAE', w:'Set up in Dubai Media City or DIFC. Free zone, no local sponsor, 100% foreign ownership.'},
+     {n:'REMOTE', w:'No registration needed at all. Just a brand, a site, and clients.'},
+     {n:'SAUDI', w:'A Saudi entity requires a local sponsor. Do this only once you have Saudi clients already.'}]},
+
+  {id:'c7', lvl:70, name:'Chapter 7 \u2014 Ten Clients',
    req:'A real book of business. Ten clients. The agency is no longer a gamble.',
-   missions:['Grow to 3 clients','Grow to 5 clients','Grow to 10 clients','Build a team']},
-  {id:'c8', lvl:85, name:'Chapter 8 &mdash; Germany',
+   missions:['Grow to 3 clients','Grow to 5 clients','Grow to 10 clients','Build a team'],
+   paths:[
+     {n:'EGYPT', w:'Egyptian clients, dollar pricing where possible. Build the team locally.'},
+     {n:'UAE', w:'Gulf clients, AED pricing. Hire Egyptian talent to deliver \u2014 that is the arbitrage.'},
+     {n:'REMOTE', w:'Global clients, USD pricing, zero overhead. This is the purest form of the business.'},
+     {n:'SAUDI', w:'Saudi clients are the most lucrative in the region. One retainer can equal five elsewhere.'}]},
+
+  {id:'c8', lvl:85, name:'Chapter 8 \u2014 Germany',
    req:'The MBA. The final raid. Everything before this was preparation.',
-   missions:['Shortlist 8 universities','Prepare for the GMAT','Reach the required IELTS score','Save the full cost','Submit the applications']}
+   missions:['Shortlist 8 universities','Prepare for the GMAT','Reach the required IELTS score','Save the full cost','Submit the applications'],
+   paths:[
+     {n:'EGYPT', w:'The MBA works from anywhere. Your portfolio and income are what get you in.'},
+     {n:'UAE', w:'Dubai has German university branches \u2014 a lower-cost path to the same degree.'},
+     {n:'REMOTE', w:'Some German MBAs are part-time and remote-friendly. You do not have to stop earning.'},
+     {n:'SAUDI', w:'By now you will know if the Gulf is home. Germany becomes the second option, not the escape.'}]}
 ];
 
 function drawRoadmap(){
   $('roadList').innerHTML = CHAPTERS.map(c => {
     const on = S.level >= c.lvl;
+    const paths = (c.paths || []).map(p =>
+      '<div class="altPath"><span class="altPathTag">'+esc(p.n)+'</span><span class="altPathTxt">'+esc(p.w)+'</span></div>'
+    ).join('');
     return '<div class="boss '+(on?'done':'')+'" style="'+(on?'':'opacity:.55')+'">'
       + '<h3>'+(on ? ic('check',18)+' ' : ic('lock',18)+' ')+c.name+'</h3>'
       + '<div class="ds">'+c.req+'</div>'
       + '<div class="pc">'+(on ? 'UNLOCKED' : 'UNLOCKS AT LEVEL '+c.lvl)+'</div>'
       + '<div class="steps">'+c.missions.map(m =>
           '<div class="step '+(on?'done':'')+'"><div class="sb"></div><span>'+esc(m)+'</span></div>').join('')
-      + '</div></div>';
+      + '</div>'
+      + (paths ? '<div class="altPathsWrap"><div class="altPathsHead">'+ic('layers',16)+' ALTERNATIVE PATHS &mdash; pick the one that fits your situation</div>'+paths+'</div>' : '')
+      + '</div>';
   }).join('');
 }
 
 /* ---------------------------------------------------------------------
    REWARD VAULT
    --------------------------------------------------------------------- */
-function drawRewards(){
-  if(!S.rewards.length){
-    $('rwList').innerHTML = '<div class="hint">You have not written any rewards yet. Add your first one below &mdash; something small and real.</div>';
-    return;
-  }
-  $('rwList').innerHTML = S.rewards.map(r => {
-    const open = rewardOpen(r);
-    return '<div class="rw '+(open&&!r.claimed?'open':'')+' '+(r.claimed?'claimed':'')+'">'
-      + '<div class="ic">'+(r.claimed?ic('check',20):ic('gift',20))+'</div>'
-      + '<div class="in">'
-      +   '<div class="t">'+esc(r.name)+'</div>'
-      +   '<div class="r">Unlock: reach '+r.unlockType+' '+r.value+(r.claimed?' &middot; claimed '+esc(r.claimedOn||''):'')+'</div>'
-      +   (r.hint ? '<div class="hn">'+esc(r.hint)+'</div>' : '')
-      + '</div>'
-      + (r.claimed
-          ? '<div class="lk">CLAIMED</div>'
-          : (open ? '<div class="lk go" onclick="claimReward(\''+r.id+'\')">CLAIM</div>'
-                  : '<div class="lk">LOCKED</div>'))
-      + '<button class="xbtn" onclick="delReward(\''+r.id+'\')">'+ic('x',13)+'</button>'
-      + '</div>';
-  }).join('');
-}
 
-function openRewardForm(){
-  const name = prompt('What is the reward?');
-  if(!name || !name.trim()) return;
-  const type = (prompt('Unlock by: level, streak, or xp','level')||'').trim().toLowerCase();
-  if(!['level','streak','xp'].includes(type)){ alert('Please type level, streak, or xp.'); return; }
-  const val = parseInt(prompt('Required '+type+' value:'),10);
-  if(!val || val < 1){ alert('Please enter a number greater than zero.'); return; }
-  const hint = prompt('Optional note to yourself (or leave empty):') || '';
 
-  S.rewards.push({
-    id:'r'+Date.now(),
-    name:name.trim(), unlockType:type, value:val, hint:hint.trim(), claimed:false
-  });
-  save();
-  log('SYSTEM','Reward added: <b>'+esc(name.trim())+'</b>.');
-  renderAll();
-  sfx('badge');
-}
 
-function delReward(id){
-  const r = S.rewards.find(x => x.id === id);
-  if(!r) return;
-  if(!confirm('Delete the reward "'+r.name+'"?')) return;
-  S.rewards = S.rewards.filter(x => x.id !== id);
-  save();
-  renderAll();
-}
 
 /* ---------------------------------------------------------------------
    LIBRARY + ENGLISH
@@ -810,68 +814,7 @@ function saveTyping(){
   renderAll();
 }
 
-function drawTyping(){
-  const ty = S.typing || {};
-  const now = ty.now || 0;
-  const tgt = ty.target || TYPING.targetWPM;
-  const tag = $('typeTag');
 
-  if(tag){
-    tag.textContent = now ? (now + ' WPM') : 'NOT MEASURED';
-    tag.style.color = now >= tgt ? 'var(--green)' : (now ? 'var(--gold)' : 'var(--muted)');
-    tag.style.borderColor = now >= tgt ? 'rgba(37,224,122,.5)' : 'rgba(255,204,77,.4)';
-  }
-
-  $('typeWhy').textContent = TYPING.why;
-  $('typeNow').value = now || '';
-  $('typeTarget').value = tgt;
-
-  /* progress */
-  if(now){
-    const pct = Math.min(100, now / tgt * 100);
-    const left = Math.max(0, tgt - now);
-    const perWeek = 4;                                  /* realistic gain */
-    const weeks = left > 0 ? Math.ceil(left / perWeek) : 0;
-
-    let hist = '';
-    if(ty.hist && ty.hist.length > 1){
-      const best = Math.max(...ty.hist.map(h => h.wpm));
-      hist = '<div class="skmeta" style="margin-top:12px"><span>First logged: '+ty.hist[ty.hist.length-1].wpm+' WPM</span>'
-           + '<span>Best: '+best+' WPM</span></div>';
-    }
-
-    $('typeProgress').innerHTML =
-        '<div class="skhead"><span class="skname">'+now+' &rarr; '+tgt+' WPM</span>'
-      + '<span class="skval" style="color:var(--glow)">'+Math.round(pct)+'%</span></div>'
-      + '<div class="sktrack"><i class="skfill" style="width:'+pct+'%;background:linear-gradient(90deg,var(--glow),var(--glow2))"></i></div>'
-      + '<div class="skmeta"><span>'+(left>0 ? left+' WPM to go' : 'Target reached')+'</span>'
-      + '<span>'+(left>0 ? 'about '+weeks+' weeks at 10 min/day' : 'Move the target up')+'</span></div>'
-      + hist;
-  } else {
-    $('typeProgress').innerHTML = '<div class="hint" style="margin:0">'
-      + 'Open <b>monkeytype.com</b>, do one 60-second test, and enter the number above. '
-      + 'That gives us a baseline, and every week you can watch it climb.</div>';
-  }
-
-  /* levels */
-  $('typeLevels').innerHTML = TYPING.levels.map(l => {
-    const hit = now >= l.wpm;
-    return '<div class="skillrow">'
-      + '<div class="skhead"><span class="skname" style="color:'+(hit?'var(--green)':'var(--muted)')+'">'
-      + (hit ? ic('check',16) + ' ' : '')+esc(l.label)+'</span>'
-      + '<span class="skval" style="color:'+(hit?'var(--green)':'var(--muted)')+'">'+l.wpm+'</span></div>'
-      + '<div class="sktrack"><i class="skfill" style="width:'+(l.wpm/120*100)+'%;background:'
-      + (hit ? 'linear-gradient(90deg,var(--green),#7bffb0)' : 'rgba(255,255,255,.10)')+'"></i></div>'
-      + '<div class="skmeta"><span>'+esc(l.note)+'</span><span></span></div>'
-      + '</div>';
-  }).join('');
-
-  /* tools */
-  $('typeTools').innerHTML = TYPING.tools.map(t =>
-    '<div class="bk"><div class="t">'+esc(t.n)+'</div>'
-    + '<div class="w">'+esc(t.w)+'</div>'
-    + '<a class="xbtn" style="margin-top:7px;display:inline-block" href="'+t.u+'" target="_blank" rel="noopener">OPEN &#8599;</a></div>').join('');
-}
 
 /* ---------------------------------------------------------------------
    EXTRA SKILLS
@@ -1045,34 +988,37 @@ function drawClass(){
    --------------------------------------------------------------------- */
 function drawShadow(){
   const disp = $('shadowDisplay');
-  if(!disp) return;
+  if(disp){
+    const stage = shadowStage();
+    const mood = shadowMood();
+    const moodData = SHADOW_SOLDIER.moods[mood];
 
-  const stage = shadowStage();
-  const mood = shadowMood();
-  const moodData = SHADOW_SOLDIER.moods[mood];
+    /* progress toward the next evolution */
+    const xp = S.shadowXp || 0;
+    const nextLvl = ((S.shadowLevel || 0) + 1) * 8;
+    const inLvl = xp % 8;
+    const pct = Math.round(inLvl / 8 * 100);
+    const nextStage = SHADOW_SOLDIER.stages.find(s => s.level > (S.shadowLevel || 0));
 
-  /* progress toward the next evolution */
-  const xp = S.shadowXp || 0;
-  const nextLvl = ((S.shadowLevel || 0) + 1) * 8;
-  const inLvl = xp % 8;
-  const pct = Math.round(inLvl / 8 * 100);
-  const nextStage = SHADOW_SOLDIER.stages.find(s => s.level > (S.shadowLevel || 0));
+    if($('shadowTag')) $('shadowTag').textContent = 'LEVEL ' + (S.shadowLevel || 0);
 
-  if($('shadowTag')) $('shadowTag').textContent = 'LEVEL ' + (S.shadowLevel || 0);
+    disp.innerHTML =
+        '<div class="shadowGlyph">' + ic(stage.icon,96) + '</div>'
+      + '<div class="shadowName">' + esc(stage.name) + '</div>'
+      + '<div class="shadowDesc">' + esc(stage.desc) + '</div>'
+      + '<div class="shadowMood">' + ic(moodData.icon,18) + ' ' + esc(moodData.desc) + '</div>'
+      + '<div class="shadowProgress">'
+      +   '<div class="skhead"><span class="skname">Progress to level ' + ((S.shadowLevel||0) + 1) + '</span>'
+      +   '<span class="skval">' + inLvl + ' / 8 missions</span></div>'
+      +   '<div class="sktrack"><i class="skfill" style="width:' + pct + '%;background:linear-gradient(90deg,var(--glow),var(--glow2))"></i></div>'
+      +   '<div class="skmeta"><span>' + (nextStage
+            ? 'Next evolution: ' + nextStage.name + ' at level ' + nextStage.level
+            : 'Final form reached') + '</span></div>'
+      + '</div>';
+  }
 
-  disp.innerHTML =
-      '<div class="shadowGlyph">' + ic(stage.icon,96) + '</div>'
-    + '<div class="shadowName">' + esc(stage.name) + '</div>'
-    + '<div class="shadowDesc">' + esc(stage.desc) + '</div>'
-    + '<div class="shadowMood">' + ic(moodData.icon,18) + ' ' + esc(moodData.desc) + '</div>'
-    + '<div class="shadowProgress">'
-    +   '<div class="skhead"><span class="skname">Progress to level ' + ((S.shadowLevel||0) + 1) + '</span>'
-    +   '<span class="skval">' + inLvl + ' / 8 missions</span></div>'
-    +   '<div class="sktrack"><i class="skfill" style="width:' + pct + '%;background:linear-gradient(90deg,var(--glow),var(--glow2))"></i></div>'
-    +   '<div class="skmeta"><span>' + (nextStage
-          ? 'Next evolution: ' + nextStage.name + ' at level ' + nextStage.level
-          : 'Final form reached') + '</span></div>'
-    + '</div>';
+  /* characters */
+  drawCharacters();
 }
 
 /* ---------------------------------------------------------------------
@@ -1171,7 +1117,8 @@ function drawCharacters(){
     const isMythic = char.rarity === 'mythic';
     return '<div class="charCard' + (isMythic ? ' mythicCard' : '') + '" style="border-left-color:' + col + '">'
       + '<div class="charTop">'
-      +   '<div class="charPic">' + ic(char.icon || 'soldier', 44) + '</div>'
+      +   '<div class="charPic r-' + char.rarity + '">'
+      +     '<div class="icoWrap">' + ic(char.icon || 'soldier', 64) + '</div>'
       +     (isMythic ? '<div class="charGlow"></div>' : '') + '</div>'
       +   '<div class="charBody">'
       +     '<div class="charHead">'
@@ -1259,17 +1206,6 @@ function drawVocab(){
 }
 
 /* ---------------------------------------------------------------------
-   FOCUS TIMER
-   --------------------------------------------------------------------- */
-function drawFocus(){
-  const tag = $('focusTag');
-  if(tag){
-    const today = S.focusDate === dayKey() ? S.focusSessions : 0;
-    tag.textContent = today + ' / ' + FOCUS.sessionsPerDay + ' TODAY';
-  }
-}
-
-/* ---------------------------------------------------------------------
    VISION BOARD
    --------------------------------------------------------------------- */
 function drawVision(){
@@ -1289,15 +1225,7 @@ function drawVision(){
 /* ---------------------------------------------------------------------
    COACH
    --------------------------------------------------------------------- */
-function drawCoach(){
-  $('msgCount').textContent = S.msgs.length;
-  $('msgList').innerHTML = S.msgs.length
-    ? S.msgs.map(m =>
-        '<div class="bk"><div class="t">'+esc(m.s)+'</div>'
-        + '<div class="a">'+esc(m.d)+'</div>'
-        + '<div class="w">'+esc(m.b).replace(/\n/g,'<br>')+'</div></div>').join('')
-    : '<div class="hint" style="margin:0">Nothing sent yet.</div>';
-}
+
 
 function sendToHermes(){
   const s = $('cName').value.trim();
@@ -1353,86 +1281,33 @@ function copy(text){
 /* ---------------------------------------------------------------------
    STATUS
    --------------------------------------------------------------------- */
-function drawStats(){
-  $('statGrid').innerHTML = STATS.map(s => {
-    const lv = statOverall(s.key);
-    const xp = S.statXP[s.key] || 0;
-    const inLv = xp % STAT_XP;
-    return '<div class="stat">'
-      + '<div class="h"><span class="n">'+ic(s.icon,18)+' '+s.name+'</span><span class="lv">Lv '+lv+'</span></div>'
-      + '<div class="bar thin"><i style="width:'+(inLv/STAT_XP*100)+'%"></i></div>'
-      + '<div class="sb">'+esc(s.why)+'</div></div>';
-  }).join('');
+/* ---- the all-time records block (was on the Status tab) ---- */
+function drawRecords(){
+  const r = id => (document.getElementById(id) || {}).textContent;
+  const set = (id,v) => { const e = document.getElementById(id); if(e) e.textContent = v; };
+  set('rQ', S.qDone);
+  set('rS', S.sDone);
+  set('rB', S.best);
+  set('rR', (S.rewards||[]).filter(x=>x.claimed).length);
+  set('rP', S.penCount);
+  set('rL', S.xpLost);
+  set('rC', Object.keys(S.courses||{}).length);
+  set('rF', S.freezes);
 
-  const ri = rankIdx(S.xp);
-  $('rankList').innerHTML = RANKS.map((r,i) => {
-    const got = i <= ri;
-    const nxt = RANKS[i+1];
-    let pct = 0;
-    if(got) pct = (i < ri) ? 100 : (nxt ? Math.min(100,(S.xp-r.xp)/(nxt.xp-r.xp)*100) : 100);
-    return '<div class="stat" style="margin-bottom:10px;'+(got?'border-color:var(--glow)':'')+'">'
-      + '<div class="h"><span class="n">'+r.name+'</span><span class="lv">'+(got?ic('check',16):'')+'</span></div>'
-      + '<div class="bar thin"><i style="width:'+pct+'%"></i></div>'
-      + '<div class="sb">'+r.note+' &middot; unlocks at '+r.xp.toLocaleString()+' XP</div></div>';
-  }).join('');
-
-  $('assessList').innerHTML = ASSESSMENT.map(a =>
-    '<div class="bk"><div class="t">'+esc(a.title)+'</div>'
-    + '<div class="w">'+esc(a.body).replace(/\n/g,'<br>')+'</div></div>').join('');
-
-  $('rQ').textContent = S.qDone;
-  $('rS').textContent = S.sDone;
-  $('rB').textContent = S.best;
-  $('rR').textContent = S.rewards.filter(r=>r.claimed).length;
-  $('rP').textContent = S.penCount;
-  $('rL').textContent = S.xpLost;
-  $('rC').textContent = Object.keys(S.courses).length;
-  $('rF').textContent = S.freezes;
-
-  drawBadges();
-  drawBackup();
-}
-
-/* ---- backup status ---- */
-function drawBackup(){
-  const st = backupStatus();
-  const tag = $('backupTag');
-  const hint = $('backupHint');
-  if(!tag || !hint) return;
-
-  tag.textContent = st.text.toUpperCase();
-  tag.style.color = st.warn ? 'var(--red)' : 'var(--green)';
-  tag.style.borderColor = st.warn ? 'rgba(255,77,94,.5)' : 'rgba(37,224,122,.5)';
-
-  const runs = S.streak > 0 ? S.streak + '-day streak' : 'no active streak';
-  if(!S.lastBackup){
-    hint.innerHTML = '<b style="color:var(--red)">You have never exported a backup.</b> '
-      + 'Right now all of your progress &mdash; level ' + S.level + ', ' + S.xp.toLocaleString()
-      + ' XP, ' + runs + ' &mdash; exists in one place only. Export it once and stop worrying.';
-  } else if(st.warn){
-    hint.innerHTML = 'Last backup: <b style="color:var(--red)">' + st.text + '</b>. '
-      + 'That is a long gap. Export a fresh one now.';
-  } else {
-    hint.innerHTML = 'Last backup: <b style="color:var(--green)">' + st.text + '</b>. '
-      + 'Level ' + S.level + ' &middot; ' + S.xp.toLocaleString() + ' XP &middot; ' + runs + ' are safe.';
-  }
-
-  /* the automatic snapshots, newest first */
-  const sl = $('snapList');
-  if(sl){
-    const hist = autoBackupInfo().slice().reverse();
-    if(!hist.length){
-      sl.innerHTML = '<div class="hint" style="margin:0">No automatic snapshots yet. '
-        + 'One is written the first time you open the System each day.</div>';
-    } else {
-      sl.innerHTML = '<div class="vcatHead">Automatic Snapshots<span>' + hist.length + ' / 7</span></div>'
-        + hist.map((h, i) =>
-            '<div class="vbRow">'
-            + '<span class="vbWord">' + (i === 0 ? 'Today' : h.d) + '</span>'
-            + '<span class="vbAr">Level ' + h.level + ' &middot; ' + (h.xp || 0).toLocaleString()
-            + ' XP &middot; ' + h.streak + '-day streak</span>'
-            + '</div>').join('');
-    }
+  /* the hunter rank ladder */
+  const rl = document.getElementById('rankList');
+  if(rl){
+    const ri = rankIdx(S.xp);
+    rl.innerHTML = RANKS.map((r,i) => {
+      const got = i <= ri;
+      const nxt = RANKS[i+1];
+      let pct = 0;
+      if(got) pct = (i < ri) ? 100 : (nxt ? Math.min(100,(S.xp-r.xp)/(nxt.xp-r.xp)*100) : 100);
+      return '<div class="stat" style="margin-bottom:10px;'+(got?'border-color:var(--glow)':'')+'">'
+        + '<div class="h"><span class="n">'+r.name+'</span><span class="lv">'+(got?ic('check',16):'')+'</span></div>'
+        + '<div class="bar thin"><i style="width:'+pct+'%"></i></div>'
+        + '<div class="sb">'+r.note+' &middot; unlocks at '+r.xp.toLocaleString()+' XP</div></div>';
+    }).join('');
   }
 }
 
@@ -1501,30 +1376,13 @@ function submitReview(){
    INSIGHTS
    --------------------------------------------------------------------- */
 function drawInsights(){
-  /* --- 30-day heat map --- */
-  const days = last30();
-  $('heatMap').innerHTML =
-    '<div class="heatGrid">' + days.map(d => {
-      const pct = d.total ? d.done / d.total : 0;
-      let cls = 'heatCell';
-      if(d.future) cls += ' future';
-      else if(pct >= 1)    cls += ' full';
-      else if(pct >= 0.6)  cls += ' high';
-      else if(pct > 0)     cls += ' some';
-      else if(d.total)     cls += ' miss';
-      const lbl = d.day.slice(5) + ' \u00b7 ' + d.done + '/' + (d.total || 0);
-      return '<div class="' + cls + '" title="' + lbl + '"></div>';
-    }).join('') + '</div>'
-    + '<div class="heatLegend">'
-    + '<span><i class="heatCell miss"></i> miss</span>'
-    + '<span><i class="heatCell some"></i> partial</span>'
-    + '<span><i class="heatCell high"></i> strong</span>'
-    + '<span><i class="heatCell full"></i> perfect</span>'
-    + '</div>';
+  /* --- MONTHLY STREAK CALENDAR --- */
+  const cal = streakCalendar();
+  $('heatMap').innerHTML = cal.html;
 
-  const active = days.filter(d => d.active).length;
+  const active = cal.active;
   const perfect = (S.perfectDays || []).length;
-  const misses = days.filter(d => d.total && !d.active).length;
+  const misses = cal.missed;
 
   $('streakStats').innerHTML =
       statCard('Current Streak', S.streak, 'days in a row', 'var(--gold)')
@@ -1605,6 +1463,134 @@ function drawInsights(){
       + (weak ? '<div class="skmeta"><span style="color:var(--red)">Neglected &mdash; give this attention</span><span></span></div>' : '')
       + '</div>';
   }).join('');
+
+  /* --- the status window that used to live in the Status tab --- */
+  const sg = $('statGrid');
+  if(sg){
+    sg.innerHTML = STATS.map(s => {
+      const lv = statOverall(s.key);
+      const xp = S.statXP[s.key] || 0;
+      const inLv = xp % STAT_XP;
+      return '<div class="stat">'
+        + '<div class="h"><span class="n">'+ic(s.icon,18)+' '+s.name+'</span><span class="lv">Lv '+lv+'</span></div>'
+        + '<div class="bar thin"><i style="width:'+(inLv/STAT_XP*100)+'%"></i></div>'
+        + '<div class="sb">'+esc(s.why)+'</div></div>';
+    }).join('');
+  }
+
+  const al = $('assessList');
+  if(al){
+    al.innerHTML = ASSESSMENT.map(a =>
+      '<div class="bk"><div class="t">'+esc(a.title)+'</div>'
+      + '<div class="w">'+esc(a.body).replace(/\n/g,'<br>')+'</div></div>').join('');
+  }
+
+  drawBadges();
+  drawRecords();
+}
+
+/* build the monthly streak calendar */
+function streakCalendar(){
+  const now = new Date();
+  const y = now.getFullYear(), m = now.getMonth();
+  const daysInMonth = new Date(y, m+1, 0).getDate();
+  const firstDay = new Date(y, m, 1).getDay();
+  const monthNames = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  const dayNames = ['S','M','T','W','T','F','S'];
+  const today = dayKey();
+
+  let active = 0, missed = 0, cells = '';
+
+  cells += '<div class="calHead"><button class="calNav" onclick="calMonth(-1)">&larr;</button>'
+         + '<div class="calTitle">' + monthNames[m] + ' ' + y + '</div>'
+         + '<button class="calNav" onclick="calMonth(1)">&rarr;</button></div>';
+  cells += '<div class="calGrid">';
+  dayNames.forEach(d => { cells += '<div class="calDow">' + d + '</div>'; });
+  for(let i = 0; i < firstDay; i++) cells += '<div class="calCell empty"></div>';
+
+  for(let day = 1; day <= daysInMonth; day++){
+    const k = y + '-' + String(m+1).padStart(2,'0') + '-' + String(day).padStart(2,'0');
+    const isToday = (k === today);
+    const rec = (S.log30 && S.log30[k]) || null;
+    const perfect = (S.perfectDays || []).includes(k);
+    const isFuture = day > now.getDate();
+
+    let pct = 0, done = 0, tot = 0, cls = 'calCell';
+    if(isFuture){ cls += ' future'; }
+    else if(rec){ done = rec.done; tot = rec.total; pct = tot ? done/tot : 0; }
+    else if(perfect){ done = 1; tot = 1; pct = 1; }
+
+    if(!isFuture){
+      if(pct >= 1)      { cls += ' dFull';   active++; }
+      else if(pct >= .6){ cls += ' dHigh';   active++; }
+      else if(pct > 0)  { cls += ' dSome';   active++; }
+      else if(S.started && S.startedOn && k >= S.startedOn){ cls += ' dMiss'; missed++; }
+      else { cls += ' dNone'; }
+    }
+    if(isToday) cls += ' today';
+    if(perfect) cls += ' perfect';
+
+    const detail = isFuture ? 'Future'
+      : (done || tot ? done + '/' + tot + ' missions'
+        : (S.started && S.startedOn && k >= S.startedOn ? 'No missions' : ''));
+
+    cells += '<div class="' + cls + '" title="' + k + (detail ? ' \u00b7 ' + detail : '') + '">'
+           + '<span class="calNum">' + day + '</span>'
+           + (perfect ? '<span class="calStar">&#9733;</span>' : '')
+           + (detail ? '<span class="calInfo">' + detail + '</span>' : '')
+           + '</div>';
+  }
+  cells += '</div>';
+
+  /* legend + the streak run itself */
+  let runs = '';
+  const last30 = (window.last30 ? null : null);
+  runs += '<div class="calLegend">'
+        + '<span><i class="calCell dFull"></i> Perfect</span>'
+        + '<span><i class="calCell dHigh"></i> Strong</span>'
+        + '<span><i class="calCell dSome"></i> Partial</span>'
+        + '<span><i class="calCell dMiss"></i> Missed</span>'
+        + '<span><i class="calCell dNone"></i> Before you started</span>'
+        + '</div>';
+
+  /* streak run: how many consecutive days ending today */
+  let run = 0, runCells = '';
+  for(let i = 0; i < 45; i++){
+    const d = new Date(); d.setDate(d.getDate() - i);
+    const k = ymd(d);
+    const rec = S.log30 && S.log30[k];
+    const perfect = (S.perfectDays || []).includes(k);
+    let on = false;
+    if(rec && rec.done > 0) on = true;
+    else if(perfect) on = true;
+    if(i === 0 && !on){ /* today may still be in progress */ }
+    if(!on) break;
+    run++;
+  }
+  for(let i = run - 1; i >= 0; i--){
+    const d = new Date(); d.setDate(d.getDate() - i);
+    runCells += '<div class="streakDot on" title="' + ymd(d) + '"></div>';
+  }
+  for(let i = run; i < Math.max(7, run + 4); i++){
+    runCells += '<div class="streakDot"></div>';
+  }
+
+  const streakHtml = '<div class="streakRunWrap"><div class="streakRunHead">'
+    + '<span>CONSECUTIVE DAYS</span><span class="streakRunNum">' + S.streak + '</span></div>'
+    + '<div class="streakRun">' + runCells + '</div>'
+    + '<div class="streakRunHint">Days in a row you completed at least one mission.</div></div>';
+
+  return { html: cells + runs + streakHtml, active: active, missed: missed };
+}
+
+function ymd(d){
+  return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+}
+
+let CAL_OFFSET = 0;
+function calMonth(dir){
+  CAL_OFFSET += dir;
+  drawInsights();
 }
 
 function statCard(label, value, sub, colour){
@@ -1613,15 +1599,7 @@ function statCard(label, value, sub, colour){
     + '<div class="sb">' + esc(sub) + '</div></div>';
 }
 
-function drawHistory(){
-  $('history').innerHTML = S.hist.length
-    ? S.hist.slice(0,10).map(h =>
-        '<div style="padding:9px 0;border-bottom:1px solid rgba(29,59,107,.5)">'
-        + '<span style="font-family:var(--hud);font-size:10px;color:var(--glow);letter-spacing:1.4px">'+esc(h.h)+'</span> '
-        + '<span style="font-size:14px">'+h.t+'</span>'
-        + '<div style="font-size:11px;color:var(--muted);margin-top:2px">'+esc(h.d)+'</div></div>').join('')
-    : 'No activity recorded yet. Start your first mission.';
-}
+
 
 /* ---------------------------------------------------------------------
    DAILY BRIEFING
@@ -1747,10 +1725,10 @@ function removeHabit(habitId) {
    --------------------------------------------------------------------- */
 function renderAll(){
   drawHUD(); drawDaily(); drawWeekly(); drawBosses();
-  drawCourses(); drawRoadmap(); drawRewards();
-  drawLibrary(); drawCoach(); drawStats(); drawHistory();
-  drawReview(); drawInsights(); drawTyping(); drawExtras(); drawSkillTree(); drawCourseTree();
-  drawClass(); drawShadow(); drawFocus(); drawVision();
+  drawCourses(); drawRoadmap();
+  drawLibrary();
+  drawReview(); drawInsights(); drawExtras(); drawSkillTree(); drawCourseTree();
+  drawClass(); drawShadow(); drawVision();
   drawEggs(); drawCharacters(); drawVocab(); drawMoney();
   drawSpeaking(); drawUpToDate(); drawExpenses();
   checkHabitFormation();
@@ -1812,31 +1790,43 @@ function boot(){
 
   /* ------------------------------------------------------------------
      MIDNIGHT ROLLOVER — the daily quest must reset at 00:00 Cairo time
-     even when the page stays open all night. We check every 30 seconds
-     and also whenever the tab becomes visible again.
+     even when the page stays open all night.
+
+     Why this needs three layers:
+       1. A timer while the tab is focused
+       2. A timer when the tab is in the background (browsers throttle
+          setInterval to 1 call/minute when the tab is hidden)
+       3. A check on visibility, focus and scroll — the moment you look
+          at the page, it fixes itself
+
+     Before this, the page only checked ONCE at boot, so if you left the
+     tab open overnight the missions stayed frozen until you reloaded.
      ------------------------------------------------------------------ */
-  dayTimer = setInterval(function(){
+  function rolloverCheck(quiet){
     const t = dayKey();
     if(S.lastDay !== t){
       resets();
       autoBackup();
       renderAll();
       log('SYSTEM', 'A new day has begun. Daily quests reset. Prove yourself again, Hunter.');
-      sfx('boot');
+      if(!quiet) sfx('boot');
+      return true;
     }
-  }, 30*1000);
+    return false;
+  }
 
+  /* layer 1: every 20 seconds while focused */
+  dayTimer = setInterval(function(){ rolloverCheck(false); }, 20*1000);
+
+  /* layer 2: a wider net for when the tab is hidden (browsers throttle) */
+  setInterval(function(){ rolloverCheck(false); }, 60*1000);
+
+  /* layer 3: the instant you come back to the page */
   document.addEventListener('visibilitychange', function(){
-    if(!document.hidden){
-      const t = dayKey();
-      if(S.lastDay !== t){
-        resets();
-        autoBackup();
-        renderAll();
-        log('SYSTEM', 'A new day has begun. Daily quests reset.');
-      }
-    }
+    if(!document.hidden) rolloverCheck(false);
   });
+  window.addEventListener('focus', function(){ rolloverCheck(true); });
+  window.addEventListener('online', function(){ rolloverCheck(false); });
 
   if(!S.hist.length){
     setTimeout(() => log('SYSTEM',
@@ -1853,14 +1843,4 @@ function setBG(src){
     l.style.backgroundImage = "url('" + src + "')";
     l.classList.add('on');
   }, 150);
-}
-
-function resetAll(){
-  if(!confirm('This erases all XP, levels, streaks, courses and progress. Continue?')) return;
-  if(!confirm('Final confirmation: start again from level 1?')) return;
-  S = blank();
-  save();
-  renderAll();
-  showPhrase();
-  log('SYSTEM','All data reset. A new beginning.');
 }
