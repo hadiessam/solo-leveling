@@ -1724,21 +1724,68 @@ function removeHabit(habitId) {
    MASTER RENDER
    --------------------------------------------------------------------- */
 function renderAll(){
-  drawHUD(); drawDaily(); drawWeekly(); drawBosses();
-  drawCourses(); drawRoadmap();
-  drawLibrary();
-  drawReview(); drawInsights(); drawExtras(); drawSkillTree(); drawCourseTree();
-  drawClass(); drawShadow(); drawVision();
-  drawEggs(); drawCharacters(); drawVocab(); drawMoney();
-  drawSpeaking(); drawUpToDate(); drawExpenses();
+  /* ---------------------------------------------------------------
+     RENDER ONLY WHAT THE USER IS LOOKING AT.
+
+     The old version rebuilt all 17 tabs on every single call — 39
+     innerHTML writes, 38 book cards, 100 speaking words, a full
+     calendar — even for tabs that were closed. That is what made
+     the app stutter and eventually hang.
+
+     Now: one cheap pass for the HUD, then a full render for only the
+     active tab. Anything that is not the active tab is left alone.
+     --------------------------------------------------------------- */
+  drawHUD();
   checkHabitFormation();
-  /* dynamic freeze numbers — never hardcode these in the HTML */
+
+  const active = document.querySelector('.tab.active');
+  const page = active ? active.dataset.page : 'dash';
+  drawTab(page);
+
+  /* dynamic numbers that live outside the tab system */
   if($('fCost'))  $('fCost').textContent  = FREEZE.costXP;
   if($('fDebt'))  $('fDebt').textContent  = FREEZE.punishmentXP;
   if($('fEvery')) $('fEvery').textContent = FREEZE.earnEvery;
   if($('courseTag')) $('courseTag').textContent = Object.keys(S.courses).length + ' / ' + COURSES.length + ' DONE';
   if($('badgeTag'))  $('badgeTag').textContent  = S.badges.length + ' / ' + BADGES.length + ' EARNED';
   if($('libTag'))    $('libTag').textContent    = booksRead() + ' / ' + allBooks().length + ' READ';
+}
+
+/* draw one tab — the only place a tab's markup is rebuilt */
+function drawTab(page){
+  switch(page){
+    case 'dash':     drawDaily(); break;
+    case 'daily':    drawDaily(); break;
+    case 'weekly':   drawWeekly(); break;
+    case 'boss':     drawBosses(); break;
+    case 'courses':  drawCourses(); drawCourseTree(); break;
+    case 'roadmap':  drawRoadmap(); break;
+    case 'library':  drawLibrary(); break;
+    case 'review':   drawReview(); break;
+    case 'insight':  drawInsights(); break;
+    case 'skills':   drawExtras(); drawSkillTree(); break;
+    case 'vocab':    drawVocab(); break;
+    case 'hunter':   drawClass(); drawVision(); break;
+    case 'shadow':   drawEggs(); drawShadow(); break;
+    case 'money':    drawMoney(); break;
+    case 'speaking': drawSpeaking(); break;
+    case 'uptodate': drawUpToDate(); break;
+    case 'expenses': drawExpenses(); break;
+  }
+}
+
+/* force a full rebuild — only used when data structure changes, not on
+   every render tick */
+function renderEverything(){
+  drawHUD(); drawDaily(); drawWeekly(); drawBosses();
+  drawCourses(); drawRoadmap();
+  drawLibrary();
+  drawReview(); drawInsights(); drawExtras(); drawSkillTree(); drawCourseTree();
+  drawClass(); drawVision();
+  drawEggs();   /* this also draws the shadow + characters */
+  drawVocab(); drawMoney();
+  drawSpeaking(); drawUpToDate(); drawExpenses();
+  checkHabitFormation();
 }
 
 /* ---------------------------------------------------------------------
@@ -1751,8 +1798,9 @@ function boot(){
   checkForUpdates();
   /* pull cloud save first, then render */
   cloudLoad().then(function(pulled){
-    if(pulled) renderAll();
-    else renderAll();
+    /* one full rebuild at boot so every tab is populated, then the
+       fast per-tab render takes over */
+    renderEverything();
   });
   resumePomodoro();
 
@@ -1777,8 +1825,8 @@ function boot(){
       setBG(t.dataset.bg);
       sfx('tab');
       window.scrollTo({top:0,behavior:'smooth'});
-      /* Show character for this tab */
-
+      /* render just this tab — fast, and it shows the freshest data */
+      drawTab(t.dataset.page);
     });
   });
 

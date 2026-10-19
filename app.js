@@ -42,7 +42,7 @@ function blank(){
     freezes:0, freezeUsed:[], punishment:0,
     started:false, startedOn:'',
     milestones:[], badges:[],
-    lastBackup:'', lastAuto:'', perfectDays:[], perfectPending:'', missionXP:{},
+    lastBackup:'', lastAuto:'', perfectDays:[], perfectPending:'', perfectBonusScheduled:'', missionXP:{},
     reviews:[], lastReview:'', log30:{},
     typing:{now:0, target:60, hist:[]},
     books:{},
@@ -124,6 +124,7 @@ function read(){
         if(!o.badges) o.badges = [];
         if(!o.perfectDays) o.perfectDays = [];
         if(!o.perfectPending) o.perfectPending = '';
+        if(!o.perfectBonusScheduled) o.perfectBonusScheduled = '';
         if(!o.missionXP) o.missionXP = {};
         /* streak: if old save has 2, reset to 1 (user started yesterday) */
         if(o.streak >= 2) o.streak = 1;
@@ -174,6 +175,8 @@ function read(){
     if(!o.milestones) o.milestones = [];
     if(!o.badges) o.badges = [];
     if(!o.perfectDays) o.perfectDays = [];
+    if(!o.perfectPending) o.perfectPending = '';
+    if(!o.perfectBonusScheduled) o.perfectBonusScheduled = '';
     if(!o.reviews) o.reviews = [];
     if(!o.log30) o.log30 = {};
     if(!o.typing) o.typing = {now:0, target:60, hist:[]};
@@ -1245,6 +1248,18 @@ function checkPerfectDay(){
   const today = dayKey();
   if(S.perfectDays && S.perfectDays.includes(today)) return;
   if(!S.perfectDays) S.perfectDays = [];
+
+  /* ------------------------------------------------------------------
+     GUARD: checkPerfectDay runs once per mission completion, so it is
+     called N times on the same day. Without this flag it scheduled N
+     setTimeouts and the +75 XP bonus was paid N times.
+
+     perfectBonusScheduled remembers that today's bonus already has a
+     timer running — only the first call is allowed to schedule one.
+     ------------------------------------------------------------------ */
+  if(S.perfectBonusScheduled === today) return;
+  S.perfectBonusScheduled = today;
+
   S.perfectDays.push(today);
 
   /* mark the bonus as pending so an uncheck can cancel it before it lands */
@@ -1263,6 +1278,7 @@ function checkPerfectDay(){
       return;
     }
     S.perfectPending = '';
+    S.perfectBonusScheduled = '';
     ceremonyCard({
       kicker:'PERFECT DAY',
       big:'ALL MISSIONS CLEARED',

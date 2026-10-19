@@ -239,14 +239,11 @@ const DAILY = [
   {id:'d5', t:1, name:'15-minute home workout',     sub:'Health',     stat:'health',  xp:7,
    guide:'BUILD FROM ZERO \u2014 15 minutes, no equipment, no jumping (knee-friendly at 85 kg).\n\nWarm-up (2 min): 30s arm circles \u00b7 30s marching in place \u00b7 30s hip circles \u00b7 30s slow bodyweight squats.\n\nCircuit \u2014 3 rounds, 40s work / 30s rest:\n  1. Incline push-ups (hands on a chair or wall)\n  2. Chair-assisted squats\n  3. Knee plank (build to full plank)\n  4. Glute bridge\n  5. Dead bug (core, back-safe)\n\nCool-down (3 min): stretch quads, hamstrings, chest, lower back.\n\nWeek 1 you will struggle. Week 3 you will not. Do not skip rest days \u2014 3 to 4 sessions a week, not 7.'},
 
-  {id:'d6', t:1, name:'English Training \u2014 30 min', sub:'Self-Development', stat:'selfdev', xp:20,
-   guide:'YOUR REAL PROFILE (EF SET 4-skill, measured):\n  Listening 63 \u2014 C1 ADVANCED\n  Speaking  50 \u2014 B1\n  Reading   48 \u2014 B1\n  Writing   33 \u2014 A2 ELEMENTARY  \u2190 THIS IS THE PROBLEM\n\nAverage 49 = B1. B2 needs 51. The whole gap is in WRITING.\n\nTHE MATH: if writing goes from 33 to 43, your average hits 51 and you are B2. One skill. Ten points.\n\n\u2500\u2500\u2500 THE 30 MINUTES \u2500\u2500\u2500\n\n\u2022 15 min \u2014 WRITE AND GET CORRECTED: use writeandimprove.com (free, Cambridge University). Pick a B1/B2 task, write at least 200 words, and the tool returns instant feedback on grammar, spelling and vocabulary plus a CEFR score. Rewrite using the feedback. This is the single highest-value 15 minutes available to you.\n\n\u2022 10 min \u2014 GRAMMAR DRILL: fix the errors Write & Improve keeps flagging. Same mistake three times = that is your drill for the week.\n\n\u2022 5 min \u2014 SPEAK ALOUD: read your corrected text out loud. Speaking is already 50, one point from B2 \u2014 this keeps it there while you fix writing.\n\n\u2500\u2500\u2500 VOCABULARY \u2500\u2500\u2500\n\nLearn 5 new English words. Write each one in a sentence about your work or life. Use a notebook or a notes app. Review them tomorrow. This builds vocabulary without feeling like studying.\n\nWHY NOT MORE LISTENING: you are C1 at listening. Watching more English content is the most comfortable thing to do and the least useful. Do not spend your 30 minutes there.\n\nYou are not learning English. You are fixing one skill.'},
+  {id:'d6', t:1, name:'English Writing & Typing \u2014 50 min', sub:'Self-Development', stat:'selfdev', xp:28,
+     guide:'YOUR REAL PROFILE (EF SET 4-skill, measured):\n  Listening 63 \u2014 C1 ADVANCED\n  Speaking  50 \u2014 B1\n  Reading   48 \u2014 B1\n  Writing   33 \u2014 A2 ELEMENTARY  \u2190 THIS IS THE PROBLEM\n\nAverage 49 = B1. B2 needs 51. The whole gap is in WRITING.\n\nTHE MATH: if writing goes from 33 to 43, your average hits 51 and you are B2. One skill. Ten points.\n\n\u2500\u2500\u2500 THE 50 MINUTES \u2500\u2500\u2500\n\n\u2022 30 min \u2014 WRITE AND GET CORRECTED: use writeandimprove.com (free, Cambridge University). Pick a B1/B2 task, write at least 200 words, and the tool returns instant feedback on grammar, spelling and vocabulary plus a CEFR score. Rewrite using the feedback. This is the single highest-value 15 minutes available to you.\n\n\u2022 15 min \u2014 TOUCH TYPING: go to keybr.com and do a full session. It finds the letters you are slow at and drills them automatically. No setup, no account needed. At 25 WPM a 1,000-word report takes 40 minutes; at 60 it takes 16. That is 24 minutes back on every document, forever.\n\n\u2022 5 min \u2014 SPEAK ALOUD: read your corrected text out loud. Speaking is already 50, one point from B2 \u2014 this keeps it there while you fix writing.\n\n\u2500\u2500\u2500 WHY THEY ARE ONE MISSION \u2500\u2500\u2500\n\nWriting and typing are the same skill from two ends. You cannot write well if you are hunting for letters, and typing is worthless if you have nothing to say. Doing them together in one sitting is how both improve.\n\nOnce a week, test yourself on monkeytype.com and write the WPM down. You will be at 60 in about 8 weeks.\n\nWHY NOT MORE LISTENING: you are C1 at listening. Watching more English content is the most comfortable thing to do and the least useful. Do not spend your time there.\n\nYou are not learning English. You are fixing one skill.'},
 
   {id:'d7', t:1, name:'30 minutes of reading',      sub:'Self-Development', stat:'selfdev', xp:5,
    guide:'You read about 5 pages per 15 minutes, so 30 minutes is roughly 10 pages. Aim for 10 pages, not for 30 minutes.\n\nRead in English when you can \u2014 it compounds with the English work. Arabic is fine for the mindset books.\n\nThe Library tab now has REAL books you can open and read right now, free and legal: As a Man Thinketh (35 min, start tonight), The Art of War, Meditations, The Richest Man in Babylon, and full university textbooks on marketing and business writing.'},
-
-  {id:'d18', t:1, name:'Touch typing practice \u2014 20 min', sub:'Skills', stat:'skills', xp:8,
-   guide:'THE HIGHEST-RETURN 20 MINUTES IN THIS LIST.\n\nGo to keybr.com and do a full session. It finds the letters you are slow at and drills them automatically. No setup, no account needed.\n\nWHY IT MATTERS: you will write client reports, campaign summaries, proposals and ad copy for the rest of your career. At 25 words per minute a 1,000-word report takes 40 minutes. At 60 WPM it takes 16. That is 24 minutes back on every single document, forever.\n\nOnce a week, test yourself on monkeytype.com and write the number down. You will be at 60 WPM in about 8 weeks.\n\n20 minutes beats two separate 10-minute sessions \u2014 typing is a physical skill and it needs uninterrupted time to build.'},
 
   {id:'d8', t:1, name:'No phone for the first 30 min', sub:'Discipline', stat:null,   xp:5,
    guide:'From waking until 30 minutes later: no phone. Not for the time, not for messages, not for anything.\n\nPut it across the room before you sleep so you must physically get up to reach it.'},
@@ -273,7 +270,7 @@ const DAILY = [
    guide:'Move a fixed amount into a separate pot today. Any amount, but fixed.\n\nName the pot EGYPT FUND. Nothing else touches it. This is the money that buys the stability \u2014 and later, the ticket. Pay yourself first: move a fixed amount the day money comes in, before anything else.'},
 
   {id:'d13',t:2, name:'Egypt market study \u2014 20 min', sub:'Career', stat:'career', xp:7, unlock:{level:5},
-   guide:'You are targeting PERFORMANCE MARKETING / MEDIA BUYER roles in RIYADH. Research exactly that:\n\n\u2022 Search LinkedIn Jobs and Bayt for "performance marketing Riyadh" and "media buyer Riyadh". Read 5 ads properly.\n\u2022 Note the salary bands quoted.\n\u2022 Note which tools they ask for that you do not list.\n\u2022 Note which industries are hiring most (e-commerce, real estate, government, agencies).\n\nWrite down one gap you found. That gap is tomorrow\'s work.'},
+   guide:'You are targeting PERFORMANCE MARKETING / MEDIA BUYER roles IN EGYPT FIRST. Research exactly that:\n\n\u2022 Search Wuzzuf, LinkedIn Jobs and Bayt for "media buyer Egypt" and "performance marketer Egypt". Read 5 ads properly.\n\u2022 Note the salary bands quoted in EGP.\n\u2022 Note which tools they ask for that you do not list.\n\u2022 Note which industries are hiring most (e-commerce, real estate, agencies, fintech).\n\u2022 Check the remote listings too \u2014 many pay in USD.\n\nWrite down one gap you found. That gap is tomorrow\'s work.'},
 
   {id:'d14',t:2, name:'Practise interview answers', sub:'Career',     stat:'career',  xp:7, unlock:{level:5},
    guide:'Out loud, not in your head. You are a strong candidate with real numbers \u2014 the job is presenting them without hesitating.\n\nToday: "Tell me about yourself."\nStructure: who you are \u2192 what you do \u2192 your strongest number \u2192 why this role.\n90 seconds. Use your real figures: 27 programs, 11,406 leads, TL 15.06 blended CPL.\n\nRecord it, listen back, cut the filler. New question each day.'},
@@ -595,7 +592,7 @@ const EVENT_PHRASES = {
     "You are proving something to yourself right now.",
     "The gap between you and your goal just got smaller.",
     "Consistency is your superpower.",
-    "One more step on the road to Riyadh.",
+    "One more step on the road to your goal.",
     "You are becoming the hunter you were meant to be.",
     "That mission is now part of your story.",
     "The System sees your dedication.",
@@ -619,7 +616,7 @@ const EVENT_PHRASES = {
     "The System has raised your rank.",
     "You are climbing. Keep climbing.",
     "That level was earned, not given.",
-    "The gap between you and Riyadh just got smaller.",
+    "The gap between you and your goal just got smaller.",
     "You are becoming dangerous to your own excuses.",
     "The System acknowledges your evolution.",
     "Higher level. Higher stakes. Higher rewards."
@@ -795,7 +792,7 @@ const GENERAL_PHRASES = [
   "You are building something that will outlast this moment.",
   "The System sees your potential.",
   "Discipline is choosing what you want most over what you want now.",
-  "You are one mission closer to Riyadh.",
+  "You are one mission closer to your goal.",
   "The System believes in your growth.",
   "Every expert was once a beginner who refused to quit.",
   "You are not your excuses. You are your actions.",
@@ -888,7 +885,7 @@ const GENERAL_PHRASES = [
 
 const GUIDE_BY_TIER = {
   1: "Foundation tier. Fajr, water, fifteen minutes of movement, thirty minutes of English, no phone in the morning. Small things, done daily.",
-  2: "Hunting tier. Money starts moving and the Riyadh market research begins. You are building leverage now, not just habits.",
+  2: "Hunting tier. Money starts moving and the Egypt market research begins. You are building leverage now, not just habits.",
   3: "Awakened tier. Speaking, courses, publishing. The market starts to notice you exist. Do not slow down."
 };
 
@@ -935,7 +932,7 @@ const BOOKS = [
      read:'https://openstax.org/details/books/principles-marketing', src:'OpenStax'},
 
     {t:'Business Communication for Success', a:'OpenStax', yr:2019, mins:'textbook', xp:600,
-     why:'Directly targets your weakest skill. How to write reports, proposals, emails and presentations that get read. Every client report you write in Riyadh runs through this.',
+     why:'Directly targets your weakest skill. How to write reports, proposals, emails and presentations that get read. Every client report you write runs through this.',
      read:'https://openstax.org/details/books/business-communication', src:'OpenStax'},
 
     {t:'Principles of Management', a:'OpenStax', yr:2019, mins:'textbook', xp:600,
@@ -1123,7 +1120,7 @@ const SKILL_TREE = [
 
   {id:'google_sheets', n:'Google Sheets & Excel', type:'tool', priority:3, requires:[],
    target:'Pivot tables + reporting',
-   why:'Every performance marketing role in Riyadh tests this. Recruiters assume it, they do not teach it. You already handle TL 171K of spend \u2014 this is how you present it properly.',
+   why:'Every performance marketing role in Egypt and the Gulf tests this. Recruiters assume it, they do not teach it. You already handle TL 171K of spend \u2014 this is how you present it properly.',
    learn:[
      {n:'Google\u2019s official Sheets training', u:'https://support.google.com/a/users/answer/9282959', w:'Free, straight from Google. Covers everything from basics to pivot tables.'},
      {n:'GCFGlobal \u2014 Excel tutorial', u:'https://edu.gcfglobal.org/en/excel/', w:'Gentle, well-made free tutorial. Good if spreadsheets feel intimidating.'},
@@ -1146,7 +1143,7 @@ const SKILL_TREE = [
    why:'You will present to clients and teams. Speaking in front of people is a skill, not a personality trait \u2014 and it is trainable.',
    learn:[
      {n:'Yoodli \u2014 AI speech coach', u:'https://yoodli.ai/', w:'Free tier. Records you and counts filler words, pacing, eye contact. Practise alone first.'},
-     {n:'Toastmasters', u:'https://www.toastmasters.org/find-a-club', w:'The gold standard. Real audiences, real feedback. Guest visits are usually free \u2014 find a club in Riyadh before you land.'},
+     {n:'Toastmasters', u:'https://www.toastmasters.org/find-a-club', w:'The gold standard. Real audiences, real feedback. Guest visits are usually free \u2014 find a club near you and visit once.'},
      {n:'Speaking.io \u2014 public speaking practice', u:'https://speaking.io/', w:'Free, practical, no fluff. Built by people who speak for a living.'}
    ]},
 
@@ -1170,7 +1167,7 @@ const SKILL_TREE = [
 
   {id:'negotiation', n:'Negotiation', type:'skill', priority:8, requires:['public_speaking'],
    target:'A better salary offer',
-   why:'Your salary in Riyadh is negotiable. One good conversation can be worth a year of savings. This is the highest hourly rate you will ever earn.',
+   why:'Your salary is negotiable. One good conversation can be worth a year of savings. This is the highest hourly rate you will ever earn.',
    learn:[
      {n:'Never Split the Difference \u2014 summary', u:'https://www.blackswanltd.com/never-split-the-difference', w:'Chris Voss\u2019 own site. Free articles on tactical empathy.'},
      {n:'Harvard PON \u2014 free negotiation resources', u:'https://www.pon.harvard.edu/free-reports/', w:'Free reports from Harvard\u2019s Program on Negotiation. Genuinely useful.'},
@@ -1189,7 +1186,7 @@ const SKILL_TREE = [
 
   {id:'linkedin', n:'LinkedIn & Personal Branding', type:'career', priority:10, requires:['saudi_culture'],
    target:'Be findable',
-   why:'You have the profile, the logo and the portfolio. The only missing piece is output. Recruiters in Riyadh search before they post \u2014 being visible is how they find you.',
+   why:'You have the profile, the logo and the portfolio. The only missing piece is output. Recruiters search before they post \u2014 being visible is how they find you.',
    learn:[
      {n:'LinkedIn \u2014 official creator resources', u:'https://www.linkedin.com/help/linkedin/answer/a549033', w:'Free guidance straight from LinkedIn on what the algorithm rewards.'},
      {n:'Buffer \u2014 social media guides', u:'https://buffer.com/resources/', w:'Free, practical, no fluff. Good on what to actually post.'}
@@ -1376,7 +1373,7 @@ const LOOT = [
    VISION BOARD — visual goals (inspired by Gamified Life OS)
    --------------------------------------------------------------- */
 const VISION_BOARD = [
-  {id:'v1', icon:'flag', title:'Riyadh', desc:'Live and work in Saudi Arabia'},
+  {id:'v1', icon:'flag', title:'Riyadh', desc:'Live and work in Saudi Arabia \u2014 long-term goal, tracked monthly'},
   {id:'v2', icon:'career', title:'Dream Job', desc:'Performance Marketing / Media Buyer'},
   {id:'v3', icon:'building', title:'My Agency', desc:'Own advertising agency in the Gulf'},
   {id:'v4', icon:'graduation', title:'MBA Germany', desc:'Master of Business Administration'},
