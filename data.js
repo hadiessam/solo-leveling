@@ -254,6 +254,9 @@ const DAILY = [
   {id:'d10',t:1, name:'Phone-free hour',  sub:'Discipline', stat:null,      xp:7,
    guide:'One full hour with the phone completely off or in another room. Not "I will not scroll" \u2014 physically away.\n\nPick a fixed time every day (e.g. 9pm-10pm). During that hour: read, study, walk, or just sit. The goal is to prove to yourself that you can exist without it.\n\nStart with one hour. If that feels easy, extend to two.'},
 
+  {id:'d21',t:1, name:'Practice a skill for 20 min', sub:'Skills', stat:'skills', xp:8,
+   guide:'Spend 20 uninterrupted minutes on ONE skill: touch typing, Excel, presentation design, HTML, or anything from the Skills tab.\n\nTwenty minutes is the minimum that produces a real gain \u2014 five minutes of half-attention does not. Pick the skill, set a timer, phone in another room, and work on it until the timer ends.\n\nUse the phone-free hour for this. The goal is to replace scrolling with learning, and to make 20 minutes a habit you can extend later.'},
+
   {id:'d22',t:1, name:'Plan tomorrow\'s top 3', sub:'Discipline', stat:null, xp:2,
    guide:'Before sleeping, write down the 3 most important things to do tomorrow. Not 10 \u2014 just 3.\n\nThis takes 2 minutes and makes tomorrow 10x easier. Do it on paper, not on your phone.'},
 
