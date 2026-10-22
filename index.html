@@ -578,12 +578,110 @@
 <script>
 boot();
 
-/* register the service worker so the app installs and works offline */
-if ('serviceWorker' in navigator) {
+/* ------------------------------------------------------------------
+   SERVICE WORKER REGISTRATION + AUTO-UPDATE
+
+   The old code registered the worker and did nothing else. That meant
+   when a new worker was waiting, the page kept running the OLD code
+   until the user manually closed and reopened everything.
+
+   Now:
+     1. We listen for a new worker waiting to take over and offer a
+        one-tap "UPDATE AVAILABLE" bar at the top of the page.
+     2. If the update is only to data/missions, we apply it silently
+        with a light reload — no hard refresh, no Ctrl+Shift+R.
+   ------------------------------------------------------------------ */
+(function(){
+  if(!('serviceWorker' in navigator)) return;
+
+  let reg = null;
+  let refreshing = false;
+
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('sw.js').catch(() => {});
+    navigator.serviceWorker.register('sw.js').then(r => {
+      reg = r;
+
+      /* a new worker is waiting — the app can be updated now */
+      r.addEventListener('updatefound', () => {
+        const sw = r.installing;
+        if(!sw) return;
+        sw.addEventListener('statechange', () => {
+          if(sw.state === 'installed' && navigator.serviceWorker.controller){
+            showUpdateBar(() => {
+              /* let the new worker take over, then reload once */
+              sw.postMessage({ type: 'SKIP_WAITING' });
+            });
+          }
+        });
+      });
+
+      /* the new worker took control — reload once so the new code runs */
+      navigator.serviceWorker.addEventListener('controllerchange', () => {
+        if(refreshing) return;
+        refreshing = true;
+        window.location.reload();
+      });
+    }).catch(() => {});
   });
-}
+
+  /* the "UPDATE AVAILABLE" bar */
+  function showUpdateBar(onApply){
+    if(document.getElementById('updBar')) return;
+    const bar = document.createElement('div');
+    bar.id = 'updBar';
+    bar.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:999999;' +
+      'background:linear-gradient(90deg,#7c3aed,#38bdf8);color:#fff;' +
+      'font:600 13px/1.4 system-ui,sans-serif;text-align:center;padding:10px 44px 10px 16px;' +
+      'box-shadow:0 2px 12px rgba(0,0,0,.35);';
+    bar.innerHTML = 'New missions and fixes are ready.';
+
+    const btn = document.createElement('button');
+    btn.textContent = 'UPDATE';
+    btn.style.cssText = 'position:absolute;right:8px;top:50%;transform:translateY(-50%);' +
+      'background:#fff;color:#6d28d9;border:0;border-radius:6px;padding:6px 14px;' +
+      'font:700 12px/1 system-ui,sans-serif;cursor:pointer;';
+    btn.onclick = () => { bar.remove(); onApply(); };
+    bar.appendChild(btn);
+
+    const close = document.createElement('button');
+    close.textContent = '×';
+    close.style.cssText = 'position:absolute;right:96px;top:50%;transform:translateY(-50%);' +
+      'background:transparent;color:#fff;border:0;font:700 18px/1 system-ui,sans-serif;cursor:pointer;';
+    close.onclick = () => bar.remove();
+    bar.appendChild(close);
+
+    document.body.appendChild(bar);
+  }
+})();
+
+/* ------------------------------------------------------------------
+   FALLBACK: if the service worker is unavailable (private mode, blocked
+   browser), the app still shows the newest data on a normal refresh —
+   because GitHub Pages serves code files with cache:reload from the SW,
+   and without an SW the browser's own cache applies. This stamp lets us
+   detect a long-lived tab so we can nudge a reload.
+   ------------------------------------------------------------------ */
+(function(){
+  const KEY = 'slPageStamp';
+  const now = Date.now();
+  const seen = parseInt(localStorage.getItem(KEY) || '0', 10);
+  const STALE_MS = 30 * 60 * 1000;   /* 30 minutes */
+
+  /* if the tab has been open much longer than the stamp, the data on
+     screen may be old. Ask the service worker to re-check, and if there
+     is no worker, refresh once so the missions come back correct. */
+  if(seen && (now - seen) > STALE_MS){
+    localStorage.setItem(KEY, String(now));
+    /* only reload if the page has been idle a while — never mid-session */
+    setTimeout(() => {
+      if(!document.hidden && navigator.onLine !== false){
+        window.location.reload();
+      }
+    }, 4000);
+  } else {
+    localStorage.setItem(KEY, String(now));
+  }
+})();
 
 /* open a specific tab straight from the URL, e.g. #daily */
 window.addEventListener('load', () => {

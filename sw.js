@@ -4,9 +4,10 @@
    Bump CACHE when you change any file, otherwise the phone serves the old one.
    ===================================================================== */
 
-const CACHE = 'solo-leveling-v40';
+const CACHE   = 'solo-leveling-v41';
 
-const ASSETS = [
+/* code + markup — these MUST always be fresh */
+const CORE = [
   './',
   './index.html',
   './styles.css',
@@ -22,7 +23,11 @@ const ASSETS = [
   './_features1.js',
   './_features2.js',
   './_features3.js',
-  './manifest.json',
+  './manifest.json'
+];
+
+/* images — safe to serve stale, they never change */
+const MEDIA = [
   './assets/avatar.jpg',
   './assets/jinwoo.png',
   './assets/bg/bg-dashboard.jpg',
@@ -41,11 +46,25 @@ const ASSETS = [
   './icons/favicon.png'
 ];
 
+const ALL = CORE.concat(MEDIA);
+
+/* fetch with the HTTP cache bypassed — we never want yesterday's data.js */
+function net(req){
+  return fetch(req, { cache: 'reload' });
+}
+
 self.addEventListener('install', e => {
   e.waitUntil(
-    caches.open(CACHE)
-      .then(c => c.addAll(ASSETS))
-      .then(() => self.skipWaiting())
+    caches.open(CACHE).then(cache =>
+      /* cache each file on its own. If one icon 404s the worker must still
+         install — otherwise the old worker keeps running forever and the
+         app never updates. */
+      Promise.all(ALL.map(u =>
+        net(new Request(u)).then(res => {
+          if(res && res.status === 200 && res.type === 'basic') cache.put(u, res.clone());
+        }).catch(() => {})
+      ))
+    ).then(() => self.skipWaiting())
   );
 });
 
@@ -59,16 +78,25 @@ self.addEventListener('activate', e => {
   );
 });
 
+/* let the page tell us to take over immediately */
+self.addEventListener('message', e => {
+  if(e.data && e.data.type === 'SKIP_WAITING') self.skipWaiting();
+});
+
 /* ---------------------------------------------------------------------
-   STRATEGY — stale-while-revalidate.
+   STRATEGY
 
-   Why not cache-first: a cache-first service worker serves the OLD file
-   indefinitely, which is what made the app appear frozen and out of date
-   until the user hard-reloaded it several times. Now we return something
-   instantly AND silently refresh it in the background for next time.
+   1. Navigations and code -> NETWORK FIRST, cache fallback.
+      Online you always get the newest missions on the very first normal
+      refresh. Offline you still load from cache.
 
-   Why not network-first: the app must still work offline, so we fall back
-   to cache when the network is unavailable.
+      This replaces stale-while-revalidate, which answered with the cached
+      file and only fetched the new one in the background — so the first
+      refresh after an update still showed the old missions and the user
+      had to hard-reload several times.
+
+   2. Images -> stale-while-revalidate (they never change, and blocking on
+      them would slow every page load).
    --------------------------------------------------------------------- */
 self.addEventListener('fetch', e => {
   const req = e.request;
@@ -77,25 +105,40 @@ self.addEventListener('fetch', e => {
   const url = new URL(req.url);
   if (url.origin !== location.origin) return;   /* let fonts/CDN go to network */
 
+  const isNavigate = req.mode === 'navigate';
+  const isMedia    = url.pathname.match(/\.(png|jpe?g|gif|webp|svg|ico|woff2?)$/);
+
+  /* code and navigations: network first, cache when offline */
+  if (isNavigate || !isMedia) {
+    e.respondWith(
+      net(req).then(res => {
+        if (res && res.status === 200 && res.type === 'basic') {
+          const copy = res.clone();
+          caches.open(CACHE).then(c => c.put(req, copy));
+        }
+        return res;
+      }).catch(() =>
+        caches.open(CACHE).then(cache =>
+          cache.match(req).then(hit =>
+            hit || (isNavigate ? cache.match('./index.html') : null) ||
+            new Response('', { status: 504, statusText: 'Offline' })
+          )
+        )
+      )
+    );
+    return;
+  }
+
+  /* media: serve cached immediately, refresh in the background */
   e.respondWith(
-    caches.open(CACHE).then(cache => {
-      return cache.match(req).then(cached => {
-        const networkFetch = fetch(req).then(res => {
-          if (res && res.status === 200 && res.type === 'basic') {
-            const copy = res.clone();
-            cache.put(req, copy);
-          }
+    caches.open(CACHE).then(cache =>
+      cache.match(req).then(cached => {
+        const bg = net(req).then(res => {
+          if (res && res.status === 200 && res.type === 'basic') cache.put(req, res.clone());
           return res;
         }).catch(() => null);
-
-        /* instant answer if we have it; otherwise wait for the network */
-        if (cached) return cached;
-        return networkFetch.then(fresh => {
-          if (fresh) return fresh;
-          if (req.mode === 'navigate') return cache.match('./index.html');
-          return new Response('', { status: 408, statusText: 'Offline' });
-        });
-      });
-    })
+        return cached || bg;
+      })
+    )
   );
 });
