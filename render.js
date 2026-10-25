@@ -584,7 +584,104 @@ function drawWeekly(){
   const av = available(WEEKLY), lk = lockedOf(WEEKLY);
   let html = av.map(m => missionRow(m,'weekly')).join('');
   if(lk.length) html += lk.map(lockRow).join('');
+
+  /* ---- consequence warning for the weekly missions ---- */
+  const undone = av.filter(m => !S.weekly[m.id]);
+  if(undone.length){
+    const w = consequenceWarning(undone, av);
+    if(w){
+      const col = w.sev === 'high' ? 'var(--danger,#ef4444)'
+                : w.sev === 'mid'  ? 'var(--warn,#f59e0b)'
+                : 'var(--muted,#94a3b8)';
+      html += '<div class="st" style="margin-top:26px"><h2>Weekly Warning</h2>'
+            + '<span class="tag" style="color:' + col + '">' + (w.sev === 'high' ? 'HIGH' : w.sev === 'mid' ? 'WARNING' : 'LOW') + '</span></div>'
+            + '<div class="warnBox" style="border-left:3px solid ' + col + '">'
+            + '<b style="color:var(--text)">' + esc(w.title) + '</b>'
+            + '<div class="hint" style="margin:8px 0 0">' + esc(w.body) + '</div>'
+            + (w.cost ? '<div class="hint" style="margin:6px 0 0;color:' + col + '">' + w.cost + ' XP still on the table this week.</div>' : '')
+            + '</div>';
+    }
+  }
+
   $('weeklyList').innerHTML = html;
+}
+
+/* ---- PODCASTS ---- */
+function drawPodcasts(){
+  const cats = $('podcastCats');
+  if(!cats) return;
+
+  const sel = (S.podcastCat || 'all');
+  const keys = ['all'].concat(Object.keys(PODCAST_CATS));
+
+  cats.innerHTML = '<div class="catRow">'
+    + keys.map(k => {
+        const active = (k === sel);
+        if(k === 'all'){
+          return '<button class="catBtn' + (active ? ' on' : '') + '" onclick="setPodcastCat(\'all\')">All</button>';
+        }
+        const c = PODCAST_CATS[k];
+        return '<button class="catBtn' + (active ? ' on' : '') + '" '
+             + 'style="' + (active ? 'background:' + c.color + ';border-color:' + c.color : '') + '" '
+             + 'onclick="setPodcastCat(\'' + k + '\')">' + c.name + '</button>';
+      }).join('')
+    + '</div>';
+
+  const list = PODCASTS.filter(p => sel === 'all' || p.cat === sel);
+  $('podcastList').innerHTML = list.length
+    ? list.map(p => {
+        const c = PODCAST_CATS[p.cat] || {name:p.cat, icon:'brain', color:'#94a3b8'};
+        const done = (S.podcastsListened || []).includes(p.id);
+        return '<div class="podRow">'
+          + '<div class="podIcon" style="background:' + c.color + '22;color:' + c.color + '">'
+          +   ic(c.icon || 'brain', 20) + '</div>'
+          + '<div class="podBody">'
+          +   '<div class="podName">' + esc(p.name) + (p.lang === 'ar' ? ' <span class="tag" style="font-size:10px">ARABIC</span>' : '') + '</div>'
+          +   '<div class="podHost">' + esc(p.host || '') + '</div>'
+          +   '<div class="podWhy">' + esc(p.why) + '</div>'
+          +   (p.when ? '<div class="podWhen">▶ ' + esc(p.when) + '</div>' : '')
+          + '</div>'
+          + '<div class="podAct">'
+          +   (p.url ? '<a class="xbtn" href="' + esc(p.url) + '" target="_blank" rel="noopener">OPEN</a>' : '')
+          +   '<button class="xbtn' + (done ? ' done' : '') + '" onclick="togglePodcastListened(\'' + p.id + '\')">'
+          +     (done ? 'LISTENED' : 'MARK') + '</button>'
+          + '</div>'
+          + '</div>';
+      }).join('')
+    : '<div class="hint">Nothing in this category yet.</div>';
+
+  /* ---- Why / Goal / Dream panel ---- */
+  const wp = $('whyPanel');
+  if(wp){
+    wp.innerHTML = '<div class="whyRow"><div class="whyTag" style="background:#a78bfa">WHY</div>'
+      + '<div class="whyText">' + esc(WHY_LINES[new Date().getDate() % WHY_LINES.length]) + '</div></div>'
+      + '<div class="whyRow"><div class="whyTag" style="background:#4ade80">GOAL</div>'
+      + '<div class="whyText">' + esc(GOAL_LINES[new Date().getDate() % GOAL_LINES.length]) + '</div></div>'
+      + '<div class="whyRow"><div class="whyTag" style="background:#fbbf24">DREAM</div>'
+      + '<div class="whyText">' + esc(DREAM_LINES[new Date().getDate() % DREAM_LINES.length]) + '</div></div>'
+      + '<div class="hint" style="margin-top:14px">Jin-Woo rotates these on a schedule — morning, midday and night. Every refresh can bring a new one.</div>';
+  }
+}
+
+function setPodcastCat(k){
+  S.podcastCat = k;
+  save();
+  drawPodcasts();
+}
+
+function togglePodcastListened(id){
+  S.podcastsListened = S.podcastsListened || [];
+  const i = S.podcastsListened.indexOf(id);
+  if(i >= 0){
+    S.podcastsListened.splice(i, 1);
+    log('PODCAST','Removed from your listened list.');
+  } else {
+    S.podcastsListened.push(id);
+    addXP(4, 'selfdev', true, 'bonus');
+    log('PODCAST','Marked as listened. <b>+4 XP</b> — input is progress too.');
+  }
+  save();
+  drawPodcasts();
 }
 
 /* ---------------------------------------------------------------------
@@ -1771,6 +1868,7 @@ function drawTab(page){
     case 'speaking': drawSpeaking(); break;
     case 'uptodate': drawUpToDate(); break;
     case 'expenses': drawExpenses(); break;
+    case 'podcasts': drawPodcasts(); break;
   }
 }
 
@@ -1784,7 +1882,7 @@ function renderEverything(){
   drawClass(); drawVision();
   drawEggs();   /* this also draws the shadow + characters */
   drawVocab(); drawMoney();
-  drawSpeaking(); drawUpToDate(); drawExpenses();
+  drawSpeaking(); drawUpToDate(); drawExpenses(); drawPodcasts();
   checkHabitFormation();
 }
 

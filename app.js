@@ -42,7 +42,7 @@ function blank(){
     freezes:0, freezeUsed:[], punishment:0,
     started:false, startedOn:'',
     milestones:[], badges:[],
-    lastBackup:'', lastAuto:'', perfectDays:[], perfectPending:'', perfectBonusScheduled:'', missionXP:{},
+    lastBackup:'', lastAuto:'', perfectDays:[], perfectPending:'', perfectBonusScheduled:'', missionXP:{}, warnings:[],
     reviews:[], lastReview:'', log30:{},
     typing:{now:0, target:60, hist:[]},
     books:{},
@@ -90,7 +90,9 @@ function blank(){
     /* Up to Date — social platform news tracker */
     uptodate:{readNews:[]},
     /* Money Expenses calendar */
-    expenses:{}
+    expenses:{},
+    /* Podcasts — last category viewed + which ones were listened to */
+    podcastCat:'all', podcastsListened:[]
   };
 }
 
@@ -1103,8 +1105,154 @@ function resets(){
     S.lastDay = t;
     S.daily = {};
   }
-  if(S.lastWeek !== w){ S.lastWeek = w; S.weekly = {}; }
+  if(S.lastWeek !== w){
+    /* the week is over — judge it before clearing, so the player is told
+       which weekly missions were left undone and what that costs */
+    weeklyConsequence();
+    S.lastWeek = w; S.weekly = {};
+  }
   save();
+}
+
+/* ---------------------------------------------------------------------
+   CONSEQUENCE WARNING — when a mission is missed, explain WHAT IT COSTS.
+
+   The user's request: "لو فوت اي مهمة ان ديه هتؤثر علي حاجة تانية"
+   (if I miss a mission, show that it affects something else).
+
+   Instead of a generic penalty we name the real consequence: the domain
+   that stops growing, the boss raid that stalls, the XP never earned.
+   --------------------------------------------------------------------- */
+const MISSION_CONSEQUENCES = {
+  d6:  {domain:'selfdev', title:'Writing skill stalled',
+        body:'This is the ONLY thing standing between you and English B2. Writing is at 33 — the lowest of your four skills.'},
+  d15: {domain:'selfdev', title:'Speaking practice skipped',
+        body:'Speaking is at 50, one point from B2. Interviews in Cairo and Dubai test exactly this.'},
+  d21: {domain:'skills', title:'Skill practice skipped',
+        body:'Twenty minutes of real skill work — the thing that makes you hireable.'},
+  d24: {domain:'selfdev', title:'Course work skipped',
+        body:'Certifications get your CV past the filter. You have completed 0 of 36 courses.'},
+  d16: {domain:'selfdev', title:'Course module skipped',
+        body:'One finished module. You are still at 0 courses completed.'},
+  d13: {domain:'career', title:'Market study skipped',
+        body:'You cannot hit a target you have not looked at. This keeps the job search honest.'},
+  d14: {domain:'career', title:'Interview practice skipped',
+        body:'You have real numbers: 27 campaigns, 11,406 leads, TL 15.06 CPL. Skipping means hesitating when they ask.'},
+  d17: {domain:'career', title:'LinkedIn output skipped',
+        body:'You manage 27 programs and TL 171K of spend. Nobody knows that yet. Posting is how they learn it.'},
+  d11: {domain:'money', title:'Expenses not logged',
+        body:'You cannot fix money you do not look at. Money is your weakest domain at 114 XP.'},
+  d12: {domain:'money', title:'No income attempt today',
+        body:'No salary is coming. Today produced zero attempts to change that.'},
+  d27: {domain:'money', title:'Money idea not worked',
+        body:'Eight ideas are written in the Money tab. You have done zero. This mission forces one.'},
+  d5:  {domain:'health', title:'Workout skipped',
+        body:'You are 85 kg at 167 cm. This is the cheapest health change available and you skipped it.'},
+  d4:  {domain:'health', title:'Water not tracked',
+        body:'Two litres. At your weight this matters more than you think.'},
+  d2:  {domain:'health', title:'Morning routine skipped',
+        body:'Two minutes. The morning routine is the base everything else sits on.'},
+  d3:  {domain:'health', title:'Night routine skipped',
+        body:'Two minutes before sleep. Skipping this costs you tomorrow morning.'},
+  d1:  {domain:'discipline', title:'Fajr missed',
+        body:'This is the anchor of the whole day. If it slips, everything else follows it down.'},
+  d8:  {domain:'discipline', title:'Morning phone control lost',
+        body:'The first 30 minutes set the tone. You gave them away.'},
+  d9:  {domain:'discipline', title:'Late-night phone control lost',
+        body:'This single habit fixes your Fajr more than any alarm will.'},
+  d10: {domain:'discipline', title:'Phone-free hour skipped',
+        body:'One hour away from the phone. That is the hour that could have gone to a skill.'},
+  d22: {domain:'discipline', title:'Tomorrow not planned',
+        body:'Two minutes of planning makes tomorrow 10x easier.'},
+  d26: {domain:'relations', title:'No real conversation',
+        body:'Most marketing jobs in Egypt come through people, not applications. Relationships had ZERO daily missions until this was added.'},
+  d7:  {domain:'selfdev', title:'Reading skipped',
+        body:'Ten pages. The Library has real books you can open right now — As a Man Thinketh is 35 minutes. Skipping this means another day with no input.'}
+};
+
+const WEEKLY_CONSEQUENCES = {
+  w1:  {domain:'career', title:'No LinkedIn post this week',
+        body:'Your material is strong: CPL recovered from 130.62 to 50.79, a 1,544-lead campaign at TL 4.62. Real case studies. Still not posted.'},
+  w2:  {domain:'relations', title:'No new contact this week',
+        body:'One message. The recruiter who remembers you, the media buyer who mentions you — it starts with one message.'},
+  w3:  {domain:'relations', title:'No family or friend contact',
+        body:'One of the few things on this list that will still matter to you in ten years.'},
+  w4:  {domain:'selfdev', title:'Nothing summarised this week',
+        body:'Reading without writing it down is entertainment. Five bullets is all it takes.'},
+  w5:  {domain:'career', title:'CV not updated',
+        body:'You keep skipping this one. Your CV is your first impression and it has not been touched.'},
+  w6:  {domain:'career', title:'No company research',
+        body:'You keep skipping this too. Know the company and you are ahead of most candidates.'},
+  w7:  {domain:'system', title:'Week not reviewed',
+        body:'A week that is not reviewed is a week that is repeated. This is the one mission that makes all the others count.'},
+  w8:  {domain:'career', title:'No applications sent',
+        body:'THIS IS THE ONE. Five applications a week is 20 a month. You cannot get a job without sending them.'},
+  w9:  {domain:'money', title:'No paid offer sent',
+        body:'You have done zero of the eight money ideas. This mission forces one. Skipped again.'}
+};
+
+function consequenceWarning(missedList, availList){
+  if(!missedList.length) return null;
+
+  const order = ['career','money','selfdev','skills','health','relations','discipline','system'];
+  const byDomain = {};
+  missedList.forEach(m => {
+    const c = MISSION_CONSEQUENCES[m.id] || WEEKLY_CONSEQUENCES[m.id];
+    const d = c ? c.domain : 'discipline';
+    if(!byDomain[d]) byDomain[d] = [];
+    byDomain[d].push({m, c});
+  });
+
+  let pick = null, pickDomain = null;
+  for(const d of order){
+    if(byDomain[d]){ pick = byDomain[d]; pickDomain = d; break; }
+  }
+  if(!pick){ pick = missedList.map(m => ({m, c:null})); pickDomain = 'discipline'; }
+
+  const first = pick[0];
+  const title = first.c ? first.c.title : 'Mission missed: ' + first.m.name;
+  const body  = first.c ? first.c.body : 'You missed this one.';
+
+  const xpLost = pick.reduce((a,x) => a + (x.m.xp || 0), 0);
+  const share = availList.length ? Math.round(missedList.length / availList.length * 100) : 0;
+
+  let sev = 'low';
+  if(share >= 60) sev = 'high';
+  else if(share >= 30) sev = 'mid';
+
+  let neglectNote = '';
+  const recent = (S.warnings || []).slice(0,5);
+  const sameDomain = recent.filter(w => w.domain === pickDomain).length;
+  if(sameDomain >= 2){
+    neglectNote = ' This is the ' + (sameDomain+1) + 'th time recently. ' + pickDomain.toUpperCase() + ' is being neglected.';
+  }
+
+  return {
+    title: title,
+    body: body + (xpLost ? ' — that is ' + xpLost + ' XP that never arrived.' : '') + neglectNote,
+    cost: xpLost, sev: sev, domain: pickDomain
+  };
+}
+
+/* called when the week rolls over with weekly work undone */
+function weeklyConsequence(){
+  const av = available(WEEKLY);
+  if(!av.length) return null;
+  const missed = av.filter(m => !S.weekly[m.id]);
+  if(missed.length < 2) return null;
+
+  const w = consequenceWarning(missed, av);
+  if(!w) return null;
+
+  S.warnings = S.warnings || [];
+  S.warnings.unshift({
+    d: dayKey(), kind: 'weekly',
+    title: 'WEEKLY: ' + w.title,
+    body: w.body, cost: w.cost, sev: w.sev, domain: w.domain
+  });
+  if(S.warnings.length > 30) S.warnings.pop();
+  log('WARNING', 'WEEKLY — ' + w.title + '. ' + w.body, true);
+  return w;
 }
 
 function judgeDay(day){
@@ -1113,6 +1261,23 @@ function judgeDay(day){
   const avail  = available(DAILY);
   const done   = avail.filter(m => S.daily[m.id]).length;
   const missed = avail.length - done;
+
+  /* record what was missed BEFORE the day is cleared, so the warning
+     can name the real consequence instead of a generic penalty */
+  const missedMissions = avail.filter(m => !S.daily[m.id]);
+  if(missedMissions.length){
+    const w = consequenceWarning(missedMissions, avail);
+    if(w){
+      S.warnings = S.warnings || [];
+      S.warnings.unshift({
+        d: day, kind: 'daily',
+        title: w.title, body: w.body,
+        cost: w.cost, sev: w.sev, domain: w.domain
+      });
+      if(S.warnings.length > 30) S.warnings.pop();
+      log('WARNING', w.title + ' — ' + w.body, true);
+    }
+  }
 
   /* streak freeze: nothing done but a freeze is held */
   if(done === 0 && S.freezes > 0 && S.streak > 0){
@@ -1722,6 +1887,26 @@ function smartPhrase(){
     return lines[Math.floor(Math.random() * lines.length)];
   }
 
+  /* ------------------------------------------------------------------
+     FIXED WHY/GOAL/DREAM SLOTS — Jin-Woo reminds him on a schedule.
+
+     These are checked FIRST but only apply in their own time window, so
+     a missed streak or an outstanding debt still gets priority later in
+     the function. Outside the window they fall through to the normal
+     contextual rotation, which still contains a small chance of a
+     WHY/GOAL/DREAM line.
+     ------------------------------------------------------------------ */
+  const hr = new Date().getHours();
+  const slot = Math.floor(Date.now() / (3 * 60 * 60 * 1000));
+  let timeLine = null;
+  if(hr >= 4 && hr < 9  && slot % 2 === 0) timeLine = pickLine(WHY_LINES);    /* morning: WHY */
+  else if(hr >= 20 && slot % 2 === 0)      timeLine = pickLine(GOAL_LINES);  /* night: GOAL */
+  else if(hr >= 12 && hr < 15 && slot % 3 === 0) timeLine = pickLine(DREAM_LINES);
+
+  /* the reminder lines take priority over the generic contextual ones —
+     they are what he asked for, and they only fire in their window */
+  if(timeLine) return timeLine;
+
   const av = available(DAILY);
   const done = av.filter(m => S.daily[m.id]).length;
   const pct = av.length ? done/av.length : 0;
@@ -1747,6 +1932,19 @@ function smartPhrase(){
   /* review due — only when it genuinely is */
   if(reviewDue()) return GUIDE_CONTEXT.reviewDue;
 
+  /* ------------------------------------------------------------------
+     WHY / GOAL / DREAM — the player asked Jin-Woo to keep reminding him
+     why he is doing this, what his goal is and what his dream is.
+
+     Checked after the urgent context (streak, debt, review) but before
+     the routine "half day" message, because the reminder is what makes
+     the routine bearable. ~35% of refreshes land here.
+     ------------------------------------------------------------------ */
+  const guideRoll = Math.random();
+  if(guideRoll < .12) return pickLine(WHY_LINES);
+  if(guideRoll < .24) return pickLine(GOAL_LINES);
+  if(guideRoll < .36) return pickLine(DREAM_LINES);
+
   if(pct === 0) return GUIDE_CONTEXT.noMissions;
   if(pct >= .5 && pct < 1) return GUIDE_CONTEXT.halfDay;
 
@@ -1771,6 +1969,18 @@ function smartPhrase(){
   let guard = 0;
   while(line === lastLine && guard++ < 12){
     line = pool[Math.floor(Math.random() * pool.length)];
+  }
+  lastLine = line;
+  return line;
+}
+
+/* pick a line that is not the one we showed last time */
+function pickLine(arr){
+  if(!arr || !arr.length) return '';
+  let line = arr[Math.floor(Math.random() * arr.length)];
+  let guard = 0;
+  while(line === lastLine && guard++ < 12){
+    line = arr[Math.floor(Math.random() * arr.length)];
   }
   lastLine = line;
   return line;

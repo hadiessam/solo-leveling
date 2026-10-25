@@ -4,7 +4,7 @@
    Bump CACHE when you change any file, otherwise the phone serves the old one.
    ===================================================================== */
 
-const CACHE   = 'solo-leveling-v42';
+const CACHE   = 'solo-leveling-v43';
 
 /* code + markup — these MUST always be fresh */
 const CORE = [
@@ -20,6 +20,7 @@ const CORE = [
   './speaking.js',
   './uptodate.js',
   './expenses.js',
+  './podcasts.js',
   './_features1.js',
   './_features2.js',
   './_features3.js',
