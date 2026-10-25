@@ -764,53 +764,57 @@ function save(){
 /* ---------------------------------------------------------------------
    AUTO-UPDATE SYSTEM — checks for new features and applies them
    --------------------------------------------------------------------- */
-const APP_VERSION = 22;
+const APP_VERSION = 23;
 function checkForUpdates(){
   const lastVer = parseInt(localStorage.getItem('soloAppVer') || '0', 10);
   if(lastVer >= APP_VERSION) return;
 
-  /* v22: fix XP ledger on old saves */
+  /* ------------------------------------------------------------------
+     v23 — NEVER DESTROY XP.
+
+     The v22 block rebuilt S.xp from missions only. It ran whenever
+     soloAppVer was missing or older than APP_VERSION, which happens on
+     every device where localStorage was cleared, on a new browser, or in
+     a private window — and it silently wiped every XP source except
+     missions, perfect days, books and vocab. Measured on a real save:
+     6896 XP -> 1574 XP, i.e. 77% of a player's progress, and the damage
+     was pushed to the cloud and saved permanently.
+
+     We still want a fresh player (no save, no missions) to start at 0.
+     So the recalculation only runs when there is genuinely nothing to
+     lose — and it PRESERVES the existing ledger rather than replacing it.
+     ------------------------------------------------------------------ */
   if(lastVer < 22){
-    let xp = 0;
-    const ledger = {};
-    if(S.daily) Object.keys(S.daily).forEach(id => {
-      const m = DAILY.find(x => x.id === id);
-      if(m && S.daily[id]){ xp += m.xp; ledger.mission = (ledger.mission||0) + m.xp; }
-    });
-    if(S.weekly) Object.keys(S.weekly).forEach(id => {
-      const m = WEEKLY.find(x => x.id === id);
-      if(m && S.weekly[id]){ xp += m.xp; ledger.mission = (ledger.mission||0) + m.xp; }
-    });
-    if(S.boss) Object.keys(S.boss).forEach(bid => {
-      const b = BOSSES.find(x => x.id === bid);
-      if(b && S.boss[bid]) S.boss[bid].forEach((done, i) => {
-        if(done && b.steps[i]){ xp += b.steps[i].xp; ledger.boss = (ledger.boss||0) + b.steps[i].xp; }
-      });
-    });
-    if(S.courses) Object.keys(S.courses).forEach(cid => {
-      const c = COURSES.find(x => x.id === cid);
-      if(c && S.courses[cid]){ xp += c.xp; ledger.course = (ledger.course||0) + c.xp; }
-    });
-    if(S.books) Object.keys(S.books).forEach(key => {
-      const bk = allBooks().find(b => b.key === key);
-      if(bk && S.books[key]){ xp += bk.xp; ledger.bonus = (ledger.bonus||0) + bk.xp; }
-    });
-    if(S.vocab) Object.keys(S.vocab).forEach(key => {
-      if(S.vocab[key]){ xp += 8; ledger.vocab = (ledger.vocab||0) + 8; }
-    });
-    if(S.perfectDays && S.perfectDays.length){
-      xp += S.perfectDays.length * PERFECT_BONUS;
-      ledger.bonus = (ledger.bonus||0) + S.perfectDays.length * PERFECT_BONUS;
+    const hadProgress = !!(S.xp > 0 || Object.keys(S.daily||{}).length ||
+                           Object.keys(S.weekly||{}).length ||
+                           (S.boss && Object.keys(S.boss).length) ||
+                           (S.courses && Object.keys(S.courses).length));
+
+    if(hadProgress){
+      /* keep the player's XP exactly as it is. Only make sure the ledger
+         exists so the breakdown panel has something to show. */
+      if(!S.xpSource || !Object.keys(S.xpSource).length) S.xpSource = {};
+      S.level = Math.floor(S.xp / LEVEL_XP) + 1;
+      log('UPDATE','System updated to version <b>'+APP_VERSION+'</b>. Your XP and progress were preserved.');
+    } else {
+      /* genuinely new player — nothing to rebuild, start clean */
+      S.xp = 0;
+      S.level = 1;
+      S.xpSource = S.xpSource || {};
+      S.missionXP = {};
     }
-    S.xp = xp;
-    S.level = Math.floor(S.xp / LEVEL_XP) + 1;
-    S.xpSource = ledger;
-    S.missionXP = {};
   }
+
+  /* v23: make sure every XP source the app can award has a ledger key,
+     so the breakdown always adds up. Purely additive — no XP is touched. */
+  if(!S.xpSource) S.xpSource = {};
+  S.xpSource.boss   = S.xpSource.boss   || 0;
+  S.xpSource.habit  = S.xpSource.habit  || 0;
+  S.xpSource.speaking = S.xpSource.speaking || 0;
+  S.xpSource.manual = S.xpSource.manual || 0;
 
   localStorage.setItem('soloAppVer', APP_VERSION);
   save();
-  log('UPDATE', 'System updated to version <b>' + APP_VERSION + '</b>. XP recalculated.');
 }
 
 /* ---------------------------------------------------------------------
