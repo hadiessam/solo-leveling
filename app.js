@@ -97,7 +97,16 @@ function blank(){
     /* Money Expenses calendar */
     expenses:{},
     /* Podcasts — last category viewed + which ones were listened to */
-    podcastCat:'all', podcastsListened:[]
+    podcastCat:'all', podcastsListened:[],
+    /* Personal Life OS Fields */
+    projects:{},
+    customTasks:[],
+    taskStatus:{},
+    habitNotifications:[],
+    knowledgeNotes:[],
+    journal:{},
+    relocationFund:{target:120000, current:0, currency:'EGP'},
+    activeRoadmap:'saudi'
   };
 }
 
@@ -227,6 +236,27 @@ function read(){
       power: c.power || 35
     }));
     o.badges = o.badges.map(b => b === 'perfect' ? 'perfect1' : b);
+
+    /* Life OS fields safe migration */
+    if(!o.projects) o.projects = {};
+    if(!o.customTasks) o.customTasks = [];
+    if(!o.taskStatus) o.taskStatus = {};
+    if(!o.formedHabits) o.formedHabits = {};
+    if(!o.habitNotifications) o.habitNotifications = [];
+    if(!o.knowledgeNotes) o.knowledgeNotes = [];
+    if(!o.journal) o.journal = {};
+    if(!o.relocationFund) o.relocationFund = { target: 120000, current: 0, currency: 'EGP' };
+    if(!o.activeRoadmap) o.activeRoadmap = 'saudi';
+
+    /* Auto-graduate tasks with 21+ completions into formedHabits */
+    if(o.habitDays){
+      Object.keys(o.habitDays).forEach(id => {
+        if(o.habitDays[id] && o.habitDays[id].length >= 21){
+          o.formedHabits[id] = true;
+        }
+      });
+    }
+
     return o;
   }catch(e){ return blank(); }
 }
@@ -859,12 +889,22 @@ function checkHabitFormation(){
     const days = S.habitDays[m.id];
     if(S.daily[m.id] && days.indexOf(today) === -1){
       days.push(today);
-      if(days.length >= 21){
+      if(days.length >= 21 && (!S.formedHabits || !S.formedHabits[m.id])){
         S.formedHabits = S.formedHabits || {};
         S.formedHabits[m.id] = true;
-        log('HABIT FORMED', '<b>' + esc(m.name) + '</b> ran 21 days straight. It is a habit now — no longer in your daily quest.');
+        const notif = {
+          id: m.id,
+          name: m.name,
+          date: today,
+          days: days.length,
+          title: 'NEW HABIT ESTABLISHED',
+          body: 'You have consistently completed this activity. It is no longer an ordinary quest.\nIt is now part of your daily routine.\nYour progress continues to be tracked in the Habits section.'
+        };
+        S.habitNotifications = S.habitNotifications || [];
+        S.habitNotifications.unshift(notif);
+        log('HABIT ESTABLISHED', '<b>' + esc(m.name) + '</b> established! Moved to Habits section.');
         sfx('levelup');
-        overlay('HABIT FORMED', m.name, '21 days straight. This is now automatic — it no longer appears in your daily quest.', false);
+        overlay('NEW HABIT ESTABLISHED', m.name, 'You have consistently completed this activity. It is no longer an ordinary quest.\nIt is now part of your daily routine.\nYour progress continues to be tracked in the Habits section.', false);
       }
     }
   });
@@ -1719,7 +1759,12 @@ function buyFreeze(){
    MISSIONS
    --------------------------------------------------------------------- */
 function available(list){
-  return list.filter(m => !m.unlock || S.level >= m.unlock.level);
+  return list.filter(m => {
+    if(m.unlock && S.level < m.unlock.level) return false;
+    /* Exclude formed habits from active daily quest list so they do not clutter daily quests */
+    if(list === DAILY && S.formedHabits && S.formedHabits[m.id]) return false;
+    return true;
+  });
 }
 function lockedOf(list){
   return list.filter(m => m.unlock && S.level < m.unlock.level);
@@ -2172,3 +2217,239 @@ function snapshotToday(){
 }
 
 
+
+
+/* =====================================================================
+   SMART DAILY PLANNING ENGINE & LIFE OS CORE CONTROLLER
+   ===================================================================== */
+const MAX_DAILY_TASKS = 10;
+const TARGET_DAILY_TASKS = 7;
+
+/* Returns the active daily priorities list, strictly capped at MAX_DAILY_TASKS (10)
+   Excludes any established habits that have graduated to the Habits section. */
+function getDailyPriorities(){
+  let pool = [];
+  
+  if(typeof ACTIVE_DAILY_TASKS_DEF !== 'undefined'){
+    pool = pool.concat(ACTIVE_DAILY_TASKS_DEF);
+  }
+  
+  if(S.customTasks && S.customTasks.length){
+    const userActive = S.customTasks.filter(t => !t.archived && (t.status === 'today' || t.status === 'in_progress'));
+    pool = pool.concat(userActive);
+  }
+  
+  /* Exclude formed habits */
+  pool = pool.filter(t => {
+    if(S.formedHabits && S.formedHabits[t.id]) return false;
+    if(t.legacyId && S.formedHabits && S.formedHabits[t.legacyId]) return false;
+    return true;
+  });
+  
+  /* Sort by priority: high -> medium -> normal */
+  const pWeight = { high: 3, medium: 2, normal: 1 };
+  pool.sort((a, b) => (pWeight[b.priority] || 1) - (pWeight[a.priority] || 1));
+  
+  /* STRICT RULE: Never exceed 10 active tasks */
+  return pool.slice(0, MAX_DAILY_TASKS);
+}
+
+function createCustomTask(title, sub, xp, duration, priority, project, action, why){
+  if(!title) return false;
+  const currentToday = getDailyPriorities();
+  if(currentToday.length >= MAX_DAILY_TASKS){
+    alert('Strict Rule: Maximum 10 active daily tasks allowed. Complete or reschedule an existing task first.');
+    return false;
+  }
+  
+  const newTask = {
+    id: 'ct_' + Date.now(),
+    name: title,
+    sub: sub || 'Career & Goals',
+    stat: 'career',
+    xp: parseInt(xp, 10) || 15,
+    duration: duration || '25 min',
+    priority: priority || 'medium',
+    project: project || null,
+    why: why || 'User defined strategic action',
+    action: action || title,
+    criteria: 'Marked complete by user',
+    outcome: 'Milestone progress achieved',
+    status: 'today',
+    createdAt: Date.now()
+  };
+  
+  if(!S.customTasks) S.customTasks = [];
+  S.customTasks.unshift(newTask);
+  save();
+  renderAll();
+  log('TASK CREATED', 'New task added: <b>' + esc(title) + '</b>');
+  return true;
+}
+
+function updateTaskStatus(taskId, newStatus){
+  if(!S.taskStatus) S.taskStatus = {};
+  S.taskStatus[taskId] = newStatus;
+  
+  if(S.customTasks){
+    const ct = S.customTasks.find(t => t.id === taskId);
+    if(ct){
+      ct.status = newStatus;
+      if(newStatus === 'archived') ct.archived = true;
+    }
+  }
+  save();
+  renderAll();
+}
+
+function toggleLifeOSTask(taskId, ev){
+  if(ev && ev.stopPropagation) ev.stopPropagation();
+  const isCustom = taskId.startsWith('ct_');
+  const task = isCustom 
+    ? (S.customTasks && S.customTasks.find(t => t.id === taskId))
+    : (typeof ACTIVE_DAILY_TASKS_DEF !== 'undefined' ? ACTIVE_DAILY_TASKS_DEF.find(t => t.id === taskId) : null);
+    
+  if(!task) return;
+  
+  const isDone = !!S.daily[taskId];
+  if(isDone){
+    delete S.daily[taskId];
+    sfx('uncheck');
+    updateTaskStatus(taskId, 'today');
+    subXP(task.xp, task.stat || 'career', 'task', task.xp);
+  } else {
+    S.daily[taskId] = dayKey();
+    sfx('check');
+    updateTaskStatus(taskId, 'completed');
+    addXP(task.xp, task.stat || 'career', true, 'task');
+    log('TASK COMPLETE', '<b>' + esc(task.name) + '</b> cleared! +' + task.xp + ' XP.');
+    
+    /* If task is linked to a project, advance project progress */
+    if(task.project){
+      advanceProject(task.project, 15);
+    }
+  }
+  save();
+  renderAll();
+}
+
+function toggleHabitRoutine(habitId, ev){
+  if(ev && ev.stopPropagation) ev.stopPropagation();
+  if(!S.daily) S.daily = {};
+  const isDone = !!S.daily[habitId];
+  const today = dayKey();
+  
+  if(!S.habitDays) S.habitDays = {};
+  if(!S.habitDays[habitId]) S.habitDays[habitId] = [];
+  
+  if(isDone){
+    delete S.daily[habitId];
+    sfx('uncheck');
+    const idx = S.habitDays[habitId].indexOf(today);
+    if(idx !== -1) S.habitDays[habitId].splice(idx, 1);
+    subXP(10, 'health', 'habit', 10);
+  } else {
+    S.daily[habitId] = today;
+    sfx('check');
+    if(S.habitDays[habitId].indexOf(today) === -1){
+      S.habitDays[habitId].push(today);
+    }
+    addXP(10, 'health', true, 'habit');
+    log('ROUTINE LOGGED', 'Daily habit logged: <b>' + habitId + '</b> (+10 XP).');
+  }
+  save();
+  renderAll();
+}
+
+function advanceProject(projectId, increment){
+  if(!S.projects) S.projects = {};
+  if(!S.projects[projectId]) S.projects[projectId] = { progress: 0, notes: [], customTasks: [] };
+  const p = S.projects[projectId];
+  p.progress = Math.min(100, (p.progress || 0) + (increment || 15));
+  log('PROJECT ADVANCE', 'Project progress: <b>' + p.progress + '%</b>');
+  if(p.progress === 100){
+    addXP(100, 'career', true, 'project');
+    overlay('PROJECT COMPLETED', projectId, 'Outstanding execution. Saudi roadmap milestone updated.', false);
+  }
+  save();
+}
+
+function toggleProjectSubtask(projectId, subtaskId){
+  if(!S.projects) S.projects = {};
+  if(!S.projects[projectId]) S.projects[projectId] = { progress: 0, subtasks: {} };
+  if(!S.projects[projectId].subtasks) S.projects[projectId].subtasks = {};
+  
+  const current = !!S.projects[projectId].subtasks[subtaskId];
+  S.projects[projectId].subtasks[subtaskId] = !current;
+  
+  if(!current){
+    addXP(20, 'career', true, 'project');
+    sfx('check');
+    log('SUBTASK DONE', 'Project task completed (+20 XP).');
+  } else {
+    subXP(20, 'career', 'project', 20);
+    sfx('uncheck');
+  }
+  save();
+  renderAll();
+}
+
+function addProjectNote(projectId, noteText){
+  if(!noteText) return;
+  if(!S.projects) S.projects = {};
+  if(!S.projects[projectId]) S.projects[projectId] = { progress: 0, notes: [] };
+  if(!S.projects[projectId].notes) S.projects[projectId].notes = [];
+  S.projects[projectId].notes.push({ text: noteText, date: dayKey() });
+  save();
+  renderAll();
+  log('NOTE ADDED', 'Note attached to project.');
+}
+
+function saveKnowledgeNote(title, category, tags, content){
+  if(!title || !content) return;
+  if(!S.knowledgeNotes) S.knowledgeNotes = [];
+  const note = {
+    id: 'kn_' + Date.now(),
+    title: title,
+    category: category || 'General',
+    tags: tags ? tags.split(',').map(t => t.trim()) : [],
+    content: content,
+    date: dayKey()
+  };
+  S.knowledgeNotes.unshift(note);
+  addXP(15, 'selfdev', true, 'knowledge');
+  save();
+  renderAll();
+  log('KNOWLEDGE SAVED', 'Note added to Second Brain: <b>' + esc(title) + '</b> (+15 XP).');
+}
+
+function deleteKnowledgeNote(noteId){
+  if(!S.knowledgeNotes) return;
+  S.knowledgeNotes = S.knowledgeNotes.filter(n => n.id !== noteId);
+  save();
+  renderAll();
+}
+
+function saveJournalReflection(wins, blockers, lessons){
+  if(!S.journal) S.journal = {};
+  const today = dayKey();
+  S.journal[today] = {
+    date: today,
+    wins: wins || '',
+    blockers: blockers || '',
+    lessons: lessons || '',
+    timestamp: Date.now()
+  };
+  addXP(15, 'selfdev', true, 'journal');
+  save();
+  renderAll();
+  log('JOURNAL SAVED', 'Daily reflection recorded (+15 XP).');
+}
+
+function updateRelocationBuffer(amount){
+  if(!S.relocationFund) S.relocationFund = { target: 120000, current: 0, currency: 'EGP' };
+  S.relocationFund.current = Math.max(0, parseInt(amount, 10) || 0);
+  save();
+  renderAll();
+  log('FINANCE SAVED', 'Saudi relocation runway: <b>' + S.relocationFund.current.toLocaleString() + ' EGP</b>.');
+}

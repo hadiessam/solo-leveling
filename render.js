@@ -1848,80 +1848,81 @@ function removeHabit(habitId) {
    MASTER RENDER
    --------------------------------------------------------------------- */
 /* =====================================================================
-   PORTALS & SUB-NAV SYSTEM ARCHITECTURE
-   Consolidates 18 tabs into 6 immersive anime System Portals.
+   PORTALS & SUB-NAV SYSTEM ARCHITECTURE — SOLO LEVELING LIFE OS
+   Consolidates all functions into 6 Master System Portals.
    ===================================================================== */
 const PORTALS = {
+  dash: {
+    id: 'dash',
+    name: 'Command',
+    icon: '⚡',
+    bg: 'assets/bg/bg-system-gate.jpg',
+    tabs: [
+      { id: 'dash', label: 'System Dashboard' }
+    ]
+  },
   quests: {
     id: 'quests',
-    name: 'Quests',
+    name: 'Tasks',
     icon: '⚔️',
     bg: 'assets/bg/bg-system-gate.jpg',
     tabs: [
-      { id: 'dash', label: 'Dashboard' },
-      { id: 'daily', label: 'Daily Missions' },
-      { id: 'weekly', label: 'Weekly Missions' },
-      { id: 'boss', label: 'Boss Raids' },
-      { id: 'habits', label: 'Habit Tracker' }
+      { id: 'tasks', label: 'Task Manager' },
+      { id: 'weekly', label: 'Weekly Quests' },
+      { id: 'boss', label: 'Boss Raids' }
     ]
   },
-  status: {
-    id: 'status',
-    name: 'Status',
-    icon: '👤',
+  habits: {
+    id: 'habits',
+    name: 'Habits',
+    icon: '🔄',
     bg: 'assets/bg/bg-hunter-status.jpg',
     tabs: [
-      { id: 'hunter', label: 'Hunter & Class' },
-      { id: 'insight', label: 'Status & Stats' },
-      { id: 'review', label: 'Weekly Review' }
+      { id: 'habits', label: 'Daily Routines' },
+      { id: 'insight', label: 'Streak & Insights' }
     ]
   },
-  growth: {
-    id: 'growth',
-    name: 'Growth',
-    icon: '📜',
+  roadmap: {
+    id: 'roadmap',
+    name: 'Roadmap',
+    icon: '🎯',
     bg: 'assets/bg/bg-hunter.jpg',
     tabs: [
-      { id: 'skills', label: 'Skill Tree' },
-      { id: 'courses', label: 'Course Track' },
-      { id: 'library', label: 'Library' },
-      { id: 'roadmap', label: 'Life Roadmap' }
+      { id: 'roadmap', label: 'Saudi Arabia 2027' },
+      { id: 'projects', label: 'Notion Projects' },
+      { id: 'courses', label: 'Course Track' }
     ]
   },
-  academy: {
-    id: 'academy',
-    name: 'Academy',
-    icon: '🎙️',
+  knowledge: {
+    id: 'knowledge',
+    name: 'Knowledge',
+    icon: '🧠',
     bg: 'assets/bg/bg-academy-training.jpg',
     tabs: [
-      { id: 'speaking', label: 'Speaking Lab' },
+      { id: 'knowledge', label: 'Second Brain' },
+      { id: 'skills', label: 'Skills Matrix' },
       { id: 'vocab', label: 'Vocabulary Bank' },
-      { id: 'podcasts', label: 'Curated Podcasts' }
+      { id: 'speaking', label: 'Speaking Lab' },
+      { id: 'podcasts', label: 'Podcasts' },
+      { id: 'library', label: 'Library' }
     ]
   },
   resources: {
     id: 'resources',
-    name: 'Resources',
+    name: 'Operations',
     icon: '💎',
     bg: 'assets/bg/bg-vault.jpg',
     tabs: [
-      { id: 'expenses', label: 'Expenses Calendar' },
-      { id: 'money', label: 'Money From Home' },
-      { id: 'uptodate', label: 'Industry Updates' }
-    ]
-  },
-  shadow: {
-    id: 'shadow',
-    name: 'Shadows',
-    icon: '👑',
-    bg: 'assets/bg/bg-shadow-realm.jpg',
-    tabs: [
-      { id: 'shadow', label: 'Shadow Realm & Army' }
+      { id: 'expenses', label: 'Runway & Expenses' },
+      { id: 'journal', label: 'Daily Reflections' },
+      { id: 'review', label: 'Weekly Review' },
+      { id: 'shadow', label: 'Shadow Army' },
+      { id: 'hunter', label: 'Hunter Vitals' }
     ]
   }
 };
 
-let currentPortal = 'quests';
+let currentPortal = 'dash';
 let currentActiveTab = 'dash';
 
 function switchPortal(portalId, targetTabId){
@@ -2007,40 +2008,54 @@ function renderAll(){
 /* draw one tab — the only place a tab's markup is rebuilt */
 function drawTab(page){
   switch(page){
-    case 'dash':     drawDaily(); break;
-    case 'daily':    drawDaily(); if(typeof renderStrengthBars === 'function') renderStrengthBars(); if(typeof renderNegativeHabits === 'function') renderNegativeHabits(); break;
-    case 'weekly':   drawWeekly(); break;
-    case 'boss':     drawBosses(); break;
-    case 'courses':  drawCourses(); drawCourseTree(); break;
-    case 'roadmap':  drawRoadmap(); break;
-    case 'library':  drawLibrary(); break;
-    case 'review':   drawReview(); break;
-    case 'insight':  drawInsights(); break;
-    case 'skills':   drawExtras(); drawSkillTree(); break;
-    case 'vocab':    drawVocab(); break;
-    case 'hunter':   drawClass(); drawVision(); if(typeof renderEquipmentPanel === 'function') renderEquipmentPanel(); break;
-    case 'shadow':   drawEggs(); drawShadow(); break;
-    case 'money':    drawMoney(); break;
-    case 'speaking': drawSpeaking(); break;
-    case 'uptodate': drawUpToDate(); break;
-    case 'expenses': drawExpenses(); break;
-    case 'podcasts': drawPodcasts(); break;
-    case 'habits':   if(typeof drawHabits === 'function') drawHabits(); break;
+    case 'dash':      drawDashboardLifeOS(); break;
+    case 'tasks':     drawTaskManager(); break;
+    case 'daily':     drawTaskManager(); break;
+    case 'habits':    drawHabitsSection(); break;
+    case 'roadmap':   drawRoadmapSection(); break;
+    case 'projects':  drawProjectsSection(); break;
+    case 'knowledge': drawKnowledgeBaseSection(); break;
+    case 'skills':    drawSkillsSection(); break;
+    case 'vocab':     drawVocabSection(); break;
+    case 'expenses':  drawFinanceSection(); break;
+    case 'journal':   drawJournalSection(); break;
+    case 'weekly':    drawWeekly(); break;
+    case 'boss':      drawBosses(); break;
+    case 'courses':   drawCourses(); drawCourseTree(); break;
+    case 'library':   drawLibrary(); break;
+    case 'review':    drawReview(); break;
+    case 'insight':   drawInsights(); break;
+    case 'hunter':    drawClass(); drawVision(); if(typeof renderEquipmentPanel === 'function') renderEquipmentPanel(); break;
+    case 'shadow':    drawEggs(); drawShadow(); break;
+    case 'money':     drawMoney(); break;
+    case 'speaking':  drawSpeaking(); break;
+    case 'uptodate':  drawUpToDate(); break;
+    case 'podcasts':  drawPodcasts(); break;
   }
 }
 
 /* force a full rebuild — only used when data structure changes, not on
    every render tick */
 function renderEverything(){
-  drawHUD(); drawDaily(); drawWeekly(); drawBosses();
-  drawCourses(); drawRoadmap();
+  drawHUD();
+  drawDashboardLifeOS();
+  drawTaskManager();
+  drawHabitsSection();
+  drawRoadmapSection();
+  drawProjectsSection();
+  drawKnowledgeBaseSection();
+  drawSkillsSection();
+  drawVocabSection();
+  drawFinanceSection();
+  drawJournalSection();
+  drawWeekly(); drawBosses();
+  drawCourses();
   drawLibrary();
-  drawReview(); drawInsights(); drawExtras(); drawSkillTree(); drawCourseTree();
+  drawReview(); drawInsights(); drawCourseTree();
   drawClass(); drawVision();
   drawEggs();   /* this also draws the shadow + characters */
-  drawVocab(); drawMoney();
-  drawSpeaking(); drawUpToDate(); drawExpenses(); drawPodcasts();
-  if(typeof drawHabits === 'function') drawHabits();
+  drawMoney();
+  drawSpeaking(); drawUpToDate(); drawPodcasts();
   if(typeof renderCoachPanel === 'function') renderCoachPanel();
   if(typeof renderStrengthBars === 'function') renderStrengthBars();
   if(typeof renderNegativeHabits === 'function') renderNegativeHabits();
@@ -2102,7 +2117,7 @@ function boot(){
   if (initialHash && $(initialHash)) {
     switchTab(initialHash);
   } else {
-    switchPortal('quests', 'dash');
+    switchPortal('dash', 'dash');
   }
 
   /* the guide changes his line every 10 minutes, and pops up on its own */
@@ -2164,4 +2179,856 @@ function setBG(src){
     l.style.backgroundImage = "url('" + src + "')";
     l.classList.add('on');
   }, 150);
+}
+
+/* =====================================================================
+   SOLO LEVELING PERSONAL LIFE OS — RENDERING ENGINES
+   ===================================================================== */
+
+/* 1. DASHBOARD LIFE OS ENGINE */
+function drawDashboardLifeOS(){
+  const dashList = $('dashList');
+  if(!dashList) return;
+
+  const priorities = getDailyPriorities();
+  const completedCount = priorities.filter(t => S.daily && S.daily[t.id]).length;
+  const totalCount = priorities.length;
+  const pct = totalCount ? Math.round((completedCount / totalCount) * 100) : 0;
+  
+  if($('dashBar')) $('dashBar').style.width = pct + '%';
+  if($('penLabel')) $('penLabel').textContent = completedCount + ' / ' + totalCount;
+  if($('penBar')) $('penBar').style.width = pct + '%';
+  if($('todayTag')) $('todayTag').textContent = completedCount + ' / ' + totalCount + ' CLEARED';
+
+  let html = '';
+  
+  /* Central Saudi Mission Hero Card */
+  const fundCurrent = (S.relocationFund && S.relocationFund.current) || 0;
+  const fundTarget = (S.relocationFund && S.relocationFund.target) || 120000;
+  const fundPct = Math.min(100, Math.round((fundCurrent / fundTarget) * 100));
+
+  html += '<div class="saudi-hero-card">'
+    + '<div class="shc-header">'
+    +   '<div class="shc-badge"><span class="pulse-dot"></span> CENTRAL LIFE MISSION</div>'
+    +   '<div class="shc-target">TARGET: MID-2027</div>'
+    + '</div>'
+    + '<div class="shc-title">PREPARING FOR SAUDI ARABIA RELOCATION & CAREER</div>'
+    + '<div class="shc-sub">Unified Progression &bull; Performance Marketing Leadership &bull; Financial Runway</div>'
+    + '<div class="shc-quote">&ldquo;What should I do today to become more qualified, financially prepared, and professionally competitive for Saudi Arabia?&rdquo;</div>'
+    + '<div class="shc-runway-row">'
+    +   '<div class="shc-runway-meta">'
+    +     '<span>Relocation Runway Fund ($2,500 Buffer)</span>'
+    +     '<span class="gold-num">' + fundCurrent.toLocaleString() + ' / ' + fundTarget.toLocaleString() + ' EGP (' + fundPct + '%)</span>'
+    +   '</div>'
+    +   '<div class="bar thin"><i style="width:' + fundPct + '%;background:linear-gradient(90deg,var(--gold),#ffe066)"></i></div>'
+    + '</div>'
+    + '<div class="shc-actions">'
+    +   '<button class="shc-btn" onclick="goTab(\'roadmap\')">View Saudi 5-Milestone Roadmap &rarr;</button>'
+    +   '<button class="shc-btn secondary" onclick="goTab(\'projects\')">View Active Projects &rarr;</button>'
+    + '</div>'
+    + '</div>';
+
+  /* Priorities Section Header */
+  html += '<div class="priority-section-head">'
+    + '<div>'
+    +   '<h3 style="margin:0;font-family:var(--hud);font-size:15px;color:var(--sys-blue);letter-spacing:1px;">TODAY\'S STRATEGIC PRIORITIES</h3>'
+    +   '<div style="font-size:12px;color:var(--muted);margin-top:2px;">Strict Limit: Never more than 10 tasks &bull; Focused on Saudi career readiness</div>'
+    + '</div>'
+    + '<div class="priority-load-badge ' + (totalCount > 8 ? 'heavy' : 'optimal') + '">'
+    +   totalCount + ' / ' + MAX_DAILY_TASKS + ' ACTIVE TASKS'
+    + '</div>'
+    + '</div>';
+
+  if(priorities.length === 0){
+    html += '<div class="empty-priority-card">'
+      + '<div style="font-size:28px;margin-bottom:8px;">⚔️</div>'
+      + '<div style="font-family:var(--hud);font-size:14px;color:#fff;">NO ACTIVE PRIORITIES TODAY</div>'
+      + '<div style="font-size:12px;color:var(--muted);margin-top:4px;">All routine tasks have graduated to Habits. Add a custom task or rest.</div>'
+      + '</div>';
+  } else {
+    html += '<div class="priority-list">';
+    priorities.forEach(t => {
+      const isDone = !!(S.daily && S.daily[t.id]);
+      const pColor = t.priority === 'high' ? 'var(--red)' : (t.priority === 'medium' ? 'var(--gold)' : 'var(--sys-blue)');
+      html += '<div class="priority-item ' + (isDone ? 'done' : '') + '" onclick="toggleLifeOSTask(\'' + t.id + '\', event)">'
+        + '<div class="p-check">' + (isDone ? '&#10003;' : '') + '</div>'
+        + '<div class="p-content">'
+        +   '<div class="p-top">'
+        +     '<span class="p-name">' + esc(t.name) + '</span>'
+        +     '<span class="p-badge" style="border-color:' + pColor + ';color:' + pColor + ';">' + (t.priority || 'medium').toUpperCase() + '</span>'
+        +     '<span class="p-duration">' + esc(t.duration || '25 min') + '</span>'
+        +   '</div>'
+        +   '<div class="p-desc">' + esc(t.why || t.action || '') + '</div>'
+        +   (t.outcome ? '<div class="p-outcome">Target: ' + esc(t.outcome) + '</div>' : '')
+        + '</div>'
+        + '<div class="p-xp">+' + t.xp + ' XP</div>'
+        + '</div>';
+    });
+    html += '</div>';
+  }
+
+  html += '<div style="display:flex;gap:10px;margin-top:14px;flex-wrap:wrap;">'
+    + '<button class="btn" style="flex:1;" onclick="openTaskModal()">+ Add New Priority Task</button>'
+    + '<button class="btn secondary" onclick="goTab(\'tasks\')">Open Task Manager & Kanban &rarr;</button>'
+    + '</div>';
+
+  /* Habits Quick Glance Bar */
+  if(typeof HABIT_ROUTINES_DEF !== 'undefined'){
+    const completedHabits = HABIT_ROUTINES_DEF.filter(h => S.daily && S.daily[h.id]).length;
+    html += '<div class="habits-glance-box">'
+      + '<div class="hgb-head">'
+      +   '<div>'
+      +     '<span style="font-family:var(--hud);font-size:13px;color:#fff;letter-spacing:1px;">ESTABLISHED ROUTINES QUICK-CHECK</span>'
+      +     '<span style="font-size:11.5px;color:var(--muted);margin-left:8px;">(Graduated from daily clutter)</span>'
+      +   '</div>'
+      +   '<span class="tag">' + completedHabits + ' / ' + HABIT_ROUTINES_DEF.length + ' DONE</span>'
+      + '</div>'
+      + '<div class="hgb-grid">'
+      + HABIT_ROUTINES_DEF.map(h => {
+          const done = !!(S.daily && S.daily[h.id]);
+          const streak = (S.habitDays && S.habitDays[h.id] && S.habitDays[h.id].length) || 21;
+          return '<div class="hgb-pill ' + (done ? 'done' : '') + '" onclick="toggleHabitRoutine(\'' + h.id + '\', event)">'
+            + '<span class="hgb-check">' + (done ? '&#10003;' : '') + '</span>'
+            + '<span class="hgb-name">' + esc(h.name) + '</span>'
+            + '<span class="hgb-streak">&times;' + streak + '</span>'
+            + '</div>';
+        }).join('')
+      + '</div>'
+      + '<div style="margin-top:10px;text-align:right;">'
+      +   '<a href="javascript:void(0)" onclick="goTab(\'habits\')" style="font-size:11.5px;color:var(--sys-blue);text-decoration:none;">View Full Habits Tracker & Routines &rarr;</a>'
+      + '</div>'
+      + '</div>';
+  }
+
+  /* Projects Quick Glance Bar */
+  if(typeof LIFE_OS_PROJECTS !== 'undefined'){
+    html += '<div class="projects-glance-box">'
+      + '<div class="pgb-head">'
+      +   '<span style="font-family:var(--hud);font-size:13px;color:#fff;letter-spacing:1px;">ACTIVE LIFE OS PROJECTS</span>'
+      +   '<a href="javascript:void(0)" onclick="goTab(\'projects\')" style="font-size:11.5px;color:var(--sys-blue);text-decoration:none;">All Projects &rarr;</a>'
+      + '</div>'
+      + '<div class="pgb-list">'
+      + LIFE_OS_PROJECTS.slice(0, 4).map(p => {
+          const userP = (S.projects && S.projects[p.id]) || { progress: 0, subtasks: {} };
+          const subDone = Object.values(userP.subtasks || {}).filter(Boolean).length;
+          const subTotal = (p.subtasks || []).length;
+          const progress = subTotal ? Math.round((subDone / subTotal) * 100) : (userP.progress || 0);
+          return '<div class="pgb-row" onclick="goTab(\'projects\')">'
+            + '<div class="pgb-info">'
+            +   '<span class="pgb-name">' + esc(p.name) + '</span>'
+            +   '<span class="pgb-cat">' + esc(p.category) + ' &bull; Target: ' + esc(p.targetDate) + '</span>'
+            + '</div>'
+            + '<div class="pgb-bar-wrap">'
+            +   '<span class="pgb-pct">' + progress + '%</span>'
+            +   '<div class="bar thin" style="width:100px;"><i style="width:' + progress + '%;background:linear-gradient(90deg,var(--glow),var(--glow2))"></i></div>'
+            + '</div>'
+            + '</div>';
+        }).join('')
+      + '</div>'
+      + '</div>';
+  }
+
+  dashList.innerHTML = html;
+}
+
+/* 2. TASK MANAGER & KANBAN ENGINE */
+let taskViewState = {
+  view: 'list',
+  filter: 'today'
+};
+
+function setTaskView(v){
+  taskViewState.view = v;
+  drawTaskManager();
+}
+
+function setTaskFilter(f){
+  taskViewState.filter = f;
+  drawTaskManager();
+}
+
+function drawTaskManager(){
+  const container = $('taskManagerContainer');
+  if(!container) return;
+
+  const priorities = getDailyPriorities();
+  const allCustom = (S.customTasks || []).filter(t => !t.archived);
+  
+  let allTasks = [];
+  if(typeof ACTIVE_DAILY_TASKS_DEF !== 'undefined') allTasks = allTasks.concat(ACTIVE_DAILY_TASKS_DEF);
+  allTasks = allTasks.concat(allCustom);
+
+  let filtered = [];
+  if(taskViewState.filter === 'today'){
+    filtered = priorities;
+  } else if(taskViewState.filter === 'in_progress'){
+    filtered = allTasks.filter(t => (S.taskStatus && S.taskStatus[t.id] === 'in_progress') && !(S.daily && S.daily[t.id]));
+  } else if(taskViewState.filter === 'upcoming'){
+    filtered = allTasks.filter(t => t.status === 'upcoming' || (S.taskStatus && S.taskStatus[t.id] === 'upcoming'));
+  } else if(taskViewState.filter === 'completed'){
+    filtered = allTasks.filter(t => S.daily && S.daily[t.id]);
+  } else {
+    filtered = allTasks;
+  }
+
+  let html = '<div class="tm-header">'
+    + '<div class="tm-top-bar">'
+    +   '<div class="tm-views">'
+    +     '<button class="tm-view-btn ' + (taskViewState.view === 'list' ? 'active' : '') + '" onclick="setTaskView(\'list\')">&#9776; List View</button>'
+    +     '<button class="tm-view-btn ' + (taskViewState.view === 'kanban' ? 'active' : '') + '" onclick="setTaskView(\'kanban\')">&#9638; Kanban Board</button>'
+    +   '</div>'
+    +   '<button class="btn tm-add-btn" onclick="openTaskModal()">+ New Task</button>'
+    + '</div>'
+    + '<div class="tm-filter-bar">'
+    +   '<button class="tm-filter-pill ' + (taskViewState.filter === 'today' ? 'active' : '') + '" onclick="setTaskFilter(\'today\')">Today (' + priorities.length + ')</button>'
+    +   '<button class="tm-filter-pill ' + (taskViewState.filter === 'in_progress' ? 'active' : '') + '" onclick="setTaskFilter(\'in_progress\')">In Progress</button>'
+    +   '<button class="tm-filter-pill ' + (taskViewState.filter === 'upcoming' ? 'active' : '') + '" onclick="setTaskFilter(\'upcoming\')">Upcoming</button>'
+    +   '<button class="tm-filter-pill ' + (taskViewState.filter === 'completed' ? 'active' : '') + '" onclick="setTaskFilter(\'completed\')">Completed</button>'
+    +   '<button class="tm-filter-pill ' + (taskViewState.filter === 'all' ? 'active' : '') + '" onclick="setTaskFilter(\'all\')">All Tasks</button>'
+    +   '<div class="tm-cap-tag ' + (priorities.length >= MAX_DAILY_TASKS ? 'full' : '') + '">'
+    +     'Capacity: ' + priorities.length + ' / ' + MAX_DAILY_TASKS
+    +   '</div>'
+    + '</div>'
+    + '</div>';
+
+  if(taskViewState.view === 'list'){
+    html += '<div class="tm-list-view">';
+    if(filtered.length === 0){
+      html += '<div class="empty-priority-card" style="margin-top:20px;">No tasks match this filter.</div>';
+    } else {
+      filtered.forEach(t => {
+        const isDone = !!(S.daily && S.daily[t.id]);
+        const pColor = t.priority === 'high' ? 'var(--red)' : (t.priority === 'medium' ? 'var(--gold)' : 'var(--sys-blue)');
+        html += '<div class="tm-task-row ' + (isDone ? 'done' : '') + '">'
+          + '<div class="tm-task-left" onclick="toggleLifeOSTask(\'' + t.id + '\', event)">'
+          +   '<div class="p-check">' + (isDone ? '&#10003;' : '') + '</div>'
+          +   '<div>'
+          +     '<div class="tm-task-title">' + esc(t.name) + '</div>'
+          +     '<div class="tm-task-meta">'
+          +       '<span class="p-badge" style="border-color:' + pColor + ';color:' + pColor + ';">' + (t.priority || 'medium').toUpperCase() + '</span>'
+          +       '<span>' + esc(t.duration || '25 min') + '</span>'
+          +       '<span>&bull;</span>'
+          +       '<span>' + esc(t.sub || 'Career & Saudi') + '</span>'
+          +       (t.project ? '<span class="tm-proj-tag">' + esc(t.project) + '</span>' : '')
+          +     '</div>'
+          +   '</div>'
+          + '</div>'
+          + '<div class="tm-task-right">'
+          +   '<span class="p-xp">+' + t.xp + ' XP</span>'
+          +   '<select class="tm-status-select" onchange="updateTaskStatus(\'' + t.id + '\', this.value)" onclick="event.stopPropagation()">'
+          +     '<option value="today" ' + (((S.taskStatus && S.taskStatus[t.id] === 'today') || !S.taskStatus || !S.taskStatus[t.id]) ? 'selected' : '') + '>Today</option>'
+          +     '<option value="in_progress" ' + (S.taskStatus && S.taskStatus[t.id] === 'in_progress' ? 'selected' : '') + '>In Progress</option>'
+          +     '<option value="upcoming" ' + (S.taskStatus && S.taskStatus[t.id] === 'upcoming' ? 'selected' : '') + '>Upcoming</option>'
+          +     '<option value="completed" ' + (isDone ? 'selected' : '') + '>Completed</option>'
+          +   '</select>'
+          + '</div>'
+          + '</div>';
+      });
+    }
+    html += '</div>';
+  } else {
+    const cols = [
+      { id: 'today', name: "Today's Priorities", items: priorities.filter(t => !S.daily[t.id] && (!S.taskStatus || S.taskStatus[t.id] !== 'in_progress')) },
+      { id: 'in_progress', name: 'In Progress', items: allTasks.filter(t => (S.taskStatus && S.taskStatus[t.id] === 'in_progress') && !S.daily[t.id]) },
+      { id: 'upcoming', name: 'Upcoming & Inbox', items: allTasks.filter(t => (t.status === 'upcoming' || (S.taskStatus && S.taskStatus[t.id] === 'upcoming')) && !S.daily[t.id]) },
+      { id: 'completed', name: 'Completed Today', items: allTasks.filter(t => S.daily && S.daily[t.id]) }
+    ];
+
+    html += '<div class="kanban-board">';
+    cols.forEach(col => {
+      html += '<div class="kanban-col">'
+        + '<div class="kanban-col-head">'
+        +   '<span>' + col.name + '</span>'
+        +   '<span class="tag">' + col.items.length + '</span>'
+        + '</div>'
+        + '<div class="kanban-card-list">'
+        + col.items.map(t => {
+            const isDone = !!(S.daily && S.daily[t.id]);
+            const pColor = t.priority === 'high' ? 'var(--red)' : (t.priority === 'medium' ? 'var(--gold)' : 'var(--sys-blue)');
+            return '<div class="kanban-card ' + (isDone ? 'done' : '') + '" onclick="toggleLifeOSTask(\'' + t.id + '\', event)">'
+              + '<div class="kc-top">'
+              +   '<span class="p-badge" style="border-color:' + pColor + ';color:' + pColor + ';">' + (t.priority || 'medium').toUpperCase() + '</span>'
+              +   '<span class="p-xp">+' + t.xp + ' XP</span>'
+              + '</div>'
+              + '<div class="kc-title">' + esc(t.name) + '</div>'
+              + '<div class="kc-desc">' + esc(t.why || t.action || '') + '</div>'
+              + '<div class="kc-footer">'
+              +   '<span>' + esc(t.duration || '25 min') + '</span>'
+              +   '<span class="kc-shift-btn" onclick="event.stopPropagation(); updateTaskStatus(\'' + t.id + '\', \'' + (col.id === 'today' ? 'in_progress' : (col.id === 'in_progress' ? 'completed' : 'today')) + '\')">Shift &rarr;</span>'
+              + '</div>'
+              + '</div>';
+          }).join('')
+        + (col.items.length === 0 ? '<div class="kanban-empty">Empty</div>' : '')
+        + '</div>'
+        + '</div>';
+    });
+    html += '</div>';
+  }
+
+  container.innerHTML = html;
+}
+
+/* 3. HABITS SECTION ENGINE */
+function drawHabitsSection(){
+  const container = $('habitTrackerContainer');
+  if(!container) return;
+
+  const routines = typeof HABIT_ROUTINES_DEF !== 'undefined' ? HABIT_ROUTINES_DEF : [];
+  const completedCount = routines.filter(h => S.daily && S.daily[h.id]).length;
+  const totalCount = routines.length;
+
+  let morning = routines.filter(h => h.time === 'Morning');
+  let day = routines.filter(h => h.time === 'Day');
+  let night = routines.filter(h => h.time === 'Night');
+
+  let html = '<div class="panel">'
+    + '<div class="st">'
+    +   '<h2>Habits & Routines Management</h2>'
+    +   '<span class="tag">' + completedCount + ' / ' + totalCount + ' COMPLETED TODAY</span>'
+    + '</div>'
+    + '<div class="hint">'
+    +   '<b>Intelligent Habit Recognition System:</b> When a daily action reaches <b>21+ completions</b>, it automatically graduates from your active quest list to your permanent Habits section. It builds long-term discipline without cluttering your daily priorities.'
+    + '</div>'
+    + '<div class="habits-stats-row">'
+    +   '<div class="stat"><div class="h"><span class="n">Active Habits</span><span class="lv" style="color:var(--sys-blue);">' + totalCount + '</span></div><div class="sb">Graduated routines</div></div>'
+    +   '<div class="stat"><div class="h"><span class="n">Today\'s Progress</span><span class="lv" style="color:var(--green);">' + completedCount + '/' + totalCount + '</span></div><div class="sb">' + Math.round((completedCount/totalCount)*100 || 0) + '% completed</div></div>'
+    +   '<div class="stat"><div class="h"><span class="n">Formation Threshold</span><span class="lv" style="color:var(--gold);">21 Days</span></div><div class="sb">Neuroplasticity lock</div></div>'
+    +   '<div class="stat"><div class="h"><span class="n">Consistency Score</span><span class="lv" style="color:var(--glow);">' + (S.streak >= 21 ? 'EXEMPLARY' : 'STABLE') + '</span></div><div class="sb">' + S.streak + '-day streak</div></div>'
+    + '</div>'
+    + '</div>';
+
+  const renderRoutineGroup = (title, icon, items) => {
+    let groupHtml = '<div class="panel">'
+      + '<div class="st"><h2 style="color:var(--sys-blue);">' + icon + ' ' + title + '</h2><span class="tag">' + items.filter(h => S.daily && S.daily[h.id]).length + ' / ' + items.length + ' DONE</span></div>'
+      + '<div class="habit-group-grid">';
+    items.forEach(h => {
+      const isDone = !!(S.daily && S.daily[h.id]);
+      const streak = (S.habitDays && S.habitDays[h.id] && S.habitDays[h.id].length) || 21;
+      groupHtml += '<div class="habit-routine-card ' + (isDone ? 'done' : '') + '" onclick="toggleHabitRoutine(\'' + h.id + '\', event)">'
+        + '<div class="hrc-left">'
+        +   '<div class="p-check">' + (isDone ? '&#10003;' : '') + '</div>'
+        +   '<div>'
+        +     '<div class="hrc-title">' + esc(h.name) + '</div>'
+        +     '<div class="hrc-why">' + esc(h.why) + '</div>'
+        +   '</div>'
+        + '</div>'
+        + '<div class="hrc-right">'
+        +   '<span class="hrc-grad-badge">&#127942; ESTABLISHED (' + streak + 'D)</span>'
+        +   '<span class="p-xp">+10 XP</span>'
+        + '</div>'
+        + '</div>';
+    });
+    groupHtml += '</div></div>';
+    return groupHtml;
+  };
+
+  html += renderRoutineGroup('Morning Routine — Foundation & Focus', '🌅', morning);
+  html += renderRoutineGroup('Day & Work Routine — High Performance & Strategy', '⚡', day);
+  html += renderRoutineGroup('Night Routine — Recovery, Expense Audit & Reflection', '🌙', night);
+
+  container.innerHTML = html;
+}
+
+/* 4. SAUDI ROADMAP SECTION ENGINE */
+function drawRoadmapSection(){
+  const container = $('roadList');
+  if(!container) return;
+
+  const milestones = typeof SAUDI_MILESTONES !== 'undefined' ? SAUDI_MILESTONES : [];
+
+  let html = '<div class="saudi-hero-card" style="margin-bottom:20px;">'
+    + '<div class="shc-header">'
+    +   '<div class="shc-badge"><span class="pulse-dot"></span> UNIFIED DEVELOPMENT PATH</div>'
+    +   '<div class="shc-target">EST. MID-2027 RELOCATION</div>'
+    + '</div>'
+    + '<div class="shc-title">SAUDI ARABIA CAREER & RELOCATION ROADMAP</div>'
+    + '<div class="shc-sub">The previous competing 3 paths have been eliminated. Every goal, project, and habit contributes directly to preparing for high-value Saudi marketing opportunities.</div>'
+    + '</div>';
+
+  milestones.forEach(m => {
+    const isCurrent = m.status === 'CURRENT FOCUS';
+    html += '<div class="milestone-card ' + (isCurrent ? 'active' : '') + '">'
+      + '<div class="mc-head">'
+      +   '<div>'
+      +     '<span class="mc-tag ' + (isCurrent ? 'active-tag' : '') + '">' + m.status + '</span>'
+      +     '<h3 class="mc-title">' + esc(m.name) + '</h3>'
+      +     '<div class="mc-timeframe">&#128197; ' + esc(m.timeframe) + '</div>'
+      +   '</div>'
+      +   '<div class="mc-xp">+' + m.xpReward + ' XP</div>'
+      + '</div>'
+      + '<div class="mc-body">'
+      +   '<div class="mc-section-title">CORE OBJECTIVES</div>'
+      +   '<ul class="mc-list">'
+      +     (m.objectives || []).map(o => '<li>' + esc(o) + '</li>').join('')
+      +   '</ul>'
+      +   '<div class="mc-section-title" style="margin-top:12px;">KEY DELIVERABLES & PROOF</div>'
+      +   '<div class="mc-deliverables">'
+      +     (m.deliverables || []).map(d => '<span class="mc-deliv-pill">&#10003; ' + esc(d) + '</span>').join('')
+      +   '</div>'
+      + '</div>'
+      + '</div>';
+  });
+
+  container.innerHTML = html;
+}
+
+/* 5. PROJECTS SECTION ENGINE */
+function drawProjectsSection(){
+  const container = $('projectsContainer');
+  if(!container) return;
+
+  const projects = typeof LIFE_OS_PROJECTS !== 'undefined' ? LIFE_OS_PROJECTS : [];
+
+  let html = '<div class="panel">'
+    + '<div class="st">'
+    +   '<h2>Notion-Style Project Workspace</h2>'
+    +   '<span class="tag">' + projects.length + ' ACTIVE INITIATIVES</span>'
+    + '</div>'
+    + '<div class="hint">'
+    +   'High-impact projects structured around the Saudi Arabia career mission. Complete subtasks, attach notes, and advance progress towards senior marketing placement.'
+    + '</div>'
+    + '</div>'
+    + '<div class="projects-grid">';
+
+  projects.forEach(p => {
+    const userP = (S.projects && S.projects[p.id]) || { progress: 0, subtasks: {}, notes: [] };
+    const subtasks = p.subtasks || [];
+    const doneCount = subtasks.filter(s => userP.subtasks && userP.subtasks[s.id]).length;
+    const pct = subtasks.length ? Math.round((doneCount / subtasks.length) * 100) : (userP.progress || 0);
+
+    html += '<div class="notion-proj-card">'
+      + '<div class="npc-header">'
+      +   '<div>'
+      +     '<span class="npc-cat">' + esc(p.category) + '</span>'
+      +     '<h3 class="npc-title">' + esc(p.name) + '</h3>'
+      +   '</div>'
+      +   '<span class="npc-status ' + p.status.toLowerCase().replace(/\s+/g,'-') + '">' + esc(p.status) + '</span>'
+      + '</div>'
+      + '<div class="npc-desc">' + esc(p.desc) + '</div>'
+      + '<div class="npc-progress-row">'
+      +   '<div class="npc-prog-meta">'
+      +     '<span>Progress (' + doneCount + '/' + subtasks.length + ' subtasks)</span>'
+      +     '<span class="gold-num">' + pct + '%</span>'
+      +   '</div>'
+      +   '<div class="bar thin"><i style="width:' + pct + '%;background:linear-gradient(90deg,var(--sys-blue),var(--glow2))"></i></div>'
+      + '</div>'
+      + '<div class="npc-subtasks-title">ACTIONABLE SUBTASKS</div>'
+      + '<div class="npc-subtask-list">'
+      + subtasks.map(st => {
+          const isDone = !!(userP.subtasks && userP.subtasks[st.id]);
+          return '<div class="npc-subtask-item ' + (isDone ? 'done' : '') + '" onclick="toggleProjectSubtask(\'' + p.id + '\', \'' + st.id + '\')">'
+            + '<span class="npc-subtask-check">' + (isDone ? '&#10003;' : '') + '</span>'
+            + '<span class="npc-subtask-name">' + esc(st.name) + '</span>'
+            + '</div>';
+        }).join('')
+      + '</div>'
+      + '<div class="npc-notes-area">'
+      +   '<div class="npc-notes-head">PROJECT LOG & NOTES</div>'
+      +   '<div class="npc-notes-list">'
+      +     (userP.notes || []).map(n => '<div class="npc-note-item">&bull; ' + esc(n.text) + ' <span style="font-size:10px;color:var(--muted)">(' + n.date + ')</span></div>').join('')
+      +     ((!userP.notes || !userP.notes.length) ? '<div style="font-size:11px;color:var(--muted);font-style:italic;">No notes recorded yet.</div>' : '')
+      +   '</div>'
+      +   '<div class="npc-note-input-row">'
+      +     '<input type="text" id="pnote_' + p.id + '" placeholder="Add note / progress update..." onkeydown="if(event.key===\'Enter\'){ addProjectNote(\'' + p.id + '\', this.value); this.value=\'\'; }">'
+      +     '<button class="npc-note-btn" onclick="const el=$(\'pnote_' + p.id + '\'); addProjectNote(\'' + p.id + '\', el.value); el.value=\'\';">Add</button>'
+      +   '</div>'
+      + '</div>'
+      + '</div>';
+  });
+
+  html += '</div>';
+  container.innerHTML = html;
+}
+
+/* 6. KNOWLEDGE BASE & SECOND BRAIN ENGINE */
+let knowledgeFilter = { search: '', category: 'all' };
+
+function setKnowledgeSearch(val){
+  knowledgeFilter.search = (val || '').toLowerCase().trim();
+  drawKnowledgeBaseSection();
+}
+
+function setKnowledgeCategory(cat){
+  knowledgeFilter.category = cat;
+  drawKnowledgeBaseSection();
+}
+
+function drawKnowledgeBaseSection(){
+  const container = $('knowledgeBaseContainer');
+  if(!container) return;
+
+  const frameworks = typeof KNOWLEDGE_BASE_DATA !== 'undefined' ? KNOWLEDGE_BASE_DATA : [];
+  const customNotes = (S.knowledgeNotes || []);
+
+  const cats = ['all', 'Performance Marketing', 'Tracking & Data', 'Creative & Copy', 'Career & GCC', 'Custom Notes'];
+
+  let allItems = [];
+  frameworks.forEach(f => {
+    allItems.push({
+      id: f.id,
+      title: f.title,
+      category: f.category,
+      tags: f.tags || [],
+      summary: f.summary,
+      content: f.content,
+      isCustom: false
+    });
+  });
+
+  customNotes.forEach(n => {
+    allItems.push({
+      id: n.id,
+      title: n.title,
+      category: 'Custom Notes',
+      tags: n.tags || [],
+      summary: n.content.substring(0, 140) + '...',
+      content: n.content,
+      isCustom: true,
+      date: n.date
+    });
+  });
+
+  let filtered = allItems;
+  if(knowledgeFilter.category !== 'all'){
+    filtered = filtered.filter(item => item.category === knowledgeFilter.category);
+  }
+
+  if(knowledgeFilter.search){
+    const q = knowledgeFilter.search;
+    filtered = filtered.filter(item => 
+      item.title.toLowerCase().includes(q) || 
+      item.summary.toLowerCase().includes(q) || 
+      item.content.toLowerCase().includes(q) ||
+      (item.tags && item.tags.some(t => t.toLowerCase().includes(q)))
+    );
+  }
+
+  let html = '<div class="panel">'
+    + '<div class="st">'
+    +   '<h2>Second Brain Knowledge Base</h2>'
+    +   '<span class="tag">' + allItems.length + ' FRAMEWORKS & NOTES</span>'
+    + '</div>'
+    + '<div class="hint">'
+    +   'Verified marketing architectures, conversion models, tracking guides, and personal strategic playbooks.'
+    + '</div>'
+    + '<div class="kb-controls">'
+    +   '<div class="kb-search-wrap">'
+    +     '<input type="text" class="kb-search-input" placeholder="Search frameworks, models, tags, keywords..." value="' + esc(knowledgeFilter.search) + '" oninput="setKnowledgeSearch(this.value)">'
+    +   '</div>'
+    +   '<button class="btn" onclick="openNoteModal()">+ Add New Note</button>'
+    + '</div>'
+    + '<div class="kb-cat-pills">'
+    + cats.map(c => '<button class="kb-cat-pill ' + (knowledgeFilter.category === c ? 'active' : '') + '" onclick="setKnowledgeCategory(\'' + c + '\')">' + (c === 'all' ? 'All Resources' : c) + '</button>').join('')
+    + '</div>'
+    + '</div>'
+    + '<div class="kb-grid">';
+
+  if(filtered.length === 0){
+    html += '<div class="empty-priority-card" style="grid-column:1/-1;">No knowledge items match your search.</div>';
+  } else {
+    filtered.forEach(item => {
+      html += '<div class="kb-card">'
+        + '<div class="kb-card-head">'
+        +   '<span class="kb-cat-tag">' + esc(item.category) + '</span>'
+        +   (item.isCustom ? '<button class="kb-del-btn" onclick="deleteKnowledgeNote(\'' + item.id + '\')" title="Delete note">&#10005;</button>' : '')
+        + '</div>'
+        + '<h3 class="kb-card-title">' + esc(item.title) + '</h3>'
+        + '<div class="kb-card-tags">'
+        +   (item.tags || []).map(t => '<span class="kb-tag">#' + esc(t) + '</span>').join('')
+        + '</div>'
+        + '<div class="kb-card-summary">' + esc(item.summary) + '</div>'
+        + '<div class="kb-card-content" id="kbc_' + item.id + '" style="display:none;">'
+        +   '<div class="kb-expanded-body">' + esc(item.content).replace(/\n/g, '<br>') + '</div>'
+        + '</div>'
+        + '<button class="kb-expand-btn" onclick="const el=$(\'kbc_' + item.id + '\'); const isHid=el.style.display===\'none\'; el.style.display=isHid?\'block\':\'none\'; this.textContent=isHid?\'Hide Details &uarr;\':\'Read Full Framework &rarr;\';">'
+        +   'Read Full Framework &rarr;'
+        + '</button>'
+        + '</div>';
+    });
+  }
+
+  html += '</div>';
+  container.innerHTML = html;
+}
+
+/* 7. SKILLS MATRIX ENGINE */
+function drawSkillsSection(){
+  const container = $('skillsMatrixContainer');
+  if(!container) return;
+
+  const skills = typeof SKILL_MATRIX_DEF !== 'undefined' ? SKILL_MATRIX_DEF : [];
+
+  let html = '<div class="panel">'
+    + '<div class="st">'
+    +   '<h2>Professional Skills Competency Matrix</h2>'
+    +   '<span class="tag">TARGET: SENIOR GCC STANDARDS</span>'
+    + '</div>'
+    + '<div class="hint">'
+    +   'Visual comparison of your <b>Current Competency Level</b> versus the <b>Required Level for Senior Roles in Saudi Arabia</b>. Focus your training where the gap is largest.'
+    + '</div>'
+    + '<div class="skills-matrix-grid">';
+
+  skills.forEach(s => {
+    const curPct = (s.current / 10) * 100;
+    const tgtPct = (s.target / 10) * 100;
+    const gap = s.target - s.current;
+
+    html += '<div class="skill-matrix-card">'
+      + '<div class="smc-head">'
+      +   '<div>'
+      +     '<span class="smc-domain">' + esc(s.domain) + '</span>'
+      +     '<h4 class="smc-name">' + esc(s.name) + '</h4>'
+      +   '</div>'
+      +   '<span class="smc-gap ' + (gap <= 1 ? 'low-gap' : 'high-gap') + '">' + (gap === 0 ? 'MASTERY' : ('GAP: +' + gap + ' LVL')) + '</span>'
+      + '</div>'
+      + '<div class="smc-bars">'
+      +   '<div class="smc-bar-row">'
+      +     '<span>Current Level (' + s.current + '/10)</span>'
+      +     '<div class="bar thin"><i style="width:' + curPct + '%;background:var(--sys-blue);"></i></div>'
+      +   '</div>'
+      +   '<div class="smc-bar-row">'
+      +     '<span>Saudi Target (' + s.target + '/10)</span>'
+      +     '<div class="bar thin"><i style="width:' + tgtPct + '%;background:linear-gradient(90deg,var(--glow),var(--monarch-purple));"></i></div>'
+      +   '</div>'
+      + '</div>'
+      + '<div class="smc-action">'
+      +   '<b style="color:var(--sys-blue);">Action:</b> ' + esc(s.action)
+      + '</div>'
+      + '</div>';
+  });
+
+  html += '</div></div>';
+  container.innerHTML = html;
+
+  if(typeof drawExtras === 'function') drawExtras();
+  if(typeof drawSkillTree === 'function') drawSkillTree();
+}
+
+/* 8. VOCABULARY ENGINE WITH AUDIO TTS */
+function speakWord(term){
+  if('speechSynthesis' in window){
+    window.speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(term);
+    u.lang = 'en-US';
+    u.rate = 0.9;
+    window.speechSynthesis.speak(u);
+  } else {
+    alert('Speech synthesis audio is not supported in this browser.');
+  }
+}
+
+function drawVocabSection(){
+  const todayContainer = $('vocabToday');
+  if(!todayContainer) return;
+
+  const vocabPool = typeof EXPANDED_VOCAB_DATA !== 'undefined' ? EXPANDED_VOCAB_DATA : (typeof VOCAB_DATA !== 'undefined' ? VOCAB_DATA : []);
+  
+  if($('vPool')) $('vPool').textContent = vocabPool.length;
+  const learnedTotal = (S.vocabLearned || []).length;
+  if($('vTotal')) $('vTotal').textContent = learnedTotal;
+  if($('vocabTotalTag')) $('vocabTotalTag').textContent = learnedTotal + ' WORDS';
+
+  let html = '<div class="vocab-cards-grid">';
+  vocabPool.forEach(v => {
+    const isLearned = (S.vocabLearned || []).includes(v.word);
+    html += '<div class="vocab-card ' + (isLearned ? 'learned' : '') + '">'
+      + '<div class="vc-top">'
+      +   '<span class="vc-cat">' + esc(v.category || 'Marketing') + '</span>'
+      +   '<button class="vc-audio-btn" onclick="speakWord(\'' + esc(v.word) + '\')">&#128266; Listen</button>'
+      + '</div>'
+      + '<div class="vc-word-row">'
+      +   '<h3 class="vc-word">' + esc(v.word) + '</h3>'
+      +   '<span class="vc-ipa">' + esc(v.ipa || '') + '</span>'
+      + '</div>'
+      + '<div class="vc-def">' + esc(v.def || v.meaning || '') + '</div>'
+      + '<div class="vc-ar"><b>المعنى بالعامية:</b> ' + esc(v.arabic || '') + '</div>'
+      + (v.example ? '<div class="vc-ex">&ldquo;' + esc(v.example) + '&rdquo;</div>' : '')
+      + '<div class="vc-footer">'
+      +   '<button class="vc-learn-btn ' + (isLearned ? 'done' : '') + '" onclick="toggleVocabLearned(\'' + esc(v.word) + '\')">'
+      +     (isLearned ? '&#10003; Learned' : 'Mark Learned (+8 XP)')
+      +   '</button>'
+      + '</div>'
+      + '</div>';
+  });
+  html += '</div>';
+  todayContainer.innerHTML = html;
+}
+
+function toggleVocabLearned(word){
+  if(!S.vocabLearned) S.vocabLearned = [];
+  const idx = S.vocabLearned.indexOf(word);
+  if(idx !== -1){
+    S.vocabLearned.splice(idx, 1);
+    subXP(8, 'english', 'vocab', 8);
+    sfx('uncheck');
+  } else {
+    S.vocabLearned.push(word);
+    addXP(8, 'english', true, 'vocab');
+    sfx('check');
+    log('VOCAB LEARNED', 'Learned vocabulary: <b>' + esc(word) + '</b> (+8 XP).');
+  }
+  save();
+  renderAll();
+}
+
+/* 9. FINANCE & RUNWAY BUFFER ENGINE */
+function drawFinanceSection(){
+  const runwayContainer = $('relocationRunwayContainer');
+  if(runwayContainer){
+    const fund = S.relocationFund || { target: 120000, current: 0, currency: 'EGP' };
+    const pct = Math.min(100, Math.round((fund.current / fund.target) * 100));
+
+    let html = '<div class="panel">'
+      + '<div class="st">'
+      +   '<h2>Saudi Relocation Runway Buffer</h2>'
+      +   '<span class="tag gold-num">' + fund.current.toLocaleString() + ' / ' + fund.target.toLocaleString() + ' EGP (' + pct + '%)</span>'
+      + '</div>'
+      + '<div class="hint">'
+      +   'Financial runway buffer required before stepping foot in Riyadh: covers work visa fees, flights, initial 2 months housing deposit, and personal living buffer ($2,500 USD equivalent).'
+      + '</div>'
+      + '<div class="runway-widget">'
+      +   '<div class="bar" style="height:14px;margin-bottom:14px;"><i style="width:' + pct + '%;background:linear-gradient(90deg,var(--gold),#ffe066);"></i></div>'
+      +   '<div class="runway-breakdown-grid">'
+      +     '<div class="rb-item">'
+      +       '<span class="rb-title">&#9992; Visa & Flight Tickets</span>'
+      +       '<span class="rb-val">45,000 EGP</span>'
+      +       '<span class="rb-sub">Airfare & visa processing</span>'
+      +     '</div>'
+      +     '<div class="rb-item">'
+      +       '<span class="rb-title">&#127968; Initial 2 Months Rent</span>'
+      +       '<span class="rb-val">50,000 EGP</span>'
+      +       '<span class="rb-sub">Housing deposit in Riyadh</span>'
+      +     '</div>'
+      +     '<div class="rb-item">'
+      +       '<span class="rb-title">&#128176; Emergency Buffer</span>'
+      +       '<span class="rb-val">25,000 EGP</span>'
+      +       '<span class="rb-sub">Living expenses & contingency</span>'
+      +     '</div>'
+      +   '</div>'
+      +   '<div class="runway-update-row">'
+      +     '<input type="number" id="runwayInput" placeholder="Update current saved EGP amount..." value="' + fund.current + '">'
+      +     '<button class="btn" onclick="const val=$(\'runwayInput\').value; updateRelocationBuffer(val);">Update Buffer</button>'
+      +   '</div>'
+      + '</div>'
+      + '</div>';
+    runwayContainer.innerHTML = html;
+  }
+
+  if(typeof drawExpenses === 'function') drawExpenses();
+}
+
+/* 10. DAILY JOURNAL & REFLECTION ENGINE */
+function drawJournalSection(){
+  const container = $('journalContainer');
+  if(!container) return;
+
+  const today = dayKey();
+  const entry = (S.journal && S.journal[today]) || { wins: '', blockers: '', lessons: '' };
+  const allEntries = S.journal ? Object.values(S.journal).sort((a,b) => b.timestamp - a.timestamp) : [];
+
+  let html = '<div class="panel">'
+    + '<div class="st">'
+    +   '<h2>Daily Reflection & Continuous Improvement</h2>'
+    +   '<span class="tag">' + today + '</span>'
+    + '</div>'
+    + '<div class="hint">'
+    +   'Every successful operator ends their day with honest reflection. Document your wins, identify operational friction, and set the single priority that matters tomorrow.'
+    + '</div>'
+    + '<div class="journal-form">'
+    +   '<div class="jf-field">'
+    +     '<label class="jf-label">&#127942; Daily Wins (What went well today? Tasks completed, metrics improved, skills practiced):</label>'
+    +     '<textarea id="jWins" class="jf-textarea" placeholder="e.g. Audited CAPI server-side tags, finished English speaking drill without missing B/P...">' + esc(entry.wins || '') + '</textarea>'
+    +   '</div>'
+    +   '<div class="jf-field">'
+    +     '<label class="jf-label">&#9888; Friction & Blockers (What slowed me down, distracted me, or caused resistance?):</label>'
+    +     '<textarea id="jBlockers" class="jf-textarea" placeholder="e.g. Procrastinated on drafting the case study outline, spent 40 mins on phone...">' + esc(entry.blockers || '') + '</textarea>'
+    +   '</div>'
+    +   '<div class="jf-field">'
+    +     '<label class="jf-label">&#127919; Tomorrow\'s Single Priority (The one thing that makes tomorrow a win):</label>'
+    +     '<input type="text" id="jLessons" class="jf-input" placeholder="e.g. Finalize 3-page IRA Academy Case Study draft..." value="' + esc(entry.lessons || '') + '">'
+    +   '</div>'
+    +   '<button class="btn" style="margin-top:10px;" onclick="const w=$(\'jWins\').value; const b=$(\'jBlockers\').value; const l=$(\'jLessons\').value; saveJournalReflection(w, b, l);">'
+    +     'Save Reflection &bull; +15 XP'
+    +   '</button>'
+    + '</div>'
+    + '</div>'
+    + '<div class="panel">'
+    + '<div class="st">'
+    +   '<h2>Recent Reflections Log</h2>'
+    +   '<span class="tag">' + allEntries.length + ' LOGGED</span>'
+    + '</div>'
+    + '<div class="journal-history-list">'
+    + allEntries.slice(0, 7).map(e => '<div class="jh-card">'
+        + '<div class="jh-date">&#128197; ' + e.date + '</div>'
+        + (e.wins ? '<div class="jh-row"><b style="color:var(--green);">Wins:</b> ' + esc(e.wins) + '</div>' : '')
+        + (e.blockers ? '<div class="jh-row"><b style="color:var(--red);">Blockers:</b> ' + esc(e.blockers) + '</div>' : '')
+        + (e.lessons ? '<div class="jh-row"><b style="color:var(--gold);">Next Focus:</b> ' + esc(e.lessons) + '</div>' : '')
+        + '</div>').join('')
+    + (allEntries.length === 0 ? '<div style="font-size:12px;color:var(--muted);font-style:italic;">No reflections saved yet. Complete your first today.</div>' : '')
+    + '</div>'
+    + '</div>';
+
+  container.innerHTML = html;
+}
+
+/* UI MODAL CONTROLLERS */
+function openTaskModal(){
+  const m = $('taskModal');
+  if(m) m.classList.add('on');
+}
+function closeTaskModal(){
+  const m = $('taskModal');
+  if(m) m.classList.remove('on');
+}
+function submitTaskModal(){
+  const title = ($('tmTitle').value || '').trim();
+  const sub = ($('tmSub').value || '').trim();
+  const xp = parseInt($('tmXP').value, 10) || 20;
+  const dur = ($('tmDur').value || '').trim() || '25 min';
+  const priority = $('tmPriority').value || 'medium';
+  const proj = $('tmProject').value || null;
+  const why = ($('tmWhy').value || '').trim();
+
+  if(!title){
+    alert('Please enter a task title.');
+    return;
+  }
+
+  const ok = createCustomTask(title, sub, xp, dur, priority, proj, title, why);
+  if(ok){
+    $('tmTitle').value = '';
+    $('tmWhy').value = '';
+    closeTaskModal();
+  }
+}
+
+function openNoteModal(){
+  const m = $('noteModal');
+  if(m) m.classList.add('on');
+}
+function closeNoteModal(){
+  const m = $('noteModal');
+  if(m) m.classList.remove('on');
+}
+function submitNoteModal(){
+  const title = ($('nmTitle').value || '').trim();
+  const cat = $('nmCat').value || 'General';
+  const tags = ($('nmTags').value || '').trim();
+  const content = ($('nmContent').value || '').trim();
+
+  if(!title || !content){
+    alert('Please enter both title and content for your note.');
+    return;
+  }
+
+  saveKnowledgeNote(title, cat, tags, content);
+  $('nmTitle').value = '';
+  $('nmTags').value = '';
+  $('nmContent').value = '';
+  closeNoteModal();
+}
+
+function closeHabitGradModal(){
+  const m = $('habitGradModal');
+  if(m) m.classList.remove('on');
 }

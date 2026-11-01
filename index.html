@@ -76,6 +76,122 @@
   <button class="btn mclose" onclick="closeModal()">Close</button>
 </div></div>
 
+<!-- ============ TASK CREATION MODAL ============ -->
+<div id="taskModal" class="lo-modal">
+  <div class="lo-modal-box">
+    <div class="lo-modal-head">
+      <h3>+ Add Priority Task</h3>
+      <button class="lo-modal-close" onclick="closeTaskModal()">&#10005;</button>
+    </div>
+    <div class="lo-modal-body">
+      <div class="lo-form-group">
+        <label>Task Title & Action:</label>
+        <input type="text" id="tmTitle" placeholder="e.g. Audit CAPI Event Match Quality on Stape.io">
+      </div>
+      <div class="lo-form-row">
+        <div class="lo-form-group">
+          <label>Category / Domain:</label>
+          <select id="tmSub">
+            <option value="Performance Marketing">Performance Marketing</option>
+            <option value="CAPI & Tracking">CAPI & Tracking</option>
+            <option value="English Fluency">English Fluency</option>
+            <option value="AI & Video Ads">AI & Video Ads</option>
+            <option value="Saudi Outreach">Saudi Outreach</option>
+            <option value="Finance & Runway">Finance & Runway</option>
+          </select>
+        </div>
+        <div class="lo-form-group">
+          <label>Priority:</label>
+          <select id="tmPriority">
+            <option value="high">High Priority</option>
+            <option value="medium" selected>Medium Priority</option>
+            <option value="normal">Normal</option>
+          </select>
+        </div>
+      </div>
+      <div class="lo-form-row">
+        <div class="lo-form-group">
+          <label>Estimated Duration:</label>
+          <input type="text" id="tmDur" placeholder="e.g. 35 min" value="30 min">
+        </div>
+        <div class="lo-form-group">
+          <label>XP Reward:</label>
+          <input type="number" id="tmXP" value="20" min="5" max="100">
+        </div>
+      </div>
+      <div class="lo-form-group">
+        <label>Linked Project (Optional):</label>
+        <select id="tmProject">
+          <option value="">None / Standalone</option>
+          <option value="p_ira">IRA Academy Case Studies</option>
+          <option value="p_cv">ATS English CV</option>
+          <option value="p_capi">CAPI & Server-Side Tracking</option>
+          <option value="p_video">AI Video Ad Production</option>
+          <option value="p_linkedin">LinkedIn Thought Leadership</option>
+          <option value="p_pipeline">Gulf Agency Pipeline</option>
+          <option value="p_runway">Saudi Relocation Runway Fund</option>
+          <option value="p_english">English Fluency Drills</option>
+        </select>
+      </div>
+      <div class="lo-form-group">
+        <label>Strategic Why / Outcome Target:</label>
+        <textarea id="tmWhy" placeholder="Why does this move the needle for your Saudi Arabia readiness?"></textarea>
+      </div>
+      <button class="btn" style="width:100%;margin-top:10px;" onclick="submitTaskModal()">Create Task</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ KNOWLEDGE NOTE MODAL ============ -->
+<div id="noteModal" class="lo-modal">
+  <div class="lo-modal-box">
+    <div class="lo-modal-head">
+      <h3>+ Add Knowledge Base Note</h3>
+      <button class="lo-modal-close" onclick="closeNoteModal()">&#10005;</button>
+    </div>
+    <div class="lo-modal-body">
+      <div class="lo-form-group">
+        <label>Note Title:</label>
+        <input type="text" id="nmTitle" placeholder="e.g. Stape.io Custom Domain CNAME Configuration">
+      </div>
+      <div class="lo-form-row">
+        <div class="lo-form-group">
+          <label>Category:</label>
+          <select id="nmCat">
+            <option value="Performance Marketing">Performance Marketing</option>
+            <option value="Tracking & Data">Tracking & Data</option>
+            <option value="Creative & Copy">Creative & Copy</option>
+            <option value="Career & GCC">Career & GCC</option>
+            <option value="Custom Notes" selected>Custom Notes</option>
+          </select>
+        </div>
+        <div class="lo-form-group">
+          <label>Tags (comma separated):</label>
+          <input type="text" id="nmTags" placeholder="e.g. CAPI, Stape, DNS, Cookies">
+        </div>
+      </div>
+      <div class="lo-form-group">
+        <label>Note Content & Architectural Notes:</label>
+        <textarea id="nmContent" style="height:150px;" placeholder="Document your verified steps, learnings, code, or campaign structure..."></textarea>
+      </div>
+      <button class="btn" style="width:100%;margin-top:10px;" onclick="submitNoteModal()">Save to Second Brain</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ HABIT GRADUATION ALERT MODAL ============ -->
+<div id="habitGradModal" class="lo-modal">
+  <div class="lo-modal-box" style="border-color:var(--gold);text-align:center;">
+    <div style="font-size:42px;margin-bottom:10px;">🏆</div>
+    <div class="lo-modal-badge" style="color:var(--gold);border-color:var(--gold);display:inline-block;padding:4px 12px;border:1px solid;border-radius:20px;font-family:var(--hud);font-size:11px;margin-bottom:8px;">NEW HABIT ESTABLISHED</div>
+    <h3 id="hgTitle" style="color:#fff;font-family:var(--hud);margin:0 0 10px;">HABIT GRADUATED</h3>
+    <div id="hgDesc" style="font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:16px;">
+      You have cleared this activity for 21+ consecutive days! It has now graduated to your permanent Habits system, freeing up your daily quest list.
+    </div>
+    <button class="btn" style="border-color:var(--gold);color:var(--gold);background:rgba(255,204,77,.15);width:100%;" onclick="closeHabitGradModal()">Acknowledge & Arise</button>
+  </div>
+</div>
+
 <div class="wrap">
 
   <!-- ============ SYSTEM HUD (STATUS WINDOW) ============ -->
@@ -161,35 +277,35 @@
 
   <!-- ============ MASTER SYSTEM PORTALS DOCK ============ -->
   <div class="portal-dock">
-    <div class="portal-btn active" data-portal="quests">
+    <div class="portal-btn active" data-portal="dash" onclick="switchPortal('dash', 'dash')">
+      <span class="p-icon">⚡</span>
+      <span class="p-name">COMMAND</span>
+      <span class="p-desc">HUD & Priorities</span>
+    </div>
+    <div class="portal-btn" data-portal="quests" onclick="switchPortal('quests', 'tasks')">
       <span class="p-icon">⚔️</span>
-      <span class="p-name">QUESTS</span>
-      <span class="p-desc">Daily & Bosses</span>
+      <span class="p-name">TASKS</span>
+      <span class="p-desc">List & Kanban</span>
     </div>
-    <div class="portal-btn" data-portal="status">
-      <span class="p-icon">👤</span>
-      <span class="p-name">STATUS</span>
-      <span class="p-desc">Stats & Vitals</span>
+    <div class="portal-btn" data-portal="habits" onclick="switchPortal('habits', 'habits')">
+      <span class="p-icon">🔄</span>
+      <span class="p-name">HABITS</span>
+      <span class="p-desc">21-Day Routines</span>
     </div>
-    <div class="portal-btn" data-portal="growth">
-      <span class="p-icon">📜</span>
-      <span class="p-name">GROWTH</span>
-      <span class="p-desc">Skills & Courses</span>
+    <div class="portal-btn" data-portal="roadmap" onclick="switchPortal('roadmap', 'roadmap')">
+      <span class="p-icon">🎯</span>
+      <span class="p-name">ROADMAP</span>
+      <span class="p-desc">Saudi & Projects</span>
     </div>
-    <div class="portal-btn" data-portal="academy">
-      <span class="p-icon">🎙️</span>
-      <span class="p-name">ACADEMY</span>
-      <span class="p-desc">English & Vocab</span>
+    <div class="portal-btn" data-portal="knowledge" onclick="switchPortal('knowledge', 'knowledge')">
+      <span class="p-icon">🧠</span>
+      <span class="p-name">KNOWLEDGE</span>
+      <span class="p-desc">Second Brain & Skills</span>
     </div>
-    <div class="portal-btn" data-portal="resources">
+    <div class="portal-btn" data-portal="resources" onclick="switchPortal('resources', 'expenses')">
       <span class="p-icon">💎</span>
-      <span class="p-name">RESOURCES</span>
-      <span class="p-desc">Money & Intel</span>
-    </div>
-    <div class="portal-btn" data-portal="shadow">
-      <span class="p-icon">👑</span>
-      <span class="p-name">SHADOW</span>
-      <span class="p-desc">Army & Eggs</span>
+      <span class="p-name">OPERATIONS</span>
+      <span class="p-desc">Runway & Journal</span>
     </div>
   </div>
 
@@ -226,6 +342,11 @@
       <div class="st"><h2>System Log</h2><span class="tag">RECENT</span></div>
       <div id="history" class="hint">No activity recorded yet. Start your first mission.</div>
     </div>
+  </div>
+
+  <!-- ============ TASKS & QUESTS (LIFE OS) ============ -->
+  <div class="page" id="tasks">
+    <div id="taskManagerContainer"></div>
   </div>
 
   <!-- ============ DAILY ============ -->
@@ -284,11 +405,12 @@
 
   <!-- ============ ROADMAP ============ -->
   <div class="page" id="roadmap">
-    <div class="panel">
-      <div class="st"><h2>Life Roadmap</h2><span class="tag">THE PLAN</span></div>
-      <div class="hint">Your missions change as you progress. Each chapter unlocks new work and retires what is already done.</div>
-      <div id="roadList"></div>
-    </div>
+    <div id="roadList"></div>
+  </div>
+
+  <!-- ============ NOTION-STYLE PROJECTS ============ -->
+  <div class="page" id="projects">
+    <div id="projectsContainer"></div>
   </div>
 
   <!-- ============ LIBRARY ============ -->
@@ -358,8 +480,15 @@
     </div>
   </div>
 
+  <!-- ============ SECOND BRAIN KNOWLEDGE BASE ============ -->
+  <div class="page" id="knowledge">
+    <div id="knowledgeBaseContainer"></div>
+  </div>
+
   <!-- ============ SKILLS ============ -->
   <div class="page" id="skills">
+      <div id="skillsMatrixContainer"></div>
+
       <div class="panel">
         <div class="st"><h2>Skill Tree</h2><span class="tag">ORDERED BY IMPORTANCE</span></div>
         <div class="hint">Skills ranked by impact on your career. Complete a skill to unlock the ones that depend on it. Each skill has real places to learn it.</div>
@@ -625,8 +754,9 @@
     </div>
   </div>
 
-  <!-- ============ EXPENSES ============ -->
+  <!-- ============ EXPENSES & RELOCATION ============ -->
   <div class="page" id="expenses">
+    <div id="relocationRunwayContainer"></div>
     <div class="panel">
       <div class="st"><h2>Money Expenses Calendar</h2><span class="tag">DAILY TRACKER</span></div>
       <div class="hint">Track every pound you spend. Awareness is the first step to control. Select a date, add a note, and watch your spending patterns.</div>
@@ -657,8 +787,14 @@
     </div>
   </div>
 
+  <!-- ============ DAILY REFLECTIONS & JOURNAL ============ -->
+  <div class="page" id="journal">
+    <div id="journalContainer"></div>
+  </div>
+
   <!-- ============ HABITS ============ -->
   <div class="page" id="habits">
+    <div id="habitTrackerContainer"></div>
     <div id="habitList"></div>
   </div>
 

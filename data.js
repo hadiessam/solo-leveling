@@ -1515,3 +1515,680 @@ const HABITS = [
   {id:'h10', icon:'calendar', category:'Mindset', name:"Plan tomorrow's tasks",
    why:'Planning tomorrow tonight reduces decision fatigue in the morning and lets you start the day with momentum instead of uncertainty.'}
 ];
+
+
+/* =====================================================================
+   SOLO LEVELING: PERSONAL LIFE OS DATA ARCHITECTURE
+   Unified Central Strategic Direction: Saudi Arabia Relocation & Career
+   ===================================================================== */
+
+/* 1. UNIFIED SAUDI ARABIA STRATEGIC ROADMAP MILESTONES */
+const SAUDI_MILESTONES = [
+  {
+    id: 'm1_proof',
+    name: 'Milestone 1 — Documented Proof & Hero Case Studies',
+    targetDate: '2026-12-15',
+    progress: 75,
+    desc: 'Transform 14 months of verified performance marketing at IRA Academy (27 programs, TL 171K spend, 11,406 leads, TL 15.06 CPL) and ADLab into 3 deep, visually compelling case studies.',
+    icon: 'award',
+    projects: ['prj_hero_phd', 'prj_hero_recovery', 'prj_hero_diploma'],
+    deliverables: [
+      'PhD Political Science campaign breakdown (1,544 leads @ TL 4.62 CPL)',
+      'AI & Cybersecurity CPL recovery playbook (130 TL -> 50 TL)',
+      'Intelligence Studies premium diploma campaign breakdown ($1,000 offer)'
+    ]
+  },
+  {
+    id: 'm2_brand',
+    name: 'Milestone 2 — ATS English CV & Regional Personal Brand',
+    targetDate: '2027-01-30',
+    progress: 55,
+    desc: 'Establish top-tier positioning among Saudi media buying agencies and Gulf hiring managers.',
+    icon: 'user',
+    projects: ['prj_ats_cv', 'prj_portfolio', 'prj_linkedin_saudi'],
+    deliverables: [
+      '100% ATS-friendly 1-page English CV focusing on ROI & scale',
+      'Interactive online portfolio showcasing hero case studies',
+      'Optimized LinkedIn profile with weekly performance marketing insights'
+    ]
+  },
+  {
+    id: 'm3_tech',
+    name: 'Milestone 3 — Advanced Media Buying & AI Arsenal',
+    targetDate: '2027-03-31',
+    progress: 40,
+    desc: 'Master technical infrastructure that differentiates top 1% media buyers in the Gulf.',
+    icon: 'cpu',
+    projects: ['prj_tech_capi', 'prj_ai_video_ads', 'prj_google_analytics'],
+    deliverables: [
+      'Server-side Meta Conversions API (CAPI) & Pixel deduplication mastery',
+      'Google Analytics 4 custom lead event tracking & funnel analysis',
+      'Multimodal AI video ads production pipeline (ElevenLabs + HeyGen + CapCut)'
+    ]
+  },
+  {
+    id: 'm4_interview',
+    name: 'Milestone 4 — High-Ticket Gulf Interview Mastery & English Fluency',
+    targetDate: '2027-05-31',
+    progress: 35,
+    desc: 'Deliver effortless English presentations defending campaign decisions, budget allocation, and ROAS optimization.',
+    icon: 'mic',
+    projects: ['prj_interview_pitch', 'prj_english_drills', 'prj_proposal_writing'],
+    deliverables: [
+      '90-second executive elevator pitch with zero filler words',
+      'Live campaign defense drills explaining ROAS drop recovery in English',
+      'Commercial client proposal and contract presentation deck'
+    ]
+  },
+  {
+    id: 'm5_finance',
+    name: 'Milestone 5 — Financial Runway & Relocation Capital Buffer',
+    targetDate: '2027-07-31',
+    progress: 25,
+    desc: 'Accumulate a dedicated relocation runway (flight, visa, initial living buffer) through expense discipline and freelance revenue.',
+    icon: 'dollar',
+    projects: ['prj_relocation_fund', 'prj_freelance_retainers'],
+    deliverables: [
+      '120,000 EGP dedicated Saudi relocation and emergency reserve',
+      '30-day itemized expense discipline (zero unaccounted spending)',
+      'Established dollar freelance retainers (Upwork / Mostaql / direct)'
+    ]
+  }
+];
+
+/* 2. NOTION-STYLE LIFE OS PROJECTS */
+const LIFE_OS_PROJECTS = [
+  {
+    id: 'prj_hero_phd',
+    title: 'Hero Case Study: PhD Political Science (1,544 Leads @ TL 4.62)',
+    milestoneId: 'm1_proof',
+    category: 'Portfolio',
+    status: 'in_progress',
+    progress: 75,
+    deadline: '2026-11-20',
+    objective: 'Write and design a comprehensive case study documenting the lowest CPL educational campaign in account history.',
+    outcome: 'Polished 3-page PDF and web case study ready to send to Saudi recruiters.',
+    tasks: [
+      { id: 't_phd_1', text: 'Extract raw Meta Ads Manager export for PhD campaign', done: true },
+      { id: 't_phd_2', text: 'Draft Problem & Challenge statement (niche target audience in Arab world)', done: true },
+      { id: 't_phd_3', text: 'Detail Audience Strategy: Custom/Lookalike layering & Advantage+ budget', done: true },
+      { id: 't_phd_4', text: 'Format results visual: 1,544 leads, TL 4.62 CPL vs TL 15.06 average', done: false },
+      { id: 't_phd_5', text: 'Export high-res PDF and embed in portfolio', done: false }
+    ],
+    notes: 'Primary proof point for high-volume lead generation efficiency.'
+  },
+  {
+    id: 'prj_hero_recovery',
+    title: 'Hero Case Study: Delivery Volatility & CPL Recovery (130 -> 50 TL)',
+    milestoneId: 'm1_proof',
+    category: 'Portfolio',
+    status: 'in_progress',
+    progress: 50,
+    deadline: '2026-11-30',
+    objective: 'Document the exact systematic protocol used to recover an AI & Cyber campaign from 130 TL to 50 TL CPL.',
+    outcome: 'Demonstrates deep troubleshooting, learning phase reset tactics, and algorithmic understanding.',
+    tasks: [
+      { id: 't_rec_1', text: 'Structure the 4-step diagnostic protocol', done: true },
+      { id: 't_rec_2', text: 'Write the campaign duplication and learning phase reset rationale', done: true },
+      { id: 't_rec_3', text: 'Document creative fatigue indicators and copy adjustments', done: false },
+      { id: 't_rec_4', text: 'Create before/after CPL comparison chart', done: false }
+    ],
+    notes: 'Recruiters value candidates who know what to do when campaigns break.'
+  },
+  {
+    id: 'prj_ats_cv',
+    title: 'ATS-Optimized 1-Page English CV for Saudi Media Agencies',
+    milestoneId: 'm2_brand',
+    category: 'Career',
+    status: 'active',
+    progress: 60,
+    deadline: '2026-12-05',
+    objective: 'Build an ultra-clean, high-converting English resume passing all applicant tracking systems with a 95%+ match score.',
+    outcome: 'ATS-compliant PDF resume emphasizing 27 campaigns, 11,406 leads, and TL 171K spend.',
+    tasks: [
+      { id: 't_cv_1', text: 'Quantify all IRA Academy bullet points with verified numbers', done: true },
+      { id: 't_cv_2', text: 'Highlight ADLab media planning experience (Audi, Lynk & Co)', done: true },
+      { id: 't_cv_3', text: 'Incorporate Saudi/Gulf job keyword matrix (Advantage+, CAPI, CAC/ROAS, Attribution)', done: false },
+      { id: 't_cv_4', text: 'Run through Jobscan ATS simulator and score above 90%', done: false }
+    ],
+    notes: 'Never list generic duties; always state Action + Metric + Result.'
+  },
+  {
+    id: 'prj_linkedin_saudi',
+    title: 'LinkedIn Authority & Saudi Recruiter Outreach Pipeline',
+    milestoneId: 'm2_brand',
+    category: 'Career',
+    status: 'active',
+    progress: 40,
+    deadline: '2026-12-20',
+    objective: 'Transform LinkedIn into an inbound recruiter magnet targeting Riyadh/Jeddah agencies and brands.',
+    outcome: 'Weekly inbound messages from regional agency recruiters.',
+    tasks: [
+      { id: 't_li_1', text: 'Update Headline: Performance Marketing Specialist | Meta Ads & Lead Gen | $171K+ Spend Managed', done: true },
+      { id: 't_li_2', text: 'Publish Case Study 1 as a LinkedIn carousel', done: false },
+      { id: 't_li_3', text: 'Connect with 15 Saudi media directors and talent acquisition leads per week', done: false },
+      { id: 't_li_4', text: 'Engage thoughtfully on top 5 Saudi marketing agency posts daily', done: false }
+    ],
+    notes: 'Position as a ROI-driven practitioner, not a generic content creator.'
+  },
+  {
+    id: 'prj_tech_capi',
+    title: 'Meta Conversions API (CAPI) & GA4 Advanced Tracking Mastery',
+    milestoneId: 'm3_tech',
+    category: 'Technical',
+    status: 'active',
+    progress: 35,
+    deadline: '2027-01-15',
+    objective: 'Acquire practical, end-to-end server-side tracking and attribution skills demanded by modern media buyers.',
+    outcome: 'Ability to set up CAPI gateway, event deduplication, and custom GA4 conversion funnels.',
+    tasks: [
+      { id: 't_cap_1', text: 'Complete Meta CAPI Gateway walkthrough', done: true },
+      { id: 't_cap_2', text: 'Test event deduplication between browser pixel and server event', done: false },
+      { id: 't_cap_3', text: 'Configure custom lead qualification events in GA4', done: false },
+      { id: 't_cap_4', text: 'Write step-by-step CAPI setup guide for Knowledge Base', done: false }
+    ],
+    notes: 'Highest-leverage technical moat against ordinary media buyers.'
+  },
+  {
+    id: 'prj_ai_video_ads',
+    title: 'Automated AI Video Ad Production Pipeline',
+    milestoneId: 'm3_tech',
+    category: 'AI & Automation',
+    status: 'active',
+    progress: 45,
+    deadline: '2027-02-15',
+    objective: 'Build an automated pipeline to produce direct-response UGC-style video ads using AI tools.',
+    outcome: 'Produce 3 variation video creatives in under 20 minutes.',
+    tasks: [
+      { id: 't_ai_1', text: 'Draft 3 direct-response Arabic hook formulas for Gulf audience', done: true },
+      { id: 't_ai_2', text: 'Generate natural Arabic voiceover narration in ElevenLabs', done: true },
+      { id: 't_ai_3', text: 'Assemble avatar presenter and overlay B-roll in CapCut', done: false },
+      { id: 't_ai_4', text: 'Document end-to-end SOP in Knowledge Base', done: false }
+    ],
+    notes: 'Crucial for rapid creative testing without high studio production costs.'
+  },
+  {
+    id: 'prj_interview_pitch',
+    title: '90-Second Executive Pitch & English Interview Mastery',
+    milestoneId: 'm4_interview',
+    category: 'English & Communication',
+    status: 'active',
+    progress: 30,
+    deadline: '2027-03-15',
+    objective: 'Achieve total fluency and confidence presenting past campaign results in English interviews.',
+    outcome: 'Recorded flawless answers for the top 5 Gulf media buyer interview questions.',
+    tasks: [
+      { id: 't_int_1', text: 'Master 90-second "Tell me about yourself" with 27-campaign proof', done: true },
+      { id: 't_int_2', text: 'Record answer for "How do you handle ad fatigue and rising CPL?"', done: false },
+      { id: 't_int_3', text: 'Record answer for "Explain your Advantage+ budget scaling strategy"', done: false },
+      { id: 't_int_4', text: 'Complete 3 mock interviews with an AI conversation partner', done: false }
+    ],
+    notes: 'Speaking is 50 (B1) — one point from B2. Consistent drills will bridge the gap.'
+  },
+  {
+    id: 'prj_relocation_fund',
+    title: 'Saudi Relocation Runway & Emergency Capital Buffer',
+    milestoneId: 'm5_finance',
+    category: 'Finance',
+    status: 'active',
+    progress: 25,
+    deadline: '2027-06-30',
+    objective: 'Accumulate a dedicated 120,000 EGP relocation and emergency runway through expense control and freelance income.',
+    outcome: 'Financial peace of mind and flexibility when transitioning to Saudi Arabia.',
+    tasks: [
+      { id: 't_fin_1', text: 'Track daily itemized expenses consistently for 30 days', done: true },
+      { id: 't_fin_2', text: 'Identify and eliminate bottom 15% non-essential monthly expenses', done: true },
+      { id: 't_fin_3', text: 'Set up dedicated relocation savings ledger', done: false },
+      { id: 't_fin_4', text: 'Generate first 10,000 EGP in freelance retainers', done: false }
+    ],
+    notes: 'Financial discipline buys career choices and eliminates desperation.'
+  }
+];
+
+/* 3. KNOWLEDGE BASE ARTICLES & MARKETING FRAMEWORKS */
+const KNOWLEDGE_BASE_DATA = [
+  {
+    id: 'kb_volatility_recovery',
+    title: 'Meta Ads Delivery Volatility Recovery Playbook',
+    category: 'Performance Marketing',
+    tags: ['Meta Ads', 'CPL Optimization', 'Troubleshooting', 'Troubleshooting Playbook'],
+    readTime: '4 min',
+    summary: 'Systematic 4-step emergency diagnosis and recovery protocol when CPL spikes due to platform algorithmic volatility.',
+    content: `### 1. Diagnosis Phase (The 24-Hour Rule)
+- Never panic-edit an active ad set within the first 4 hours of a cost spike.
+- Compare Day-over-Day CPM vs Frequency:
+  - If CPM spiked without ad changes -> Platform delivery auction congestion.
+  - If Frequency is > 2.5 on cold audience -> Creative fatigue.
+  - If CTR dropped > 35% -> Creative exhaustion or negative comment storm.
+
+### 2. The Duplicate & Relaunch Reset
+- Step 1: Export campaign historical metrics for baseline.
+- Step 2: Pause the corrupted ad set (do not delete).
+- Step 3: Duplicate the ad set at original stable budget. This resets the learning phase cleanly without historical algorithmic baggage.
+- Step 4: Keep winning creatives; introduce ONE new hook variation.
+
+### 3. Real Proof from Account History
+- Applied during the IRA Academy AI & Cybersecurity diploma campaign:
+  - Runaway initial CPL: TL 130.62.
+  - After duplication and audience re-clustering: TL 50.79 (61% CPL reduction).`
+  },
+  {
+    id: 'kb_lead_qualification',
+    title: 'High-Ticket Lead Gen & Instant Form Qualification Framework',
+    category: 'Performance Marketing',
+    tags: ['Lead Gen', 'Instant Forms', 'CPL vs Quality', 'CRM'],
+    readTime: '5 min',
+    summary: 'How to balance low Cost Per Lead (CPL) with high sales team qualification rates using Meta Instant Forms.',
+    content: `### 1. The Friction Paradox
+- Zero friction = cheap leads that never answer the phone.
+- Excessive friction = prohibitive CPL with high drop-off rates.
+- Sweet Spot: The "Higher Intent" form type with 2 custom qualification hurdles.
+
+### 2. The 3-Step Qualification Question Architecture
+- **Question 1 (Commitment Filter):** Multiple-choice verifying current employment or field background.
+- **Question 2 (Timeline/Readiness):** "When do you plan to start?" (Immediate / Next Month / Researching).
+- **Question 3 (Contact Verification):** Explicitly require active WhatsApp number with country code.
+
+### 3. Proof Benchmark from IRA Academy
+- 11,406 qualified leads generated across 27 programs at a blended TL 15.06 CPL.
+- Sales closing rate increased by 28% when switching from More Volume to Higher Intent forms.`
+  },
+  {
+    id: 'kb_saudi_market',
+    title: 'Saudi Advertising Market & Media Buying Intelligence',
+    category: 'Saudi Market',
+    tags: ['Saudi Arabia', 'KSA', 'Consumer Behavior', 'Media Planning'],
+    readTime: '6 min',
+    summary: 'Essential platform dynamics, consumer preferences, and advertising regulations in the Kingdom of Saudi Arabia.',
+    content: `### 1. Platform Power Hierarchy in KSA
+- **Snapchat:** Unrivaled penetration among Saudi nationals. Mandatory for mass awareness and local retail/app campaigns.
+- **TikTok:** Highest engagement growth; excellent for direct-response UGC and e-commerce.
+- **Meta (Instagram & Facebook):** Instagram remains high-trust for lifestyle, fashion, B2B, and professional services. Facebook drives strong expat traffic.
+- **X (Twitter):** Primary channel for news, public relations, and governmental announcements.
+
+### 2. Cultural & Creative Guidelines
+- **Dialect Matters:** Use white Saudi Arabic (اللهجة البيضاء) for mass audience; Modern Standard Arabic for formal, governmental, or premium luxury.
+- **Visual Sensitivity:** Respect conservative cultural norms in imagery and video. Family-oriented visuals convert substantially higher.
+- **Payment Preferences:** Mada card, Apple Pay, and Tabby/Tamara (BNPL) are non-negotiable payment signals.
+
+### 3. Key Seasons & Budget Spikes
+- Ramadan & Eid: Highest ad spend and highest e-commerce conversion rates.
+- Saudi National Day (September 23) & Founding Day (February 22): Massive discount campaigns and patriotic marketing themes.`
+  },
+  {
+    id: 'kb_ai_video_pipeline',
+    title: 'End-to-End AI Video Ad Production SOP',
+    category: 'AI & Automation',
+    tags: ['AI Workflows', 'Video Ads', 'ElevenLabs', 'CapCut', 'HeyGen'],
+    readTime: '4 min',
+    summary: 'Step-by-step SOP for generating high-converting Arabic video creatives in under 20 minutes.',
+    content: `### 1. Scripting (Direct-Response Formula)
+- **Seconds 0-3 (The Hook):** Visual surprise + problem callout ("بتصرف ميزانية إعلاناتك ومش بتشوف مبيعات حقيقية؟").
+- **Seconds 4-15 (Agitation & Insight):** Explain why ordinary tactics fail (algorithm changes, high CPL).
+- **Seconds 16-35 (The Solution & Proof):** Introduce the offer, show verified dashboard numbers.
+- **Seconds 36-45 (Call to Action):** Low-friction command ("اضغط على الرابط وسجل الآن").
+
+### 2. Audio & Avatar Assembly
+- Voice: ElevenLabs Arabic model (Deep, confident, natural inflection).
+- Presenter: HeyGen custom digital avatar with natural gestures.
+- B-Roll & Pacing: CapCut with bold text captions (Yellow/Cyan), sound effects on text popups, and 1.2x pacing.`
+  },
+  {
+    id: 'kb_interview_90s',
+    title: 'The 90-Second Performance Marketer Executive Pitch',
+    category: 'Career & Interview',
+    tags: ['Interview', 'Elevator Pitch', 'English B2', 'Executive Presence'],
+    readTime: '3 min',
+    summary: 'The battle-tested script to answer "Tell me about yourself" in marketing interviews with total authority.',
+    content: `### Structure: Who -> Specialization -> Verified Numbers -> Why This Role
+
+**English Script:**
+"I am Hadi Essam, a Performance Marketing and Social Media Specialist with over 14 months of hands-on paid media experience managing cross-channel campaigns.
+
+In my recent tenure at IRA Academy, I had full operational responsibility for managing paid advertising across 27 distinct educational programs. During that period, I managed over 171,000 Turkish Liras in ad spend, delivering 11,406 qualified leads at an exceptionally lean blended Cost Per Lead of 15.06 TL across 5 brand pages.
+
+My core edge is combining technical attribution—like server-side CAPI and GA4 funnel tracking—with creative direct-response copy that converts cold Arab audiences.
+
+I am looking to bring this exact data-driven execution and budget efficiency to high-growth brands and media agencies in Saudi Arabia."`
+  },
+  {
+    id: 'kb_leadgen_funnel',
+    title: 'High-Ticket Education & B2B Funnel Architecture',
+    category: 'Performance Marketing',
+    tags: ['Funnel Architecture', 'B2B', 'Education', 'ROAS'],
+    readTime: '5 min',
+    summary: 'The TOFU / MOFU / BOFU structure used to sell premium $1,000 diplomas and graduate programs.',
+    content: `### 1. Top of Funnel (TOFU) — Problem Awareness
+- Content: Short video carousels detailing career breakthroughs in international relations, cybersecurity, or diplomacy.
+- KPI: 3-second video views & cost per landing page visit.
+
+### 2. Middle of Funnel (MOFU) — Proof & Syllabus Breakdown
+- Offer: Free introductory masterclass, detailed curriculum PDF, or faculty credential sheet.
+- Lead Capture: Meta Instant Form (Higher Intent).
+
+### 3. Bottom of Funnel (BOFU) — Direct Sales Closing
+- Retargeting: Social proof ads showing past alumni testimonials and employment placement.
+- Direct WhatsApp automated handoff to academic advisor team within 15 minutes of lead capture.`
+  }
+];
+
+/* 4. EXPANDED PRACTICAL ENGLISH & MARKETING VOCABULARY BANK */
+const EXPANDED_VOCAB_DATA = [
+  {
+    w: 'Attribution',
+    pos: 'noun',
+    ipa: '/ˌæt.rɪˈbjuː.ʃən/',
+    ar: 'إسناد الإعلانات / تحديد مصدر التحويل',
+    ex: 'Multi-touch attribution models help us identify which ad touchpoint drove the final purchase.',
+    ctx: 'Performance Marketing Analytics',
+    cat: 'Marketing'
+  },
+  {
+    w: 'Deliverable',
+    pos: 'noun',
+    ipa: '/dɪˈlɪv.ər.ə.bəl/',
+    ar: 'مُخرَج العمل / التسليمات المتفق عليها',
+    ex: 'Our primary deliverables for Q1 are three hero case studies and an updated portfolio.',
+    ctx: 'Agency & Client Management',
+    cat: 'Business'
+  },
+  {
+    w: 'Deduplication',
+    pos: 'noun',
+    ipa: '/diːˌdjuː.plɪˈkeɪ.ʃən/',
+    ar: 'إزالة التكرار (للبيانات أو الأحداث الإعلانية)',
+    ex: 'Event deduplication ensures Meta does not count the browser pixel and server CAPI event twice.',
+    ctx: 'Technical Tracking & CAPI',
+    cat: 'Marketing'
+  },
+  {
+    w: 'Retainer',
+    pos: 'noun',
+    ipa: '/rɪˈteɪ.nər/',
+    ar: 'عقد أتعاب دوري / اشتراك شهري ثابت للعميل',
+    ex: 'We transitioned the client from a one-off campaign fee to a monthly retainer of $1,500.',
+    ctx: 'Freelancing & Agency Contracts',
+    cat: 'Business'
+  },
+  {
+    w: 'Runway',
+    pos: 'noun',
+    ipa: '/ˈrʌn.weɪ/',
+    ar: 'فترة الأمان المالي / المدة التي تكفيها المدخرات',
+    ex: 'Having six months of living runway allows you to negotiate higher salaries without desperation.',
+    ctx: 'Financial Planning & Relocation',
+    cat: 'Finance'
+  },
+  {
+    w: 'Scalability',
+    pos: 'noun',
+    ipa: '/ˌskeɪ.ləˈbɪl.ə.ti/',
+    ar: 'قابلية التوسع / زيادة الميزانية دون انهيار العائد',
+    ex: 'We verified the campaign scalability by increasing budget by 20% every 48 hours.',
+    ctx: 'Meta Ads Optimization',
+    cat: 'Marketing'
+  },
+  {
+    w: 'Benchmarking',
+    pos: 'noun',
+    ipa: '/ˈbentʃ.mɑː.kɪŋ/',
+    ar: 'المقارنة المعيارية بالسوق والمنافسين',
+    ex: 'Our Saudi salary benchmarking indicates media buyer roles range between 8,000 to 14,000 SAR.',
+    ctx: 'Market Research & Careers',
+    cat: 'Career'
+  },
+  {
+    w: 'Leverage',
+    pos: 'noun / verb',
+    ipa: '/ˈliː.vər.ɪdʒ/',
+    ar: 'استغلال أمثل / نقطة قوة تضاعف النتائج',
+    ex: 'We leveraged AI video tools to test 15 creative variations in three days.',
+    ctx: 'Strategic Management',
+    cat: 'Business'
+  },
+  {
+    w: 'Feasibility',
+    pos: 'noun',
+    ipa: '/ˌfiː.zəˈbɪl.ə.ti/',
+    ar: 'الجدوى وقابلية التطبيق الواقعي',
+    ex: 'Before launching the new course, we conducted a feasibility study on expected ad costs.',
+    ctx: 'Project Planning',
+    cat: 'Business'
+  },
+  {
+    w: 'Discrepancy',
+    pos: 'noun',
+    ipa: '/dɪˈskrep.ən.si/',
+    ar: 'فرق أو تعارض غير متوقع في الأرقام',
+    ex: 'We investigated the 15% discrepancy between Meta Ads Manager leads and CRM entries.',
+    ctx: 'Analytics & Reporting',
+    cat: 'Marketing'
+  }
+];
+
+/* 5. ACTIVE HIGH-IMPACT DAILY TASKS POOL (Strict Max 10 Rules, Target 5-8) */
+const ACTIVE_DAILY_TASKS_DEF = [
+  {
+    id: 'q_case_study',
+    legacyId: 'd6',
+    name: 'Draft Case Study Section (IRA Academy Hero Campaign)',
+    sub: 'Career & Proof',
+    stat: 'career',
+    xp: 25,
+    duration: '35 min',
+    priority: 'high',
+    project: 'prj_hero_phd',
+    why: 'Documented proof with verified numbers is the single highest-leverage asset for Saudi recruiters.',
+    action: 'Write the Problem, Strategy, and Budget Optimization section for the PhD Political Science campaign (1,544 leads @ TL 4.62).',
+    criteria: 'A finished 300-word written section with exact metrics and bullet points ready for design.',
+    outcome: 'One core hero case study section completed.'
+  },
+  {
+    id: 'q_english_speaking',
+    legacyId: 'd15',
+    name: 'Record 2-Minute English Campaign Defense Drill',
+    sub: 'English Fluency',
+    stat: 'selfdev',
+    xp: 20,
+    duration: '20 min',
+    priority: 'high',
+    project: 'prj_interview_pitch',
+    why: 'Interviewers in Riyadh evaluate executive presence and technical fluency under pressure.',
+    action: 'Speak out loud for 2 minutes answering: "Explain how you managed ad delivery volatility and stabilized CPL at IRA Academy." Record it on phone, listen back, and eliminate pauses.',
+    criteria: 'One completed 2-minute voice recording with clean pacing and zero filler words.',
+    outcome: 'Confidence and fluency on a core technical interview question.'
+  },
+  {
+    id: 'q_ats_cv_refine',
+    legacyId: 'd14',
+    name: 'Refine 3 ATS Bullet Points with Verified Metrics',
+    sub: 'Career & Brand',
+    stat: 'career',
+    xp: 15,
+    duration: '20 min',
+    priority: 'high',
+    project: 'prj_ats_cv',
+    why: 'ATS algorithms screen resumes based on quantified business impact, not generic job descriptions.',
+    action: 'Rewrite 3 work experience bullets using the formula: Action Verb + Context + Quantitative Metric + Result (e.g. TL 171K spend, 11,406 leads).',
+    criteria: '3 polished bullet points added to English CV draft.',
+    outcome: 'Stronger resume match score for Saudi agency openings.'
+  },
+  {
+    id: 'q_workout',
+    legacyId: 'd5',
+    name: '15-Minute Home Functional Workout',
+    sub: 'Health & Energy',
+    stat: 'health',
+    xp: 10,
+    duration: '15 min',
+    priority: 'medium',
+    project: null,
+    why: 'Physical discipline and stamina directly fuel cognitive endurance and emotional resilience.',
+    action: '3 rounds: Incline push-ups (12), Chair-assisted squats (15), Knee plank (35s), Glute bridge (15), Dead bug (12). Stretch 3 min.',
+    criteria: '3 rounds completed with proper form.',
+    outcome: 'Physical energy boosted and health streak maintained.'
+  },
+  {
+    id: 'q_reading_marketing',
+    legacyId: 'd7',
+    name: 'Read 10 Pages of Marketing Strategy / Business Book',
+    sub: 'Knowledge & Craft',
+    stat: 'selfdev',
+    xp: 10,
+    duration: '25 min',
+    priority: 'medium',
+    project: null,
+    why: 'Reading builds deep mental models that separate strategic marketing managers from basic operators.',
+    action: 'Read 10 pages in English from Principles of Marketing or Influence by Cialdini. Write down 1 actionable takeaway.',
+    criteria: '10 pages read and 1 insight noted in Knowledge Base.',
+    outcome: 'Broader strategic vocabulary and marketing insight.'
+  },
+  {
+    id: 'q_linkedin_authority',
+    legacyId: 'd17',
+    name: 'Publish or Engage with 3 Saudi Agency Leads on LinkedIn',
+    sub: 'Networking & Authority',
+    stat: 'career',
+    xp: 15,
+    duration: '20 min',
+    priority: 'medium',
+    project: 'prj_linkedin_saudi',
+    why: 'Consistent professional visibility brings inbound inquiries from Gulf marketing directors.',
+    action: 'Leave 2 substantive, value-additive comments on posts by Saudi agency founders, and connect with 3 media buyers in Riyadh.',
+    criteria: '2 thoughtful comments posted and 3 personalized connection requests sent.',
+    outcome: 'Expanded professional footprint in the Saudi market.'
+  },
+  {
+    id: 'q_ai_workflow_test',
+    legacyId: 'd21',
+    name: 'Test 1 AI Marketing Workflow (Ad Copy / Creative)',
+    sub: 'Technical Skills',
+    stat: 'skills',
+    xp: 15,
+    duration: '25 min',
+    priority: 'normal',
+    project: 'prj_ai_video_ads',
+    why: 'AI automation multiplies your output, allowing you to operate with the leverage of an entire creative team.',
+    action: 'Use Gemini / ChatGPT to generate 3 distinct direct-response ad angles (Fear of Missing Out, Data Proof, Story Hook) for a test campaign.',
+    criteria: '3 structured ad copy variants generated and reviewed.',
+    outcome: 'Practical AI workflow documented in Knowledge Base.'
+  }
+];
+
+/* 6. ESTABLISHED HABIT ROUTINES (Graduated from Daily Quests, Tracked in Habits) */
+const HABIT_ROUTINES_DEF = [
+  {
+    id: 'd1',
+    name: 'Fajr on time & Morning Adhkar',
+    category: 'Morning Routine',
+    timeOfDay: 'morning',
+    target: 'Every Day',
+    icon: 'compass',
+    why: 'The spiritual and psychological anchor of the entire day.'
+  },
+  {
+    id: 'd2',
+    name: 'Morning Dental & Personal Care',
+    category: 'Morning Routine',
+    timeOfDay: 'morning',
+    target: 'Every Day',
+    icon: 'smile',
+    why: 'Non-negotiable morning hygiene routine.'
+  },
+  {
+    id: 'd8',
+    name: 'No Phone for First 30 Minutes',
+    category: 'Morning Routine',
+    timeOfDay: 'morning',
+    target: 'Every Day',
+    icon: 'shield',
+    why: 'Protects morning mental clarity from reactive dopamine scrolling.'
+  },
+  {
+    id: 'd4',
+    name: 'Hydration: 2 Litres of Water',
+    category: 'Daytime Routine',
+    timeOfDay: 'day',
+    target: 'Every Day',
+    icon: 'droplet',
+    why: 'Maintains sustained mental focus and metabolic health.'
+  },
+  {
+    id: 'd10',
+    name: '1 Hour Screen-Free Deep Focus / Disconnect',
+    category: 'Daytime Routine',
+    timeOfDay: 'day',
+    target: 'Every Day',
+    icon: 'eyeOff',
+    why: 'Rebuilds deep attention span and trains dopamine control.'
+  },
+  {
+    id: 'd11',
+    name: 'Log Itemized Daily Expenses',
+    category: 'Evening Routine',
+    timeOfDay: 'evening',
+    target: 'Every Day',
+    icon: 'dollar',
+    why: 'Ensures absolute financial awareness and spending discipline.'
+  },
+  {
+    id: 'd22',
+    name: 'Plan Tomorrow\'s Top 3 Priorities',
+    category: 'Evening Routine',
+    timeOfDay: 'evening',
+    target: 'Every Day',
+    icon: 'list',
+    why: 'Eliminates morning decision fatigue; allows immediate focused execution.'
+  },
+  {
+    id: 'd9',
+    name: 'No Phone 30 Minutes Before Sleep',
+    category: 'Evening Routine',
+    timeOfDay: 'evening',
+    target: 'Every Day',
+    icon: 'moon',
+    why: 'Protects sleep architecture and circadian rhythm.'
+  },
+  {
+    id: 'd3',
+    name: 'Night Dental Care',
+    category: 'Evening Routine',
+    timeOfDay: 'evening',
+    target: 'Every Day',
+    icon: 'smile',
+    why: 'Non-negotiable nighttime health routine.'
+  },
+  {
+    id: 'd14',
+    name: 'Daily Spoken English Interview Drill',
+    category: 'Professional Discipline',
+    timeOfDay: 'day',
+    target: 'Every Day',
+    icon: 'mic',
+    why: 'Maintains spoken fluency and conversational agility for Gulf interviews.'
+  }
+];
+
+/* 7. COMPETENCY & SKILLS MATRIX */
+const SKILL_MATRIX_DEF = [
+  { id: 'sk_meta', name: 'Meta Ads & Advantage+ Ecosystem', current: 85, target: 95, cat: 'Paid Media', proof: 'Managed 27 programs & $171K+ spend at IRA Academy' },
+  { id: 'sk_leadgen', name: 'Instant Forms & Lead Gen Optimization', current: 80, target: 90, cat: 'Conversion', proof: '11,406 leads generated at TL 15.06 blended CPL' },
+  { id: 'sk_capi', name: 'Meta Conversions API & Tracking Diagnostics', current: 55, target: 85, cat: 'Technical', proof: 'Server-side CAPI implementation & event deduplication' },
+  { id: 'sk_ga4', name: 'Google Analytics 4 & Tag Manager', current: 60, target: 80, cat: 'Analytics', proof: 'Custom lead event triggers and conversion funnel tracking' },
+  { id: 'sk_cro', name: 'Landing Page CRO & Ad Copywriting', current: 75, target: 85, cat: 'Creative', proof: 'High-converting Arabic direct-response frameworks' },
+  { id: 'sk_ai_video', name: 'AI Video Ad Automation (ElevenLabs/CapCut)', current: 65, target: 85, cat: 'Creative', proof: 'Multimodal Arabic UGC ad generation in under 20 mins' },
+  { id: 'sk_english', name: 'Business English Fluency & Pitch Delivery', current: 50, target: 75, cat: 'Communication', proof: 'EF SET Speaking 50 (B1) -> Targeted B2/C1 interview ready' },
+  { id: 'sk_typing', name: 'Touch Typing & Execution Speed', current: 35, target: 60, cat: 'Discipline', proof: '35 WPM on keybr/monkeytype -> Target 60 WPM' }
+];
+
+/* 8. SAUDI RELOCATION RUNWAY CONFIGURATION */
+const RELOCATION_BUFFER_CONFIG = {
+  currency: 'EGP',
+  targetTotal: 120000,
+  breakdown: [
+    { label: 'Visa, Attestations & Medical Processing', amount: 25000 },
+    { label: 'Round-trip Flight & Initial Baggage', amount: 20000 },
+    { label: 'First Month Housing Deposit in Riyadh/Jeddah', amount: 45000 },
+    { label: '60-Day Emergency Buffer & Living Runway', amount: 30000 }
+  ]
+};
