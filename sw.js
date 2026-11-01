@@ -4,13 +4,14 @@
    Bump CACHE when you change any file, otherwise the phone serves the old one.
    ===================================================================== */
 
-const CACHE   = 'solo-leveling-v43';
+const CACHE   = 'solo-leveling-v47-prod';
 
 /* code + markup — these MUST always be fresh */
 const CORE = [
   './',
   './index.html',
   './styles.css',
+  './seed_data.js',
   './data.js',
   './vocab.js',
   './icons.js',
@@ -31,7 +32,18 @@ const CORE = [
 const MEDIA = [
   './assets/avatar.jpg',
   './assets/jinwoo.png',
+  './assets/jinwoo.ico',
+  './assets/shadows/char1.jpg',
+  './assets/shadows/char2.jpg',
+  './assets/shadows/char3.jpg',
+  './assets/shadows/char4.jpg',
+  './assets/shadows/char5.jpg',
+  './assets/shadows/char6.jpg',
   './assets/bg/bg-dashboard.jpg',
+  './assets/bg/bg-system-gate.jpg',
+  './assets/bg/bg-shadow-realm.jpg',
+  './assets/bg/bg-hunter-status.jpg',
+  './assets/bg/bg-academy-training.jpg',
   './assets/bg/bg-daily.jpg',
   './assets/bg/bg-weekly.jpg',
   './assets/bg/bg-boss.jpg',

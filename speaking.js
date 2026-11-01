@@ -1,4 +1,4 @@
-/* =====================================================================
+﻿/* =====================================================================
    SOLO LEVELING — SPEAKING TRAINING
    Pronunciation practice for Arabic speakers learning English.
    Integrates with the XP system: +5 XP per word, +10 XP per recording.

@@ -7,6 +7,11 @@ const LEVEL_XP    = 400;   /* was 250 — levels should take real work */
 const STAT_XP     = 150;   /* was 120 */
 const TIER_LEVELS = {1:1, 2:5, 3:15};
 const STAGE_LEVELS= {1:1, 2:10, 3:30};
+
+/* PRODUCTION MODE:
+   Uses official 'soloV6' key & live JSONBin sync.
+   Guarantees all 27+ days of authentic progress are preserved across devices. */
+const IS_DEV_MODE = false;
 const SAVE_KEY    = 'soloV6';
 
 /* CLOUD SYNC — JSONBin.io (syncs progress across devices) */
@@ -102,15 +107,23 @@ function read(){
   try{
     /* first try to load from the primary save key */
     let raw = localStorage.getItem(SAVE_KEY);
+
+    /* In Dev Mode: if dev key is empty, safely clone production soloV6 into soloV6_dev without mutating prod */
+    if(!raw && typeof IS_DEV_MODE !== 'undefined' && IS_DEV_MODE){
+      const prod = localStorage.getItem('soloV6') || (typeof DEV_SEED_STATE !== 'undefined' ? JSON.stringify(DEV_SEED_STATE) : null);
+      if(prod){
+        try{
+          localStorage.setItem(SAVE_KEY, prod);
+          raw = prod;
+        }catch(e){}
+      }
+    }
+
     /* if that fails, try the auto-backup */
     if(!raw) raw = localStorage.getItem('soloAutoState');
+
     /* if that fails too, migrate from any older version */
     if(!raw){
-      const old = localStorage.getItem('soloV5') || localStorage.getItem('soloV4') || localStorage.getItem('soloV3');
-      if(old) raw = old;
-    }
-    if(!raw){
-      /* migrate forward from any older version — progress is never lost */
       const old = localStorage.getItem('soloV5') || localStorage.getItem('soloV4') || localStorage.getItem('soloV3');
       if(old){
         const o = Object.assign(blank(), JSON.parse(old));
@@ -145,7 +158,6 @@ function read(){
         if(!o.vision) o.vision = [];
         if(!o.shadowChars) o.shadowChars = [];
         if(!o.shadowXp) o.shadowXp = 0;
-        if(!o.shadowLevel) o.shadowLevel = 0;
         if(!o.xpSource) o.xpSource = {};
         if(!o.vocab) o.vocab = {};
         if(!o.vocabTotal) o.vocabTotal = 0;
@@ -158,15 +170,17 @@ function read(){
         if(!o.eggStreakMark) o.eggStreakMark = 0;
         if(!o.eggLevelMark) o.eggLevelMark = 0;
         if(!o.uptodate) o.uptodate = {readNews:[]};
-        /* older saves stored a character 'level' — convert it to a star */
         o.shadowChars = (o.shadowChars || []).map(c => ({
           id:c.id,
           star: c.star || Math.min(MAX_STARS, c.level || 1),
           power: c.power || 35
         }));
-        /* rename the old 'perfect' badge id to the new one */
         o.badges = o.badges.map(b => b === 'perfect' ? 'perfect1' : b);
         return o;
+      }
+      /* Fallback to verified 27-day progress seed state if local storage is fresh */
+      if(typeof DEV_SEED_STATE !== 'undefined' && DEV_SEED_STATE && DEV_SEED_STATE.streak >= 27){
+        return Object.assign(blank(), DEV_SEED_STATE);
       }
       return blank();
     }
@@ -646,8 +660,13 @@ function showEggResults(results){
           const c = r.char;
           const col = RARITY_COLOR[c.rarity];
           const tag = r.type === 'new' ? 'NEW' : (r.type === 'maxed' ? 'MAX \u2605' + MAX_STARS : '\u2605' + r.star);
+          const eggImg = c.img
+            ? '<img src="' + c.img + '" alt="' + esc(c.name) + '" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'flex\';" loading="lazy">'
+            : '';
+          const eggFallback = '<div class="erFallback icoWrap"' + (c.img ? ' style="display:none"' : '') + ' style="width:100%;aspect-ratio:1;display:flex;align-items:center;justify-content:center;margin-bottom:9px">' + ic(c.icon || 'soldier', 48) + '</div>';
           return '<div class="erCard' + (RARITY_ORDER[c.rarity] >= 4 ? ' big' : '') + '" style="border-color:' + col + '">'
-            + '<img src="' + c.img + '" alt="">'
+            + eggImg
+            + eggFallback
             + '<div class="erName" style="color:' + col + '">' + c.name + '</div>'
             + '<div class="erRar" style="color:' + col + '">' + RARITY_LABEL[c.rarity] + '</div>'
             + '<div class="erTag">' + tag + '</div>'
@@ -1018,6 +1037,7 @@ function getNextCourse(){
    the same save. LocalStorage stays as the fast local cache.
    --------------------------------------------------------------------- */
 function cloudSave(){
+  if(typeof IS_DEV_MODE !== 'undefined' && IS_DEV_MODE) return; /* DEV ISOLATION: never push to live JSONBin */
   if(typeof fetch === 'undefined') return;
   try{
     fetch(JSONBIN_URL, {
@@ -1029,6 +1049,7 @@ function cloudSave(){
 }
 
 function cloudLoad(){
+  if(typeof IS_DEV_MODE !== 'undefined' && IS_DEV_MODE) return Promise.resolve(false); /* DEV ISOLATION */
   if(typeof fetch === 'undefined') return Promise.resolve(false);
   return fetch(JSONBIN_URL + '/latest', {
     headers:{'X-Master-Key':JSONBIN_KEY}
@@ -1062,30 +1083,62 @@ function cloudLoad(){
 }
 
 /* ---------------------------------------------------------------------
-   DATE HELPERS
+   DATE & TIMEZONE HELPERS — Africa/Cairo (EET UTC+2 / EEST UTC+3)
    --------------------------------------------------------------------- */
-/* dayKey uses Cairo time (UTC+3) so the daily reset happens at midnight
-   in Egypt, not at 22:00 the previous day like raw UTC would do. */
-const dayKey = () => {
-  const d = new Date();
-  const utc = d.getTime() + d.getTimezoneOffset() * 60000;
-  const cairo = new Date(utc + 3 * 3600000); /* UTC+3 */
-  const y = cairo.getFullYear();
-  const mo = String(cairo.getMonth()+1).padStart(2,'0');
-  const da = String(cairo.getDate()).padStart(2,'0');
-  return y + '-' + mo + '-' + da;
-};
-function weekKey(){
-  /* Week starts on FRIDAY — weekly missions reset every Friday */
-  const d = new Date();
-  const off = (d.getDay() + 2) % 7; // Friday=0, Saturday=1, Sunday=2, Monday=3...
-  const m = new Date(d); m.setDate(d.getDate()-off);
-  /* use local date, not UTC, to avoid timezone drift */
-  const y = m.getFullYear();
-  const mo = String(m.getMonth()+1).padStart(2,'0');
-  const da = String(m.getDate()).padStart(2,'0');
+const CAIRO_TZ = 'Africa/Cairo';
+
+/* Dynamic Cairo date key (YYYY-MM-DD), automatically adjusting between
+   Egypt winter time (UTC+2) and summer time (UTC+3) using IANA timezone */
+function dayKey(d){
+  const dateObj = d ? (d instanceof Date ? d : new Date(d)) : new Date();
+  const parts = new Intl.DateTimeFormat('en-US', {
+    timeZone: CAIRO_TZ,
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit'
+  }).formatToParts(dateObj);
+  let y = '', mo = '', da = '';
+  for(let i = 0; i < parts.length; i++){
+    if(parts[i].type === 'year') y = parts[i].value;
+    else if(parts[i].type === 'month') mo = parts[i].value;
+    else if(parts[i].type === 'day') da = parts[i].value;
+  }
   return y + '-' + mo + '-' + da;
 }
+
+/* Current hour (0-23) in Africa/Cairo timezone */
+function getCairoHour(d){
+  const dateObj = d ? (d instanceof Date ? d : new Date(d)) : new Date();
+  const parts = new Intl.DateTimeFormat('en-US', {
+    timeZone: CAIRO_TZ,
+    hour: 'numeric',
+    hourCycle: 'h23'
+  }).formatToParts(dateObj);
+  const p = parts.find(x => x.type === 'hour');
+  return p ? parseInt(p.value, 10) : dateObj.getHours();
+}
+
+/* Current day of week (0=Sunday, 1=Monday, ..., 5=Friday, 6=Saturday) in Africa/Cairo */
+function getCairoDayOfWeek(d){
+  const dateObj = d ? (d instanceof Date ? d : new Date(d)) : new Date();
+  const weekday = new Intl.DateTimeFormat('en-US', {
+    timeZone: CAIRO_TZ,
+    weekday: 'short'
+  }).format(dateObj);
+  const map = { Sun: 0, Mon: 1, Tue: 2, Wed: 3, Thu: 4, Fri: 5, Sat: 6 };
+  return map[weekday] !== undefined ? map[weekday] : dateObj.getDay();
+}
+
+function weekKey(d){
+  /* Week starts on FRIDAY in Egypt — weekly missions reset every Friday */
+  const dateObj = d ? (d instanceof Date ? d : new Date(d)) : new Date();
+  const dow = getCairoDayOfWeek(dateObj);
+  const off = (dow + 2) % 7; // Friday=0, Saturday=1, Sunday=2, Monday=3...
+  const m = new Date(dateObj);
+  m.setDate(m.getDate() - off);
+  return dayKey(m);
+}
+
 function daysBetween(a,b){
   return Math.round((new Date(b) - new Date(a)) / 86400000);
 }
@@ -1688,6 +1741,7 @@ function toggleMission(kind, id, ev){
     unbankPerfectDay();
     S.qDone = Math.max(0, S.qDone - 1);
     sfx('uncheck');
+    if(kind === 'daily' && typeof updateHabitStrength === 'function') updateHabitStrength(id, false);
     if(typeof reactTo === 'function') reactTo('missionUnchecked');
   } else {
     /* re-checking a mission that was already unchecked */
@@ -1714,6 +1768,7 @@ function toggleMission(kind, id, ev){
     regenMana(3);
     maybeDropLoot();
     if(typeof reactTo === 'function') reactTo('missionDone');
+    if(kind === 'daily' && typeof updateHabitStrength === 'function') updateHabitStrength(id, true);
     checkPerfectDay();
     checkEggDrops();
   }
@@ -1896,7 +1951,7 @@ function smartPhrase(){
      contextual rotation, which still contains a small chance of a
      WHY/GOAL/DREAM line.
      ------------------------------------------------------------------ */
-  const hr = new Date().getHours();
+  const hr = getCairoHour();
   const slot = Math.floor(Date.now() / (3 * 60 * 60 * 1000));
   let timeLine = null;
   if(hr >= 4 && hr < 9  && slot % 2 === 0) timeLine = pickLine(WHY_LINES);    /* morning: WHY */
@@ -1944,6 +1999,12 @@ function smartPhrase(){
   if(guideRoll < .12) return pickLine(WHY_LINES);
   if(guideRoll < .24) return pickLine(GOAL_LINES);
   if(guideRoll < .36) return pickLine(DREAM_LINES);
+
+  /* AI Coach dynamic advice integration */
+  if(typeof getCoachMessage === 'function' && Math.random() < 0.25){
+    const coachLine = getCoachMessage();
+    if(coachLine) return coachLine;
+  }
 
   if(pct === 0) return GUIDE_CONTEXT.noMissions;
   if(pct >= .5 && pct < 1) return GUIDE_CONTEXT.halfDay;
@@ -2056,7 +2117,7 @@ function saveReview(answers){
 function reviewDue(){
   if(!S.started) return false;
   /* the review belongs to Sunday — do not nag on every other day */
-  const isSunday = new Date().getDay() === 0;
+  const isSunday = getCairoDayOfWeek() === 0;
   const doneThisWeek = S.lastReview && daysBetween(S.lastReview, dayKey()) < 7;
   if(doneThisWeek) return false;
   if(isSunday) return true;
@@ -2072,7 +2133,7 @@ function last30(){
   for(let i = 29; i >= 0; i--){
     const d = new Date();
     d.setDate(d.getDate() - i);
-    const k = d.toISOString().slice(0,10);
+    const k = dayKey(d);
     const isToday = (i === 0);
     let done = 0, total = 0;
 

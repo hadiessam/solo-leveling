@@ -403,7 +403,11 @@ function popGuide(){
 
 function toggleGuide(){
   const g = $('guidePop');
-  g.classList.toggle('hidden');
+  if(!g) return;
+  const isHidden = g.classList.toggle('hidden');
+  const btn = $('guideReopenBtn');
+  if(btn) btn.style.display = isHidden ? 'flex' : 'none';
+  S.guideHidden = isHidden;
   save();
 }
 
@@ -478,6 +482,19 @@ function drawHUD(){
   $('penLabel').textContent = done + ' / ' + av.length;
   $('penLabel').style.color = pct === 100 ? 'var(--green)' : (pct < 40 ? 'var(--red)' : 'var(--gold)');
 
+  /* Vitals: HP & Mana */
+  if($('hpVal')) $('hpVal').textContent = (S.hp !== undefined ? S.hp : 100) + ' / ' + (S.maxHp || 100);
+  if($('hpBar')) $('hpBar').style.width = Math.min(100, Math.max(0, (S.hp !== undefined ? S.hp : 100)/(S.maxHp || 100)*100)) + '%';
+  if($('manaVal')) $('manaVal').textContent = (S.mana !== undefined ? S.mana : 50) + ' / ' + (S.maxMana || 50);
+  if($('manaBar')) $('manaBar').style.width = Math.min(100, Math.max(0, (S.mana !== undefined ? S.mana : 50)/(S.maxMana || 50)*100)) + '%';
+  if($('hudClass')) $('hudClass').textContent = (S.classId ? S.classId.toUpperCase() : 'ROGUE');
+  if($('rankBadgeMini')) $('rankBadgeMini').textContent = (cur.name || 'E')[0];
+
+  /* Ghost features HUD sync */
+  if(typeof drawStatsHUD === 'function') drawStatsHUD();
+  if(typeof drawPrestigeHUD === 'function') drawPrestigeHUD();
+  if(typeof drawPauseHUD === 'function') drawPauseHUD();
+
   /* streak multiplier badge */
   const mult = streakMult();
   const mb = $('multBadge');
@@ -497,7 +514,7 @@ function drawHUD(){
   /* streak danger warning — shows late in the day when nothing is done */
   const sd = $('streakDanger');
   if(sd){
-    const h = new Date().getHours();
+    const h = (typeof getCairoHour === 'function') ? getCairoHour() : new Date().getHours();
     const av2 = available(DAILY);
     const doneToday = av2.filter(m => S.daily[m.id]).length;
     const late = h >= 20;
@@ -1074,10 +1091,14 @@ function drawClass(){
       + '</div></div>').join('');
   }
 
-  $('hpVal').textContent = S.hp + '/' + S.maxHp;
-  $('hpBar').style.width = (S.hp/S.maxHp*100) + '%';
-  $('manaVal').textContent = S.mana + '/' + S.maxMana;
-  $('manaBar').style.width = (S.mana/S.maxMana*100) + '%';
+  if($('classHpVal')) $('classHpVal').textContent = S.hp + '/' + S.maxHp;
+  if($('classHpBar')) $('classHpBar').style.width = (S.hp/S.maxHp*100) + '%';
+  if($('classManaVal')) $('classManaVal').textContent = S.mana + '/' + S.maxMana;
+  if($('classManaBar')) $('classManaBar').style.width = (S.mana/S.maxMana*100) + '%';
+  if($('hpVal')) $('hpVal').textContent = S.hp + '/' + S.maxHp;
+  if($('hpBar')) $('hpBar').style.width = (S.hp/S.maxHp*100) + '%';
+  if($('manaVal')) $('manaVal').textContent = S.mana + '/' + S.maxMana;
+  if($('manaBar')) $('manaBar').style.width = (S.mana/S.maxMana*100) + '%';
 }
 
 /* ---------------------------------------------------------------------
@@ -1212,10 +1233,16 @@ function drawCharacters(){
     if(!char) return '';
     const col = RARITY_COLOR[char.rarity];
     const isMythic = char.rarity === 'mythic';
+    const imgHtml = char.img
+      ? '<img src="' + char.img + '" alt="' + esc(char.name) + '" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'flex\';" loading="lazy">'
+      : '';
+    const fallbackHtml = '<div class="charFallback icoWrap"' + (char.img ? ' style="display:none"' : '') + '>' + ic(char.icon || 'soldier', 64) + '</div>';
+
     return '<div class="charCard' + (isMythic ? ' mythicCard' : '') + '" style="border-left-color:' + col + '">'
       + '<div class="charTop">'
       +   '<div class="charPic r-' + char.rarity + '">'
-      +     '<div class="icoWrap">' + ic(char.icon || 'soldier', 64) + '</div>'
+      +     imgHtml
+      +     fallbackHtml
       +     (isMythic ? '<div class="charGlow"></div>' : '') + '</div>'
       +   '<div class="charBody">'
       +     '<div class="charHead">'
@@ -1820,24 +1847,153 @@ function removeHabit(habitId) {
 /* ---------------------------------------------------------------------
    MASTER RENDER
    --------------------------------------------------------------------- */
+/* =====================================================================
+   PORTALS & SUB-NAV SYSTEM ARCHITECTURE
+   Consolidates 18 tabs into 6 immersive anime System Portals.
+   ===================================================================== */
+const PORTALS = {
+  quests: {
+    id: 'quests',
+    name: 'Quests',
+    icon: '⚔️',
+    bg: 'assets/bg/bg-system-gate.jpg',
+    tabs: [
+      { id: 'dash', label: 'Dashboard' },
+      { id: 'daily', label: 'Daily Missions' },
+      { id: 'weekly', label: 'Weekly Missions' },
+      { id: 'boss', label: 'Boss Raids' },
+      { id: 'habits', label: 'Habit Tracker' }
+    ]
+  },
+  status: {
+    id: 'status',
+    name: 'Status',
+    icon: '👤',
+    bg: 'assets/bg/bg-hunter-status.jpg',
+    tabs: [
+      { id: 'hunter', label: 'Hunter & Class' },
+      { id: 'insight', label: 'Status & Stats' },
+      { id: 'review', label: 'Weekly Review' }
+    ]
+  },
+  growth: {
+    id: 'growth',
+    name: 'Growth',
+    icon: '📜',
+    bg: 'assets/bg/bg-hunter.jpg',
+    tabs: [
+      { id: 'skills', label: 'Skill Tree' },
+      { id: 'courses', label: 'Course Track' },
+      { id: 'library', label: 'Library' },
+      { id: 'roadmap', label: 'Life Roadmap' }
+    ]
+  },
+  academy: {
+    id: 'academy',
+    name: 'Academy',
+    icon: '🎙️',
+    bg: 'assets/bg/bg-academy-training.jpg',
+    tabs: [
+      { id: 'speaking', label: 'Speaking Lab' },
+      { id: 'vocab', label: 'Vocabulary Bank' },
+      { id: 'podcasts', label: 'Curated Podcasts' }
+    ]
+  },
+  resources: {
+    id: 'resources',
+    name: 'Resources',
+    icon: '💎',
+    bg: 'assets/bg/bg-vault.jpg',
+    tabs: [
+      { id: 'expenses', label: 'Expenses Calendar' },
+      { id: 'money', label: 'Money From Home' },
+      { id: 'uptodate', label: 'Industry Updates' }
+    ]
+  },
+  shadow: {
+    id: 'shadow',
+    name: 'Shadows',
+    icon: '👑',
+    bg: 'assets/bg/bg-shadow-realm.jpg',
+    tabs: [
+      { id: 'shadow', label: 'Shadow Realm & Army' }
+    ]
+  }
+};
+
+let currentPortal = 'quests';
+let currentActiveTab = 'dash';
+
+function switchPortal(portalId, targetTabId){
+  const p = PORTALS[portalId];
+  if(!p) return;
+  currentPortal = portalId;
+
+  document.querySelectorAll('.portal-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.portal === portalId);
+  });
+
+  const subnav = $('subnavContainer');
+  if(subnav){
+    subnav.innerHTML = p.tabs.map(t =>
+      `<button class="subnav-pill" data-page="${t.id}" onclick="switchTab('${t.id}')">${t.label}</button>`
+    ).join('');
+  }
+
+  const chosenTab = targetTabId || p.tabs[0].id;
+  switchTab(chosenTab);
+}
+
+function switchTab(tabId){
+  let ownerPortal = null;
+  for(const pid in PORTALS){
+    if(PORTALS[pid].tabs.some(t => t.id === tabId)){
+      ownerPortal = pid;
+      break;
+    }
+  }
+
+  if(ownerPortal && ownerPortal !== currentPortal){
+    currentPortal = ownerPortal;
+    document.querySelectorAll('.portal-btn').forEach(b => {
+      b.classList.toggle('active', b.dataset.portal === ownerPortal);
+    });
+    const subnav = $('subnavContainer');
+    if(subnav){
+      subnav.innerHTML = PORTALS[ownerPortal].tabs.map(t =>
+        `<button class="subnav-pill" data-page="${t.id}" onclick="switchTab('${t.id}')">${t.label}</button>`
+      ).join('');
+    }
+  }
+
+  currentActiveTab = tabId;
+
+  document.querySelectorAll('.subnav-pill').forEach(p => {
+    p.classList.toggle('active', p.dataset.page === tabId);
+  });
+
+  document.querySelectorAll('.tab').forEach(t => {
+    t.classList.toggle('active', t.dataset.page === tabId);
+  });
+
+  document.querySelectorAll('.page').forEach(page => {
+    page.classList.toggle('active', page.id === tabId);
+  });
+
+  const bg = (PORTALS[ownerPortal] && PORTALS[ownerPortal].bg) || 'assets/bg/bg-system-gate.jpg';
+  setBG(bg);
+
+  sfx('tab');
+  drawTab(tabId);
+}
+
+window.goTab = switchTab;
+
 function renderAll(){
-  /* ---------------------------------------------------------------
-     RENDER ONLY WHAT THE USER IS LOOKING AT.
-
-     The old version rebuilt all 17 tabs on every single call — 39
-     innerHTML writes, 38 book cards, 100 speaking words, a full
-     calendar — even for tabs that were closed. That is what made
-     the app stutter and eventually hang.
-
-     Now: one cheap pass for the HUD, then a full render for only the
-     active tab. Anything that is not the active tab is left alone.
-     --------------------------------------------------------------- */
   drawHUD();
   checkHabitFormation();
 
-  const active = document.querySelector('.tab.active');
-  const page = active ? active.dataset.page : 'dash';
-  drawTab(page);
+  drawTab(currentActiveTab || 'dash');
 
   /* dynamic numbers that live outside the tab system */
   if($('fCost'))  $('fCost').textContent  = FREEZE.costXP;
@@ -1852,7 +2008,7 @@ function renderAll(){
 function drawTab(page){
   switch(page){
     case 'dash':     drawDaily(); break;
-    case 'daily':    drawDaily(); break;
+    case 'daily':    drawDaily(); if(typeof renderStrengthBars === 'function') renderStrengthBars(); if(typeof renderNegativeHabits === 'function') renderNegativeHabits(); break;
     case 'weekly':   drawWeekly(); break;
     case 'boss':     drawBosses(); break;
     case 'courses':  drawCourses(); drawCourseTree(); break;
@@ -1862,13 +2018,14 @@ function drawTab(page){
     case 'insight':  drawInsights(); break;
     case 'skills':   drawExtras(); drawSkillTree(); break;
     case 'vocab':    drawVocab(); break;
-    case 'hunter':   drawClass(); drawVision(); break;
+    case 'hunter':   drawClass(); drawVision(); if(typeof renderEquipmentPanel === 'function') renderEquipmentPanel(); break;
     case 'shadow':   drawEggs(); drawShadow(); break;
     case 'money':    drawMoney(); break;
     case 'speaking': drawSpeaking(); break;
     case 'uptodate': drawUpToDate(); break;
     case 'expenses': drawExpenses(); break;
     case 'podcasts': drawPodcasts(); break;
+    case 'habits':   if(typeof drawHabits === 'function') drawHabits(); break;
   }
 }
 
@@ -1883,6 +2040,12 @@ function renderEverything(){
   drawEggs();   /* this also draws the shadow + characters */
   drawVocab(); drawMoney();
   drawSpeaking(); drawUpToDate(); drawExpenses(); drawPodcasts();
+  if(typeof drawHabits === 'function') drawHabits();
+  if(typeof renderCoachPanel === 'function') renderCoachPanel();
+  if(typeof renderStrengthBars === 'function') renderStrengthBars();
+  if(typeof renderNegativeHabits === 'function') renderNegativeHabits();
+  if(typeof renderEquipmentPanel === 'function') renderEquipmentPanel();
+  if(typeof drawStatsHUD === 'function') drawStatsHUD();
   checkHabitFormation();
 }
 
@@ -1903,6 +2066,12 @@ function boot(){
   resumePomodoro();
 
   showPhrase();
+  if(S.guideHidden){
+    const g = $('guidePop');
+    if(g) g.classList.add('hidden');
+    const btn = $('guideReopenBtn');
+    if(btn) btn.style.display = 'flex';
+  }
   sfx('boot');
   /* reflect the saved mute state on the button */
   const mb = $('muteBtn');
@@ -1912,23 +2081,29 @@ function boot(){
     mb.classList.toggle('off', m);
   }
   $('todayTag').textContent = new Date()
-    .toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short'}).toUpperCase();
+    .toLocaleDateString('en-GB',{timeZone:'Africa/Cairo',weekday:'short',day:'numeric',month:'short'}).toUpperCase();
 
-  document.querySelectorAll('.tab[data-page]').forEach(t => {
-    t.addEventListener('click', () => {
-      document.querySelectorAll('.tab[data-page]').forEach(x => x.classList.remove('active'));
-      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-      t.classList.add('active');
-      $(t.dataset.page).classList.add('active');
-      setBG(t.dataset.bg);
-      sfx('tab');
-      window.scrollTo({top:0,behavior:'smooth'});
-      /* render just this tab — fast, and it shows the freshest data */
-      drawTab(t.dataset.page);
+  /* Initialize Portal Command Bar */
+  document.querySelectorAll('.portal-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      switchPortal(btn.dataset.portal);
     });
   });
 
-  setBG('assets/bg/bg-dashboard.jpg');
+  /* Keep legacy .tab selector working if present */
+  document.querySelectorAll('.tab[data-page]').forEach(t => {
+    t.addEventListener('click', () => {
+      switchTab(t.dataset.page);
+    });
+  });
+
+  /* Initial portal & tab boot */
+  const initialHash = (location.hash || '').replace('#','');
+  if (initialHash && $(initialHash)) {
+    switchTab(initialHash);
+  } else {
+    switchPortal('quests', 'dash');
+  }
 
   /* the guide changes his line every 10 minutes, and pops up on its own */
   /* rotate every 3 minutes — fast enough to feel alive */

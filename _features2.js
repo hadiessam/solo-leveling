@@ -296,6 +296,56 @@ function getEquippedItem(slot) {
   return EQUIPMENT.find(e => e.id === itemId) || null;
 }
 
+/**
+ * Render the interactive Equipment & Inventory panel into the DOM.
+ */
+function renderEquipmentPanel() {
+  const container = document.getElementById('equipmentPanel');
+  if (!container) return;
+  initEquipment();
+
+  const slots = [
+    { key:'weapon', name:'Weapon Slot', icon:'⚔️' },
+    { key:'armor', name:'Armor Slot', icon:'🛡️' },
+    { key:'accessory', name:'Accessory Slot', icon:'💍' }
+  ];
+
+  let html = '<div class="equip-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin-bottom:14px;">';
+  for (const s of slots) {
+    const item = getEquippedItem(s.key);
+    html += '<div class="equip-slot-card ' + (item ? item.rarity : 'empty') + '" style="border:1px solid var(--line);border-radius:6px;padding:12px;background:rgba(6,12,28,0.7);">'
+      + '<div class="slot-head" style="display:flex;align-items:center;gap:8px;margin-bottom:6px;"><span class="slot-icon">' + s.icon + '</span><span class="slot-name" style="font-family:var(--hud);font-size:12px;letter-spacing:1px;color:var(--muted);">' + s.name + '</span></div>';
+    if (item) {
+      html += '<div class="item-title" style="font-size:15px;font-weight:700;color:var(--glow);margin-bottom:4px;">' + (typeof esc === 'function' ? esc(item.name) : item.name) + '</div>'
+        + '<div class="item-desc" style="font-size:12px;color:var(--text);margin-bottom:6px;">' + (typeof esc === 'function' ? esc(item.description) : item.description) + '</div>'
+        + '<div class="item-bonus" style="font-size:11px;color:var(--green);font-weight:600;margin-bottom:8px;">' + item.bonusType + ': +' + item.bonusValue + '%</div>'
+        + '<button class="btn" style="padding:4px 10px;font-size:11px;" onclick="unequipItem(\'' + s.key + '\')">Unequip</button>';
+    } else {
+      html += '<div class="item-empty" style="font-size:13px;color:var(--muted);margin-bottom:4px;">[ Empty Slot ]</div>'
+        + '<div class="item-desc" style="font-size:11px;color:var(--muted);">Clear raids to discover rare equipment drops.</div>';
+    }
+    html += '</div>';
+  }
+  html += '</div>';
+
+  if (S.equipment.inventory && S.equipment.inventory.length) {
+    html += '<div class="st" style="margin-top:16px"><h3>Backpack Inventory (' + S.equipment.inventory.length + ')</h3></div>';
+    html += '<div class="inv-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;">';
+    S.equipment.inventory.forEach(itemId => {
+      const it = EQUIPMENT.find(e => e.id === itemId);
+      if (it) {
+        html += '<div class="inv-item-card ' + it.rarity + '" style="border:1px solid var(--line);border-radius:4px;padding:10px;background:rgba(255,255,255,0.03);">'
+          + '<div style="font-size:13px;font-weight:700;color:#fff;">' + (typeof esc === 'function' ? esc(it.name) : it.name) + ' <span class="tag" style="font-size:9px;">' + it.rarity + '</span></div>'
+          + '<div style="font-size:11px;color:var(--green);margin:4px 0 6px;">' + it.bonusType + ': +' + it.bonusValue + '%</div>'
+          + '<button class="btn" style="padding:3px 8px;font-size:11px;" onclick="equipItem(\'' + it.slot + '\',\'' + it.id + '\')">Equip</button>'
+          + '</div>';
+      }
+    });
+    html += '</div>';
+  }
+  container.innerHTML = html;
+}
+
 /* ============================================================
    3. AI COACH
    ============================================================ */
@@ -426,7 +476,7 @@ const COACH_MESSAGES = {
  */
 function getCoachMessage() {
   const now = new Date();
-  const hour = now.getHours();
+  const hour = (typeof getCairoHour === 'function') ? getCairoHour(now) : now.getHours();
 
   // Determine time of day
   let timeOfDay;
@@ -508,26 +558,17 @@ function getCoachMessage() {
  * Creates/updates a dedicated panel with the coach message.
  */
 function renderCoachPanel() {
-  let panel = document.getElementById('coach-panel');
-  if (!panel) {
-    panel = document.createElement('div');
-    panel.id = 'coach-panel';
-    panel.className = 'coach-panel';
-    panel.innerHTML = `
-      <div class="coach-header">
-        <span class="coach-icon">🤖</span>
-        <span class="coach-title">AI Coach</span>
-      </div>
-      <div class="coach-message" id="coach-message"></div>
-    `;
-    // Insert after header or at top of main content
-    const main = document.querySelector('main') || document.body;
-    main.insertBefore(panel, main.firstChild);
-  }
-
+  const msg = getCoachMessage();
   const msgEl = document.getElementById('coach-message');
   if (msgEl) {
-    msgEl.textContent = getCoachMessage();
+    msgEl.textContent = msg;
+  }
+  // Synchronize system advice directly into Sung Jin-Woo's floating speech bubble
+  const bubbleText = document.getElementById('gBubbleText');
+  if (bubbleText && typeof S !== 'undefined' && !S.customPhrase) {
+    if (!bubbleText.textContent || bubbleText.textContent === '\u00a0' || bubbleText.textContent.trim() === '') {
+      bubbleText.textContent = msg;
+    }
   }
 }
 

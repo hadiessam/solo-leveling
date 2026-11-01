@@ -47,6 +47,12 @@
   <img src="assets/jinwoo.png" alt="Jin-Woo" id="gFig">
 </div>
 
+<!-- Floating reopen pill if Jin-Woo guide is minimized -->
+<button id="guideReopenBtn" onclick="toggleGuide()" class="guide-reopen-btn" title="Open Sung Jin-Woo Guide">
+  <img src="assets/jinwoo.ico" alt="Jin-Woo">
+  <span>JIN-WOO</span>
+</button>
+
 <!-- ============ FLOATING POMODORO ============ -->
 <div id="pomoFloat">
   <div id="pomoRing"></div>
@@ -72,38 +78,80 @@
 
 <div class="wrap">
 
-  <!-- ============ HUD ============ -->
-  <div class="panel">
+  <!-- ============ SYSTEM HUD (STATUS WINDOW) ============ -->
+  <div class="panel system-hud-panel">
+    <div class="sys-window-bar">
+      <div class="sys-tag"><span class="sys-dot"></span> SYSTEM &bull; ONLINE</div>
+      <div class="sys-title">PLAYER STATUS WINDOW</div>
+      <div class="sys-actions">
+        <span class="pauseBadge" id="pauseBadge" onclick="togglePause()" title="System Pause Mode">ACTIVE</span>
+        <button class="muteBtn" id="muteBtn" onclick="toggleMute()" title="Toggle sound">Sound On</button>
+      </div>
+    </div>
+
     <div class="hud">
-      <div class="avatar"><img src="assets/avatar.jpg" alt="Hadi"></div>
+      <div class="avatar-frame">
+        <div class="avatar"><img src="assets/avatar.jpg" alt="Hadi"></div>
+        <div class="avatar-rank-pill" id="rankBadgeMini">E</div>
+      </div>
       <div class="hudid">
-        <div class="nm">HADI</div>
-        <div class="rk">PLAYER &middot; <span id="rankName">E-RANK HUNTER</span></div>
+        <div class="nm-row">
+          <span class="nm">HADI ESSAM</span>
+          <span class="player-title" id="playerTitle">PERFORMANCE STRATEGIST</span>
+        </div>
+        <div class="rk"><span class="rk-label">RANK</span> <span id="rankName">E-RANK HUNTER</span> &bull; <span class="cls-label">CLASS</span> <span id="hudClass">ROGUE</span></div>
       </div>
       <div class="badges">
         <div class="badge"><div class="k">Level</div><div class="v" id="bLevel">1</div></div>
         <div class="badge"><div class="k">Total XP</div><div class="v" id="bXP">0</div></div>
         <div class="badge"><div class="k">Streak</div><div class="v" id="bStreak">0</div></div>
         <div class="badge"><div class="k">Multiplier</div><div class="v" id="multBadge">x1.00</div></div>
+        <div class="badge"><div class="k">Prestige</div><div class="v" id="prestigeBadge">P0 &bull; x1.0</div></div>
         <div class="badge"><div class="k">Freezes</div><div class="v" id="bFreeze">1</div></div>
         <div class="badge"><div class="k">Missions</div><div class="v" id="bQuests">0</div></div>
       </div>
-      <button class="muteBtn" id="muteBtn" onclick="toggleMute()" title="Toggle sound">Sound On</button>
     </div>
+
+    <!-- VITALS: HP & MANA GAUGES -->
+    <div class="vitals-row">
+      <div class="vital-col">
+        <div class="vital-meta">
+          <span class="vital-label"><i class="ico-hp"></i> HEALTH (HP)</span>
+          <span class="vital-val" id="hpVal">94 / 100</span>
+        </div>
+        <div class="bar vital-bar hp-bar"><i id="hpBar" style="width:94%"></i></div>
+      </div>
+      <div class="vital-col">
+        <div class="vital-meta">
+          <span class="vital-label"><i class="ico-mp"></i> MANA (MP)</span>
+          <span class="vital-val" id="manaVal">50 / 50</span>
+        </div>
+        <div class="bar vital-bar mana-bar"><i id="manaBar" style="width:100%"></i></div>
+      </div>
+    </div>
+
     <div class="rankTease" id="rankTease">&nbsp;</div>
+
+    <!-- PROGRESS GAUGES -->
     <div class="xpbox">
-      <div class="meta"><span>LEVEL PROGRESS</span><span><b id="xpNow">0</b> / <span id="xpNeed">250</span> XP</span></div>
+      <div class="meta"><span>LEVEL PROGRESS</span><span><b id="xpNow">0</b> / <span id="xpNeed">400</span> XP</span></div>
       <div class="bar"><i id="xpBar"></i></div>
       <div class="meta" style="margin-top:12px"><span>NEXT RANK: <b id="nextRank">D-RANK</b></span><span><b id="rankNow">0</b> / <span id="rankNeed">800</span> XP</span></div>
       <div class="bar thin"><i id="rankBar"></i></div>
-      <div class="meta" style="margin-top:12px"><span>DAILY QUEST</span><span><b id="penLabel">0 / 10</b></span></div>
+      <div class="meta" style="margin-top:12px"><span>DAILY QUEST PROGRESS</span><span><b id="penLabel">0 / 10</b></span></div>
       <div class="bar thin pen"><i id="penBar"></i></div>
       <div class="meta" id="debtRow" style="margin-top:12px;display:none">
         <span style="color:var(--red)">FREEZE DEBT OUTSTANDING</span>
         <span style="color:var(--red)"><b id="debtVal">0</b> XP TO REPAY</span>
       </div>
     </div>
+
+    <!-- RPG ATTRIBUTES QUICK BAR -->
+    <div class="stats-quick-bar" id="statsPanel"></div>
   </div>
+
+  <!-- Hidden anchor for System AI Coach Message (Delivered via Sung Jin-Woo floating guide) -->
+  <span id="coach-message" style="display:none">Awaken, Hunter. Prove yourself again today.</span>
 
   <div class="panel" id="startBanner" style="border-color:var(--gold);background:rgba(255,204,77,.06)">
     <div class="st"><h2 style="color:var(--gold)">System Dormant</h2><span class="tag">NOT STARTED</span></div>
@@ -111,27 +159,42 @@
     <button class="btn" style="border-color:var(--gold);color:var(--gold);background:rgba(255,204,77,.12)" onclick="startSystem()">Begin Day 1 Now</button>
   </div>
 
-  <!-- ============ TABS ============ -->
-  <div class="tabs">
-    <div class="tab active" data-page="dash"    data-bg="assets/bg/bg-dashboard.jpg">Dashboard</div>
-    <div class="tab"        data-page="daily"   data-bg="assets/bg/bg-daily.jpg">Daily</div>
-    <div class="tab"        data-page="weekly"  data-bg="assets/bg/bg-weekly.jpg">Weekly</div>
-    <div class="tab"        data-page="boss"    data-bg="assets/bg/bg-boss.jpg">Boss Raids</div>
-    <div class="tab"        data-page="courses" data-bg="assets/bg/bg-hunter.jpg">Course Track</div>
-    <div class="tab"        data-page="roadmap" data-bg="assets/bg/bg-roadmap.jpg">Roadmap</div>
-    <div class="tab"        data-page="library" data-bg="assets/bg/bg-guide.jpg">Library</div>
-    <div class="tab"        data-page="skills"  data-bg="assets/bg/bg-boss.jpg">Skills</div>
-    <div class="tab"        data-page="review"  data-bg="assets/bg/bg-status.jpg">Review</div>
-    <div class="tab"        data-page="insight" data-bg="assets/bg/bg-dashboard.jpg">Insights</div>
-    <div class="tab"        data-page="vocab"   data-bg="assets/bg/bg-guide.jpg">Vocabulary</div>
-    <div class="tab"        data-page="hunter"  data-bg="assets/bg/bg-boss.jpg">Hunter</div>
-    <div class="tab"        data-page="shadow"  data-bg="assets/bg/bg-guide.jpg">Shadow</div>
-    <div class="tab"        data-page="money"   data-bg="assets/bg/bg-vault.jpg">Money</div>
-    <div class="tab"        data-page="speaking" data-bg="assets/bg/bg-vocab.jpg">Speaking</div>
-    <div class="tab"        data-page="uptodate" data-bg="assets/bg/bg-dashboard.jpg">Up to Date</div>
-    <div class="tab"        data-page="expenses" data-bg="assets/bg/bg-vault.jpg">Money Expenses</div>
-    <div class="tab"        data-page="podcasts" data-bg="assets/bg/bg-guide.jpg">Podcasts</div>
+  <!-- ============ MASTER SYSTEM PORTALS DOCK ============ -->
+  <div class="portal-dock">
+    <div class="portal-btn active" data-portal="quests">
+      <span class="p-icon">⚔️</span>
+      <span class="p-name">QUESTS</span>
+      <span class="p-desc">Daily & Bosses</span>
+    </div>
+    <div class="portal-btn" data-portal="status">
+      <span class="p-icon">👤</span>
+      <span class="p-name">STATUS</span>
+      <span class="p-desc">Stats & Vitals</span>
+    </div>
+    <div class="portal-btn" data-portal="growth">
+      <span class="p-icon">📜</span>
+      <span class="p-name">GROWTH</span>
+      <span class="p-desc">Skills & Courses</span>
+    </div>
+    <div class="portal-btn" data-portal="academy">
+      <span class="p-icon">🎙️</span>
+      <span class="p-name">ACADEMY</span>
+      <span class="p-desc">English & Vocab</span>
+    </div>
+    <div class="portal-btn" data-portal="resources">
+      <span class="p-icon">💎</span>
+      <span class="p-name">RESOURCES</span>
+      <span class="p-desc">Money & Intel</span>
+    </div>
+    <div class="portal-btn" data-portal="shadow">
+      <span class="p-icon">👑</span>
+      <span class="p-name">SHADOW</span>
+      <span class="p-desc">Army & Eggs</span>
+    </div>
   </div>
+
+  <!-- SUB-NAV PILLS BAR -->
+  <div class="subnav-container" id="subnavContainer"></div>
 
   <!-- ============ DASHBOARD ============ -->
   <div class="page active" id="dash">
@@ -171,6 +234,18 @@
       <div class="st"><h2>Daily Missions</h2><span class="tag" id="dailyTag">RESETS MIDNIGHT</span></div>
       <div class="hint">Tap a mission to complete it. Tap <b>?</b> for the full instructions &mdash; every mission tells you exactly what to do.</div>
       <div id="dailyList"></div>
+    </div>
+
+    <div class="panel">
+      <div class="st"><h2>Habit Strength Index</h2><span class="tag">DYNAMIC 0-100</span></div>
+      <div class="hint">Consistent completion strengthens your daily habits (+5). Skipping weakens them (-10).</div>
+      <div id="strengthBars"></div>
+    </div>
+
+    <div class="panel">
+      <div class="st"><h2>Negative Habits &amp; HP Penalties</h2><span class="tag">HP DAMAGE</span></div>
+      <div class="hint">Slacking or indulging in bad habits directly inflicts HP damage. Stay vigilant.</div>
+      <div id="negativeHabits"></div>
     </div>
   </div>
 
@@ -475,13 +550,13 @@
       <div class="st"><h2>Health &amp; Mana</h2><span class="tag">CLASS RESOURCES</span></div>
       <div class="grid">
         <div class="stat">
-          <div class="h"><span class="n">Health</span><span class="lv" id="hpVal">100/100</span></div>
-          <div class="bar thin"><i id="hpBar"></i></div>
+          <div class="h"><span class="n">Health</span><span class="lv" id="classHpVal">100/100</span></div>
+          <div class="bar thin"><i id="classHpBar"></i></div>
           <div class="sb">Missed missions cost HP. Heal with potions from loot, or by completing a full day.</div>
         </div>
         <div class="stat">
-          <div class="h"><span class="n">Mana</span><span class="lv" id="manaVal">50/50</span></div>
-          <div class="bar thin"><i id="manaBar"></i></div>
+          <div class="h"><span class="n">Mana</span><span class="lv" id="classManaVal">50/50</span></div>
+          <div class="bar thin"><i id="classManaBar"></i></div>
           <div class="sb">+3 mana per completed mission. Spend it on your class ability.</div>
         </div>
       </div>
@@ -492,6 +567,18 @@
       <div class="st"><h2>Vision Board</h2><span class="tag" id="visionTag">0 / 6 SET</span></div>
       <div class="hint">The six things you are actually working toward. Tap to pin the ones that matter most &mdash; they stay lit on this board.</div>
       <div id="visionGrid" class="grid" style="margin-top:14px;"></div>
+    </div>
+
+    <div class="panel">
+      <div class="st"><h2>Hunter Equipment &amp; Relics</h2><span class="tag">ACTIVE LOADOUT</span></div>
+      <div class="hint">Equip weapons, armor, and accessories dropped from boss raids to gain permanent XP and drop chance multipliers.</div>
+      <div id="equipmentPanel"></div>
+    </div>
+
+    <div class="panel" style="border-color:var(--glow2);background:rgba(157,0,255,0.05);">
+      <div class="st"><h2 style="color:#d8b4fe">Prestige Awakening</h2><span class="tag" style="border-color:var(--glow2);color:#d8b4fe">LEVEL 10+</span></div>
+      <div class="hint">Reset Level and XP to 1 in exchange for a permanent <b>+0.1x XP multiplier</b> across the entire System. Badges, shadow army, and achievements remain untouched.</div>
+      <button class="btn" style="border-color:var(--glow2);background:rgba(157,0,255,0.18);color:#fff;" onclick="doPrestige()">Perform Prestige Awakening</button>
     </div>
   </div>
 
@@ -581,6 +668,7 @@
   </div>
 </div>
 
+<script src="seed_data.js"></script>
 <script src="data.js"></script>
 <script src="vocab.js"></script>
 <script src="icons.js"></script>
@@ -588,12 +676,12 @@
 <script src="app.js"></script>
 <script src="habits.js"></script>
 <script src="speaking.js"></script>
-<script src="render.js"></script>
 <script src="_features1.js"></script>
 <script src="_features2.js"></script>
 <script src="_features3.js"></script>
 <script src="uptodate.js"></script>
 <script src="expenses.js"></script>
+<script src="render.js"></script>
 <script>
 boot();
 

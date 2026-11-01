@@ -1,4 +1,4 @@
-/* =====================================================================
+﻿/* =====================================================================
    SOLO LEVELING — ICON LIBRARY
    Hand-built SVG line icons. No emoji, no external requests.
    Every icon inherits currentColor so it takes the colour of its context.

@@ -1,4 +1,4 @@
-/* =====================================================================
+﻿/* =====================================================================
    SOLO LEVELING — VOCABULARY DATA
    150 words a working professional actually needs. 5 per day, 30 days.
    Edit freely — nothing here affects saved progress.
