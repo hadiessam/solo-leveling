@@ -221,9 +221,21 @@ const COURSES = [
 
 /* ---------------------------------------------------------------
    DAILY MISSIONS
+   Core Daily Anchors + Day-of-Week Thematic Rotations (0-6)
+   Addressing Hadi's real bottlenecks: Writing 33 A2, Level 1 Money, BMI 30.5 Health
    --------------------------------------------------------------- */
+const DAILY_THEMES = [
+  { day: 0, dayName: 'الأحد (Sunday)', title: 'Market Intelligence & Weekly Strategy', titleAr: 'دراسة السوق وتحديد هدف الأسبوع' },
+  { day: 1, dayName: 'الإثنين (Monday)', title: 'Technical Tracking & Conversion Deep Dive', titleAr: 'التعمق التقني في التتبع والـ CAPI' },
+  { day: 2, dayName: 'الثلاثاء (Tuesday)', title: 'Interview & Spoken Pitch Fluency', titleAr: 'طلاقة المقابلات والعرض بالإنجليزية' },
+  { day: 3, dayName: 'الأربعاء (Wednesday)', title: 'Direct Income Action & Freelance Pitch', titleAr: 'عروض العمل الحر والتحصيل المالي' },
+  { day: 4, dayName: 'الخميس (Thursday)', title: 'Professional Outreach & Networking', titleAr: 'بناء العلاقات وشبكة المعارف الخليجية' },
+  { day: 5, dayName: 'الجمعة (Friday)', title: 'Weekly Performance Audit & Reflection', titleAr: 'مراجعة أداء الأسبوع والتأمل' },
+  { day: 6, dayName: 'السبت (Saturday)', title: 'Content Output & Portfolio Proof', titleAr: 'صناعة المحتوى وتوثيق البورتفوليو' }
+];
+
 const DAILY = [
-  /* ---------- TIER 1 : FOUNDATION ---------- */
+  /* ---------- CORE DAILY ANCHORS (Non-negotiables every single day) ---------- */
   {id:'d1', t:1, name:'Fajr on time',              sub:'Faith',      stat:null,      xp:5,
    guide:'Wake for Fajr and pray it on time. Then five minutes of morning adhkar.\n\nThis is the anchor of the whole day. If it holds, everything else holds. If it slips, everything else follows it down.'},
 
@@ -242,9 +254,6 @@ const DAILY = [
   {id:'d6', t:1, name:'English Writing & Typing \u2014 50 min', sub:'Self-Development', stat:'selfdev', xp:28,
      guide:'YOUR REAL PROFILE (EF SET 4-skill, measured):\n  Listening 63 \u2014 C1 ADVANCED\n  Speaking  50 \u2014 B1\n  Reading   48 \u2014 B1\n  Writing   33 \u2014 A2 ELEMENTARY  \u2190 THIS IS THE PROBLEM\n\nAverage 49 = B1. B2 needs 51. The whole gap is in WRITING.\n\nTHE MATH: if writing goes from 33 to 43, your average hits 51 and you are B2. One skill. Ten points.\n\n\u2500\u2500\u2500 THE 50 MINUTES \u2500\u2500\u2500\n\n\u2022 30 min \u2014 WRITE AND GET CORRECTED: use writeandimprove.com (free, Cambridge University). Pick a B1/B2 task, write at least 200 words, and the tool returns instant feedback on grammar, spelling and vocabulary plus a CEFR score. Rewrite using the feedback. This is the single highest-value 15 minutes available to you.\n\n\u2022 15 min \u2014 TOUCH TYPING: go to keybr.com and do a full session. It finds the letters you are slow at and drills them automatically. No setup, no account needed. At 25 WPM a 1,000-word report takes 40 minutes; at 60 it takes 16. That is 24 minutes back on every document, forever.\n\n\u2022 5 min \u2014 SPEAK ALOUD: read your corrected text out loud. Speaking is already 50, one point from B2 \u2014 this keeps it there while you fix writing.\n\n\u2500\u2500\u2500 WHY THEY ARE ONE MISSION \u2500\u2500\u2500\n\nWriting and typing are the same skill from two ends. You cannot write well if you are hunting for letters, and typing is worthless if you have nothing to say. Doing them together in one sitting is how both improve.\n\nOnce a week, test yourself on monkeytype.com and write the WPM down. You will be at 60 in about 8 weeks.\n\nWHY NOT MORE LISTENING: you are C1 at listening. Watching more English content is the most comfortable thing to do and the least useful. Do not spend your time there.\n\nYou are not learning English. You are fixing one skill.'},
 
-  {id:'d7', t:1, name:'30 minutes of reading',      sub:'Self-Development', stat:'selfdev', xp:5,
-   guide:'You read about 5 pages per 15 minutes, so 30 minutes is roughly 10 pages. Aim for 10 pages, not for 30 minutes.\n\nRead in English when you can \u2014 it compounds with the English work. Arabic is fine for the mindset books.\n\nThe Library tab now has REAL books you can open and read right now, free and legal: As a Man Thinketh (35 min, start tonight), The Art of War, Meditations, The Richest Man in Babylon, and full university textbooks on marketing and business writing.'},
-
   {id:'d8', t:1, name:'No phone for the first 30 min', sub:'Discipline', stat:null,   xp:5,
    guide:'From waking until 30 minutes later: no phone. Not for the time, not for messages, not for anything.\n\nPut it across the room before you sleep so you must physically get up to reach it.'},
 
@@ -254,110 +263,257 @@ const DAILY = [
   {id:'d10',t:1, name:'Phone-free hour',  sub:'Discipline', stat:null,      xp:7,
    guide:'One full hour with the phone completely off or in another room. Not "I will not scroll" \u2014 physically away.\n\nPick a fixed time every day (e.g. 9pm-10pm). During that hour: read, study, walk, or just sit. The goal is to prove to yourself that you can exist without it.\n\nStart with one hour. If that feels easy, extend to two.'},
 
+  {id:'d11',t:1, name:'Log today\'s expenses in Calendar', sub:'Money', stat:'money', xp:5,
+   guide:'Every pound you spent today. Open the Money Expenses Calendar and log what, how much, and the category.\n\nAwareness creates financial control. If you spent 0 today, log 0.01 with note "Zero spend".'},
+
+  {id:'d27',t:1, name:'One money action \u2014 15 min', sub:'Money', stat:'money', xp:8,
+   guide:'YOUR WEAKEST DOMAIN. Money is at Level 1. That gap is the whole reason you are not stable yet.\n\nThis mission forces one concrete income action:\n\n• Message 1 local business offering a Meta Ads audit or CAPI setup.\n• Submit 1 customized freelance proposal on Mostaql or Upwork.\n• Check job openings on LinkedIn/Wuzzuf and prepare 1 tailored application.\n• Take 1 tangible action to move your financial runway forward.'},
+
+  {id:'d7', t:1, name:'30 minutes of reading',      sub:'Self-Development', stat:'selfdev', xp:5,
+   guide:'Aim for 10 pages. Read in English when you can \u2014 it compounds with your writing work.\n\nCheck the Library tab for verified books: As a Man Thinketh, The Richest Man in Babylon, Meditations, and marketing textbooks.'},
+
   {id:'d21',t:1, name:'Practice a skill for 20 min', sub:'Skills', stat:'skills', xp:8,
-   guide:'Spend 20 uninterrupted minutes on ONE skill: touch typing, Excel, presentation design, HTML, or anything from the Skills tab.\n\nTwenty minutes is the minimum that produces a real gain \u2014 five minutes of half-attention does not. Pick the skill, set a timer, phone in another room, and work on it until the timer ends.\n\nUse the phone-free hour for this. The goal is to replace scrolling with learning, and to make 20 minutes a habit you can extend later.'},
+   guide:'Spend 20 uninterrupted minutes on ONE skill: touch typing, Excel formulas, presentation design, or CAPI integration.'},
 
   {id:'d22',t:1, name:'Plan tomorrow\'s top 3', sub:'Discipline', stat:null, xp:2,
-   guide:'Before sleeping, write down the 3 most important things to do tomorrow. Not 10 \u2014 just 3.\n\nThis takes 2 minutes and makes tomorrow 10x easier. Do it on paper, not on your phone.'},
+   guide:'Before sleeping, write down the 3 most important things to do tomorrow. Clear priorities eliminate morning hesitation.'},
 
   {id:'d24',t:1, name:'Course work \u2014 20 min', sub:'Self-Development', stat:'selfdev', xp:10,
-   guide:'Open the Course Track tab and work on ONE course for 20 minutes.\n\nNot browsing the list \u2014 actual work. Watch a lesson, do the exercise, take notes.\n\nStage 1 courses open right now:\n  \u2022 Google Ads Search Certification\n  \u2022 Google Analytics 4 Certification\n  \u2022 Meta Pixel & Conversions API Setup\n  \u2022 TikTok Media Buying Certification\n  \u2022 Snapchat Ads Certification\n  \u2022 Touch Typing \u2014 Reach 60 WPM\n\nFinish a whole course and tick it on the Course Track for +60 XP \u2014 and it advances the "Clear the certification stack" boss raid automatically.\n\nOne course at a time. Finishing one beats starting five.'},
+   guide:'Open the Course Track tab and work on ONE module from Google Ads, GA4, or Meta Media Buying certification tracks.'},
 
+  /* ---------- THEMATIC DAILY ROTATIONS (One dynamic focus per day of week) ---------- */
+  {id:'d13',t:1, name:'Sunday: Egypt & Gulf Market Study — 20 min', sub:'Career', stat:'career', xp:10, rotDay:0,
+   guide:'SUNDAY FOCUS: Market Intelligence.\n\n• Search Wuzzuf, LinkedIn Jobs, and Bayt for "Media Buyer" and "Performance Marketer" in Egypt and Saudi Arabia.\n• Note salary ranges in EGP / SAR.\n• Identify in-demand keywords (CAPI, ROAS, Advantage+, GA4).\n• Note one gap in your CV to target this week.'},
 
+  {id:'d16',t:1, name:'Monday: Technical Tracking & Course Module', sub:'Skills', stat:'skills', xp:12, rotDay:1,
+   guide:'MONDAY FOCUS: Technical Ad Mastery.\n\n• Spend 25 uninterrupted minutes studying Meta Conversions API (CAPI), Pixel deduplication, or Google Ads Search.\n• Complete one quiz or hands-on setup step in the Course Track.\n• High technical competency commands Gulf compensation.'},
 
-  /* ---------- TIER 2 : HUNTING (level 5) ---------- */
-  {id:'d11',t:2, name:'Log today\'s expenses',      sub:'Money',      stat:'money',   xp:2, unlock:{level:5},
-   guide:'Every pound you spent today. One line each: what, how much.\n\nNotes app or notebook. The point is not budgeting yet \u2014 it is seeing where the money actually goes. Most people are shocked in week one.'},
+  {id:'d14',t:1, name:'Tuesday: English Interview Answers Out Loud', sub:'Career', stat:'career', xp:10, rotDay:2,
+   guide:'TUESDAY FOCUS: Spoken Pitch Fluency.\n\n• Practise out loud: "Tell me about yourself and your track record."\n• Speak with conviction in English: 27 programs managed, 11,406 leads, TL 15.06 blended CPL.\n• Record 90 seconds, listen back, and eliminate pauses.'},
 
-  {id:'d12',t:2, name:'Find one way to earn 100 EGP',  sub:'Money',      stat:'money',   xp:5, unlock:{level:5},
-   guide:'YOU HAVE NO INCOME RIGHT NOW. "Save a fixed amount" is impossible when nothing comes in — so that mission is gone, replaced by this one.\n\nFind ONE realistic way to bring in 100 EGP this week. Not 10,000. One hundred.\n\n── ACTUALLY DOABLE ──\n\n• SELL SOMETHING YOU ALREADY KNOW — offer Meta ads setup or campaign management to one local business. One client, one invoice.\n\n• SELL SOMETHING YOU OWN — a skill, an old phone, a course you finished, a design template.\n\n• ONE FREELANCE GIG — Mostaql, Khamsat, or LinkedIn. Filter by "today". Bid on ONE job properly, not ten badly.\n\n• ONE HOUR OF PAID WORK — anything. Translation, data entry, helping a shop with their social media.\n\n── THE RULE ──\n\nWrite it down in the Money tab. One idea. Then DO the first step today — send the message, post the offer, send the bid.\n\n100 EGP a week is 400 a month. That is the floor, not the goal. The goal is to prove money can come in — because right now you are acting like it cannot.\n\nStability does not start with a salary. It starts with one invoice you sent yourself.'},
+  {id:'d12',t:1, name:'Wednesday: Direct Income Action (100 EGP Test)', sub:'Money', stat:'money', xp:10, rotDay:3,
+   guide:'WEDNESDAY FOCUS: Monetization Action.\n\n• Find ONE realistic way to bring in income: pitch a paid audit, bid on a Mostaql gig, or sell a tailored service.\n• Send the message or submit the proposal today.\n• Proving you can generate income breaks financial paralysis.'},
 
-  {id:'d13',t:2, name:'Egypt market study \u2014 20 min', sub:'Career', stat:'career', xp:7, unlock:{level:5},
-   guide:'You are targeting PERFORMANCE MARKETING / MEDIA BUYER roles IN EGYPT FIRST. Research exactly that:\n\n\u2022 Search Wuzzuf, LinkedIn Jobs and Bayt for "media buyer Egypt" and "performance marketer Egypt". Read 5 ads properly.\n\u2022 Note the salary bands quoted in EGP.\n\u2022 Note which tools they ask for that you do not list.\n\u2022 Note which industries are hiring most (e-commerce, real estate, agencies, fintech).\n\u2022 Check the remote listings too \u2014 many pay in USD.\n\nWrite down one gap you found. That gap is tomorrow\'s work.'},
+  {id:'d26',t:1, name:'Thursday: High-Value Professional Outreach', sub:'Relationships', stat:'relations', xp:8, rotDay:4,
+   guide:'THURSDAY FOCUS: Network Expansion.\n\n• Have ONE real professional conversation today: call or voice-note a fellow marketer, mentor, or family member.\n• Engage meaningfully on a post by a senior Gulf agency director or media buyer.\n• Genuine professional relationships unlock unadvertised Gulf opportunities.'},
 
-  {id:'d14',t:2, name:'Practise interview answers', sub:'Career',     stat:'career',  xp:7, unlock:{level:5},
-   guide:'Out loud, not in your head. You are a strong candidate with real numbers \u2014 the job is presenting them without hesitating.\n\nToday: "Tell me about yourself."\nStructure: who you are \u2192 what you do \u2192 your strongest number \u2192 why this role.\n90 seconds. Use your real figures: 27 programs, 11,406 leads, TL 15.06 blended CPL.\n\nRecord it, listen back, cut the filler. New question each day.'},
+  {id:'d15',t:1, name:'Friday: English Speaking Fluency Drill — 15 min', sub:'Self-Development', stat:'selfdev', xp:10, rotDay:5,
+   guide:'FRIDAY FOCUS: Spoken Fluency & Jumu\'ah Reflection.\n\n• Speak English out loud for 15 minutes: discuss a marketing campaign, summarize a podcast, or talk with an AI voice tutor.\n• Pray Jumu\'ah on time and reflect on your week\'s consistency.'},
 
-  /* ---------- TIER 3 : AWAKENED (level 15) ---------- */
-  {id:'d15',t:3, name:'English speaking \u2014 15 min', sub:'Self-Development', stat:'selfdev', xp:10, unlock:{level:15},
-   guide:'15 minutes of spoken English. Not reading, not listening \u2014 speaking.\n\nOptions: talk to yourself about a campaign you ran, use an AI voice chat, or book a conversation tutor.\n\nThe goal is fluency under pressure, which is exactly what an interview in Cairo or Dubai will test.'},
-
-  {id:'d16',t:3, name:'Study one course module',    sub:'Self-Development', stat:'selfdev', xp:10, unlock:{level:15},
-   guide:'One module of your current course from the Course Track tab.\n\nNot "study a course" \u2014 one specific module, finished. One course at a time. Do not start five.\n\nPick from the Course Track tab. Stage 1 opens now. Each completed course is +60 XP and advances the certification boss raid.'},
-
-  {id:'d17',t:3, name:'Post or comment on LinkedIn',sub:'Career',     stat:'career',  xp:10, unlock:{level:15},
-   guide:'You have the profile, the logo and the portfolio built. The only thing missing is output.\n\nEither a short post about something you learned, or a real comment on someone\'s post in your field. Three lines is enough.\n\nYou manage 27 programs and TL 171K of spend. You have more to say than most people posting in your niche.'},
-
-  /* ---------- NEW: RELATIONSHIPS had ZERO daily missions ---------- */
-  {id:'d26',t:2, name:'One real conversation',  sub:'Relationships', stat:'relations', xp:7, unlock:{level:5},
-   guide:'RELATIONSHIPS HAD NO DAILY MISSION AT ALL. This was a hole in the system — so it is fixed now.\n\nOne real conversation today. Not a text. Not a like. A conversation.\n\n\u2500\u2500\u2500 WHO \u2500\u2500\u2500\n\n\u2022 Your parents \u2014 call them. Five minutes. Ask how they are and actually listen.\n\n\u2022 A friend you have not spoken to in a while \u2014 call, do not message.\n\n\u2022 Someone in your field \u2014 a media buyer, an agency owner, a recruiter.\n\n\u2500\u2500\u2500 WHY THIS MATTERS FOR YOUR GOAL \u2500\u2500\u2500\n\nMost marketing jobs in Egypt are filled through people, not applications. The recruiter who remembers you. The media buyer who mentions you to an agency. The friend whose brother runs an e-commerce brand.\n\nYou cannot network by posting on LinkedIn. You network by being someone people actually talk to.\n\n\u2500\u2500\u2500 THE RULE \u2500\u2500\u2500\n\nAsk one question. Listen to the answer. Do not pitch anything.\n\nOne conversation. That is the whole mission.'},
-
-  {id:'d27',t:2, name:'One money idea \u2014 15 min', sub:'Money', stat:'money', xp:7, unlock:{level:5},
-   guide:'YOUR WEAKEST DOMAIN. Money: 114 XP against Self-Development at 1,664. That gap is the whole reason you are not stable yet.\n\nThis mission exists to close it.\n\n\u2500\u2500\u2500 THE 15 MINUTES \u2500\u2500\u2500\n\nOpen the Money tab and pick ONE idea from the list. Then do the first step on it \u2014 not research, the first actual step.\n\n\u2500\u2500\u2500 EXAMPLES \u2500\u2500\u2500\n\n\u2022 Idea: sell Meta ads setup to local businesses \u2192 STEP: write the offer message and send it to 3 shops you know.\n\n\u2022 Idea: freelance on Mostaql \u2192 STEP: create the account and publish one service listing.\n\n\u2022 Idea: sell a course you finished \u2192 STEP: record 3 minutes of you explaining one thing you know.\n\n\u2022 Idea: help a shop with social media \u2192 STEP: message one shop owner with a concrete suggestion.\n\n\u2500\u2500\u2500 WHY THIS EXISTS \u2500\u2500\u2500\n\nYou have been treating money as something that will arrive later, when the job comes. It will not. Money arrives when you send the invoice.\n\nEight ideas are already written in the Money tab. You have done zero of them. This mission forces one.\n\n15 minutes a day, one idea at a time. In four weeks you will have tried eight ways to make money \u2014 and at least one of them will have worked.'}
+  {id:'d17',t:1, name:'Saturday: Content Creation & Portfolio Proof', sub:'Career', stat:'career', xp:10, rotDay:6,
+   guide:'SATURDAY FOCUS: Authority & Social Proof.\n\n• Publish 1 short LinkedIn post or add 1 screenshot proof to your portfolio.\n• Share a lesson from your 27 campaigns or how you dropped CPL from 130 to 50.\n• Proof in public builds inbound opportunities.'}
 ];
 
 /* ---------------------------------------------------------------
    WEEKLY MISSIONS
+   Core Weekly Anchors + 4 Evolving Rotational Cycles
    --------------------------------------------------------------- */
+const WEEKLY_THEMES = [
+  { id: 0, name: 'Proof & Case Studies Evolution', nameAr: 'المرحلة الأولى: هندسة دراسات الحالة والإثبات الرقمي' },
+  { id: 1, name: 'Technical Tracking & Conversion Architecture', nameAr: 'المرحلة الثانية: البنية التحتية للتتبع و Conversions API' },
+  { id: 2, name: 'Direct Revenue & Market Pitch Execution', nameAr: 'المرحلة الثالثة: العروض المباشرة وتحصيل الدخل المستقل' },
+  { id: 3, name: 'Creative Automation & ATS Optimization', nameAr: 'المرحلة الرابعة: الأتمتة الإبداعية وتجهيز السيرة للخليج' }
+];
+
 const WEEKLY = [
-  {id:'w1', t:1, name:'Publish one LinkedIn post',      sub:'Career',           stat:'career',    xp:25, unlock:null,
-   guide:'One post a week, about your actual work.\n\nFormat: hook \u2192 the problem \u2192 what you did \u2192 the result with a number \u2192 one question.\n\nYour material is unusually strong: the CPL recovery from 130.62 to 50.79, the 1,544-lead campaign at TL 4.62. Those are real case studies \u2014 post them.'},
+  /* ---------- CORE WEEKLY ANCHORS (Active every week) ---------- */
+  {id:'w7', t:1, name:'Weekly Strategic Review — Sunday', sub:'System', stat:'selfdev', xp:35, unlock:null, cycle:null,
+   guide:'Fifteen minutes, every Sunday, 5 non-negotiable questions:\n\n1. How many missions did I complete this week?\n2. What tangible progress was made toward Saudi Arabia?\n3. What failed or stalled, and why — honestly?\n4. What is the ONE single priority that matters most next week?\n5. What specific behavior or system am I changing?\n\nWrite the answers down in your reflections.'},
 
-  {id:'w2', t:1, name:'Contact one new person',         sub:'Relationships',    stat:'relations', xp:25, unlock:null,
-   guide:'One person you do not already talk to \u2014 ideally someone working in performance marketing in Egypt or Dubai.\n\nOne honest message: who you are, what you are working toward, one specific question they can answer in two lines. Not "can you help me".'},
+  {id:'w_audit', t:1, name:'7-Day Expense Audit & Budget Leak Check', sub:'Money', stat:'money', xp:30, unlock:null, cycle:null,
+   guide:'Open the Money Expenses Calendar and review every single pound spent over the past 7 days.\n\n• Calculate your total spend for the week.\n• Identify at least ONE unnecessary expense leak.\n• Check your remaining Runway toward the 120,000 EGP Saudi emergency fund.\n\nFinancial discipline creates the runway for your move.'},
 
-  {id:'w3', t:1, name:'Call family or meet a friend',   sub:'Relationships',    stat:'relations', xp:25, unlock:null,
-   guide:'A real conversation, not a text. Call your parents. Meet a friend.\n\nThis is one of the few things on this list that will still matter to you in ten years.'},
+  {id:'w_eng', t:1, name:'English Writing Benchmark — 2 Submissions', sub:'Self-Development', stat:'selfdev', xp:40, unlock:null, cycle:null,
+   guide:'Complete at least TWO full writing submissions on writeandimprove.com (B2 level).\n\n• Focus on eliminating repetitive grammar errors.\n• Note your CEFR score improvement.\n• Writing is your ONLY sub-B1 skill (currently at 33 A2). This weekly drill pushes you directly toward 43+ to achieve B2 overall.'},
 
-  {id:'w4', t:1, name:'Summarise a book or chapter',    sub:'Self-Development', stat:'selfdev',   xp:25, unlock:null,
-   guide:'Five bullet points on what you read this week, in your own words.\n\nBonus: turn those bullets into the LinkedIn post and you clear two weekly missions with one piece of work.'},
+  /* ---------- CYCLE 0: Proof & Case Studies Evolution ---------- */
+  {id:'w1', t:1, name:'Publish 1 breakdown case study on LinkedIn', sub:'Career', stat:'career', xp:35, unlock:null, cycle:0,
+   guide:'Publish a real campaign recovery breakdown: hook → problem → solution → quantifiable result (e.g. CPL 130.62 to 50.79 or 1,544 leads at TL 4.62). Real numbers attract serious Gulf recruiters.'},
 
-  {id:'w5', t:1, name:'Review and update CV',           sub:'Career',           stat:'career',    xp:25, unlock:null,
-   guide:'Your CV is already strong. Change one thing: a stronger verb, a number added to a result, a section reordered.\n\nSmall weekly edits beat one big rewrite.'},
+  {id:'w5', t:1, name:'Update portfolio slide with verifiable proof', sub:'Career', stat:'career', xp:30, unlock:null, cycle:0,
+   guide:'Add verifiable Ads Manager proof to your portfolio: campaign dashboard screenshot, CPL curve, audience segmentation.'},
 
-  {id:'w6', t:2, name:'One company research session',   sub:'Career',           stat:'career',    xp:50, unlock:{level:8},
-   guide:'One hour, one Egyptian or Dubai company you want to work for.\n\n\u2022 What they actually do, in plain words\n\u2022 Who their clients are\n\u2022 Who their competitors are\n\u2022 Recent campaigns or news\n\u2022 Who you would need to talk to\n\nWalk into an interview knowing this and you are ahead of most candidates.'},
+  {id:'w_cyc0_3', t:1, name:'Audit 2 competitor ad campaigns in Egypt/KSA', sub:'Skills', stat:'skills', xp:25, unlock:null, cycle:0,
+   guide:'Analyze 2 active campaigns in the Meta Ad Library. Note hook angles, creative formats, and offer structures.'},
 
-  {id:'w7', t:3, name:'Weekly review \u2014 Sunday',       sub:'System',           stat:null,        xp:25, unlock:{level:15},
-   guide:'Fifteen minutes, every Sunday, five questions:\n\n1. How many missions did I complete?\n2. What did I learn?\n3. What failed, and why \u2014 honestly?\n4. What is the ONE thing that matters most next week?\n5. What am I changing?\n\nWrite the answers down. A week that is not reviewed is a week that is repeated.'},
+  {id:'w2', t:1, name:'Reach out to 1 senior media buyer or agency lead', sub:'Relationships', stat:'relations', xp:25, unlock:null, cycle:0,
+   guide:'Send a respectful, specific message to a working Gulf or Egypt media buyer. Ask one actionable question about regional campaign challenges.'},
 
-  /* ---------- NEW: the two weekly missions he keeps skipping ---------- */
-  {id:'w8', t:1, name:'Send 5 real applications',  sub:'Career', stat:'career', xp:35, unlock:null,
-   guide:'YOU KEEP SAYING YOU WANT THE JOB. This is the mission that actually produces it.\n\nFive real applications. Not "I will apply later". Five, today.\n\n\u2500\u2500\u2500 HOW \u2500\u2500\u2500\n\n\u2022 Wuzzuf \u2014 filter "media buyer", "performance marketer", "digital marketing". Egypt only.\n\n\u2022 LinkedIn Jobs \u2014 same filters. Turn on alerts so this takes 10 minutes a week.\n\n\u2022 Bayt, Olx Jobs, and the company career pages directly.\n\n\u2022 Remote listings that pay in USD \u2014 these exist and you qualify.\n\n\u2500\u2500\u2500 QUALITY OVER VOLUME \u2500\u2500\u2500\n\nDo not spray 50 identical CVs. Pick five roles where you match at least half the requirements, and change the first three lines of each application to match that job.\n\n\u2500\u2500\u2500 WHY THIS MISSION EXISTS \u2500\u2500\u2500\n\nw5 (CV review) and w6 (company research) are preparation. This is the actual action. Preparation without applications is procrastination wearing a productive mask.\n\nFive a week is 20 a month. That is a real job hunt.\n\nTrack them: company, role, date, reply. When one replies, w6 research is what makes you ready for it.'},
+  /* ---------- CYCLE 1: Technical Tracking & Conversion Architecture ---------- */
+  {id:'w_cyc1_1', t:1, name:'Meta CAPI & Pixel Event Match Quality audit', sub:'Skills', stat:'skills', xp:40, unlock:null, cycle:1,
+   guide:'Inspect Meta Events Manager. Verify Conversions API server-side events, check event deduplication, and ensure Event Match Quality (EMQ) is 7.0 or higher.'},
 
-  {id:'w9', t:1, name:'One paid offer or gig sent', sub:'Money', stat:'money', xp:40, unlock:null,
-   guide:'THE MONEY MISSION. You have done ZERO of the eight ideas in the Money tab. This forces one out of you.\n\nSend ONE real offer or bid for paid work this week.\n\n\u2500\u2500\u2500 EXAMPLES \u2500\u2500\u2500\n\n\u2022 Bid on ONE job on Mostaql or Khamsat \u2014 a real bid, personalised, not a copy-paste.\n\n\u2022 Message 3 local businesses offering Meta ads management \u2014 one paragraph, one price, one call to action.\n\n\u2022 Post an offer in a relevant Facebook group \u2014 e-commerce Egypt, marketing groups.\n\n\u2022 Offer your CV services, translation, or data entry to someone who needs it.\n\n\u2500\u2500\u2500 THE POINT \u2500\u2500\u2500\n\nYou are waiting for a salary. That is one path and it is slow. This mission builds the other path \u2014 the one where you make money yourself.\n\nOne offer sent is worth more than ten hours of planning. Send it, then send another next week.\n\nIf one lands, you have income. If none land, you now know which offers do not work \u2014 and that is information you did not have last week.'}
+  {id:'w_cyc1_2', t:1, name:'Build / audit campaign UTM taxonomy sheet', sub:'Skills', stat:'skills', xp:30, unlock:null, cycle:1,
+   guide:'Create a structured UTM naming convention sheet for source, medium, campaign, content, and term across Meta and Google.'},
+
+  {id:'w_cyc1_3', t:1, name:'Complete 1 high-value certification module', sub:'Self-Development', stat:'selfdev', xp:30, unlock:null, cycle:1,
+   guide:'Complete 1 full module from Google Ads Search, GA4, or Meta Media Buying certification tracks.'},
+
+  {id:'w8', t:1, name:'Send 5 tailored performance marketing applications', sub:'Career', stat:'career', xp:35, unlock:null, cycle:1,
+   guide:'Send 5 real, customized applications via Wuzzuf, LinkedIn, or Gulf portals. Tailor the opening pitch to the company requirements.'},
+
+  /* ---------- CYCLE 2: Direct Revenue & Market Pitch Execution ---------- */
+  {id:'w9', t:1, name:'Pitch 1 paid audit offer to a local business', sub:'Money', stat:'money', xp:45, unlock:null, cycle:2,
+   guide:'Contact 1 local business or e-commerce brand offering a paid Meta Ads account audit with concrete optimization opportunities.'},
+
+  {id:'w_cyc2_2', t:1, name:'Submit 2 customized proposals on Mostaql / Upwork', sub:'Money', stat:'money', xp:35, unlock:null, cycle:2,
+   guide:'Submit 2 well-crafted freelance proposals. Quote a specific timeline, clear deliverables, and highlight relevant past results.'},
+
+  {id:'w6', t:1, name:'Deep research on 2 top Saudi marketing agencies', sub:'Career', stat:'career', xp:30, unlock:null, cycle:2,
+   guide:'Research 2 marketing agencies in Riyadh or Jeddah: client roster, recent campaigns, leadership team, and current hiring needs.'},
+
+  {id:'w_cyc2_4', t:1, name:'Mock interview technical pitch drill (Spoken English)', sub:'Career', stat:'career', xp:30, unlock:null, cycle:2,
+   guide:'Record yourself answering: "Walk me through your campaign management process and how you optimized CPL from 130 to 50." Listen back and refine.'},
+
+  /* ---------- CYCLE 3: Creative Automation & ATS Optimization ---------- */
+  {id:'w_cyc3_1', t:1, name:'Produce 1 AI video ad variant in CapCut', sub:'Skills', stat:'skills', xp:35, unlock:null, cycle:3,
+   guide:'Combine direct-response script, synthetic voiceover, dynamic auto-captions, and B-roll to create a high-converting 9:16 video ad.'},
+
+  {id:'w_cyc3_2', t:1, name:'Audit CV for Gulf ATS keywords & Riyadh readiness', sub:'Career', stat:'career', xp:30, unlock:null, cycle:3,
+   guide:'Review your English CV against Gulf ATS standards: ensure quantifiable metrics, CAPI expertise, and clear readiness for relocation to Saudi Arabia.'},
+
+  {id:'w_cyc3_3', t:1, name:'Build 1 marketing automation workflow (Make / n8n)', sub:'Skills', stat:'skills', xp:35, unlock:null, cycle:3,
+   guide:'Create an automated workflow connecting Meta Lead Ads to Google Sheets or CRM with instant notification routing.'},
+
+  {id:'w3', t:1, name:'Call family or meet a friend', sub:'Relationships', stat:'relations', xp:25, unlock:null, cycle:3,
+   guide:'A real conversation, not a text. Call your parents. Meet a friend. Sustained progress requires emotional groundedness.'},
+
+  /* ---------- LEGACY PRESERVATION ---------- */
+  {id:'w4', t:1, name:'Summarise a book or chapter', sub:'Self-Development', stat:'selfdev', xp:25, unlock:null, cycle:null,
+   guide:'Five bullet points on what you read this week, in your own words. Turn those bullets into a LinkedIn post to clear two missions at once.'}
 ];
 
 /* ---------------------------------------------------------------
-   BOSS RAIDS
+   WEEKLY RAID BOSSES (Dynamic Dungeon Gates evolving each week)
+   --------------------------------------------------------------- */
+const WEEKLY_RAID_BOSSES = [
+  {
+    id: 'wb1',
+    rank: 'B-RANK GATE',
+    name: 'Gate of Chaos: Procrastination Monarch',
+    titleAr: 'منجم التسويف ومشتتات التركيز (مالاكور)',
+    hp: 1000,
+    avatar: 'assets/shadows/iron.png',
+    lore: 'وحش التسويف يتغذى على تأجيل المهام وتجاهل مراجعة المصروفات. القضاء عليه يفتح تدفق الإنتاجية الصافية.',
+    reward: 350,
+    phases: [
+      { text: 'تسجيل المصروفات يومياً لمدة 5 أيام دون انقطاع (Zero unlogged expenses)', dmg: 250, xp: 75 },
+      { text: 'الالتزام بصلاة الفجر في وقتها 7 أيام متتالية (Morning Anchor)', dmg: 250, xp: 75 },
+      { text: 'إتمام 5 جلسات كتابة إنجليزية على Write & Improve (كسر حاجز 33 A2)', dmg: 250, xp: 75 },
+      { text: 'إنجاز 100% من مهام الأسبوع الأساسية قبل ريسيت الجمعة', dmg: 250, xp: 75 }
+    ]
+  },
+  {
+    id: 'wb2',
+    rank: 'A-RANK GATE',
+    name: 'Gate of Fog: The CAPI Archon',
+    titleAr: 'حارس بيانات التتبع والتحويلات الرقمية',
+    hp: 1200,
+    avatar: 'assets/shadows/tank.png',
+    lore: 'حارس غامض يختبر دقتك الهندسية في ربط Meta Conversions API وتتبع الأحداث بدقة تتجاوز 7.0 EMQ.',
+    reward: 400,
+    phases: [
+      { text: 'التحقق من تتبع Meta Pixel و CAPI واختبار Deduplication في Events Manager', dmg: 300, xp: 75 },
+      { text: 'مراجعة وتوثيق أحداث التحويل المخصصة (Custom Events) في GA4', dmg: 300, xp: 75 },
+      { text: 'بناء شيت متكامل لتوزيع الميزانيات وتوقع الـ CPL و ROAS لكل حملة', dmg: 300, xp: 75 },
+      { text: 'نشر دراسة حالة فنية حول حل مشكلات التتبع في الإعلانات الخليجية', dmg: 300, xp: 75 }
+    ]
+  },
+  {
+    id: 'wb3',
+    rank: 'A-RANK GATE',
+    name: 'Gate of Ice: The ATS Dreadnought',
+    titleAr: 'فلتر التوظيف الخليجي الصارم (الروبوت الأوتوماتيكي)',
+    hp: 1200,
+    avatar: 'assets/shadows/tusk.png',
+    lore: 'درع رقمي متجمد يستبعد السير الذاتية الضعيفة. يجب أن تثبت جاهزية سيرتك لاختراق أنظمة الفرز في الرياض.',
+    reward: 450,
+    phases: [
+      { text: 'تحديث الـ CV الإنجليزي ومطابقته لكلمات ATS في 3 وظائف بالرياض', dmg: 300, xp: 75 },
+      { text: 'إرسال 5 تقديمات مباشرة ومخصصة لشركات ووكالات تسويق في السعودية', dmg: 300, xp: 75 },
+      { text: 'ممارسة 3 إجابات للمقابلات باللغة الإنجليزية بصوت عالٍ وتسجيلها', dmg: 300, xp: 75 },
+      { text: 'التفاعل وبناء تواصل احترافي مع 3 مديري تسويق خليجيين على LinkedIn', dmg: 300, xp: 75 }
+    ]
+  },
+  {
+    id: 'wb4',
+    rank: 'S-RANK GATE',
+    name: 'Gate of Shadows: The Zero-Income Beast',
+    titleAr: 'وحش الركود المالي والمبيعات الصفرية',
+    hp: 1500,
+    avatar: 'assets/shadows/beru.png',
+    lore: 'وحش شرس يحبس قدرتك على تحقيق دخل مستقل. الحل الوحيد هو تقديم عروض حقيقية وجلب أول تدفق مالي.',
+    reward: 500,
+    phases: [
+      { text: 'صياغة وإرسال 3 عروض مراجعة إعلانات (Meta Audit) لبيزنس محلي', dmg: 375, xp: 75 },
+      { text: 'نشر خدمة متخصصة واحدة على موقع مستقل أو خمسات مع نماذج سابقة', dmg: 375, xp: 75 },
+      { text: 'تحصيل 100 جنيه أو أكثر من أي عمل حر أو استشارة إعلانية سريعة', dmg: 375, xp: 75 },
+      { text: 'حساب ميزانية مدرج الطوارئ (Runway) ومصروفات الشهر بدقة في الكالندر', dmg: 375, xp: 75 }
+    ]
+  },
+  {
+    id: 'wb5',
+    rank: 'A-RANK GATE',
+    name: 'Gate of Fire: The Creative Wyrm',
+    titleAr: 'تنين التكرار الإعلاني وضعف الابتكار',
+    hp: 1200,
+    avatar: 'assets/shadows/kaisel.png',
+    lore: 'تنين ناري يحرق الميزانيات بالإعلانات التقليدية. التغلب عليه يتطلب زوايا إبداعية مبتكرة وفيديوهات UGC قوية.',
+    reward: 400,
+    phases: [
+      { text: 'كتابة 3 سكريبتات إعلانية بزوايا مختلفة (ألم مباشر، إثبات اجتماعي، عرض محدود)', dmg: 300, xp: 75 },
+      { text: 'مونتاج فيديو إعلاني قصير كامل على CapCut مع ترجمة ديناميكية وتأثيرات', dmg: 300, xp: 75 },
+      { text: 'تحليل 5 إعلانات ناجحة للمنافسين في مكتبة إعلانات Meta في السوق السعودي', dmg: 300, xp: 75 },
+      { text: 'تصميم قالبين كاروسيل (Carousel) تفاعلية قابلة للنشر على Canva Pro', dmg: 300, xp: 75 }
+    ]
+  },
+  {
+    id: 'wb6',
+    rank: 'S-RANK GATE',
+    name: 'Gate of Iron: The Sovereign\'s Discipline',
+    titleAr: 'محاكمة السيادة والانضباط الذاتي المطلق',
+    hp: 1500,
+    avatar: 'assets/shadows/bellion.png',
+    lore: 'الاختبار الأسمى لمن يريد حكم جيش الظلال. لا مجال للأعذار: انضباط بدني، ذهني، ومالي كامل.',
+    reward: 500,
+    phases: [
+      { text: 'الالتزام التام بالتمارين المنزلية (4 من 4 جلسات) دون أي تفويت', dmg: 375, xp: 75 },
+      { text: 'شرب 2 لتر ماء يومياً لمدة 7 أيام متتالية (تحسين الهيدريشن)', dmg: 375, xp: 75 },
+      { text: 'الالتزام بـ 30 دقيقة بدون هاتف بعد الاستيقاظ وقبل النوم طوال الأسبوع', dmg: 375, xp: 75 },
+      { text: 'تحقيق معدل إنجاز 100% في جميع المهام الأسبوعية النشطة', dmg: 375, xp: 75 }
+    ]
+  }
+];
+
+/* ---------------------------------------------------------------
+   GRAND CAMPAIGN RAIDS — SAUDI ARABIA 2027
    xp     = XP awarded PER STEP (visible before you start)
    reward = what clearing the whole raid gives you on top
    --------------------------------------------------------------- */
 const BOSSES = [
-  {id:'b1', name:'Land a Paid Marketing Job in Egypt', desc:'THE PRIMARY GOAL RIGHT NOW. A stable salary in EGP, on the ground, while the Saudi situation settles.', xp:150, reward:1500,
+  {id:'b1', name:'Proof & Portfolio Architect', desc:'THE FOUNDATION. Build verifiable case studies with real campaign figures (27 programs, 11,406 leads, CPL drop 130 to 50).', xp:150, reward:1500,
    steps:[
      'Rebuild the CV \u2014 English, one page, results with numbers (27 campaigns, 11,400 leads)',
-     'Build a portfolio that proves the work, not describes it',
-     'Rewrite the LinkedIn profile: headline, about, featured work',
-     'Get the CV reviewed by a working media buyer in Egypt',
-     'Set alerts on Wuzzuf + LinkedIn for "media buyer" and "performance marketer"',
-     'Apply to 20 Egypt-based roles',
-     'Apply to 50 Egypt-based roles',
-     'Complete 3 mock interviews out loud',
-     'Reach a final-stage interview',
-     'Sign the offer \u2014 take the salary, whatever stabilises the month']},
+     'Build a portfolio that proves the work with Ads Manager screenshots',
+     'Rewrite the LinkedIn profile: headline, about, featured proof',
+     'Get the CV reviewed by a working media buyer in Egypt or KSA',
+     'Set alerts on LinkedIn and Wuzzuf for "Media Buyer" and "Performance Marketer"',
+     'Apply to 20 targeted roles with customized pitches',
+     'Apply to 50 targeted roles',
+     'Complete 3 mock technical interviews out loud',
+     'Reach a final-stage interview with agency leadership',
+     'Sign the offer \u2014 establish income stability while preparing Saudi runway']},
 
-  {id:'b2', name:'Reach English B2', desc:'Listening C1 \u00b7 Speaking 50 \u00b7 Reading 48 \u00b7 Writing 33. Writing is the whole gap.', xp:100, reward:1200,
+  {id:'b2', name:'Reach English B2 & Writing Mastery', desc:'Listening C1 \u00b7 Speaking 50 \u00b7 Reading 48 \u00b7 Writing 33. Writing is the whole gap.', xp:100, reward:1200,
    steps:[
      'Baseline recorded: EF SET 4-skill = 49 (Listening 63, Speaking 50, Reading 48, Writing 33)',
      'Write 30 pieces on Write & Improve and act on every correction',
      'Cut the top 5 grammar errors you repeat \u2014 diagnosed from your own writing',
      'Raise writing from 33 to 43',
      'Raise reading from 48 to 51',
-     'Retake the EF SET and cross 51 overall']},
+     'Retake the EF SET and cross 51 overall (Achieve Verified B2)']},
 
-  {id:'b3', name:'Clear the certification stack', desc:'Every free credential that closes a real gap on your CV.', xp:90, reward:1000,
+  {id:'b3', name:'Clear the Certification Stack & Technical CAPI', desc:'Every high-leverage credential and tracking skill that separates you from ordinary media buyers.', xp:90, reward:1000,
    steps:[
      'Google Ads Search Certification',
      'Google Analytics 4 Certification',
@@ -365,103 +521,28 @@ const BOSSES = [
      'Snapchat Ads Certification',
      'Meta Media Buying study guide completed',
      'HubSpot Digital Advertising Certification',
-     'One HubSpot certification from stage 2']},
+     'Master Meta Conversions API (CAPI) & Event Match Quality 7.0+']},
 
-  {id:'b9', name:'Become an S-Tier Meta Specialist', desc:'Pixel, Conversions API, Marketing API. The skills almost no media buyer in the Gulf has.', xp:175, reward:2000,
+  {id:'b4', name:'High-Ticket Saudi Interview Clearance', desc:'The interview clearance raid: passing technical, case-study, and situational interviews with Saudi marketing leadership.', xp:175, reward:2000,
    steps:[
-     'Install a Meta Pixel on a real site and verify it with Pixel Helper',
-     'Set up standard and custom events correctly',
-     'Build a Conversions API integration and confirm events are received',
-     'Implement event deduplication and verify matching quality in Events Manager',
-     'Pull campaign data programmatically through the Marketing API',
-     'Build an automated reporting dashboard with no manual exports',
-     'Diagnose a deliberately broken tracking setup and fix it']},
+     'Complete deep research on top 10 marketing agencies in Riyadh and Jeddah',
+     'Adapt CV to Gulf ATS specifications (no photo, quantifiable ROAS, Riyadh relocation ready)',
+     'Master out-loud English presentation of the 130 to 50 CPL recovery case study',
+     'Connect directly with 15 marketing directors and agency owners in Saudi Arabia',
+     'Pass initial HR screening interview with a Saudi recruiter',
+     'Pass comprehensive technical case study assessment',
+     'Pass executive interview with managing director or VP',
+     'Receive formal written offer letter for a performance marketing role in KSA']},
 
-  {id:'b10', name:'Master automation', desc:'One person doing the work of three. This is the agency leverage.', xp:150, reward:1800,
+  {id:'b5', name:'Relocation Runway 120K EGP & Visa Clearance', desc:'Final strategic gate: 120,000 EGP emergency fund saved, medical and visa cleared, landing in Riyadh.', xp:200, reward:2500,
    steps:[
-     'Complete the Make Academy foundation track',
-     'Build a client reporting workflow that runs itself',
-     'Build a lead routing workflow from Meta to CRM',
-     'Learn the AI Agent module in Make',
-     'Self-host n8n on your own machine',
-     'Rebuild one Make scenario in n8n and compare cost',
-     'Sell one automation as a paid add-on service']},
-
-  {id:'b4', name:'Saudi Arabia \u2014 PHASED PLAN (ON HOLD)', desc:'Saudi is currently under a Level 3 travel advisory (US State Dept) with a Level 4 zone near Yemen and an incident at King Khalid Airport on 10 Oct 2026. Do NOT move now. Build the alternative paths first, revisit this when it is safe.', xp:175, reward:2500,
-   steps:[
-     'Track the situation monthly: US State Dept advisory + FCDO + Saudi press',
-     'Build the Egypt salary path to stability first (boss raid b1)',
-     'Grow freelance dollar income until it exceeds a Saudi salary',
-     'Keep the EGYPT FUND growing \u2014 it buys options, not just tickets',
-     'Passport and documents in order (valid 6+ months)',
-     'When advisory drops to Level 1-2 and airport is stable: sign contract',
-     'Book the flight and land in Riyadh']},
-
-  {id:'b11', name:'Earn in Dollars from Egypt', desc:'The alternative to moving: foreign clients, paid in USD, while you live at home. Cheapest path to real income without leaving Egypt.', xp:175, reward:2000,
-   steps:[
-     'Create profiles on Upwork, Mostaql and Khamsat (all three)',
-     'Build 3 portfolio pieces written for foreign buyers, not local ones',
-     'Send 5 proposals daily on Upwork for 2 weeks',
-     'Close the first paid client (any size)',
-     'Deliver it well enough to get a 5-star review',
-     'Repeat until you have 5 reviews',
-     'Raise prices by 30%',
-     'Reach $500/month in freelance income',
-     'Reach $1,000/month in freelance income']},
-
-  {id:'b12', name:'Move to the UAE (Dubai/Abu Dhabi)', desc:'The realistic Gulf option while Saudi is unstable. Media buyer salaries run AED 8,000\u201315,000. No visa needed to apply \u2014 the employer sponsors you.', xp:200, reward:2500,
-   steps:[
-     'Research the Dubai market: Dubai Media City + Dubai Internet City agencies',
-     'Adapt the CV to Gulf standards \u2014 no photo, no age, results first',
-     'Set alerts on Bayt, LinkedIn Gulf and GulfTalent',
-     'Apply to 20 UAE media buyer roles',
-     'Apply to 50 UAE media buyer roles',
-     'Complete 3 mock interviews with a Gulf recruiter',
-     'Reach a final-stage interview',
-     'Sign the offer (AED 8,000+)',
-     'Relocate: visa, Emirates ID, housing']},
-
-  {id:'b13', name:'Build the Freelance Agency', desc:'The real destination. One client becomes five, five becomes ten, then you hire people. This works from Egypt OR Dubai.', xp:250, reward:3500,
-   steps:[
-     'Define ONE service you can sell repeatedly (e.g. Meta Ads management)',
-     'Write the pricing: 3 packages, no hourly rate',
-     'Build the brand: name, logo, one-page site',
-     'Land the first paying client',
-     'Land the third client',
-     'Land the fifth client \u2014 or reach AED 30K/year revenue',
-     'Hire the first freelancer to help you deliver',
-     'Reach 10 clients on retainer']},
-
-  {id:'b5', name:'Master content creation', desc:'Your gear is a good phone camera. That is genuinely enough to start.', xp:125, reward:1500,
-   steps:[
-     'Learn manual control on the phone camera: exposure lock, focus lock, white balance',
-     'Learn one-light and window-light setups using what you already own',
-     'Learn phone-first audio (the microphone matters more than the camera)',
-     'Shoot 10 practice projects',
-     'Edit a complete video from start to finish',
-     'Build a portfolio of 20 finished pieces']},
-
-  {id:'b6', name:'Launch the agency', desc:'Advertising and marketing, Gulf market.', xp:225, reward:3000,
-   steps:[
-     'Define the service and the pricing',
-     'Build the brand identity (the logo is already done)',
-     'Build the website and portfolio',
-     'Register the business',
-     'Land the first paying client']},
-
-  {id:'b7', name:'Reach 10 clients', desc:'A real book of business, not a side hustle.', xp:250, reward:3500,
-   steps:['First client','Third client','Fifth client','Tenth client']},
-
-  {id:'b8', name:'MBA in Germany', desc:'The final raid. The long game.', xp:300, reward:5000,
-   steps:[
-     'Shortlist 8 universities and compare them properly',
-     'Prepare for the GMAT or equivalent requirement',
-     'Reach the required IELTS / TOEFL score',
-     'Save the full cost of study and living',
-     'Write the application essays',
-     'Secure the recommendation letters',
-     'Submit the applications',
-     'Get accepted']}
+     'Save 30,000 EGP toward relocation runway fund',
+     'Save 60,000 EGP toward relocation runway fund',
+     'Save 120,000 EGP full emergency 6-month safety runway',
+     'Passport and official documentation verified (valid 12+ months)',
+     'Complete Saudi medical check and document attestation',
+     'Sign employment contract and secure Saudi work visa',
+     'Book flight and land in Riyadh — Mission Accomplished']}
 ];
 
 /* ---------------------------------------------------------------

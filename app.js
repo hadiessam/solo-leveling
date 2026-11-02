@@ -1203,6 +1203,7 @@ function resets(){
        which weekly missions were left undone and what that costs */
     weeklyConsequence();
     S.lastWeek = w; S.weekly = {};
+    S.weeklyBoss = {};
   }
   save();
 }
@@ -1756,18 +1757,95 @@ function buyFreeze(){
 }
 
 /* ---------------------------------------------------------------------
-   MISSIONS
+   MISSIONS & EVOLVING ROTATIONS
    --------------------------------------------------------------------- */
+function getWeeklyCycleIndex(){
+  const start = (S && S.startedOn) ? S.startedOn : '2026-10-06';
+  const days = Math.max(0, daysBetween(start, dayKey()));
+  return Math.floor(days / 7);
+}
+
+function getActiveWeeklyBoss(){
+  if(typeof WEEKLY_RAID_BOSSES === 'undefined' || !WEEKLY_RAID_BOSSES.length) return null;
+  const cycleIdx = getWeeklyCycleIndex() % WEEKLY_RAID_BOSSES.length;
+  return WEEKLY_RAID_BOSSES[cycleIdx];
+}
+
+function isMissionActiveToday(m){
+  if(S && S.daily && S.daily[m.id]) return true;
+  if(typeof m.rotDay === 'number'){
+    const dow = getCairoDayOfWeek();
+    return m.rotDay === dow;
+  }
+  return true;
+}
+
+function isMissionActiveThisWeek(m){
+  if(S && S.weekly && S.weekly[m.id]) return true;
+  if(typeof m.cycle === 'number'){
+    const currentCycle = getWeeklyCycleIndex() % 4;
+    return m.cycle === currentCycle;
+  }
+  return true;
+}
+
 function available(list){
   return list.filter(m => {
     if(m.unlock && S.level < m.unlock.level) return false;
-    /* Exclude formed habits from active daily quest list so they do not clutter daily quests */
-    if(list === DAILY && S.formedHabits && S.formedHabits[m.id]) return false;
+    if(list === DAILY){
+      if(S.formedHabits && S.formedHabits[m.id]) return false;
+      if(!isMissionActiveToday(m)) return false;
+    }
+    if(list === WEEKLY){
+      if(!isMissionActiveThisWeek(m)) return false;
+    }
     return true;
   });
 }
+
 function lockedOf(list){
-  return list.filter(m => m.unlock && S.level < m.unlock.level);
+  return list.filter(m => {
+    if(!m.unlock || S.level >= m.unlock.level) return false;
+    if(list === DAILY && !isMissionActiveToday(m)) return false;
+    if(list === WEEKLY && !isMissionActiveThisWeek(m)) return false;
+    return true;
+  });
+}
+
+function toggleWeeklyBossPhase(bossId, phaseIdx){
+  if(!S.weeklyBoss) S.weeklyBoss = {};
+  if(!S.weeklyBoss[bossId]) S.weeklyBoss[bossId] = [false, false, false, false];
+
+  const b = typeof WEEKLY_RAID_BOSSES !== 'undefined' ? WEEKLY_RAID_BOSSES.find(x => x.id === bossId) : null;
+  if(!b || !b.phases || !b.phases[phaseIdx]) return;
+
+  const phase = b.phases[phaseIdx];
+  const current = !!S.weeklyBoss[bossId][phaseIdx];
+
+  if(current){
+    S.weeklyBoss[bossId][phaseIdx] = false;
+    subXP(phase.xp, 'skills', 'boss', phase.xp);
+    sfx('uncheck');
+    log('RAID', 'Phase unchecked: ' + phase.text);
+  } else {
+    S.weeklyBoss[bossId][phaseIdx] = true;
+    addXP(phase.xp, 'skills', false, 'boss');
+    sfx('questComplete');
+    log('RAID', 'Weekly Boss hit! <b>+' + phase.dmg + ' DMG dealt</b> (+'+ phase.xp +' XP).');
+
+    // Check if all phases cleared
+    const allDone = S.weeklyBoss[bossId].every(Boolean);
+    if(allDone){
+      addXP(b.reward, 'skills', true, 'boss');
+      sfx('levelUp');
+      log('RAID', '<b>GATE CONQUERED!</b> Conquered ' + b.name + ' (+ ' + b.reward + ' XP loot)!');
+      if(typeof overlay === 'function'){
+        overlay('WEEKLY GATE CONQUERED!', b.name, 'You have defeated the weekly raid boss and purged the dungeon.\nBonus Loot: +' + b.reward + ' XP earned!\nYour discipline grows stronger.');
+      }
+    }
+  }
+  save();
+  renderAll();
 }
 
 function toggleMission(kind, id, ev){

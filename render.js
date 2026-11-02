@@ -572,7 +572,21 @@ function lockRow(m){
 
 function drawDaily(){
   const av = available(DAILY), lk = lockedOf(DAILY);
-  let html = av.map(m => missionRow(m,'daily')).join('');
+
+  // Today's rotating weakness focus banner
+  const todayDow = typeof getCairoDayOfWeek === 'function' ? getCairoDayOfWeek() : new Date().getDay();
+  const themeObj = (typeof DAILY_THEMES !== 'undefined' && DAILY_THEMES[todayDow]) ? DAILY_THEMES[todayDow] : null;
+
+  let html = '';
+  if(themeObj){
+    html += '<div class="daily-theme-card">'
+          + '<div class="daily-theme-tag">TODAY\'S ROTATING WEAKNESS FOCUS &middot; ' + esc(themeObj.dayName) + '</div>'
+          + '<div class="daily-theme-title">' + esc(themeObj.title) + '</div>'
+          + '<div class="daily-theme-ar">' + esc(themeObj.titleAr) + '</div>'
+          + '</div>';
+  }
+
+  html += av.map(m => missionRow(m,'daily')).join('');
   if(lk.length) html += lk.map(lockRow).join('');
 
   /* after 21 days a mission becomes a habit automatically — no extra tracking */
@@ -599,8 +613,47 @@ function drawDaily(){
 
 function drawWeekly(){
   const av = available(WEEKLY), lk = lockedOf(WEEKLY);
-  let html = av.map(m => missionRow(m,'weekly')).join('');
-  if(lk.length) html += lk.map(lockRow).join('');
+  const weekIdx = typeof getWeeklyCycleIndex === 'function' ? getWeeklyCycleIndex() : 0;
+  const cycleIdx = weekIdx % 4;
+  const currentTheme = (typeof WEEKLY_THEMES !== 'undefined' && WEEKLY_THEMES[cycleIdx]) ? WEEKLY_THEMES[cycleIdx] : null;
+
+  const doneCount = av.filter(m => S.weekly[m.id]).length;
+  const totalCount = av.length;
+  const allWeeklyDone = totalCount > 0 && doneCount === totalCount;
+
+  let html = '';
+
+  /* Active Weekly Evolution Banner */
+  html += '<div class="weekly-cycle-banner">'
+        + '<div class="wcb-top">'
+        +   '<div class="wcb-badge">WEEK ' + (weekIdx + 1) + ' &middot; EVOLUTION CYCLE ' + (cycleIdx + 1) + '/4</div>'
+        +   '<div class="wcb-status' + (allWeeklyDone ? ' done' : '') + '">'
+        +     (allWeeklyDone ? '🏆 WEEKLY DOMINANCE (+150 XP)' : doneCount + ' / ' + totalCount + ' COMPLETED')
+        +   '</div>'
+        + '</div>'
+        + '<div class="wcb-title">' + (currentTheme ? esc(currentTheme.name) : 'Dynamic Weekly Evolution') + '</div>'
+        + '<div class="wcb-ar">' + (currentTheme ? esc(currentTheme.nameAr) : '') + '</div>'
+        + '<div class="bar thin" style="margin-top:10px"><i style="width:' + (totalCount ? (doneCount/totalCount*100) : 0) + '%;background:var(--gold)"></i></div>'
+        + '</div>';
+
+  /* Split into Core Anchors and Cycle Missions */
+  const coreMissions = av.filter(m => !m.cycle && m.cycle !== 0);
+  const cycleMissions = av.filter(m => m.cycle !== null && m.cycle !== undefined);
+
+  if(coreMissions.length){
+    html += '<div class="st" style="margin-top:18px"><h2>Core Strategic Anchors</h2><span class="tag">EVERY WEEK</span></div>';
+    html += coreMissions.map(m => missionRow(m,'weekly')).join('');
+  }
+
+  if(cycleMissions.length){
+    html += '<div class="st" style="margin-top:22px"><h2>' + (currentTheme ? esc(currentTheme.name) : 'Active Weekly Cycle') + '</h2><span class="tag">DYNAMIC ROTATION</span></div>';
+    html += cycleMissions.map(m => missionRow(m,'weekly')).join('');
+  }
+
+  if(lk.length){
+    html += '<div class="st" style="margin-top:22px"><h2>Locked Weekly Missions</h2></div>';
+    html += lk.map(lockRow).join('');
+  }
 
   /* ---- consequence warning for the weekly missions ---- */
   const undone = av.filter(m => !S.weekly[m.id]);
@@ -705,7 +758,71 @@ function togglePodcastListened(id){
    BOSSES
    --------------------------------------------------------------------- */
 function drawBosses(){
-  $('bossList').innerHTML = BOSSES.map(b => {
+  const wb = typeof getActiveWeeklyBoss === 'function' ? getActiveWeeklyBoss() : null;
+  let html = '';
+
+  /* ===== ACTIVE WEEKLY RAID BOSS SECTION ===== */
+  if(wb){
+    const wbState = (S.weeklyBoss && S.weeklyBoss[wb.id]) || [false, false, false, false];
+    let damageDealt = 0;
+    wb.phases.forEach((p, idx) => {
+      if(wbState[idx]) damageDealt += p.dmg;
+    });
+    const currentHp = Math.max(0, wb.hp - damageDealt);
+    const hpPct = Math.round((currentHp / wb.hp) * 100);
+    const isDefeated = currentHp === 0 || wbState.every(Boolean);
+
+    html += '<div class="st"><h2>Active Weekly Raid Boss</h2><span class="tag gate-rank">' + esc(wb.rank) + '</span></div>';
+    html += '<div class="hint">The dungeon gate resets every Friday with a new rotating dungeon master. Deal tactical phase damage to claim weekly victory loot.</div>';
+
+    html += '<div class="weekly-boss-card' + (isDefeated ? ' defeated' : '') + '">'
+          + '<div class="wb-header">'
+          +   '<div class="wb-avatar-wrap">'
+          +     '<img class="wb-avatar" src="' + esc(wb.avatar) + '" alt="' + esc(wb.name) + '" onerror="this.src=\'assets/jinwoo.png\'">'
+          +   '</div>'
+          +   '<div class="wb-info">'
+          +     '<div class="wb-rank-tag">' + esc(wb.rank) + ' &middot; WEEKLY GATE</div>'
+          +     '<h3 class="wb-name">' + esc(wb.name) + '</h3>'
+          +     '<div class="wb-title-ar">' + esc(wb.titleAr) + '</div>'
+          +     '<div class="wb-lore">' + esc(wb.lore) + '</div>'
+          +   '</div>'
+          + '</div>'
+
+          + '<div class="wb-hp-section">'
+          +   '<div class="wb-hp-label-row">'
+          +     '<span>BOSS HP</span>'
+          +     '<b style="color:' + (isDefeated ? 'var(--green)' : 'var(--red)') + '">'
+          +       (isDefeated ? 'GATE CLEARED 0 / ' + wb.hp + ' HP' : currentHp.toLocaleString() + ' / ' + wb.hp.toLocaleString() + ' HP (' + hpPct + '%)')
+          +     '</b>'
+          +   '</div>'
+          +   '<div class="bar thin wb-hp-bar"><i style="width:' + hpPct + '%;background:' + (isDefeated ? 'var(--green)' : 'linear-gradient(90deg, #ef4444, #a855f7)') + '"></i></div>'
+          + '</div>'
+
+          + '<div class="wb-loot-row">'
+          +   '<div class="wb-loot-item"><span class="wb-lk">Phase Damage:</span><span class="wb-lv">+250-375 DMG &middot; +75 XP</span></div>'
+          +   '<div class="wb-loot-item"><span class="wb-lk">Clear Bonus:</span><span class="wb-lv gold">+' + wb.reward + ' XP LOOT</span></div>'
+          + '</div>'
+
+          + '<div class="wb-phases-list">'
+          +   wb.phases.map((phase, pIdx) => {
+                const checked = !!wbState[pIdx];
+                return '<div class="wb-phase-row' + (checked ? ' done' : '') + '" onclick="toggleWeeklyBossPhase(\'' + wb.id + '\', ' + pIdx + ')">'
+                     + '<div class="sb">' + (checked ? ic('check', 13) : '') + '</div>'
+                     + '<div class="wb-phase-text">' + esc(phase.text) + '</div>'
+                     + '<div class="wb-phase-payout">' + (checked ? '<span style="color:var(--green)">CRITICAL HIT</span>' : '+' + phase.dmg + ' DMG &middot; +' + phase.xp + ' XP') + '</div>'
+                     + '</div>';
+              }).join('')
+          + '</div>'
+
+          + (isDefeated ? '<div class="wb-victory-banner">🏆 <b>GATE PURGED!</b> Weekly Raid Boss Defeated &middot; +' + wb.reward + ' XP Victory Loot Awarded!</div>' : '')
+          + '</div>';
+  }
+
+  /* ===== GRAND CAMPAIGN RAIDS SECTION ===== */
+  html += '<div class="st" style="margin-top:34px"><h2>Grand Campaign Raids &mdash; Saudi Arabia 2027</h2><span class="tag">STRATEGIC MILESTONES</span></div>';
+  html += '<div class="hint">The 5 sovereign campaign gates. Clear every step to eliminate weaknesses and unlock the destination.</div>';
+
+  html += BOSSES.map(b => {
     const st = S.boss[b.id] || b.steps.map(()=>false);
     const pct = bossPct(b.id);
     const fin = bossDone(b.id);
@@ -741,6 +858,8 @@ function drawBosses(){
       + (fin && b.reward ? '<div class="bossDone">Completion bonus earned: <b>+'+b.reward.toLocaleString()+' XP</b></div>' : '')
       + '</div>';
   }).join('');
+
+  $('bossList').innerHTML = html;
 }
 
 /* ---------------------------------------------------------------------
