@@ -172,12 +172,21 @@ const EQUIPMENT = [
  * Initialize equipment state on S if not present.
  */
 function initEquipment() {
-  if (!S.equipment) {
-    S.equipment = {
-      equipped: { weapon: null, armor: null, accessory: null },
-      inventory: [],        // array of item ids
-      lootDropChance: 0.10, // 10% base chance
+  if (!S.equipment || typeof S.equipment !== 'object') {
+    S.equipment = {};
+  }
+  if (!S.equipment.equipped || typeof S.equipment.equipped !== 'object') {
+    S.equipment.equipped = {
+      weapon: S.equipment.weapon || null,
+      armor: S.equipment.armor || null,
+      accessory: S.equipment.accessory || null
     };
+  }
+  if (!Array.isArray(S.equipment.inventory)) {
+    S.equipment.inventory = [];
+  }
+  if (typeof S.equipment.lootDropChance !== 'number') {
+    S.equipment.lootDropChance = 0.10;
   }
 }
 
@@ -238,7 +247,7 @@ function getEquipmentBonus(type) {
 
   let total = 0;
   for (const slot of ['weapon', 'armor', 'accessory']) {
-    const itemId = S.equipment.equipped[slot];
+    const itemId = (S.equipment && S.equipment.equipped && S.equipment.equipped[slot]) || null;
     if (!itemId) continue;
     const item = EQUIPMENT.find(e => e.id === itemId);
     if (item && item.bonusType === type) {
@@ -291,7 +300,7 @@ function rollLootDrop() {
  */
 function getEquippedItem(slot) {
   initEquipment();
-  const itemId = S.equipment.equipped[slot];
+  const itemId = (S.equipment && S.equipment.equipped && S.equipment.equipped[slot]) || null;
   if (!itemId) return null;
   return EQUIPMENT.find(e => e.id === itemId) || null;
 }

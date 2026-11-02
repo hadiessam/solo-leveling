@@ -1,4 +1,4 @@
-﻿/* =====================================================================
+/* =====================================================================
    SOLO LEVELING — RENDER LAYER
    ===================================================================== */
 
@@ -21,7 +21,7 @@ function log(hdr, txt, bad){
   el.innerHTML = '<div class="hd">'+esc(hdr)+'</div>'+txt;
   $('log').appendChild(el);
   setTimeout(()=>{ el.style.transition='opacity .5s'; el.style.opacity='0';
-    setTimeout(()=>el.remove(),500); }, 4500);
+    setTimeout(()=>{ if(el.parentNode) el.parentNode.removeChild(el); else if(el.remove) el.remove(); },500); }, 4500);
 }
 
 function beep(f, d, type){
@@ -883,9 +883,12 @@ function drawBosses(){
    --------------------------------------------------------------------- */
 function drawCourses(){
   const done = Object.keys(S.courses).length;
-  courseTag.textContent = done + ' / ' + COURSES.length + ' DONE';
+  const cTag = $('courseTag');
+  if(cTag) cTag.textContent = done + ' / ' + COURSES.length + ' DONE';
 
-  courseList.innerHTML = COURSES.map(c => {
+  const cList = $('courseList');
+  if(!cList) return;
+  cList.innerHTML = COURSES.map(c => {
     const open = courseOpen(c);
     const fin = !!S.courses[c.id];
     return '<div class="course '+(fin?'done':'')+'" style="'+(open?'':'opacity:.5')+'">'

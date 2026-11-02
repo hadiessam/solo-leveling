@@ -218,6 +218,8 @@ function read(){
     return blank();
   }
 }
+/* ---------------------------------------------------------------------
+   CLASS SYSTEM 
    --------------------------------------------------------------------- */
 function chooseClass(classId){
   if(S.level < 10){ sfx('error'); alert('Classes unlock at level 10.'); return; }
@@ -1115,6 +1117,8 @@ function cloudLoad(){
     return false;
   }).catch(()=>false);
 }
+/* ---------------------------------------------------------------------
+   DATE & TIMEZONE HELPERS
    --------------------------------------------------------------------- */
 const CAIRO_TZ = 'Africa/Cairo';
 
@@ -2390,10 +2394,7 @@ function getDailyPriorities(){
 
   const diffLevel = (S.lifeStatus && S.lifeStatus.currentDifficulty) || 1;
   const isFoundation = !(S.foundationProfile && S.foundationProfile.dayIndex > 14);
-  const targetCounts = isFoundation ? { 1: 4, 2: 4, 3: 5, 4: 5 } : { 1: 4, 2: 5, 3: 6, 8: 8 };
-  const targetCount = targetCounts[diffLevel] || 4;
-  const diffLevel = (S.lifeStatus && S.lifeStatus.currentDifficulty) || 1;
-  const targetCounts = { 1: 4, 2: 5, 3: 6, 4: 8 };
+  const targetCounts = isFoundation ? { 1: 4, 2: 4, 3: 5, 4: 5 } : { 1: 4, 2: 5, 3: 6, 4: 8 };
   const targetCount = targetCounts[diffLevel] || 4;
 
   let pool = [];
