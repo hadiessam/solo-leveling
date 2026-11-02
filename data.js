@@ -468,12 +468,13 @@ const BOSSES = [
    HUNTER RANKS
    --------------------------------------------------------------- */
 const RANKS = [
-  {name:'E-RANK HUNTER', xp:0,     note:'Foundation stage. Habits not yet formed. This is where everyone starts and most people stop.'},
-  {name:'D-RANK HUNTER', xp:2000,  note:'The habit has formed. You are no longer relying on motivation.'},
-  {name:'C-RANK HUNTER', xp:6000,  note:'Competent and consistent. This is roughly where your CV already puts you professionally.'},
-  {name:'B-RANK HUNTER', xp:14000, note:'Dangerous. You would now be a strong hire in Cairo or Dubai, not a gamble.'},
-  {name:'A-RANK HUNTER', xp:28000, note:'National level. Offers come to you now, not the other way round.'},
-  {name:'S-RANK HUNTER', xp:52000, note:'The Shadow Monarch. There is nothing left to prove.'}
+  {name:'E-RANK HUNTER', xp:0,       note:'Foundation Stage (Day 1-30). Overcoming inertia and establishing daily discipline.'},
+  {name:'D-RANK HUNTER', xp:5000,    note:'Awakened Operator (Months 2-4). Habit locked in; execution driven by systems, not fleeting mood.'},
+  {name:'C-RANK HUNTER', xp:25000,   note:'Proven Specialist (~Year 1). Verified case studies, ATS English CV, and automated lead generation engines.'},
+  {name:'B-RANK HUNTER', xp:75000,   note:'Senior Regional Operator (~Years 2-3). Authority hire in Riyadh or Dubai commanding premium compensation.'},
+  {name:'A-RANK HUNTER', xp:180000,  note:'Enterprise Marketing Director (~Years 4-5). High-impact media architect managing multi-million budgets.'},
+  {name:'S-RANK HUNTER', xp:450000,  note:'The Shadow Monarch (~6+ Years of Daily Commitment). Sovereign mastery over career, health, mind, and wealth.'},
+  {name:'NATIONAL LEVEL HUNTER', xp:1000000, note:'The Sovereign (Decade of Mastery). Transcended all mortal hunter limitations.'}
 ];
 
 /* ---------------------------------------------------------------
@@ -1437,7 +1438,8 @@ const BADGES = [
   {id:'rankc',   icon:'dagger', name:'C-Rank',           desc:'Reached C-Rank Hunter.',                           test:s=>rankIdx(s.xp)>=2},
   {id:'rankb',   icon:'target', name:'B-Rank',           desc:'Reached B-Rank Hunter. You would be a strong hire now.', test:s=>rankIdx(s.xp)>=3},
   {id:'ranka',   icon:'medal', name:'A-Rank',           desc:'Reached A-Rank Hunter. Offers come to you now.',   test:s=>rankIdx(s.xp)>=4},
-  {id:'ranks',   icon:'crown', name:'S-RANK',           desc:'The Shadow Monarch. There is nothing left to prove.', test:s=>rankIdx(s.xp)>=5},
+  {id:'ranks',   icon:'crown', name:'S-RANK',           desc:'The Shadow Monarch. Reached through 6+ years of true daily dedication.', test:s=>rankIdx(s.xp)>=5},
+  {id:'ranknat', icon:'sparkle', name:'National Level', desc:'The Sovereign. Reached the 1,000,000 XP pinnacle.', test:s=>rankIdx(s.xp)>=6},
 
   {id:'lvl10',   icon:'key', name:'Level 10',          desc:'Reached level 10.',                                test:s=>s.level>=10},
   {id:'lvl25',   icon:'arrowUp', name:'Level 25',          desc:'Reached level 25.',                                test:s=>s.level>=25},
@@ -1527,11 +1529,19 @@ const SAUDI_MILESTONES = [
   {
     id: 'm1_proof',
     name: 'Milestone 1 — Documented Proof & Hero Case Studies',
+    status: 'CURRENT FOCUS',
+    timeframe: 'Q4 2026 (By Dec 15)',
     targetDate: '2026-12-15',
     progress: 75,
+    xpReward: 500,
     desc: 'Transform 14 months of verified performance marketing at IRA Academy (27 programs, TL 171K spend, 11,406 leads, TL 15.06 CPL) and ADLab into 3 deep, visually compelling case studies.',
     icon: 'award',
     projects: ['prj_hero_phd', 'prj_hero_recovery', 'prj_hero_diploma'],
+    objectives: [
+      'Document 14 months of verified performance marketing data into 3 deep case studies.',
+      'Quantify 11,406 leads, TL 171K spend, and TL 15.06 blended CPL proof.',
+      'Build before/after CPL recovery framework from TL 130 to TL 50.'
+    ],
     deliverables: [
       'PhD Political Science campaign breakdown (1,544 leads @ TL 4.62 CPL)',
       'AI & Cybersecurity CPL recovery playbook (130 TL -> 50 TL)',
@@ -1541,11 +1551,19 @@ const SAUDI_MILESTONES = [
   {
     id: 'm2_brand',
     name: 'Milestone 2 — ATS English CV & Regional Personal Brand',
+    status: 'IN PROGRESS',
+    timeframe: 'Q1 2027 (By Jan 30)',
     targetDate: '2027-01-30',
     progress: 55,
+    xpReward: 400,
     desc: 'Establish top-tier positioning among Saudi media buying agencies and Gulf hiring managers.',
     icon: 'user',
     projects: ['prj_ats_cv', 'prj_portfolio', 'prj_linkedin_saudi'],
+    objectives: [
+      'Draft 100% ATS-compliant 1-page English resume matching Gulf agency standards.',
+      'Launch online portfolio showcasing hero case studies and live analytics.',
+      'Establish weekly LinkedIn authority posting targeting Riyadh/Jeddah agencies.'
+    ],
     deliverables: [
       '100% ATS-friendly 1-page English CV focusing on ROI & scale',
       'Interactive online portfolio showcasing hero case studies',
@@ -1555,11 +1573,19 @@ const SAUDI_MILESTONES = [
   {
     id: 'm3_tech',
     name: 'Milestone 3 — Advanced Media Buying & AI Arsenal',
+    status: 'IN PROGRESS',
+    timeframe: 'Q1 2027 (By Mar 31)',
     targetDate: '2027-03-31',
     progress: 40,
+    xpReward: 400,
     desc: 'Master technical infrastructure that differentiates top 1% media buyers in the Gulf.',
     icon: 'cpu',
     projects: ['prj_tech_capi', 'prj_ai_video_ads', 'prj_google_analytics'],
+    objectives: [
+      'Master server-side Meta Conversions API (CAPI) and event deduplication.',
+      'Implement GA4 custom lead conversion event funnels and cross-channel attribution.',
+      'Automate multimodal AI video ad creative production (ElevenLabs + HeyGen + CapCut).'
+    ],
     deliverables: [
       'Server-side Meta Conversions API (CAPI) & Pixel deduplication mastery',
       'Google Analytics 4 custom lead event tracking & funnel analysis',
@@ -1569,11 +1595,19 @@ const SAUDI_MILESTONES = [
   {
     id: 'm4_interview',
     name: 'Milestone 4 — High-Ticket Gulf Interview Mastery & English Fluency',
+    status: 'UPCOMING',
+    timeframe: 'Q2 2027 (By May 31)',
     targetDate: '2027-05-31',
     progress: 35,
+    xpReward: 350,
     desc: 'Deliver effortless English presentations defending campaign decisions, budget allocation, and ROAS optimization.',
     icon: 'mic',
     projects: ['prj_interview_pitch', 'prj_english_drills', 'prj_proposal_writing'],
+    objectives: [
+      'Deliver confident 90-second executive elevator pitch in English with zero filler words.',
+      'Conduct mock campaign defense drills explaining ROAS optimization to agency leadership.',
+      'Draft commercial freelance proposals and client presentation decks.'
+    ],
     deliverables: [
       '90-second executive elevator pitch with zero filler words',
       'Live campaign defense drills explaining ROAS drop recovery in English',
@@ -1583,11 +1617,19 @@ const SAUDI_MILESTONES = [
   {
     id: 'm5_finance',
     name: 'Milestone 5 — Financial Runway & Relocation Capital Buffer',
+    status: 'UPCOMING',
+    timeframe: 'Q3 2027 (By Jul 31)',
     targetDate: '2027-07-31',
     progress: 25,
+    xpReward: 350,
     desc: 'Accumulate a dedicated relocation runway (flight, visa, initial living buffer) through expense discipline and freelance revenue.',
     icon: 'dollar',
     projects: ['prj_relocation_fund', 'prj_freelance_retainers'],
+    objectives: [
+      'Accumulate dedicated 120,000 EGP relocation runway fund ($2,500 buffer).',
+      'Maintain 30-day itemized expense discipline with zero unaccounted spending.',
+      'Establish steady dollar freelance retainers on Upwork/Mostaql or direct clients.'
+    ],
     deliverables: [
       '120,000 EGP dedicated Saudi relocation and emergency reserve',
       '30-day itemized expense discipline (zero unaccounted spending)',
@@ -1601,145 +1643,218 @@ const LIFE_OS_PROJECTS = [
   {
     id: 'prj_hero_phd',
     title: 'Hero Case Study: PhD Political Science (1,544 Leads @ TL 4.62)',
+    name: 'Hero Case Study: PhD Political Science (1,544 Leads @ TL 4.62)',
     milestoneId: 'm1_proof',
     category: 'Portfolio',
     status: 'in_progress',
     progress: 75,
     deadline: '2026-11-20',
+    targetDate: '2026-11-20',
     objective: 'Write and design a comprehensive case study documenting the lowest CPL educational campaign in account history.',
+    desc: 'Write and design a comprehensive case study documenting the lowest CPL educational campaign in account history.',
     outcome: 'Polished 3-page PDF and web case study ready to send to Saudi recruiters.',
     tasks: [
-      { id: 't_phd_1', text: 'Extract raw Meta Ads Manager export for PhD campaign', done: true },
-      { id: 't_phd_2', text: 'Draft Problem & Challenge statement (niche target audience in Arab world)', done: true },
-      { id: 't_phd_3', text: 'Detail Audience Strategy: Custom/Lookalike layering & Advantage+ budget', done: true },
-      { id: 't_phd_4', text: 'Format results visual: 1,544 leads, TL 4.62 CPL vs TL 15.06 average', done: false },
-      { id: 't_phd_5', text: 'Export high-res PDF and embed in portfolio', done: false }
+      { id: 't_phd_1', text: 'Extract raw Meta Ads Manager export for PhD campaign', name: 'Extract raw Meta Ads Manager export for PhD campaign', done: true },
+      { id: 't_phd_2', text: 'Draft Problem & Challenge statement (niche target audience in Arab world)', name: 'Draft Problem & Challenge statement (niche target audience in Arab world)', done: true },
+      { id: 't_phd_3', text: 'Detail Audience Strategy: Custom/Lookalike layering & Advantage+ budget', name: 'Detail Audience Strategy: Custom/Lookalike layering & Advantage+ budget', done: true },
+      { id: 't_phd_4', text: 'Format results visual: 1,544 leads, TL 4.62 CPL vs TL 15.06 average', name: 'Format results visual: 1,544 leads, TL 4.62 CPL vs TL 15.06 average', done: false },
+      { id: 't_phd_5', text: 'Export high-res PDF and embed in portfolio', name: 'Export high-res PDF and embed in portfolio', done: false }
+    ],
+    subtasks: [
+      { id: 't_phd_1', text: 'Extract raw Meta Ads Manager export for PhD campaign', name: 'Extract raw Meta Ads Manager export for PhD campaign', done: true },
+      { id: 't_phd_2', text: 'Draft Problem & Challenge statement (niche target audience in Arab world)', name: 'Draft Problem & Challenge statement (niche target audience in Arab world)', done: true },
+      { id: 't_phd_3', text: 'Detail Audience Strategy: Custom/Lookalike layering & Advantage+ budget', name: 'Detail Audience Strategy: Custom/Lookalike layering & Advantage+ budget', done: true },
+      { id: 't_phd_4', text: 'Format results visual: 1,544 leads, TL 4.62 CPL vs TL 15.06 average', name: 'Format results visual: 1,544 leads, TL 4.62 CPL vs TL 15.06 average', done: false },
+      { id: 't_phd_5', text: 'Export high-res PDF and embed in portfolio', name: 'Export high-res PDF and embed in portfolio', done: false }
     ],
     notes: 'Primary proof point for high-volume lead generation efficiency.'
   },
   {
     id: 'prj_hero_recovery',
     title: 'Hero Case Study: Delivery Volatility & CPL Recovery (130 -> 50 TL)',
+    name: 'Hero Case Study: Delivery Volatility & CPL Recovery (130 -> 50 TL)',
     milestoneId: 'm1_proof',
     category: 'Portfolio',
     status: 'in_progress',
     progress: 50,
     deadline: '2026-11-30',
+    targetDate: '2026-11-30',
     objective: 'Document the exact systematic protocol used to recover an AI & Cyber campaign from 130 TL to 50 TL CPL.',
+    desc: 'Document the exact systematic protocol used to recover an AI & Cyber campaign from 130 TL to 50 TL CPL.',
     outcome: 'Demonstrates deep troubleshooting, learning phase reset tactics, and algorithmic understanding.',
     tasks: [
-      { id: 't_rec_1', text: 'Structure the 4-step diagnostic protocol', done: true },
-      { id: 't_rec_2', text: 'Write the campaign duplication and learning phase reset rationale', done: true },
-      { id: 't_rec_3', text: 'Document creative fatigue indicators and copy adjustments', done: false },
-      { id: 't_rec_4', text: 'Create before/after CPL comparison chart', done: false }
+      { id: 't_rec_1', text: 'Structure the 4-step diagnostic protocol', name: 'Structure the 4-step diagnostic protocol', done: true },
+      { id: 't_rec_2', text: 'Write the campaign duplication and learning phase reset rationale', name: 'Write the campaign duplication and learning phase reset rationale', done: true },
+      { id: 't_rec_3', text: 'Document creative fatigue indicators and copy adjustments', name: 'Document creative fatigue indicators and copy adjustments', done: false },
+      { id: 't_rec_4', text: 'Create before/after CPL comparison chart', name: 'Create before/after CPL comparison chart', done: false }
+    ],
+    subtasks: [
+      { id: 't_rec_1', text: 'Structure the 4-step diagnostic protocol', name: 'Structure the 4-step diagnostic protocol', done: true },
+      { id: 't_rec_2', text: 'Write the campaign duplication and learning phase reset rationale', name: 'Write the campaign duplication and learning phase reset rationale', done: true },
+      { id: 't_rec_3', text: 'Document creative fatigue indicators and copy adjustments', name: 'Document creative fatigue indicators and copy adjustments', done: false },
+      { id: 't_rec_4', text: 'Create before/after CPL comparison chart', name: 'Create before/after CPL comparison chart', done: false }
     ],
     notes: 'Recruiters value candidates who know what to do when campaigns break.'
   },
   {
     id: 'prj_ats_cv',
     title: 'ATS-Optimized 1-Page English CV for Saudi Media Agencies',
+    name: 'ATS-Optimized 1-Page English CV for Saudi Media Agencies',
     milestoneId: 'm2_brand',
     category: 'Career',
     status: 'active',
     progress: 60,
     deadline: '2026-12-05',
+    targetDate: '2026-12-05',
     objective: 'Build an ultra-clean, high-converting English resume passing all applicant tracking systems with a 95%+ match score.',
+    desc: 'Build an ultra-clean, high-converting English resume passing all applicant tracking systems with a 95%+ match score.',
     outcome: 'ATS-compliant PDF resume emphasizing 27 campaigns, 11,406 leads, and TL 171K spend.',
     tasks: [
-      { id: 't_cv_1', text: 'Quantify all IRA Academy bullet points with verified numbers', done: true },
-      { id: 't_cv_2', text: 'Highlight ADLab media planning experience (Audi, Lynk & Co)', done: true },
-      { id: 't_cv_3', text: 'Incorporate Saudi/Gulf job keyword matrix (Advantage+, CAPI, CAC/ROAS, Attribution)', done: false },
-      { id: 't_cv_4', text: 'Run through Jobscan ATS simulator and score above 90%', done: false }
+      { id: 't_cv_1', text: 'Quantify all IRA Academy bullet points with verified numbers', name: 'Quantify all IRA Academy bullet points with verified numbers', done: true },
+      { id: 't_cv_2', text: 'Highlight ADLab media planning experience (Audi, Lynk & Co)', name: 'Highlight ADLab media planning experience (Audi, Lynk & Co)', done: true },
+      { id: 't_cv_3', text: 'Incorporate Saudi/Gulf job keyword matrix (Advantage+, CAPI, CAC/ROAS, Attribution)', name: 'Incorporate Saudi/Gulf job keyword matrix (Advantage+, CAPI, CAC/ROAS, Attribution)', done: false },
+      { id: 't_cv_4', text: 'Run through Jobscan ATS simulator and score above 90%', name: 'Run through Jobscan ATS simulator and score above 90%', done: false }
+    ],
+    subtasks: [
+      { id: 't_cv_1', text: 'Quantify all IRA Academy bullet points with verified numbers', name: 'Quantify all IRA Academy bullet points with verified numbers', done: true },
+      { id: 't_cv_2', text: 'Highlight ADLab media planning experience (Audi, Lynk & Co)', name: 'Highlight ADLab media planning experience (Audi, Lynk & Co)', done: true },
+      { id: 't_cv_3', text: 'Incorporate Saudi/Gulf job keyword matrix (Advantage+, CAPI, CAC/ROAS, Attribution)', name: 'Incorporate Saudi/Gulf job keyword matrix (Advantage+, CAPI, CAC/ROAS, Attribution)', done: false },
+      { id: 't_cv_4', text: 'Run through Jobscan ATS simulator and score above 90%', name: 'Run through Jobscan ATS simulator and score above 90%', done: false }
     ],
     notes: 'Never list generic duties; always state Action + Metric + Result.'
   },
   {
     id: 'prj_linkedin_saudi',
     title: 'LinkedIn Authority & Saudi Recruiter Outreach Pipeline',
+    name: 'LinkedIn Authority & Saudi Recruiter Outreach Pipeline',
     milestoneId: 'm2_brand',
     category: 'Career',
     status: 'active',
     progress: 40,
     deadline: '2026-12-20',
+    targetDate: '2026-12-20',
     objective: 'Transform LinkedIn into an inbound recruiter magnet targeting Riyadh/Jeddah agencies and brands.',
+    desc: 'Transform LinkedIn into an inbound recruiter magnet targeting Riyadh/Jeddah agencies and brands.',
     outcome: 'Weekly inbound messages from regional agency recruiters.',
     tasks: [
-      { id: 't_li_1', text: 'Update Headline: Performance Marketing Specialist | Meta Ads & Lead Gen | $171K+ Spend Managed', done: true },
-      { id: 't_li_2', text: 'Publish Case Study 1 as a LinkedIn carousel', done: false },
-      { id: 't_li_3', text: 'Connect with 15 Saudi media directors and talent acquisition leads per week', done: false },
-      { id: 't_li_4', text: 'Engage thoughtfully on top 5 Saudi marketing agency posts daily', done: false }
+      { id: 't_li_1', text: 'Update Headline: Performance Marketing Specialist | Meta Ads & Lead Gen | $171K+ Spend Managed', name: 'Update Headline: Performance Marketing Specialist | Meta Ads & Lead Gen | $171K+ Spend Managed', done: true },
+      { id: 't_li_2', text: 'Publish Case Study 1 as a LinkedIn carousel', name: 'Publish Case Study 1 as a LinkedIn carousel', done: false },
+      { id: 't_li_3', text: 'Connect with 15 Saudi media directors and talent acquisition leads per week', name: 'Connect with 15 Saudi media directors and talent acquisition leads per week', done: false },
+      { id: 't_li_4', text: 'Engage thoughtfully on top 5 Saudi marketing agency posts daily', name: 'Engage thoughtfully on top 5 Saudi marketing agency posts daily', done: false }
+    ],
+    subtasks: [
+      { id: 't_li_1', text: 'Update Headline: Performance Marketing Specialist | Meta Ads & Lead Gen | $171K+ Spend Managed', name: 'Update Headline: Performance Marketing Specialist | Meta Ads & Lead Gen | $171K+ Spend Managed', done: true },
+      { id: 't_li_2', text: 'Publish Case Study 1 as a LinkedIn carousel', name: 'Publish Case Study 1 as a LinkedIn carousel', done: false },
+      { id: 't_li_3', text: 'Connect with 15 Saudi media directors and talent acquisition leads per week', name: 'Connect with 15 Saudi media directors and talent acquisition leads per week', done: false },
+      { id: 't_li_4', text: 'Engage thoughtfully on top 5 Saudi marketing agency posts daily', name: 'Engage thoughtfully on top 5 Saudi marketing agency posts daily', done: false }
     ],
     notes: 'Position as a ROI-driven practitioner, not a generic content creator.'
   },
   {
     id: 'prj_tech_capi',
     title: 'Meta Conversions API (CAPI) & GA4 Advanced Tracking Mastery',
+    name: 'Meta Conversions API (CAPI) & GA4 Advanced Tracking Mastery',
     milestoneId: 'm3_tech',
     category: 'Technical',
     status: 'active',
     progress: 35,
     deadline: '2027-01-15',
+    targetDate: '2027-01-15',
     objective: 'Acquire practical, end-to-end server-side tracking and attribution skills demanded by modern media buyers.',
+    desc: 'Acquire practical, end-to-end server-side tracking and attribution skills demanded by modern media buyers.',
     outcome: 'Ability to set up CAPI gateway, event deduplication, and custom GA4 conversion funnels.',
     tasks: [
-      { id: 't_cap_1', text: 'Complete Meta CAPI Gateway walkthrough', done: true },
-      { id: 't_cap_2', text: 'Test event deduplication between browser pixel and server event', done: false },
-      { id: 't_cap_3', text: 'Configure custom lead qualification events in GA4', done: false },
-      { id: 't_cap_4', text: 'Write step-by-step CAPI setup guide for Knowledge Base', done: false }
+      { id: 't_cap_1', text: 'Complete Meta CAPI Gateway walkthrough', name: 'Complete Meta CAPI Gateway walkthrough', done: true },
+      { id: 't_cap_2', text: 'Test event deduplication between browser pixel and server event', name: 'Test event deduplication between browser pixel and server event', done: false },
+      { id: 't_cap_3', text: 'Configure custom lead qualification events in GA4', name: 'Configure custom lead qualification events in GA4', done: false },
+      { id: 't_cap_4', text: 'Write step-by-step CAPI setup guide for Knowledge Base', name: 'Write step-by-step CAPI setup guide for Knowledge Base', done: false }
+    ],
+    subtasks: [
+      { id: 't_cap_1', text: 'Complete Meta CAPI Gateway walkthrough', name: 'Complete Meta CAPI Gateway walkthrough', done: true },
+      { id: 't_cap_2', text: 'Test event deduplication between browser pixel and server event', name: 'Test event deduplication between browser pixel and server event', done: false },
+      { id: 't_cap_3', text: 'Configure custom lead qualification events in GA4', name: 'Configure custom lead qualification events in GA4', done: false },
+      { id: 't_cap_4', text: 'Write step-by-step CAPI setup guide for Knowledge Base', name: 'Write step-by-step CAPI setup guide for Knowledge Base', done: false }
     ],
     notes: 'Highest-leverage technical moat against ordinary media buyers.'
   },
   {
     id: 'prj_ai_video_ads',
     title: 'Automated AI Video Ad Production Pipeline',
+    name: 'Automated AI Video Ad Production Pipeline',
     milestoneId: 'm3_tech',
     category: 'AI & Automation',
     status: 'active',
     progress: 45,
     deadline: '2027-02-15',
+    targetDate: '2027-02-15',
     objective: 'Build an automated pipeline to produce direct-response UGC-style video ads using AI tools.',
+    desc: 'Build an automated pipeline to produce direct-response UGC-style video ads using AI tools.',
     outcome: 'Produce 3 variation video creatives in under 20 minutes.',
     tasks: [
-      { id: 't_ai_1', text: 'Draft 3 direct-response Arabic hook formulas for Gulf audience', done: true },
-      { id: 't_ai_2', text: 'Generate natural Arabic voiceover narration in ElevenLabs', done: true },
-      { id: 't_ai_3', text: 'Assemble avatar presenter and overlay B-roll in CapCut', done: false },
-      { id: 't_ai_4', text: 'Document end-to-end SOP in Knowledge Base', done: false }
+      { id: 't_ai_1', text: 'Draft 3 direct-response Arabic hook formulas for Gulf audience', name: 'Draft 3 direct-response Arabic hook formulas for Gulf audience', done: true },
+      { id: 't_ai_2', text: 'Generate natural Arabic voiceover narration in ElevenLabs', name: 'Generate natural Arabic voiceover narration in ElevenLabs', done: true },
+      { id: 't_ai_3', text: 'Assemble avatar presenter and overlay B-roll in CapCut', name: 'Assemble avatar presenter and overlay B-roll in CapCut', done: false },
+      { id: 't_ai_4', text: 'Document end-to-end SOP in Knowledge Base', name: 'Document end-to-end SOP in Knowledge Base', done: false }
+    ],
+    subtasks: [
+      { id: 't_ai_1', text: 'Draft 3 direct-response Arabic hook formulas for Gulf audience', name: 'Draft 3 direct-response Arabic hook formulas for Gulf audience', done: true },
+      { id: 't_ai_2', text: 'Generate natural Arabic voiceover narration in ElevenLabs', name: 'Generate natural Arabic voiceover narration in ElevenLabs', done: true },
+      { id: 't_ai_3', text: 'Assemble avatar presenter and overlay B-roll in CapCut', name: 'Assemble avatar presenter and overlay B-roll in CapCut', done: false },
+      { id: 't_ai_4', text: 'Document end-to-end SOP in Knowledge Base', name: 'Document end-to-end SOP in Knowledge Base', done: false }
     ],
     notes: 'Crucial for rapid creative testing without high studio production costs.'
   },
   {
     id: 'prj_interview_pitch',
     title: '90-Second Executive Pitch & English Interview Mastery',
+    name: '90-Second Executive Pitch & English Interview Mastery',
     milestoneId: 'm4_interview',
     category: 'English & Communication',
     status: 'active',
     progress: 30,
     deadline: '2027-03-15',
+    targetDate: '2027-03-15',
     objective: 'Achieve total fluency and confidence presenting past campaign results in English interviews.',
+    desc: 'Achieve total fluency and confidence presenting past campaign results in English interviews.',
     outcome: 'Recorded flawless answers for the top 5 Gulf media buyer interview questions.',
     tasks: [
-      { id: 't_int_1', text: 'Master 90-second "Tell me about yourself" with 27-campaign proof', done: true },
-      { id: 't_int_2', text: 'Record answer for "How do you handle ad fatigue and rising CPL?"', done: false },
-      { id: 't_int_3', text: 'Record answer for "Explain your Advantage+ budget scaling strategy"', done: false },
-      { id: 't_int_4', text: 'Complete 3 mock interviews with an AI conversation partner', done: false }
+      { id: 't_int_1', text: 'Master 90-second "Tell me about yourself" with 27-campaign proof', name: 'Master 90-second "Tell me about yourself" with 27-campaign proof', done: true },
+      { id: 't_int_2', text: 'Record answer for "How do you handle ad fatigue and rising CPL?"', name: 'Record answer for "How do you handle ad fatigue and rising CPL?"', done: false },
+      { id: 't_int_3', text: 'Record answer for "Explain your Advantage+ budget scaling strategy"', name: 'Record answer for "Explain your Advantage+ budget scaling strategy"', done: false },
+      { id: 't_int_4', text: 'Complete 3 mock interviews with an AI conversation partner', name: 'Complete 3 mock interviews with an AI conversation partner', done: false }
+    ],
+    subtasks: [
+      { id: 't_int_1', text: 'Master 90-second "Tell me about yourself" with 27-campaign proof', name: 'Master 90-second "Tell me about yourself" with 27-campaign proof', done: true },
+      { id: 't_int_2', text: 'Record answer for "How do you handle ad fatigue and rising CPL?"', name: 'Record answer for "How do you handle ad fatigue and rising CPL?"', done: false },
+      { id: 't_int_3', text: 'Record answer for "Explain your Advantage+ budget scaling strategy"', name: 'Record answer for "Explain your Advantage+ budget scaling strategy"', done: false },
+      { id: 't_int_4', text: 'Complete 3 mock interviews with an AI conversation partner', name: 'Complete 3 mock interviews with an AI conversation partner', done: false }
     ],
     notes: 'Speaking is 50 (B1) — one point from B2. Consistent drills will bridge the gap.'
   },
   {
     id: 'prj_relocation_fund',
     title: 'Saudi Relocation Runway & Emergency Capital Buffer',
+    name: 'Saudi Relocation Runway & Emergency Capital Buffer',
     milestoneId: 'm5_finance',
     category: 'Finance',
     status: 'active',
     progress: 25,
     deadline: '2027-06-30',
+    targetDate: '2027-06-30',
     objective: 'Accumulate a dedicated 120,000 EGP relocation and emergency runway through expense control and freelance income.',
+    desc: 'Accumulate a dedicated 120,000 EGP relocation runway through expense control and freelance income.',
     outcome: 'Financial peace of mind and flexibility when transitioning to Saudi Arabia.',
     tasks: [
-      { id: 't_fin_1', text: 'Track daily itemized expenses consistently for 30 days', done: true },
-      { id: 't_fin_2', text: 'Identify and eliminate bottom 15% non-essential monthly expenses', done: true },
-      { id: 't_fin_3', text: 'Set up dedicated relocation savings ledger', done: false },
-      { id: 't_fin_4', text: 'Generate first 10,000 EGP in freelance retainers', done: false }
+      { id: 't_fin_1', text: 'Track daily itemized expenses consistently for 30 days', name: 'Track daily itemized expenses consistently for 30 days', done: true },
+      { id: 't_fin_2', text: 'Identify and eliminate bottom 15% non-essential monthly expenses', name: 'Identify and eliminate bottom 15% non-essential monthly expenses', done: true },
+      { id: 't_fin_3', text: 'Set up dedicated relocation savings ledger', name: 'Set up dedicated relocation savings ledger', done: false },
+      { id: 't_fin_4', text: 'Generate first 10,000 EGP in freelance retainers', name: 'Generate first 10,000 EGP in freelance retainers', done: false }
+    ],
+    subtasks: [
+      { id: 't_fin_1', text: 'Track daily itemized expenses consistently for 30 days', name: 'Track daily itemized expenses consistently for 30 days', done: true },
+      { id: 't_fin_2', text: 'Identify and eliminate bottom 15% non-essential monthly expenses', name: 'Identify and eliminate bottom 15% non-essential monthly expenses', done: true },
+      { id: 't_fin_3', text: 'Set up dedicated relocation savings ledger', name: 'Set up dedicated relocation savings ledger', done: false },
+      { id: 't_fin_4', text: 'Generate first 10,000 EGP in freelance retainers', name: 'Generate first 10,000 EGP in freelance retainers', done: false }
     ],
     notes: 'Financial discipline buys career choices and eliminates desperation.'
   }
@@ -1876,93 +1991,143 @@ I am looking to bring this exact data-driven execution and budget efficiency to 
 const EXPANDED_VOCAB_DATA = [
   {
     w: 'Attribution',
+    word: 'Attribution',
     pos: 'noun',
     ipa: '/ˌæt.rɪˈbjuː.ʃən/',
     ar: 'إسناد الإعلانات / تحديد مصدر التحويل',
+    arabic: 'إسناد الإعلانات / تحديد مصدر التحويل',
     ex: 'Multi-touch attribution models help us identify which ad touchpoint drove the final purchase.',
+    example: 'Multi-touch attribution models help us identify which ad touchpoint drove the final purchase.',
     ctx: 'Performance Marketing Analytics',
-    cat: 'Marketing'
+    def: 'Performance Marketing Analytics: identifying which ad touchpoint drove the final conversion',
+    cat: 'Marketing',
+    category: 'Marketing'
   },
   {
     w: 'Deliverable',
+    word: 'Deliverable',
     pos: 'noun',
     ipa: '/dɪˈlɪv.ər.ə.bəl/',
     ar: 'مُخرَج العمل / التسليمات المتفق عليها',
+    arabic: 'مُخرَج العمل / التسليمات المتفق عليها',
     ex: 'Our primary deliverables for Q1 are three hero case studies and an updated portfolio.',
+    example: 'Our primary deliverables for Q1 are three hero case studies and an updated portfolio.',
     ctx: 'Agency & Client Management',
-    cat: 'Business'
+    def: 'Agency & Client Management: measurable output or asset provided to a client',
+    cat: 'Business',
+    category: 'Business'
   },
   {
     w: 'Deduplication',
+    word: 'Deduplication',
     pos: 'noun',
     ipa: '/diːˌdjuː.plɪˈkeɪ.ʃən/',
     ar: 'إزالة التكرار (للبيانات أو الأحداث الإعلانية)',
+    arabic: 'إزالة التكرار (للبيانات أو الأحداث الإعلانية)',
     ex: 'Event deduplication ensures Meta does not count the browser pixel and server CAPI event twice.',
+    example: 'Event deduplication ensures Meta does not count the browser pixel and server CAPI event twice.',
     ctx: 'Technical Tracking & CAPI',
-    cat: 'Marketing'
+    def: 'Technical Tracking & CAPI: eliminating redundant identical events across browser and server',
+    cat: 'Marketing',
+    category: 'Marketing'
   },
   {
     w: 'Retainer',
+    word: 'Retainer',
     pos: 'noun',
     ipa: '/rɪˈteɪ.nər/',
     ar: 'عقد أتعاب دوري / اشتراك شهري ثابت للعميل',
+    arabic: 'عقد أتعاب دوري / اشتراك شهري ثابت للعميل',
     ex: 'We transitioned the client from a one-off campaign fee to a monthly retainer of $1,500.',
+    example: 'We transitioned the client from a one-off campaign fee to a monthly retainer of $1,500.',
     ctx: 'Freelancing & Agency Contracts',
-    cat: 'Business'
+    def: 'Freelancing & Agency Contracts: fixed recurring periodic fee for ongoing marketing services',
+    cat: 'Business',
+    category: 'Business'
   },
   {
     w: 'Runway',
+    word: 'Runway',
     pos: 'noun',
     ipa: '/ˈrʌn.weɪ/',
     ar: 'فترة الأمان المالي / المدة التي تكفيها المدخرات',
+    arabic: 'فترة الأمان المالي / المدة التي تكفيها المدخرات',
     ex: 'Having six months of living runway allows you to negotiate higher salaries without desperation.',
+    example: 'Having six months of living runway allows you to negotiate higher salaries without desperation.',
     ctx: 'Financial Planning & Relocation',
-    cat: 'Finance'
+    def: 'Financial Planning & Relocation: number of months living expenses covered by reserves',
+    cat: 'Finance',
+    category: 'Finance'
   },
   {
     w: 'Scalability',
+    word: 'Scalability',
     pos: 'noun',
     ipa: '/ˌskeɪ.ləˈbɪl.ə.ti/',
     ar: 'قابلية التوسع / زيادة الميزانية دون انهيار العائد',
+    arabic: 'قابلية التوسع / زيادة الميزانية دون انهيار العائد',
     ex: 'We verified the campaign scalability by increasing budget by 20% every 48 hours.',
+    example: 'We verified the campaign scalability by increasing budget by 20% every 48 hours.',
     ctx: 'Meta Ads Optimization',
-    cat: 'Marketing'
+    def: 'Meta Ads Optimization: ability to expand ad spend efficiently without diminishing returns',
+    cat: 'Marketing',
+    category: 'Marketing'
   },
   {
     w: 'Benchmarking',
+    word: 'Benchmarking',
     pos: 'noun',
     ipa: '/ˈbentʃ.mɑː.kɪŋ/',
     ar: 'المقارنة المعيارية بالسوق والمنافسين',
+    arabic: 'المقارنة المعيارية بالسوق والمنافسين',
     ex: 'Our Saudi salary benchmarking indicates media buyer roles range between 8,000 to 14,000 SAR.',
+    example: 'Our Saudi salary benchmarking indicates media buyer roles range between 8,000 to 14,000 SAR.',
     ctx: 'Market Research & Careers',
-    cat: 'Career'
+    def: 'Market Research & Careers: comparing operational performance metrics against industry peers',
+    cat: 'Career',
+    category: 'Career'
   },
   {
     w: 'Leverage',
+    word: 'Leverage',
     pos: 'noun / verb',
     ipa: '/ˈliː.vər.ɪdʒ/',
     ar: 'استغلال أمثل / نقطة قوة تضاعف النتائج',
+    arabic: 'استغلال أمثل / نقطة قوة تضاعف النتائج',
     ex: 'We leveraged AI video tools to test 15 creative variations in three days.',
+    example: 'We leveraged AI video tools to test 15 creative variations in three days.',
     ctx: 'Strategic Management',
-    cat: 'Business'
+    def: 'Strategic Management: using a strategic capability or tool to multiply operational impact',
+    cat: 'Business',
+    category: 'Business'
   },
   {
     w: 'Feasibility',
+    word: 'Feasibility',
     pos: 'noun',
     ipa: '/ˌfiː.zəˈbɪl.ə.ti/',
     ar: 'الجدوى وقابلية التطبيق الواقعي',
+    arabic: 'الجدوى وقابلية التطبيق الواقعي',
     ex: 'Before launching the new course, we conducted a feasibility study on expected ad costs.',
+    example: 'Before launching the new course, we conducted a feasibility study on expected ad costs.',
     ctx: 'Project Planning',
-    cat: 'Business'
+    def: 'Project Planning: the practical viability and likelihood of project success',
+    cat: 'Business',
+    category: 'Business'
   },
   {
     w: 'Discrepancy',
+    word: 'Discrepancy',
     pos: 'noun',
     ipa: '/dɪˈskrep.ən.si/',
     ar: 'فرق أو تعارض غير متوقع في الأرقام',
+    arabic: 'فرق أو تعارض غير متوقع في الأرقام',
     ex: 'We investigated the 15% discrepancy between Meta Ads Manager leads and CRM entries.',
+    example: 'We investigated the 15% discrepancy between Meta Ads Manager leads and CRM entries.',
     ctx: 'Analytics & Reporting',
-    cat: 'Marketing'
+    def: 'Analytics & Reporting: an unexpected variance or mismatch between data sources',
+    cat: 'Marketing',
+    category: 'Marketing'
   }
 ];
 
@@ -2081,6 +2246,7 @@ const HABIT_ROUTINES_DEF = [
     id: 'd1',
     name: 'Fajr on time & Morning Adhkar',
     category: 'Morning Routine',
+    time: 'Morning',
     timeOfDay: 'morning',
     target: 'Every Day',
     icon: 'compass',
@@ -2090,6 +2256,7 @@ const HABIT_ROUTINES_DEF = [
     id: 'd2',
     name: 'Morning Dental & Personal Care',
     category: 'Morning Routine',
+    time: 'Morning',
     timeOfDay: 'morning',
     target: 'Every Day',
     icon: 'smile',
@@ -2099,6 +2266,7 @@ const HABIT_ROUTINES_DEF = [
     id: 'd8',
     name: 'No Phone for First 30 Minutes',
     category: 'Morning Routine',
+    time: 'Morning',
     timeOfDay: 'morning',
     target: 'Every Day',
     icon: 'shield',
@@ -2108,6 +2276,7 @@ const HABIT_ROUTINES_DEF = [
     id: 'd4',
     name: 'Hydration: 2 Litres of Water',
     category: 'Daytime Routine',
+    time: 'Day',
     timeOfDay: 'day',
     target: 'Every Day',
     icon: 'droplet',
@@ -2117,15 +2286,27 @@ const HABIT_ROUTINES_DEF = [
     id: 'd10',
     name: '1 Hour Screen-Free Deep Focus / Disconnect',
     category: 'Daytime Routine',
+    time: 'Day',
     timeOfDay: 'day',
     target: 'Every Day',
     icon: 'eyeOff',
     why: 'Rebuilds deep attention span and trains dopamine control.'
   },
   {
+    id: 'd14',
+    name: 'Daily Spoken English Interview Drill',
+    category: 'Professional Discipline',
+    time: 'Day',
+    timeOfDay: 'day',
+    target: 'Every Day',
+    icon: 'mic',
+    why: 'Maintains spoken fluency and conversational agility for Gulf interviews.'
+  },
+  {
     id: 'd11',
     name: 'Log Itemized Daily Expenses',
     category: 'Evening Routine',
+    time: 'Night',
     timeOfDay: 'evening',
     target: 'Every Day',
     icon: 'dollar',
@@ -2135,6 +2316,7 @@ const HABIT_ROUTINES_DEF = [
     id: 'd22',
     name: 'Plan Tomorrow\'s Top 3 Priorities',
     category: 'Evening Routine',
+    time: 'Night',
     timeOfDay: 'evening',
     target: 'Every Day',
     icon: 'list',
@@ -2144,6 +2326,7 @@ const HABIT_ROUTINES_DEF = [
     id: 'd9',
     name: 'No Phone 30 Minutes Before Sleep',
     category: 'Evening Routine',
+    time: 'Night',
     timeOfDay: 'evening',
     target: 'Every Day',
     icon: 'moon',
@@ -2153,32 +2336,24 @@ const HABIT_ROUTINES_DEF = [
     id: 'd3',
     name: 'Night Dental Care',
     category: 'Evening Routine',
+    time: 'Night',
     timeOfDay: 'evening',
     target: 'Every Day',
     icon: 'smile',
     why: 'Non-negotiable nighttime health routine.'
-  },
-  {
-    id: 'd14',
-    name: 'Daily Spoken English Interview Drill',
-    category: 'Professional Discipline',
-    timeOfDay: 'day',
-    target: 'Every Day',
-    icon: 'mic',
-    why: 'Maintains spoken fluency and conversational agility for Gulf interviews.'
   }
 ];
 
 /* 7. COMPETENCY & SKILLS MATRIX */
 const SKILL_MATRIX_DEF = [
-  { id: 'sk_meta', name: 'Meta Ads & Advantage+ Ecosystem', current: 85, target: 95, cat: 'Paid Media', proof: 'Managed 27 programs & $171K+ spend at IRA Academy' },
-  { id: 'sk_leadgen', name: 'Instant Forms & Lead Gen Optimization', current: 80, target: 90, cat: 'Conversion', proof: '11,406 leads generated at TL 15.06 blended CPL' },
-  { id: 'sk_capi', name: 'Meta Conversions API & Tracking Diagnostics', current: 55, target: 85, cat: 'Technical', proof: 'Server-side CAPI implementation & event deduplication' },
-  { id: 'sk_ga4', name: 'Google Analytics 4 & Tag Manager', current: 60, target: 80, cat: 'Analytics', proof: 'Custom lead event triggers and conversion funnel tracking' },
-  { id: 'sk_cro', name: 'Landing Page CRO & Ad Copywriting', current: 75, target: 85, cat: 'Creative', proof: 'High-converting Arabic direct-response frameworks' },
-  { id: 'sk_ai_video', name: 'AI Video Ad Automation (ElevenLabs/CapCut)', current: 65, target: 85, cat: 'Creative', proof: 'Multimodal Arabic UGC ad generation in under 20 mins' },
-  { id: 'sk_english', name: 'Business English Fluency & Pitch Delivery', current: 50, target: 75, cat: 'Communication', proof: 'EF SET Speaking 50 (B1) -> Targeted B2/C1 interview ready' },
-  { id: 'sk_typing', name: 'Touch Typing & Execution Speed', current: 35, target: 60, cat: 'Discipline', proof: '35 WPM on keybr/monkeytype -> Target 60 WPM' }
+  { id: 'sk_meta', name: 'Meta Ads & Advantage+ Ecosystem', current: 85, target: 95, cat: 'Paid Media', domain: 'Paid Media', proof: 'Managed 27 programs & $171K+ spend at IRA Academy', action: 'Managed 27 programs & $171K+ spend at IRA Academy' },
+  { id: 'sk_leadgen', name: 'Instant Forms & Lead Gen Optimization', current: 80, target: 90, cat: 'Conversion', domain: 'Conversion', proof: '11,406 leads generated at TL 15.06 blended CPL', action: '11,406 leads generated at TL 15.06 blended CPL' },
+  { id: 'sk_capi', name: 'Meta Conversions API & Tracking Diagnostics', current: 55, target: 85, cat: 'Technical', domain: 'Technical', proof: 'Server-side CAPI implementation & event deduplication', action: 'Server-side CAPI implementation & event deduplication' },
+  { id: 'sk_ga4', name: 'Google Analytics 4 & Tag Manager', current: 60, target: 80, cat: 'Analytics', domain: 'Analytics', proof: 'Custom lead event triggers and conversion funnel tracking', action: 'Custom lead event triggers and conversion funnel tracking' },
+  { id: 'sk_cro', name: 'Landing Page CRO & Ad Copywriting', current: 75, target: 85, cat: 'Creative', domain: 'Creative', proof: 'High-converting Arabic direct-response frameworks', action: 'High-converting Arabic direct-response frameworks' },
+  { id: 'sk_ai_video', name: 'AI Video Ad Automation (ElevenLabs/CapCut)', current: 65, target: 85, cat: 'Creative', domain: 'Creative', proof: 'Multimodal Arabic UGC ad generation in under 20 mins', action: 'Multimodal Arabic UGC ad generation in under 20 mins' },
+  { id: 'sk_english', name: 'Business English Fluency & Pitch Delivery', current: 50, target: 75, cat: 'Communication', domain: 'Communication', proof: 'EF SET Speaking 50 (B1) -> Targeted B2/C1 interview ready', action: 'EF SET Speaking 50 (B1) -> Targeted B2/C1 interview ready' },
+  { id: 'sk_typing', name: 'Touch Typing & Execution Speed', current: 35, target: 60, cat: 'Discipline', domain: 'Discipline', proof: '35 WPM on keybr/monkeytype -> Target 60 WPM', action: '35 WPM on keybr/monkeytype -> Target 60 WPM' }
 ];
 
 /* 8. SAUDI RELOCATION RUNWAY CONFIGURATION */

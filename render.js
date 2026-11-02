@@ -3,7 +3,7 @@
    ===================================================================== */
 
 const $ = id => document.getElementById(id);
-const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const esc = s => (s === null || s === undefined ? '' : String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])));
 
 /* an icon name (from data.js) becomes an inline SVG of the requested size */
 const ic = (name, size) => ico(name, size || 18);
@@ -2310,13 +2310,17 @@ function drawDashboardLifeOS(){
       + '<div class="pgb-list">'
       + LIFE_OS_PROJECTS.slice(0, 4).map(p => {
           const userP = (S.projects && S.projects[p.id]) || { progress: 0, subtasks: {} };
-          const subDone = Object.values(userP.subtasks || {}).filter(Boolean).length;
-          const subTotal = (p.subtasks || []).length;
-          const progress = subTotal ? Math.round((subDone / subTotal) * 100) : (userP.progress || 0);
+          const pSubtasks = (p.subtasks && p.subtasks.length) ? p.subtasks : (p.tasks || []);
+          const subDone = pSubtasks.filter(s => (userP.subtasks && userP.subtasks[s.id]) || (userP.subtasks && userP.subtasks[s.id] === undefined && s.done)).length;
+          const subTotal = pSubtasks.length;
+          const progress = subTotal ? Math.round((subDone / subTotal) * 100) : (p.progress || userP.progress || 0);
+          const pName = p.title || p.name || 'Untitled Project';
+          const pCat = p.category || 'Initiative';
+          const pDate = p.deadline || p.targetDate || '2027';
           return '<div class="pgb-row" onclick="goTab(\'projects\')">'
             + '<div class="pgb-info">'
-            +   '<span class="pgb-name">' + esc(p.name) + '</span>'
-            +   '<span class="pgb-cat">' + esc(p.category) + ' &bull; Target: ' + esc(p.targetDate) + '</span>'
+            +   '<span class="pgb-name">' + esc(pName) + '</span>'
+            +   '<span class="pgb-cat">' + esc(pCat) + ' &bull; Target: ' + esc(pDate) + '</span>'
             + '</div>'
             + '<div class="pgb-bar-wrap">'
             +   '<span class="pgb-pct">' + progress + '%</span>'
@@ -2477,9 +2481,9 @@ function drawHabitsSection(){
   const completedCount = routines.filter(h => S.daily && S.daily[h.id]).length;
   const totalCount = routines.length;
 
-  let morning = routines.filter(h => h.time === 'Morning');
-  let day = routines.filter(h => h.time === 'Day');
-  let night = routines.filter(h => h.time === 'Night');
+  let morning = routines.filter(h => (h.time === 'Morning') || (h.timeOfDay || '').toLowerCase().includes('morn') || (h.category || '').toLowerCase().includes('morn'));
+  let day = routines.filter(h => (h.time === 'Day') || (h.timeOfDay || '').toLowerCase().includes('day') || (h.category || '').toLowerCase().includes('day') || (h.category || '').toLowerCase().includes('prof') || (h.category || '').toLowerCase().includes('strat') || (h.category || '').toLowerCase().includes('work'));
+  let night = routines.filter(h => (h.time === 'Night') || (h.timeOfDay || '').toLowerCase().includes('even') || (h.timeOfDay || '').toLowerCase().includes('night') || (h.category || '').toLowerCase().includes('even') || (h.category || '').toLowerCase().includes('night') || (h.category || '').toLowerCase().includes('recov'));
 
   let html = '<div class="panel">'
     + '<div class="st">'
@@ -2545,25 +2549,31 @@ function drawRoadmapSection(){
     + '<div class="shc-sub">The previous competing 3 paths have been eliminated. Every goal, project, and habit contributes directly to preparing for high-value Saudi marketing opportunities.</div>'
     + '</div>';
 
-  milestones.forEach(m => {
-    const isCurrent = m.status === 'CURRENT FOCUS';
+  milestones.forEach((m, idx) => {
+    const status = m.status || (m.progress >= 70 ? 'CURRENT FOCUS' : (m.progress > 0 ? 'IN PROGRESS' : 'UPCOMING'));
+    const isCurrent = status === 'CURRENT FOCUS' || idx === 0;
+    const timeframe = m.timeframe || m.targetDate || '2027';
+    const xpReward = m.xpReward || (idx === 0 ? 500 : 350);
+    const objectives = (m.objectives && m.objectives.length) ? m.objectives : (m.desc ? [m.desc] : []);
+    const deliverables = m.deliverables || [];
+
     html += '<div class="milestone-card ' + (isCurrent ? 'active' : '') + '">'
       + '<div class="mc-head">'
       +   '<div>'
-      +     '<span class="mc-tag ' + (isCurrent ? 'active-tag' : '') + '">' + m.status + '</span>'
+      +     '<span class="mc-tag ' + (isCurrent ? 'active-tag' : '') + '">' + esc(status) + '</span>'
       +     '<h3 class="mc-title">' + esc(m.name) + '</h3>'
-      +     '<div class="mc-timeframe">&#128197; ' + esc(m.timeframe) + '</div>'
+      +     '<div class="mc-timeframe">&#128197; ' + esc(timeframe) + '</div>'
       +   '</div>'
-      +   '<div class="mc-xp">+' + m.xpReward + ' XP</div>'
+      +   '<div class="mc-xp">+' + xpReward + ' XP</div>'
       + '</div>'
       + '<div class="mc-body">'
       +   '<div class="mc-section-title">CORE OBJECTIVES</div>'
       +   '<ul class="mc-list">'
-      +     (m.objectives || []).map(o => '<li>' + esc(o) + '</li>').join('')
+      +     objectives.map(o => '<li>' + esc(o) + '</li>').join('')
       +   '</ul>'
       +   '<div class="mc-section-title" style="margin-top:12px;">KEY DELIVERABLES & PROOF</div>'
       +   '<div class="mc-deliverables">'
-      +     (m.deliverables || []).map(d => '<span class="mc-deliv-pill">&#10003; ' + esc(d) + '</span>').join('')
+      +     deliverables.map(d => '<span class="mc-deliv-pill">&#10003; ' + esc(d) + '</span>').join('')
       +   '</div>'
       + '</div>'
       + '</div>';
@@ -2592,19 +2602,23 @@ function drawProjectsSection(){
 
   projects.forEach(p => {
     const userP = (S.projects && S.projects[p.id]) || { progress: 0, subtasks: {}, notes: [] };
-    const subtasks = p.subtasks || [];
-    const doneCount = subtasks.filter(s => userP.subtasks && userP.subtasks[s.id]).length;
-    const pct = subtasks.length ? Math.round((doneCount / subtasks.length) * 100) : (userP.progress || 0);
+    const subtasks = (p.subtasks && p.subtasks.length) ? p.subtasks : (p.tasks || []);
+    const doneCount = subtasks.filter(s => (userP.subtasks && userP.subtasks[s.id]) || (userP.subtasks && userP.subtasks[s.id] === undefined && s.done)).length;
+    const pct = subtasks.length ? Math.round((doneCount / subtasks.length) * 100) : (p.progress || userP.progress || 0);
+    const pName = p.title || p.name || 'Untitled Project';
+    const pCat = p.category || 'Initiative';
+    const pStatus = (p.status || 'Active').toUpperCase();
+    const pDesc = p.objective || p.desc || '';
 
     html += '<div class="notion-proj-card">'
       + '<div class="npc-header">'
       +   '<div>'
-      +     '<span class="npc-cat">' + esc(p.category) + '</span>'
-      +     '<h3 class="npc-title">' + esc(p.name) + '</h3>'
+      +     '<span class="npc-cat">' + esc(pCat) + '</span>'
+      +     '<h3 class="npc-title">' + esc(pName) + '</h3>'
       +   '</div>'
-      +   '<span class="npc-status ' + p.status.toLowerCase().replace(/\s+/g,'-') + '">' + esc(p.status) + '</span>'
+      +   '<span class="npc-status ' + pStatus.toLowerCase().replace(/\s+/g,'-') + '">' + esc(pStatus) + '</span>'
       + '</div>'
-      + '<div class="npc-desc">' + esc(p.desc) + '</div>'
+      + '<div class="npc-desc">' + esc(pDesc) + '</div>'
       + '<div class="npc-progress-row">'
       +   '<div class="npc-prog-meta">'
       +     '<span>Progress (' + doneCount + '/' + subtasks.length + ' subtasks)</span>'
@@ -2615,10 +2629,11 @@ function drawProjectsSection(){
       + '<div class="npc-subtasks-title">ACTIONABLE SUBTASKS</div>'
       + '<div class="npc-subtask-list">'
       + subtasks.map(st => {
-          const isDone = !!(userP.subtasks && userP.subtasks[st.id]);
+          const isDone = !!((userP.subtasks && userP.subtasks[st.id]) || (userP.subtasks && userP.subtasks[st.id] === undefined && st.done));
+          const stName = st.text || st.name || '';
           return '<div class="npc-subtask-item ' + (isDone ? 'done' : '') + '" onclick="toggleProjectSubtask(\'' + p.id + '\', \'' + st.id + '\')">'
             + '<span class="npc-subtask-check">' + (isDone ? '&#10003;' : '') + '</span>'
-            + '<span class="npc-subtask-name">' + esc(st.name) + '</span>'
+            + '<span class="npc-subtask-name">' + esc(stName) + '</span>'
             + '</div>';
         }).join('')
       + '</div>'
@@ -2660,7 +2675,8 @@ function drawKnowledgeBaseSection(){
   const frameworks = typeof KNOWLEDGE_BASE_DATA !== 'undefined' ? KNOWLEDGE_BASE_DATA : [];
   const customNotes = (S.knowledgeNotes || []);
 
-  const cats = ['all', 'Performance Marketing', 'Tracking & Data', 'Creative & Copy', 'Career & GCC', 'Custom Notes'];
+  const availableCats = Array.from(new Set(frameworks.map(f => f.category))).filter(Boolean);
+  const cats = ['all', ...availableCats, 'Custom Notes'];
 
   let allItems = [];
   frameworks.forEach(f => {
@@ -2769,30 +2785,36 @@ function drawSkillsSection(){
     + '<div class="skills-matrix-grid">';
 
   skills.forEach(s => {
-    const curPct = (s.current / 10) * 100;
-    const tgtPct = (s.target / 10) * 100;
+    const isScale10 = (s.current <= 10 && s.target <= 10);
+    const curPct = isScale10 ? Math.min(100, (s.current / 10) * 100) : Math.min(100, s.current);
+    const tgtPct = isScale10 ? Math.min(100, (s.target / 10) * 100) : Math.min(100, s.target);
     const gap = s.target - s.current;
+    const curLabel = isScale10 ? (s.current + '/10') : (s.current + '%');
+    const tgtLabel = isScale10 ? (s.target + '/10') : (s.target + '%');
+    const gapLabel = gap <= 0 ? 'MASTERY' : ('GAP: +' + gap + (isScale10 ? ' LVL' : '%'));
+    const domain = s.domain || s.cat || 'Marketing Competency';
+    const action = s.action || s.proof || '';
 
     html += '<div class="skill-matrix-card">'
       + '<div class="smc-head">'
       +   '<div>'
-      +     '<span class="smc-domain">' + esc(s.domain) + '</span>'
+      +     '<span class="smc-domain">' + esc(domain) + '</span>'
       +     '<h4 class="smc-name">' + esc(s.name) + '</h4>'
       +   '</div>'
-      +   '<span class="smc-gap ' + (gap <= 1 ? 'low-gap' : 'high-gap') + '">' + (gap === 0 ? 'MASTERY' : ('GAP: +' + gap + ' LVL')) + '</span>'
+      +   '<span class="smc-gap ' + (gap <= 10 ? 'low-gap' : 'high-gap') + '">' + gapLabel + '</span>'
       + '</div>'
       + '<div class="smc-bars">'
       +   '<div class="smc-bar-row">'
-      +     '<span>Current Level (' + s.current + '/10)</span>'
+      +     '<span>Current Competency (' + curLabel + ')</span>'
       +     '<div class="bar thin"><i style="width:' + curPct + '%;background:var(--sys-blue);"></i></div>'
       +   '</div>'
       +   '<div class="smc-bar-row">'
-      +     '<span>Saudi Target (' + s.target + '/10)</span>'
+      +     '<span>Saudi Target (' + tgtLabel + ')</span>'
       +     '<div class="bar thin"><i style="width:' + tgtPct + '%;background:linear-gradient(90deg,var(--glow),var(--monarch-purple));"></i></div>'
       +   '</div>'
       + '</div>'
       + '<div class="smc-action">'
-      +   '<b style="color:var(--sys-blue);">Action:</b> ' + esc(s.action)
+      +   '<b style="color:var(--sys-blue);">Verified Evidence / Action:</b> ' + esc(action)
       + '</div>'
       + '</div>';
   });
@@ -2830,21 +2852,28 @@ function drawVocabSection(){
 
   let html = '<div class="vocab-cards-grid">';
   vocabPool.forEach(v => {
-    const isLearned = (S.vocabLearned || []).includes(v.word);
+    const word = v.word || v.w || '';
+    const isLearned = (S.vocabLearned || []).includes(word);
+    const category = v.category || v.cat || 'Marketing';
+    const ipa = v.ipa || '';
+    const def = v.def || v.meaning || v.ctx || '';
+    const ar = v.arabic || v.ar || '';
+    const ex = v.example || v.ex || '';
+
     html += '<div class="vocab-card ' + (isLearned ? 'learned' : '') + '">'
       + '<div class="vc-top">'
-      +   '<span class="vc-cat">' + esc(v.category || 'Marketing') + '</span>'
-      +   '<button class="vc-audio-btn" onclick="speakWord(\'' + esc(v.word) + '\')">&#128266; Listen</button>'
+      +   '<span class="vc-cat">' + esc(category) + '</span>'
+      +   '<button class="vc-audio-btn" onclick="speakWord(\'' + esc(word).replace(/'/g, "\\'") + '\')">&#128266; Listen</button>'
       + '</div>'
       + '<div class="vc-word-row">'
-      +   '<h3 class="vc-word">' + esc(v.word) + '</h3>'
-      +   '<span class="vc-ipa">' + esc(v.ipa || '') + '</span>'
+      +   '<h3 class="vc-word">' + esc(word) + '</h3>'
+      +   (ipa ? '<span class="vc-ipa">' + esc(ipa) + '</span>' : '')
       + '</div>'
-      + '<div class="vc-def">' + esc(v.def || v.meaning || '') + '</div>'
-      + '<div class="vc-ar"><b>المعنى بالعامية:</b> ' + esc(v.arabic || '') + '</div>'
-      + (v.example ? '<div class="vc-ex">&ldquo;' + esc(v.example) + '&rdquo;</div>' : '')
+      + '<div class="vc-def">' + esc(def) + '</div>'
+      + (ar ? '<div class="vc-ar"><b>المعنى بالعربي:</b> ' + esc(ar) + '</div>' : '')
+      + (ex ? '<div class="vc-ex">&ldquo;' + esc(ex) + '&rdquo;</div>' : '')
       + '<div class="vc-footer">'
-      +   '<button class="vc-learn-btn ' + (isLearned ? 'done' : '') + '" onclick="toggleVocabLearned(\'' + esc(v.word) + '\')">'
+      +   '<button class="vc-learn-btn ' + (isLearned ? 'done' : '') + '" onclick="toggleVocabLearned(\'' + esc(word).replace(/'/g, "\\'") + '\')">'
       +     (isLearned ? '&#10003; Learned' : 'Mark Learned (+8 XP)')
       +   '</button>'
       + '</div>'
