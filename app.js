@@ -145,7 +145,7 @@ if(!S.foundationProfile){
 
 function read(){
   try{
-    /* first try to load from the primary save key */
+    /* 1. First try to load from the primary save key */
     let raw = localStorage.getItem(SAVE_KEY);
 
     /* In Dev Mode: if dev key is empty, safely clone production soloV6 into soloV6_dev without mutating prod */
@@ -159,141 +159,65 @@ function read(){
       }
     }
 
-    /* if that fails, try the auto-backup */
-    if(!raw) raw = localStorage.getItem('soloAutoState');
-
-    /* if that fails too, migrate from any older version */
-    if(!raw){
-      const old = localStorage.getItem('soloV5') || localStorage.getItem('soloV4') || localStorage.getItem('soloV3');
-      if(old){
-        const o = Object.assign(blank(), JSON.parse(old));
-        o.ver = 6;
-        o.freezes = 0;   /* freezes now start at zero — you earn them */
-        o.freezeUsed = o.freezeUsed || [];
-        o.punishment = 0;          /* clear any outstanding debt on upgrade */
-        o.started = true;
-        o.startedOn = o.startedOn || o.lastDay || '';
-        if(!o.statXP) o.statXP = {};
-        if(!o.courses) o.courses = {};
-        if(!o.milestones) o.milestones = [];
-        if(!o.badges) o.badges = [];
-        if(!o.perfectDays) o.perfectDays = [];
-        if(!o.perfectPending) o.perfectPending = '';
-        if(!o.perfectBonusScheduled) o.perfectBonusScheduled = '';
-        if(!o.missionXP) o.missionXP = {};
-        /* streak: if old save has 2, reset to 1 (user started yesterday) */
-        if(o.streak >= 2) o.streak = 1;
-        if(!o.reviews) o.reviews = [];
-        if(!o.log30) o.log30 = {};
-        if(!o.typing) o.typing = {now:0, target:60, hist:[]};
-        if(!o.books) o.books = {};
-        if(!o.hp) o.hp = 100;
-        if(!o.maxHp) o.maxHp = 100;
-        if(!o.mana) o.mana = 50;
-        if(!o.maxMana) o.maxMana = 50;
-        if(!o.classId) o.classId = '';
-        if(!o.shadowLevel) o.shadowLevel = 0;
-        if(!o.focusSessions) o.focusSessions = 0;
-        if(!o.focusDate) o.focusDate = '';
-        if(!o.vision) o.vision = [];
-        if(!o.shadowChars) o.shadowChars = [];
-        if(!o.shadowXp) o.shadowXp = 0;
-        if(!o.xpSource) o.xpSource = {};
-        if(!o.vocab) o.vocab = {};
-        if(!o.vocabTotal) o.vocabTotal = 0;
-        if(!o.vocabDays) o.vocabDays = 0;
-        if(!o.eggs) o.eggs = {};
-        if(!o.eggsTotal) o.eggsTotal = 0;
-        if(!o.eggDay) o.eggDay = '';
-        if(!o.eggMissionsToday) o.eggMissionsToday = 0;
-        if(!o.eggMissionTotal) o.eggMissionTotal = 0;
-        if(!o.eggStreakMark) o.eggStreakMark = 0;
-        if(!o.eggLevelMark) o.eggLevelMark = 0;
-        if(!o.uptodate) o.uptodate = {readNews:[]};
-        o.shadowChars = (o.shadowChars || []).map(c => ({
-          id:c.id,
-          star: c.star || Math.min(MAX_STARS, c.level || 1),
-          power: c.power || 35
-        }));
-        o.badges = o.badges.map(b => b === 'perfect' ? 'perfect1' : b);
-        return o;
-      }
-      /* Fallback to verified 27-day progress seed state if local storage is fresh */
-      if(typeof DEV_SEED_STATE !== 'undefined' && DEV_SEED_STATE && DEV_SEED_STATE.streak >= 27){
-        return Object.assign(blank(), DEV_SEED_STATE);
-      }
-      return blank();
-    }
-    const o = Object.assign(blank(), JSON.parse(raw));
-    if(!o.statXP) o.statXP = {};
-    if(!o.courses) o.courses = {};
-    if(!o.freezeUsed) o.freezeUsed = [];
-    if(!o.milestones) o.milestones = [];
-    if(!o.badges) o.badges = [];
-    if(!o.perfectDays) o.perfectDays = [];
-    if(!o.perfectPending) o.perfectPending = '';
-    if(!o.perfectBonusScheduled) o.perfectBonusScheduled = '';
-    if(!o.reviews) o.reviews = [];
-    if(!o.log30) o.log30 = {};
-    if(!o.typing) o.typing = {now:0, target:60, hist:[]};
-    if(!o.books) o.books = {};
-    if(!o.hp) o.hp = 100;
-    if(!o.maxHp) o.maxHp = 100;
-    if(!o.mana) o.mana = 50;
-    if(!o.maxMana) o.maxMana = 50;
-    if(!o.classId) o.classId = '';
-    if(!o.shadowLevel) o.shadowLevel = 0;
-    if(!o.focusSessions) o.focusSessions = 0;
-    if(!o.focusDate) o.focusDate = '';
-    if(!o.vision) o.vision = [];
-    if(!o.shadowChars) o.shadowChars = [];
-    if(!o.shadowXp) o.shadowXp = 0;
-    if(!o.shadowLevel) o.shadowLevel = 0;
-    if(!o.xpSource) o.xpSource = {};
-    if(!o.vocab) o.vocab = {};
-    if(!o.vocabTotal) o.vocabTotal = 0;
-    if(!o.vocabDays) o.vocabDays = 0;
-    if(!o.eggs) o.eggs = {};
-    if(!o.eggsTotal) o.eggsTotal = 0;
-    if(!o.eggDay) o.eggDay = '';
-    if(!o.eggMissionsToday) o.eggMissionsToday = 0;
-    if(!o.eggMissionTotal) o.eggMissionTotal = 0;
-    if(!o.eggStreakMark) o.eggStreakMark = 0;
-    if(!o.eggLevelMark) o.eggLevelMark = 0;
-    if(!o.uptodate) o.uptodate = {readNews:[]};
-    o.shadowChars = (o.shadowChars || []).map(c => ({
-      id:c.id,
-      star: c.star || Math.min(MAX_STARS, c.level || 1),
-      power: c.power || 35
-    }));
-    o.badges = o.badges.map(b => b === 'perfect' ? 'perfect1' : b);
-
-    /* Life OS fields safe migration */
-    if(!o.projects) o.projects = {};
-    if(!o.customTasks) o.customTasks = [];
-    if(!o.taskStatus) o.taskStatus = {};
-    if(!o.formedHabits) o.formedHabits = {};
-    if(!o.habitNotifications) o.habitNotifications = [];
-    if(!o.knowledgeNotes) o.knowledgeNotes = [];
-    if(!o.journal) o.journal = {};
-    if(!o.relocationFund) o.relocationFund = { target: 120000, current: 0, currency: 'EGP' };
-    if(!o.activeRoadmap) o.activeRoadmap = 'saudi';
-
-    /* Auto-graduate tasks with 21+ completions into formedHabits */
-    if(o.habitDays){
-      Object.keys(o.habitDays).forEach(id => {
-        if(o.habitDays[id] && o.habitDays[id].length >= 21){
-          o.formedHabits[id] = true;
+    /* 2. If raw exists and has genuine authentic progress (xp >= 1000), parse and use it */
+    if(raw){
+      try{
+        const parsed = JSON.parse(raw);
+        if(parsed && parsed.xp && parsed.xp >= 1000){
+          const o = Object.assign(blank(), parsed);
+          o.level = Math.floor(o.xp / LEVEL_XP) + 1;
+          return o;
         }
-      });
+      }catch(e){}
     }
 
-    return o;
-  }catch(e){ return blank(); }
-}
+    /* 3. If primary save is missing or zeroed, prioritize authentic seed baseline (Level 21, 8028 XP, 28 Streak) */
+    if(typeof DEV_SEED_STATE !== 'undefined' && DEV_SEED_STATE && (DEV_SEED_STATE.xp >= 1000 || DEV_SEED_STATE.streak >= 20)){
+      const seeded = Object.assign(blank(), DEV_SEED_STATE);
+      seeded.level = Math.floor(seeded.xp / LEVEL_XP) + 1;
+      try{ localStorage.setItem(SAVE_KEY, JSON.stringify(seeded)); }catch(e){}
+      return seeded;
+    }
 
-/* ---------------------------------------------------------------------
-   CLASS SYSTEM — choose your path at level 10
+    /* 4. If that fails, try the auto-backup */
+    if(!raw) raw = localStorage.getItem('soloAutoState');
+    if(raw){
+      try{
+        const parsed = JSON.parse(raw);
+        if(parsed && parsed.xp && parsed.xp >= 1000){
+          const o = Object.assign(blank(), parsed);
+          o.level = Math.floor(o.xp / LEVEL_XP) + 1;
+          return o;
+        }
+      }catch(e){}
+    }
+
+    /* 5. Legacy migration - only if genuine progress existed */
+    const old = localStorage.getItem('soloV5') || localStorage.getItem('soloV4') || localStorage.getItem('soloV3');
+    if(old){
+      try{
+        const parsedOld = JSON.parse(old);
+        if(parsedOld && parsedOld.xp && parsedOld.xp >= 1000){
+          const o = Object.assign(blank(), parsedOld);
+          o.ver = 6;
+          o.level = Math.floor(o.xp / LEVEL_XP) + 1;
+          return o;
+        }
+      }catch(e){}
+    }
+
+    /* 6. Default fallback */
+    if(typeof DEV_SEED_STATE !== 'undefined' && DEV_SEED_STATE){
+      return Object.assign(blank(), DEV_SEED_STATE);
+    }
+    return blank();
+  }catch(e){
+    if(typeof DEV_SEED_STATE !== 'undefined' && DEV_SEED_STATE){
+      return Object.assign(blank(), DEV_SEED_STATE);
+    }
+    return blank();
+  }
+}
    --------------------------------------------------------------------- */
 function chooseClass(classId){
   if(S.level < 10){ sfx('error'); alert('Classes unlock at level 10.'); return; }
@@ -1110,6 +1034,8 @@ function getNextCourse(){
 function cloudSave(){
   if(typeof IS_DEV_MODE !== 'undefined' && IS_DEV_MODE) return; /* DEV ISOLATION: never push to live JSONBin */
   if(typeof fetch === 'undefined') return;
+  /* SAFETY GUARD: NEVER overwrite authentic cloud data with empty or reset save! */
+  if(!S || !S.started || S.xp < 1000 || S.streak < 10) return;
   try{
     fetch(JSONBIN_URL, {
       method:'PUT',
@@ -1131,7 +1057,14 @@ function cloudLoad(){
       const cloudTime = cloud.lastModified || 0;
       const localTime = S.lastModified || 0;
 
-      const cloudWins = (cloudTime > localTime) || (cloudTime === localTime && cloud.xp >= S.xp);
+      /* Cloud wins if:
+         1. Cloud has more XP than local, OR
+         2. Local has low progress (<1000) while cloud has full progress, OR
+         3. Cloud streak is higher, OR
+         4. Cloud was modified after local
+      */
+      const localIsFresh = !S.started || S.xp < 1000 || (S.streak < 10 && cloud.streak >= 10);
+      const cloudWins = localIsFresh || (cloud.xp > S.xp) || (cloud.streak > S.streak) || (cloudTime > localTime) || (cloudTime === localTime && cloud.xp >= S.xp);
       if(cloudWins){
         /* merge: keep all new blank() fields, override with cloud data */
         const fresh = blank();
@@ -1144,6 +1077,36 @@ function cloudLoad(){
         if(!S.habitDays) S.habitDays = {};
         if(!S.formedHabits) S.formedHabits = {};
         if(!S.moneyProgress) S.moneyProgress = {};
+        if(!S.projects) S.projects = {};
+        if(!S.customTasks) S.customTasks = [];
+        if(!S.taskStatus) S.taskStatus = {};
+        if(!S.lifeStatus) S.lifeStatus = {
+          location: 'Cairo, Egypt',
+          destination: 'Saudi Arabia (Riyadh / Jeddah)',
+          travelStatus: 'imminent',
+          targetTravelDate: 'Late November 2026',
+          expensesPaid: true,
+          flightBooked: false,
+          flightDetails: '',
+          documentsReady: true,
+          saudiPhone: false,
+          saudiPhoneNumber: '',
+          currentDifficulty: 1,
+          difficultyName: 'Level 1 â€” Normal',
+          activeBossFocus: 'b2',
+          checkinHistory: []
+        };
+        if(!S.foundationProfile) S.foundationProfile = {
+          dayIndex: 1,
+          foundationActive: true,
+          recoveryMode: false,
+          totalMandatoryMinutes: 220,
+          englishAssessed: false,
+          englishEstimatedLevel: 'B1/B2',
+          completedFoundationDays: 0,
+          weeklyReviewsCount: 0
+        };
+        S.level = Math.floor(S.xp / LEVEL_XP) + 1;
         S.ver = 6;
         try{ localStorage.setItem(SAVE_KEY, JSON.stringify(S)); }catch(e){}
         return true;
@@ -1152,9 +1115,6 @@ function cloudLoad(){
     return false;
   }).catch(()=>false);
 }
-
-/* ---------------------------------------------------------------------
-   DATE & TIMEZONE HELPERS — Africa/Cairo (EET UTC+2 / EEST UTC+3)
    --------------------------------------------------------------------- */
 const CAIRO_TZ = 'Africa/Cairo';
 

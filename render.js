@@ -2209,14 +2209,19 @@ function renderEverything(){
    --------------------------------------------------------------------- */
 function boot(){
   buildGuideIndex();
+  /* 1. Immediately render using local/seed authentic state â€” ZERO BLANK SCREEN, ZERO LEVEL 1 FLASH */
+  renderEverything();
+
+  /* 2. Safe daily reset check & backup */
   resets();
   autoBackup();
   checkForUpdates();
-  /* pull cloud save first, then render */
+
+  /* 3. Pull cloud save asynchronously â€” if newer or higher progress, smoothly refresh */
   cloudLoad().then(function(pulled){
-    /* one full rebuild at boot so every tab is populated, then the
-       fast per-tab render takes over */
-    renderEverything();
+    if(pulled){
+      renderEverything();
+    }
   });
   resumePomodoro();
 
