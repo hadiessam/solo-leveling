@@ -1,4 +1,4 @@
-/* =====================================================================
+﻿/* =====================================================================
    SOLO LEVELING — PLAYER SYSTEM  ·  DATA LAYER
    Edit THIS file to change missions, courses, rewards, phrases.
    Nothing here affects saved progress.
@@ -29,36 +29,71 @@ const STATS = [
    --------------------------------------------------------------- */
 const COURSES = [
   {id:'c1', stage:1, name:'Google Ads Search Certification', platform:'Google Skillshop',
+   provider:'Google Skillshop', category:'Paid Media',
+   objective:'Master search intent, keyword bidding strategies, Quality Score mechanics, and Smart Bidding conversion optimization.',
+   nextLesson:'Module 2: Google Search Ads Campaign Structure and Keyword Match Types.',
+   practicalExercise:'Structure a mock Google Search campaign for a B2B SaaS or Education client with 3 ad groups and negative keywords.',
+   status:'not_started', relatedGoal:'b2',
    url:'https://skillshop.withgoogle.com/', hours:'4-6h',
    why:'You list Google Ads on your CV but your experience is Meta-first. This closes that gap and is the most expected credential for a media buyer in Egypt and the Gulf.',
    proof:'Free certificate, add to LinkedIn.'},
 
   {id:'c2', stage:1, name:'Google Analytics Certification (GA4)', platform:'Google Skillshop',
+   provider:'Google Skillshop', category:'Analytics',
+   objective:'Master event-driven data modeling, custom dimension creation, conversion funnel exploration, and cross-channel attribution.',
+   nextLesson:'Module 3: Custom Event Tracking, User Properties, and Funnel Exploration Reports.',
+   practicalExercise:'Build a custom Exploration report analyzing drop-off from Lead Form Impression to Lead Submission.',
+   status:'not_started', relatedGoal:'b2',
    url:'https://skillshop.withgoogle.com/', hours:'4-6h',
    why:'You already hold the 2024 GA4 course. This is the official certification and it is what recruiters search for.',
    proof:'Free certificate, verifiable ID.'},
 
   {id:'c3', stage:1, name:'Meta Media Buying Professional', platform:'Meta Blueprint',
+   provider:'Meta Blueprint', category:'Paid Media',
+   objective:'Solidify institutional knowledge of Advantage+ campaign budget allocation, auction dynamics, creative fatigue handling, and bidding caps.',
+   nextLesson:'Meta Blueprint Study Guide: Campaign Budget Optimization (Advantage+ Budget) & Auction Mechanics.',
+   practicalExercise:'Calculate bid cap vs cost cap thresholds for an ad set experiencing high CPL volatility.',
+   status:'not_started', relatedGoal:'b2',
    url:'https://certifications.facebookblueprint.com/', hours:'study guide + practice test',
    why:'You run Meta Ads daily. This is the credential that proves it formally, and the study guide itself will sharpen how you structure campaigns.',
    proof:'Study guide and practice tests are free; the exam is paid \u2014 study free first.'},
 
   {id:'c4', stage:1, name:'TikTok Media Buying Certification', platform:'TikTok Academy',
+   provider:'TikTok Academy', category:'Paid Media',
+   objective:'Understand short-form video auction mechanics, Spark Ads configuration, creative codes, and Gulf audience targeting on TikTok.',
+   nextLesson:'TikTok Ads Manager: Creative Exchange, Instant Forms, and TikTok Pixel setup.',
+   practicalExercise:'Draft 3 creative concepts for TikTok Spark Ads tailored for Saudi Gen Z and Millennial audiences.',
+   status:'not_started', relatedGoal:'b2',
    url:'https://ads.tiktok.com/business/en-US/academy', hours:'~2h exam',
    why:'TikTok is the fastest-growing paid channel in the Gulf and almost nobody in your market is certified on it. Immediate differentiator.',
    proof:'Free certification, valid 2 years.'},
 
   {id:'c5', stage:1, name:'Snapchat Ads Certification (Snap Focus)', platform:'Snapchat for Business',
+   provider:'Snapchat for Business', category:'Paid Media',
+   objective:'Master Snap Pixel, Story Ads, Collection Ads, and AR Lens sponsorship strategies dominating Gulf e-commerce and lead generation.',
+   nextLesson:'Snap Focus: Snap Ads Formats, Story Ads, and Pixel Event Optimization.',
+   practicalExercise:'Configure a mock Snapchat Lead Generation campaign targeting Riyadh and Jeddah with Story Ad placements.',
+   status:'not_started', relatedGoal:'b2',
    url:'https://forbusiness.snapchat.com/resources/snapfocus', hours:'2-4h',
    why:'Snapchat is a major channel in the Gulf specifically \u2014 far bigger there than in Egypt. Knowing it before you land is a genuine advantage.',
    proof:'Free certification.'},
 
   {id:'c6', stage:2, name:'Digital Advertising Certification', platform:'HubSpot Academy',
+   provider:'HubSpot Academy', category:'Strategy',
+   objective:'Develop cross-channel advertising architecture aligning paid social, search, and native channels into a unified funnel.',
+   nextLesson:'Lesson 4: Multi-Channel Paid Strategy and Customer Lifetime Value (LTV) Modeling.',
+   practicalExercise:'Map an omnichannel customer journey moving prospects from Meta top-of-funnel to Google Search high-intent capture.',
+   status:'not_started', relatedGoal:'b2',
    url:'https://academy.hubspot.com/courses/digital-advertising', hours:'4h',
    why:'Covers paid advertising strategy across channels with a framework you can reuse in interviews and client pitches.',
    proof:'Free badge, valid 2 years.'},
 
   {id:'c7', stage:2, name:'Content Marketing Certification', platform:'HubSpot Academy',
+   provider:'HubSpot Academy', category:'Content Strategy',
+   objective:'Learn content positioning, direct-response storytelling frameworks, and evergreen content repurposing across platforms.',
+   nextLesson:'Module 2: The Core Elements of High-Converting Content and Story Frameworks.',
+   practicalExercise:'Create a 1-to-5 content repurposing plan turning one campaign case study into 2 carousels, 1 video script, and 2 text posts.',
+   status:'not_started', relatedGoal:'b3',
    url:'https://academy.hubspot.com/courses/content-marketing', hours:'6-7h',
    why:'You write ad copy already. This teaches the strategy layer above it \u2014 positioning, storytelling, repurposing \u2014 which separates a media buyer from a marketer.',
    proof:'Free badge, valid 2 years.'},
@@ -90,6 +125,11 @@ const COURSES = [
 
   /* --- STAGE 1 (continues): META DEPTH — your S-tier track --- */
   {id:'c13', stage:1, name:'Meta Pixel & Conversions API Setup', platform:'Meta Blueprint',
+   provider:'Meta Blueprint', category:'Technical Meta',
+   objective:'Master browser-side pixel implementation, standard event parameters, event deduplication, and privacy-first measurement.',
+   nextLesson:'Meta Conversions API Setup: Server Event Parameters and Event Match Quality (EMQ).',
+   practicalExercise:'Audit a test pixel using Meta Pixel Helper and diagnose event parameter mismatch warnings.',
+   status:'not_started', relatedGoal:'b2',
    url:'https://certifications.facebookblueprint.com/student/path/211547-meta-pixel-conversions-api-course',
    hours:'10m + credential',
    why:'THE single most valuable technical skill for a media buyer in 2026. Tracking is what separates someone who runs ads from someone who can be trusted with a budget. If the pixel is wrong, every number in the account is a lie and the client finds out eventually.',
@@ -486,63 +526,168 @@ const WEEKLY_RAID_BOSSES = [
 ];
 
 /* ---------------------------------------------------------------
-   GRAND CAMPAIGN RAIDS — SAUDI ARABIA 2027
+   DIFFICULTY PROGRESSION STAGES (Gradual, Sustainable Mastery)
+   Starts at Level 1 Normal — 3-5 manageable daily tasks
+   --------------------------------------------------------------- */
+const DIFFICULTY_LEVELS = [
+  {
+    level: 1,
+    name: 'Normal',
+    badge: 'LEVEL 1 — NORMAL',
+    titleAr: 'المستوى 1 — عادي (تأسيس الاستمرارية)',
+    targetTasks: '3–5 مهام يومية',
+    avgDuration: '15–25 دقيقة لكل مهمة',
+    desc: 'Manageable, sustainable workload focused on building unbreakable consistency without burnout or overwhelm.',
+    descAr: 'مهام واضحة، متوازنة، غير مجهدة، تبني الروتين المستدام دون أي ضغط أو تعقيد.'
+  },
+  {
+    level: 2,
+    name: 'Developing',
+    badge: 'LEVEL 2 — DEVELOPING',
+    titleAr: 'المستوى 2 — متطور (توسيع المهارات)',
+    targetTasks: '4–6 مهام يومية',
+    avgDuration: '25–35 دقيقة لكل مهمة',
+    desc: 'Deeper practice sessions, small working automations, and expanded English speaking drills.',
+    descAr: 'جلسات أطول، تدريبات عملية ملموسة، وتحسين البورتفوليو وبناء أتمتة بسيطة.'
+  },
+  {
+    level: 3,
+    name: 'Advanced',
+    badge: 'LEVEL 3 — ADVANCED',
+    titleAr: 'المستوى 3 — متقدم (مشاريع احترافية)',
+    targetTasks: '5–7 مهام يومية',
+    avgDuration: '30–45 دقيقة لكل مهمة',
+    desc: 'Full portfolio case studies, structured content publishing, and integrated multi-agent workflows.',
+    descAr: 'مشاريع متكاملة، محاكاة مقابلات كاملة بالإنجليزي، محتوى منشور، وأتمتة شاملة.'
+  },
+  {
+    level: 4,
+    name: 'Elite',
+    badge: 'LEVEL 4 — ELITE',
+    titleAr: 'المستوى 4 — نخبوي (قيادة واستقلالية)',
+    targetTasks: '6–8 مهام يومية (سقف صارم: 10 كحد أقصى)',
+    avgDuration: '40–60 دقيقة لكل مهمة',
+    desc: 'High-impact sovereign execution, complete automation systems, and major career milestones.',
+    descAr: 'إدارة استراتيجية متقدمة، إنتاج مستقل، وأنظمة أتمتة كاملة.'
+  }
+];
+
+/* ---------------------------------------------------------------
+   THE 4 MASTER BOSS RAIDS (Central Pillars of Life Progression)
    xp     = XP awarded PER STEP (visible before you start)
    reward = what clearing the whole raid gives you on top
    --------------------------------------------------------------- */
 const BOSSES = [
-  {id:'b1', name:'Proof & Portfolio Architect', desc:'THE FOUNDATION. Build verifiable case studies with real campaign figures (27 programs, 11,406 leads, CPL drop 130 to 50).', xp:150, reward:1500,
-   steps:[
-     'Rebuild the CV \u2014 English, one page, results with numbers (27 campaigns, 11,400 leads)',
-     'Build a portfolio that proves the work with Ads Manager screenshots',
-     'Rewrite the LinkedIn profile: headline, about, featured proof',
-     'Get the CV reviewed by a working media buyer in Egypt or KSA',
-     'Set alerts on LinkedIn and Wuzzuf for "Media Buyer" and "Performance Marketer"',
-     'Apply to 20 targeted roles with customized pitches',
-     'Apply to 50 targeted roles',
-     'Complete 3 mock technical interviews out loud',
-     'Reach a final-stage interview with agency leadership',
-     'Sign the offer \u2014 establish income stability while preparing Saudi runway']},
+  {
+    id: 'b1',
+    raidId: 'raid_germany',
+    name: 'BOSS RAID 01 — Master\'s in Germany',
+    nameAr: 'غارة الزعيم الأولى — دراسة الماجستير في ألمانيا',
+    desc: 'Long-term strategic objective: Prepare academic eligibility, language credentials, university shortlists, documents, and financial roadmap for graduate studies in Germany.',
+    descAr: 'الهدف الاستراتيجي بعيد المدى: بحث متطلبات القبول، الشروط اللغوية، الأوراق الرسمية، وخارطة الطريق الواقعية لدراسة الماجستير في ألمانيا.',
+    xp: 150,
+    reward: 2500,
+    stages: [
+      { name: 'Research & Academic Eligibility', stepsRange: [0, 3] },
+      { name: 'Language, Finance & Roadmap', stepsRange: [4, 7] }
+    ],
+    steps: [
+      'Research 8 suitable German universities & marketing/data analytics programs (DAAD database)',
+      'Analyze academic eligibility & ECTS credit equivalence for Egyptian bachelor\'s degree',
+      'Research English (IELTS 6.5+ / TOEFL) & German (Goethe A1/A2) language requirements',
+      'Identify required academic documents, certified transcripts, and APS / uni-assist evaluation criteria',
+      'Research tuition fees, semester contributions, and blocked account (Sperrkonto) living expenses',
+      'Identify scholarship opportunities (DAAD, Deutschlandstipendium, and university-specific grants)',
+      'Map out program application intake deadlines (Winter / Summer semester timelines)',
+      'Build an actionable multi-year Germany Master\'s preparation roadmap and milestone schedule'
+    ]
+  },
+  {
+    id: 'b2',
+    raidId: 'raid_saudi',
+    name: 'BOSS RAID 02 — Saudi Arabia Professional Transition',
+    nameAr: 'غارة الزعيم الثانية — الانتقال المهني إلى المملكة العربية السعودية',
+    desc: 'Immediate primary objective: Final travel arrangements, arrival settlement in Riyadh, and local job search.',
+    descAr: 'الهدف السيادي المباشر: إنهاء ترتيبات السفر المتبقية، الاستقرار في الرياض، وبدء البحث الميداني عن وظيفة بعد تفعيل الرقم السعودي.',
+    xp: 175,
+    reward: 3000,
+    stages: [
+      { id: 'stage1', name: 'Stage 1: Final Travel Preparation', nameAr: 'المرحلة 1: ترتيبات السفر النهائية (نشطة الآن)', active: true, stepsRange: [0, 4] },
+      { id: 'stage2', name: 'Stage 2: Arrival and Settlement', nameAr: 'المرحلة 2: الوصول والاستقرار واستخراج الرقم السعودي', active: false, stepsRange: [5, 8] },
+      { id: 'stage3', name: 'Stage 3: Professional Job Search (Gated)', nameAr: 'المرحلة 3: البحث الوظيفي الميداني (تفتح بعد الرقم السعودي)', active: false, gated: true, stepsRange: [9, 14] }
+    ],
+    steps: [
+      /* Stage 1: Final Travel Preparation (Active Now) */
+      'Book and confirm flight ticket to Saudi Arabia (Target: late November 2026)',
+      'Organize essential travel documents (Passport, visa, medical cert, degree copies, photos)',
+      'Create dual document archives: secure cloud backup + physical travel folder',
+      'Complete travel logistics & packing checklist (professional clothes, tech gear, adapters)',
+      'Prepare first-week settlement plan (housing check-in, initial transport, survival budget)',
 
-  {id:'b2', name:'Reach English B2 & Writing Mastery', desc:'Listening C1 \u00b7 Speaking 50 \u00b7 Reading 48 \u00b7 Writing 33. Writing is the whole gap.', xp:100, reward:1200,
-   steps:[
-     'Baseline recorded: EF SET 4-skill = 49 (Listening 63, Speaking 50, Reading 48, Writing 33)',
-     'Write 30 pieces on Write & Improve and act on every correction',
-     'Cut the top 5 grammar errors you repeat \u2014 diagnosed from your own writing',
-     'Raise writing from 33 to 43',
-     'Raise reading from 48 to 51',
-     'Retake the EF SET and cross 51 overall (Achieve Verified B2)']},
+      /* Stage 2: Arrival & Settlement */
+      'Confirm flight arrival and settle into initial accommodation in Saudi Arabia',
+      'Obtain a local Saudi mobile SIM & phone number (STC / Mobily / Zain)',
+      'Update professional contact information on CV, portfolio, and LinkedIn with local Saudi number',
+      'Establish daily local routine, workspace setup, and nearby essential services',
 
-  {id:'b3', name:'Clear the Certification Stack & Technical CAPI', desc:'Every high-leverage credential and tracking skill that separates you from ordinary media buyers.', xp:90, reward:1000,
-   steps:[
-     'Google Ads Search Certification',
-     'Google Analytics 4 Certification',
-     'TikTok Media Buying Certification',
-     'Snapchat Ads Certification',
-     'Meta Media Buying study guide completed',
-     'HubSpot Digital Advertising Certification',
-     'Master Meta Conversions API (CAPI) & Event Match Quality 7.0+']},
-
-  {id:'b4', name:'High-Ticket Saudi Interview Clearance', desc:'The interview clearance raid: passing technical, case-study, and situational interviews with Saudi marketing leadership.', xp:175, reward:2000,
-   steps:[
-     'Complete deep research on top 10 marketing agencies in Riyadh and Jeddah',
-     'Adapt CV to Gulf ATS specifications (no photo, quantifiable ROAS, Riyadh relocation ready)',
-     'Master out-loud English presentation of the 130 to 50 CPL recovery case study',
-     'Connect directly with 15 marketing directors and agency owners in Saudi Arabia',
-     'Pass initial HR screening interview with a Saudi recruiter',
-     'Pass comprehensive technical case study assessment',
-     'Pass executive interview with managing director or VP',
-     'Receive formal written offer letter for a performance marketing role in KSA']},
-
-  {id:'b5', name:'Relocation Runway 120K EGP & Visa Clearance', desc:'Final strategic gate: 120,000 EGP emergency fund saved, medical and visa cleared, landing in Riyadh.', xp:200, reward:2500,
-   steps:[
-     'Save 30,000 EGP toward relocation runway fund',
-     'Save 60,000 EGP toward relocation runway fund',
-     'Save 120,000 EGP full emergency 6-month safety runway',
-     'Passport and official documentation verified (valid 12+ months)',
-     'Complete Saudi medical check and document attestation',
-     'Sign employment contract and secure Saudi work visa',
-     'Book flight and land in Riyadh — Mission Accomplished']}
+      /* Stage 3: Professional Job Search (Gated: Only after Stage 2 & local phone!) */
+      'Compile target roster of 25 performance marketing agencies & brands in Riyadh and Jeddah',
+      'Tailor CV and portfolio positioning for specific Saudi performance marketing roles',
+      'Master out-loud English presentation of the 130 to 50 CPL recovery case study',
+      'Submit 20 tailored applications directly to Saudi hiring managers using local contact info',
+      'Complete HR screening & technical campaign case study interview round',
+      'Pass final executive interview and sign employment offer letter in Saudi Arabia'
+    ]
+  },
+  {
+    id: 'b3',
+    raidId: 'raid_content',
+    name: 'BOSS RAID 03 — Content Creation & Personal Brand Engine',
+    nameAr: 'غارة الزعيم الثالثة — صناعة المحتوى وبناء الحضور الرقمي',
+    desc: 'Build an authentic, high-converting content presence across LinkedIn, YouTube, and short-form video without overwhelm.',
+    descAr: 'بناء حضور رقمي قوي كصانع محتوى في التسويق الإعلاني ونمو البيزنس، من الفكرة والسكريبت حتى المونتاج والنشر المستدام.',
+    xp: 125,
+    reward: 2000,
+    stages: [
+      { name: 'Foundations & Strategy', stepsRange: [0, 4] },
+      { name: 'Production & Publishing', stepsRange: [5, 9] }
+    ],
+    steps: [
+      'Define content niche & personal positioning (Performance Marketing & AI-Driven Growth)',
+      'Establish 3 core content pillars (Campaign Case Studies, Marketing Breakdown, Relocation Journey)',
+      'Research target audience pain points & common questions in the Egyptian and Gulf marketing space',
+      'Build a 30-day content ideation repository with hooks and angles',
+      'Master direct-response video scripting and structured storytelling frameworks',
+      'Record 5 unlisted practice talking-head videos to calibrate eye contact, pacing, and tone',
+      'Master fast, high-retention video editing in CapCut Desktop (Dynamic captions, B-roll, sound)',
+      'Publish 4 polished content pieces (2 carousels + 2 short videos) on LinkedIn / YouTube',
+      'Analyze video retention graphs, audience engagement, and click-through rates',
+      'Establish a sustainable, stress-free publishing routine (2 high-quality pieces per week)'
+    ]
+  },
+  {
+    id: 'b4',
+    raidId: 'raid_automation',
+    name: 'BOSS RAID 04 — Practical AI Automation Mastery',
+    nameAr: 'غارة الزعيم الرابعة — أتمتة الذكاء الاصطناعي العملية',
+    desc: 'Build practical, real-world AI automation systems that multiply professional output and client leverage.',
+    descAr: 'بناء أنظمة وأتمتة عملية حقيقية بالذكاء الاصطناعي لرفع الإنتاجية، معالجة البيانات، وإدارة الإعلانات بكفاءة عالية.',
+    xp: 150,
+    reward: 2200,
+    stages: [
+      { name: 'Fundamentals & Scripting', stepsRange: [0, 3] },
+      { name: 'End-to-End Workflows & Portfolios', stepsRange: [4, 6] }
+    ],
+    steps: [
+      'Master advanced prompt engineering & structured JSON outputs with Gemini API and Antigravity',
+      'Build a Google Workspace automation script (Sheets data processor & automated summary report)',
+      'Connect marketing tools via APIs (Meta Marketing API / GA4 export / webhooks)',
+      'Automate a repetitive campaign task (Automated daily CPL report & anomaly alert)',
+      'Build a multi-step automation workflow combining AI analysis with task routing (Make / n8n / Python)',
+      'Implement robust error handling, automated retry logic, and execution logging',
+      'Document and package one end-to-end automation project as a portfolio case study'
+    ]
+  }
 ];
 
 /* ---------------------------------------------------------------
@@ -1535,11 +1680,12 @@ const BADGES = [
    WEEKLY REVIEW — the Sunday checkpoint
    --------------------------------------------------------------- */
 const REVIEW_QS = [
-  {k:'done',  q:'How many missions did I complete this week?'},
-  {k:'learn', q:'What did I actually learn?'},
-  {k:'fail',  q:'What failed, and why \u2014 honestly?'},
-  {k:'one',   q:'What is the ONE thing that matters most next week?'},
-  {k:'change',q:'What am I changing because of it?'}
+  {k:'done',  q:'1. Completed Work & Actual Progress: What did I actually accomplish this week across Saudi prep and career deliverables?'},
+  {k:'eng',   q:'2. English Development (Recorded Evidence): Did I record my spoken answers? How did my pacing, pronunciation, and vocabulary sound?'},
+  {k:'saudi', q:'3. Career Readiness & Saudi Transition Milestones: What progress was made on CV, portfolio case studies, and Riyadh agency research?'},
+  {k:'ai_content', q:'4. AI Automation & Content Projects: What scripts, CapCut reels, or automation workflows were tested or built?'},
+  {k:'adjust', q:'5. Task Difficulty & Workload Adjustment: Were the tasks too hard, too easy, or just right? Do tasks need to be simplified or split?'},
+  {k:'sustain', q:'6. Sustainability Check: Is the current 3.5â€“4 hour daily mandatory workload sustainable for me, or should I activate Recovery Mode?'}
 ];
 
 /* ---------------------------------------------------------------
@@ -2212,113 +2358,483 @@ const EXPANDED_VOCAB_DATA = [
   }
 ];
 
-/* 5. ACTIVE HIGH-IMPACT DAILY TASKS POOL (Strict Max 10 Rules, Target 5-8) */
-const ACTIVE_DAILY_TASKS_DEF = [
+/* ---------------------------------------------------------------
+   INTELLIGENT QUESTS POOL (Levels 1 to 4 with Rich Metadata)
+   Strictly adheres to Hadi's real situation:
+   - Late November 2026 imminent travel window
+   - Major travel expenses ALREADY PAID
+   - Gated direct Saudi applications until local Saudi phone confirmed
+   --------------------------------------------------------------- */
+const INTELLIGENT_QUESTS_POOL = [
+  /* === LEVEL 1: NORMAL (Consistency & Low Friction: 15-25 min, 3-5 tasks/day) === */
   {
-    id: 'q_case_study',
-    legacyId: 'd6',
-    name: 'Draft Case Study Section (IRA Academy Hero Campaign)',
-    sub: 'Career & Proof',
-    stat: 'career',
-    xp: 25,
-    duration: '35 min',
-    priority: 'high',
-    project: 'prj_hero_phd',
-    why: 'Documented proof with verified numbers is the single highest-leverage asset for Saudi recruiters.',
-    action: 'Write the Problem, Strategy, and Budget Optimization section for the PhD Political Science campaign (1,544 leads @ TL 4.62).',
-    criteria: 'A finished 300-word written section with exact metrics and bullet points ready for design.',
-    outcome: 'One core hero case study section completed.'
-  },
-  {
-    id: 'q_english_speaking',
+    id: 'q_eng_defense_l1',
     legacyId: 'd15',
     name: 'Record 2-Minute English Campaign Defense Drill',
-    sub: 'English Fluency',
+    sub: 'Spoken English & Interview Agility',
     stat: 'selfdev',
     xp: 20,
-    duration: '20 min',
+    duration: '15-20 min',
     priority: 'high',
-    project: 'prj_interview_pitch',
-    why: 'Interviewers in Riyadh evaluate executive presence and technical fluency under pressure.',
-    action: 'Speak out loud for 2 minutes answering: "Explain how you managed ad delivery volatility and stabilized CPL at IRA Academy." Record it on phone, listen back, and eliminate pauses.',
-    criteria: 'One completed 2-minute voice recording with clean pacing and zero filler words.',
-    outcome: 'Confidence and fluency on a core technical interview question.'
+    level: 1,
+    related: 'b2',
+    requiresSaudiPhone: false,
+    desc: 'Record yourself speaking out loud in English for 2 minutes explaining a key campaign win without reading from a script.',
+    why: 'Saudi agency directors evaluate spoken technical fluency, clear pronunciation, and confident tone under pressure.',
+    steps: [
+      '1. Review prompt: "Explain how you stabilized ad delivery and maintained CPL at IRA Academy."',
+      '2. Set phone voice recorder for 2 minutes and speak out loud continuously.',
+      '3. Listen back immediately: check pacing, count filler words (um/uh), and verify clear metric pronunciation.',
+      '4. Save recording in English practice folder.'
+    ],
+    criteria: 'One 2-minute clean audio recording saved with fewer than 3 hesitation pauses.',
+    outcome: 'Heightened spoken fluency and spontaneous verbal articulation for Riyadh interviews.'
   },
   {
-    id: 'q_ats_cv_refine',
-    legacyId: 'd14',
-    name: 'Refine 3 ATS Bullet Points with Verified Metrics',
-    sub: 'Career & Brand',
+    id: 'q_case_hero_l1',
+    legacyId: 'd6',
+    name: 'Draft Case Study Section (IRA Academy Hero Campaign)',
+    sub: 'Portfolio & Tangible Proof',
     stat: 'career',
-    xp: 15,
-    duration: '20 min',
+    xp: 25,
+    duration: '20-25 min',
     priority: 'high',
-    project: 'prj_ats_cv',
-    why: 'ATS algorithms screen resumes based on quantified business impact, not generic job descriptions.',
-    action: 'Rewrite 3 work experience bullets using the formula: Action Verb + Context + Quantitative Metric + Result (e.g. TL 171K spend, 11,406 leads).',
-    criteria: '3 polished bullet points added to English CV draft.',
-    outcome: 'Stronger resume match score for Saudi agency openings.'
+    level: 1,
+    related: 'b2',
+    requiresSaudiPhone: false,
+    desc: 'Write the core quantitative summary of the PhD Political Science campaign (1,544 leads @ TL 4.62).',
+    why: 'Documented case studies with verified figures are the single highest-converting asset for Gulf marketing recruiters.',
+    steps: [
+      '1. Open Google Docs / Notion portfolio workspace.',
+      '2. Structure the 3 core headers: Context & Objective, Audience & Creative Strategy, Measured Outcomes.',
+      '3. Write the 200-word Problem & Solution narrative emphasizing lead volume and low CPL.',
+      '4. Format key metrics in bold bullet points (1,544 leads, TL 4.62 CPL, 100% target lead acquisition).'
+    ],
+    criteria: 'A complete 200-word written section with verified metrics ready for Notion / PDF portfolio.',
+    outcome: 'One core hero case study section finalized and ready to display.'
   },
   {
-    id: 'q_workout',
+    id: 'q_saudi_docs_l1',
+    legacyId: 'd14',
+    name: 'Inspect & Verify Travel Document Archives',
+    sub: 'Saudi Travel Readiness',
+    stat: 'career',
+    xp: 20,
+    duration: '15 min',
+    priority: 'high',
+    level: 1,
+    related: 'b2',
+    requiresSaudiPhone: false,
+    desc: 'Verify that all essential physical and digital documents are organized, backed up, and ready for late November departure.',
+    why: 'Major expenses are paid; eliminating last-minute document stress ensures a smooth airport transition and rapid settlement in Saudi Arabia.',
+    steps: [
+      '1. Check passport physical validity (must have > 6 months remaining before expiry).',
+      '2. Confirm digital copies of entry visa, medical test results, and attested graduation certificates in Google Drive.',
+      '3. Inspect physical travel pouch containing original stamped papers, passport, and photos.',
+      '4. Check off any missing paperwork on the pre-travel checklist.'
+    ],
+    criteria: 'All essential papers verified in physical travel pouch and synced to secure Google Drive folder.',
+    outcome: '100% travel administrative readiness for late November transition.'
+  },
+  {
+    id: 'q_fit_home_l1',
     legacyId: 'd5',
-    name: '15-Minute Home Functional Workout',
-    sub: 'Health & Energy',
+    name: '15-Minute Functional Calisthenics Routine',
+    sub: 'Physical Stamina & Health',
     stat: 'health',
-    xp: 10,
+    xp: 15,
     duration: '15 min',
     priority: 'medium',
-    project: null,
-    why: 'Physical discipline and stamina directly fuel cognitive endurance and emotional resilience.',
-    action: '3 rounds: Incline push-ups (12), Chair-assisted squats (15), Knee plank (35s), Glute bridge (15), Dead bug (12). Stretch 3 min.',
-    criteria: '3 rounds completed with proper form.',
-    outcome: 'Physical energy boosted and health streak maintained.'
+    level: 1,
+    related: 'b2',
+    requiresSaudiPhone: false,
+    desc: 'Perform a 15-minute functional bodyweight circuit at home to elevate heart rate, maintain joint mobility, and burn calories.',
+    why: 'Physical conditioning directly increases daily cognitive stamina, posture during interviews, and mental resilience.',
+    steps: [
+      '1. Warm-up 2 minutes: arm circles, neck rotations, and light hip openers.',
+      '2. Circuit 3 rounds: 12 incline push-ups, 15 bodyweight squats, 30-second plank, 12 glute bridges.',
+      '3. Rest 45 seconds between rounds with steady hydration.',
+      '4. Cool-down 2 minutes with deep abdominal breathing and quad stretching.'
+    ],
+    criteria: '3 complete rounds executed with controlled form and logged in the daily tracker.',
+    outcome: 'Cardiovascular activation and energy reset achieved.'
   },
   {
-    id: 'q_reading_marketing',
-    legacyId: 'd7',
-    name: 'Read 10 Pages of Marketing Strategy / Business Book',
-    sub: 'Knowledge & Craft',
+    id: 'q_vocab_drill_l1',
+    name: 'Master 5 Technical Performance Marketing Terms in English',
+    sub: 'English Fluency & Nomenclature',
     stat: 'selfdev',
-    xp: 10,
-    duration: '25 min',
-    priority: 'medium',
-    project: null,
-    why: 'Reading builds deep mental models that separate strategic marketing managers from basic operators.',
-    action: 'Read 10 pages in English from Principles of Marketing or Influence by Cialdini. Write down 1 actionable takeaway.',
-    criteria: '10 pages read and 1 insight noted in Knowledge Base.',
-    outcome: 'Broader strategic vocabulary and marketing insight.'
-  },
-  {
-    id: 'q_linkedin_authority',
-    legacyId: 'd17',
-    name: 'Publish or Engage with 3 Saudi Agency Leads on LinkedIn',
-    sub: 'Networking & Authority',
-    stat: 'career',
     xp: 15,
-    duration: '20 min',
+    duration: '15 min',
     priority: 'medium',
-    project: 'prj_linkedin_saudi',
-    why: 'Consistent professional visibility brings inbound inquiries from Gulf marketing directors.',
-    action: 'Leave 2 substantive, value-additive comments on posts by Saudi agency founders, and connect with 3 media buyers in Riyadh.',
-    criteria: '2 thoughtful comments posted and 3 personalized connection requests sent.',
-    outcome: 'Expanded professional footprint in the Saudi market.'
+    level: 1,
+    related: 'b2',
+    requiresSaudiPhone: false,
+    desc: 'Study and memorize 5 high-leverage English marketing terms with their exact industry definitions and example usage sentences.',
+    why: 'Fluency in terms like "First-Party Data", "Event Deduplication", and "Attribution Window" establishes immediate technical credibility.',
+    steps: [
+      '1. Open the Vocabulary Bank in the Knowledge portal.',
+      '2. Review 5 technical terms: Incrementality, Blended ROAS, Server-Side Tracking, Advantage+ Bidding, Customer LTV.',
+      '3. Write 1 original English sentence using each term in the context of your past campaign management.',
+      '4. Say each sentence out loud twice with clear, natural pronunciation.'
+    ],
+    criteria: '5 original contextual sentences written and spoken out loud.',
+    outcome: 'Expanded professional vocabulary for English interviews.'
   },
   {
-    id: 'q_ai_workflow_test',
-    legacyId: 'd21',
-    name: 'Test 1 AI Marketing Workflow (Ad Copy / Creative)',
-    sub: 'Technical Skills',
+    id: 'q_hook_draft_l1',
+    name: 'Draft 3 High-Retention Ad Script Hooks',
+    sub: 'Content Creation & Brand Engine',
     stat: 'skills',
     xp: 15,
+    duration: '15-20 min',
+    priority: 'medium',
+    level: 1,
+    related: 'b3',
+    requiresSaudiPhone: false,
+    desc: 'Write 3 attention-grabbing 3-second video hooks designed for short-form marketing content.',
+    why: 'The first 3 seconds dictate 80% of video retention on TikTok, Instagram Reels, and YouTube Shorts.',
+    steps: [
+      '1. Select a core marketing topic (e.g. "Why your Meta Ads stop converting after 3 days").',
+      '2. Draft Hook 1 (Contrarian): "Stop turning off ad sets when CPL spikes on day one..."',
+      '3. Draft Hook 2 (Data-Proof): "Here is how 1 simple tweak cut lead cost from 130 to 50 TL..."',
+      '4. Draft Hook 3 (Direct Callout): "If you run lead generation ads in Egypt or Saudi, do not touch Advantage+ until you fix this..."'
+    ],
+    criteria: '3 distinct, punchy hooks written in your content ideation repository.',
+    outcome: 'Ready-to-use hooks for your next short-form video script.'
+  },
+
+  /* === LEVEL 2: DEVELOPING (Building Depth: 25-35 min, 4-6 tasks/day) === */
+  {
+    id: 'q_eng_pitch_l2',
+    name: 'Deliver 3-Minute CPL Recovery Strategic Pitch',
+    sub: 'English Interview Simulation',
+    stat: 'selfdev',
+    xp: 25,
     duration: '25 min',
-    priority: 'normal',
-    project: 'prj_ai_video_ads',
-    why: 'AI automation multiplies your output, allowing you to operate with the leverage of an entire creative team.',
-    action: 'Use Gemini / ChatGPT to generate 3 distinct direct-response ad angles (Fear of Missing Out, Data Proof, Story Hook) for a test campaign.',
-    criteria: '3 structured ad copy variants generated and reviewed.',
-    outcome: 'Practical AI workflow documented in Knowledge Base.'
+    priority: 'high',
+    level: 2,
+    related: 'b2',
+    requiresSaudiPhone: false,
+    desc: 'Present a structured 3-minute oral breakdown of how you diagnosed and salvaged an underperforming campaign.',
+    why: 'Senior recruiters look for diagnostic problem-solving frameworks rather than generic tactical button-pushing.',
+    steps: [
+      '1. Structure 4 sections: The Crisis (130 TL CPL), Root Cause Analysis (creative fatigue & audience saturation), The Pivot (angle testing), The Result (50 TL CPL).',
+      '2. Deliver the entire explanation in English without stopping or reverting to Arabic.',
+      '3. Record with smartphone camera to check posture, eye contact, and vocal authority.',
+      '4. Review recording and note one area for tone or pacing improvement.'
+    ],
+    criteria: 'One 3-minute video recording completed explaining the crisis-to-recovery case study.',
+    outcome: 'Executive-level communication mastery on a signature portfolio story.'
+  },
+  {
+    id: 'q_ats_cv_refine_l2',
+    name: 'Refine 3 ATS Work Experience Bullets with Quantified ROI',
+    sub: 'CV & Career Positioning',
+    stat: 'career',
+    xp: 20,
+    duration: '25 min',
+    priority: 'high',
+    level: 2,
+    related: 'b2',
+    requiresSaudiPhone: false,
+    desc: 'Optimize 3 bullet points in your English CV using Google\'s X-Y-Z formula (Accomplished [X], as measured by [Y], by doing [Z]).',
+    why: 'Applicant Tracking Systems (ATS) and hiring managers immediately discard generic job descriptions that lack measurable outcomes.',
+    steps: [
+      '1. Open English ATS CV master document.',
+      '2. Select 3 bullets from IRA Academy or Freelance Media Buyer sections.',
+      '3. Rewrite Bullet 1: "Managed TL 171K ad spend across 27 academic programs, generating 11,406 qualified leads at a blended CPL of TL 15.06."',
+      '4. Rewrite Bullet 2: "Stabilized volatile CPL by 61.5% (130 to 50 TL) through rapid creative angle testing and Advantage+ budget scaling."',
+      '5. Update document and export clean ATS-compatible PDF.'
+    ],
+    criteria: '3 bullets rewritten with exact figures and saved in master CV.',
+    outcome: 'Substantially higher ATS pass rate for Saudi performance roles.'
+  },
+  {
+    id: 'q_script_shortform_l2',
+    name: 'Write Full 60-Second Video Script (Hook + Core + CTA)',
+    sub: 'Content Creation & Brand Engine',
+    stat: 'skills',
+    xp: 25,
+    duration: '30 min',
+    priority: 'high',
+    level: 2,
+    related: 'b3',
+    requiresSaudiPhone: false,
+    desc: 'Write a complete 60-second direct-response video script following the Hook, Retain, Deliver, and Call-to-Action architecture.',
+    why: 'Scripted clarity eliminates rambling during recording and accelerates CapCut editing by 300%.',
+    steps: [
+      '1. Choose winning hook from ideation pool.',
+      '2. Write 15-second Problem context (why most media buyers struggle with lead qualification).',
+      '3. Write 30-second Tactical Solution (the exact 2-step Instant Form question tweak you use).',
+      '4. Write 15-second Call to Action (save post, comment keyword, or follow for media buying insights).',
+      '5. Read script out loud with stopwatch to ensure exact 50-60 second duration.'
+    ],
+    criteria: 'A complete written 60-second script timed and approved for recording.',
+    outcome: 'Production-ready video asset blueprint.'
+  },
+  {
+    id: 'q_ai_prompt_pipeline_l2',
+    name: 'Build Structured JSON Prompt Workflow for Ad Copy Matrix',
+    sub: 'Practical AI Automation',
+    stat: 'skills',
+    xp: 20,
+    duration: '25 min',
+    priority: 'medium',
+    level: 2,
+    related: 'b4',
+    requiresSaudiPhone: false,
+    desc: 'Craft and test an advanced system prompt in Gemini / Antigravity that returns a 3x3 ad creative matrix in valid JSON.',
+    why: 'Structured prompt engineering turns AI into a predictable, automated creative engine rather than an unpredictable chatbot.',
+    steps: [
+      '1. Define system role: Senior Performance Copywriter specializing in Middle East high-ticket education.',
+      '2. Specify input parameters: product name, target persona pain point, primary offer.',
+      '3. Specify schema: 3 hooks (curiosity, fear, data), 3 body paragraphs, and 3 CTA variants in clean JSON format.',
+      '4. Run test with sample campaign brief and validate JSON output.'
+    ],
+    criteria: 'A reusable prompt template documented in Second Brain yielding valid JSON every run.',
+    outcome: 'Instant generation capability for 9 ad copy variants in 30 seconds.'
+  },
+  {
+    id: 'q_saudi_agency_map_l2',
+    name: 'Research & Map 10 Target Marketing Agencies in Riyadh',
+    sub: 'Saudi Market Research (No Direct Apply)',
+    stat: 'career',
+    xp: 20,
+    duration: '30 min',
+    priority: 'medium',
+    level: 2,
+    related: 'b2',
+    requiresSaudiPhone: false,
+    desc: 'Identify and profile 10 prominent performance marketing and digital advertising agencies headquartered or operating in Riyadh.',
+    why: 'Mapping agency portfolios, key clients, and managing directors allows laser-targeted outreach immediately upon arrival with local SIM.',
+    steps: [
+      '1. Research top Saudi agencies (e.g. 2P PR & Digital, UBRAND, FP7 Riyadh, Magna, Wavemaker KSA).',
+      '2. Note company name, primary client sectors (e-commerce, real estate, education), and Riyadh office location.',
+      '3. Identify the Head of Performance or Media Buying Director on LinkedIn.',
+      '4. Log company details into the Saudi Opportunity Pipeline database (strictly research only â€” no premature messages!).'
+    ],
+    criteria: '10 agencies profiled with key executive names recorded in research database.',
+    outcome: 'High-value target list ready for in-person and local telephone engagement upon landing.'
+  },
+  {
+    id: 'q_workout_circuit_l2',
+    name: '25-Minute High-Energy Bodyweight Conditioning Circuit',
+    sub: 'Health & Physical Resilience',
+    stat: 'health',
+    xp: 20,
+    duration: '25 min',
+    priority: 'medium',
+    level: 2,
+    related: 'b2',
+    requiresSaudiPhone: false,
+    desc: 'Execute a 4-round calisthenics circuit to accelerate fat burning, build postural endurance, and release stress.',
+    why: 'Dropping body fat and building muscular stamina directly improves self-confidence, breathing control, and daily energy.',
+    steps: [
+      '1. Dynamic mobility 3 min: shoulder dislocates with towel, torso twists, bodyweight lunges.',
+      '2. Circuit 4 rounds: 15 push-ups, 20 deep air squats, 40-second forearm plank, 15 walking lunges, 15 glute bridges.',
+      '3. 45-second hydration and breathing rest between rounds.',
+      '4. Static stretch 4 min: hamstrings, chest doorway stretch, hip flexors.'
+    ],
+    criteria: '4 rounds completed with strict form and logged in Health tracker.',
+    outcome: 'High metabolic stimulation and cardiovascular discipline reinforced.'
+  },
+
+  /* === LEVEL 3: ADVANCED (Deep Execution: 30-45 min, 5-7 tasks/day) === */
+  {
+    id: 'q_case_study_full_l3',
+    name: 'Package Complete Multi-Page Case Study with Visual Charts',
+    sub: 'Portfolio & Tangible Proof',
+    stat: 'career',
+    xp: 35,
+    duration: '40 min',
+    priority: 'high',
+    level: 3,
+    related: 'b2',
+    requiresSaudiPhone: false,
+    desc: 'Transform raw campaign metrics into an executive-level Notion / Canva portfolio page complete with problem breakdown and visual performance graphs.',
+    why: 'Demonstrating end-to-end strategic ownership with polished visuals sets you apart from 95% of generic applicants.',
+    steps: [
+      '1. Open Notion or Canva case study template.',
+      '2. Insert campaign context: Turkish political science PhD program lead generation (1,544 leads @ TL 4.62).',
+      '3. Add visual ad creatives used (or anonymized mockups) highlighting the messaging hook.',
+      '4. Construct before-and-after metric comparison table showing initial CPL vs optimized CPL.',
+      '5. Write executive summary of key learnings (audience exhaustion, localized ad copy, instant form qualifiers).'
+    ],
+    criteria: 'A publishable case study page complete with charts, figures, and takeaways.',
+    outcome: 'An elite portfolio asset ready to share with hiring executives.'
+  },
+  {
+    id: 'q_record_edit_video_l3',
+    name: 'Record Practice Talking-Head Reel & Edit in CapCut Desktop',
+    sub: 'Content Creation & Brand Engine',
+    stat: 'skills',
+    xp: 35,
+    duration: '45 min',
+    priority: 'high',
+    level: 3,
+    related: 'b3',
+    requiresSaudiPhone: false,
+    desc: 'Record a 60-second marketing tip video on smartphone, import into CapCut Desktop, trim pauses, and generate dynamic subtitles.',
+    why: 'Commanding short-form video establishes personal authority, opens inbound opportunities, and showcases content production mastery.',
+    steps: [
+      '1. Set up smartphone camera at eye level with clean front lighting and quiet room.',
+      '2. Record 60-second script in 2-3 focused takes maintaining direct camera eye contact.',
+      '3. Import best take into CapCut Desktop (9:16 vertical 1080x1920 timeline).',
+      '4. Trim dead silences and breath pauses with ripple edit.',
+      '5. Generate auto-captions, style keywords in yellow/green, and add subtle whoosh sound effects on transitions.'
+    ],
+    criteria: 'One fully edited 9:16 vertical video rendered in 1080p and saved to assets archive.',
+    outcome: 'Demonstrated video production and editing competence.'
+  },
+  {
+    id: 'q_sheets_automation_l3',
+    name: 'Build Automated Daily Marketing Metrics Sheet with Custom Formulas',
+    sub: 'Practical AI Automation',
+    stat: 'skills',
+    xp: 30,
+    duration: '35 min',
+    priority: 'high',
+    level: 3,
+    related: 'b4',
+    requiresSaudiPhone: false,
+    desc: 'Build an automated Google Sheet or Excel model that ingests raw ad spend and lead data, auto-calculates CPL and conversion velocity, and flags anomalies.',
+    why: 'Agencies prize media buyers who build automated reporting models that eliminate manual data entry errors.',
+    steps: [
+      '1. Set up clean data tab with Date, Campaign, Spend, Impressions, Clicks, Leads columns.',
+      '2. Write dynamic summary formulas: SUMIFS, XLOOKUP, CPL calculation with IFERROR protection.',
+      '3. Add conditional formatting to highlight ad sets with CPL exceeding 15% above target benchmark.',
+      '4. Create executive summary card calculating blended CPL, CTR, and lead run-rate.'
+    ],
+    criteria: 'A fully functional spreadsheet model calculating real-time marketing metrics with zero formula errors.',
+    outcome: 'Automated reporting tool ready for agency workflow integration.'
+  },
+  {
+    id: 'q_interview_defense_l3',
+    name: 'Simulate 5-Minute High-Stakes Technical Interview Q&A',
+    sub: 'English Fluency & Executive Presence',
+    stat: 'selfdev',
+    xp: 30,
+    duration: '30 min',
+    priority: 'high',
+    level: 3,
+    related: 'b2',
+    requiresSaudiPhone: false,
+    desc: 'Simulate and record answering two difficult technical questions: "How do you handle ad fatigue?" and "When should a client switch from Meta to Google Search?"',
+    why: 'Overcoming technical pushback fluently in English is what convinces marketing directors to make top-tier salary offers.',
+    steps: [
+      '1. Read Question 1: "Explain your framework for detecting and resolving Meta ad creative fatigue before ROAS collapses."',
+      '2. Deliver a 2.5-minute out-loud answer using structured frameworks (frequency metrics, first-time impression ratio, creative refreshes).',
+      '3. Read Question 2: "A B2B client has \,000/month budget. How do you split spend between Meta Ads and Google Search?"',
+      '4. Deliver a 2.5-minute answer explaining capture vs demand generation.',
+      '5. Review recording and evaluate technical precision and English fluency.'
+    ],
+    criteria: 'One 5-minute recording successfully defending both technical scenarios.',
+    outcome: 'Rock-solid confidence for senior media buyer and marketing specialist interviews.'
+  },
+  {
+    id: 'q_flight_logistics_l3',
+    name: 'Finalize Flight Booking Details & Arrival Schedule Checklist',
+    sub: 'Saudi Travel Transition',
+    stat: 'career',
+    xp: 25,
+    duration: '25 min',
+    priority: 'medium',
+    level: 3,
+    related: 'b2',
+    requiresSaudiPhone: false,
+    desc: 'Compare flights (EgyptAir, Flynas, Saudia) for the late November window and draft your hour-by-hour arrival day schedule.',
+    why: 'Finalizing ticket arrangements and having a clear arrival day plan eliminates anxiety and ensures a triumphant landing.',
+    steps: [
+      '1. Compare late November flight schedules and baggage allowances (Cairo to Riyadh/Jeddah).',
+      '2. Verify baggage allowance for tech gear, clothing, and documents (typically 2x 23kg + 7kg cabin).',
+      '3. Draft arrival schedule: Airport terminal -> SIM card kiosk (STC) -> Initial accommodation check-in.',
+      '4. Update Flight Status in the Life Command Center.'
+    ],
+    criteria: 'Flight options compared, booking plan ready, and arrival checklist documented.',
+    outcome: 'Clear operational clarity for the departure and arrival day.'
+  },
+
+  /* === LEVEL 4: ELITE (Peak Performance: 30-45 min, 6-8 tasks, max 10) === */
+  {
+    id: 'q_end_to_end_pipeline_l4',
+    name: 'Deploy End-to-End AI Lead Routing & Alerting Scenario',
+    sub: 'Practical AI Automation',
+    stat: 'skills',
+    xp: 40,
+    duration: '45 min',
+    priority: 'high',
+    level: 4,
+    related: 'b4',
+    requiresSaudiPhone: false,
+    desc: 'Construct and test an end-to-end automation in Make / Python connecting an incoming webhook to Gemini analysis and instant notification.',
+    why: 'Deploying robust multi-step automation demonstrates modern marketing engineering capability that few media buyers possess.',
+    steps: [
+      '1. Configure webhook trigger capturing lead form test payload.',
+      '2. Connect Gemini API module to evaluate lead intent and assign score (Hot / Warm / Cold).',
+      '3. Route hot leads to an instant Telegram / Slack alert with full qualification details.',
+      '4. Log all event records to a Google Sheet with timestamp and response latency.',
+      '5. Trigger 3 test runs and verify 100% execution success rate.'
+    ],
+    criteria: 'End-to-end scenario executed 3 times successfully with zero errors.',
+    outcome: 'Production-ready AI marketing automation system.'
+  },
+  {
+    id: 'q_saudi_direct_apply_l4',
+    name: 'Direct Outreach Sprint to 3 Saudi Hiring Directors (LOCAL PHONE REQUIRED)',
+    sub: 'Saudi Career Launch (GATED)',
+    stat: 'career',
+    xp: 45,
+    duration: '40 min',
+    priority: 'high',
+    level: 4,
+    related: 'b2',
+    requiresSaudiPhone: true,
+    desc: 'Reach out directly to marketing directors at target Riyadh agencies using your verified local Saudi phone number and tailored case study portfolio.',
+    why: 'Gated until arrival and local phone acquisition. Once verified, direct targeted outreach has a 10x higher interview conversion rate than cold job portals.',
+    steps: [
+      '1. Verify your local Saudi phone number is active and visible on CV and WhatsApp.',
+      '2. Select 3 target agencies from your Riyadh agency research roster.',
+      '3. Draft tailored 3-paragraph executive introduction linking directly to your PhD campaign case study.',
+      '4. Send outreach via LinkedIn message and professional email with local Saudi contact details.',
+      '5. Log submission details and schedule 48-hour follow-up in the Opportunity Tracker.'
+    ],
+    criteria: '3 personalized applications submitted with local Saudi contact details included.',
+    outcome: 'Direct recruitment pipeline initiated in Riyadh.'
+  },
+  {
+    id: 'q_master_presentation_l4',
+    name: 'Deliver Full 10-Minute Paid Media Strategy Presentation in English',
+    sub: 'English Fluency & Executive Presence',
+    stat: 'selfdev',
+    xp: 40,
+    duration: '40 min',
+    priority: 'high',
+    level: 4,
+    related: 'b2',
+    requiresSaudiPhone: false,
+    desc: 'Present a complete 10-minute slide deck presentation in English outlining a 90-day scaling strategy for a Gulf e-commerce or education brand.',
+    why: 'Executive presentations at this level win Senior Performance Marketing Specialist and Growth Lead positions.',
+    steps: [
+      '1. Prepare 6 slides: Executive Summary, Channel Mix (Meta + Google + TikTok), Tracking Architecture (CAPI), Creative Testing Engine, Budget Forecast, and KPI Milestones.',
+      '2. Set timer for 10 minutes and present continuously in English without checking notes.',
+      '3. Record presentation screen and audio.',
+      '4. Audit presentation for clarity, authority, and persuasive conviction.'
+    ],
+    criteria: 'One 10-minute complete strategic presentation recorded and archived.',
+    outcome: 'Proven capability to lead high-level marketing strategy meetings in English.'
   }
+];
+
+/* ---------------------------------------------------------------
+   ACTIVE HIGH-IMPACT DAILY TASKS POOL (Level 1 Normal Default: 4 High-Impact Tasks)
+   Strictly capped: Level 1 Normal = 3 to 5 tasks (Target: 4 tasks)
+   --------------------------------------------------------------- */
+const ACTIVE_DAILY_TASKS_DEF = [
+  INTELLIGENT_QUESTS_POOL[0], /* Record 2-Minute English Campaign Defense Drill */
+  INTELLIGENT_QUESTS_POOL[1], /* Draft Case Study Section (IRA Academy Hero Campaign) */
+  INTELLIGENT_QUESTS_POOL[2], /* Inspect & Verify Travel Document Archives */
+  INTELLIGENT_QUESTS_POOL[3]  /* 15-Minute Functional Calisthenics Routine */
 ];
 
 /* 6. ESTABLISHED HABIT ROUTINES (Graduated from Daily Quests, Tracked in Habits) */
@@ -2437,14 +2953,292 @@ const SKILL_MATRIX_DEF = [
   { id: 'sk_typing', name: 'Touch Typing & Execution Speed', current: 35, target: 60, cat: 'Discipline', domain: 'Discipline', proof: '35 WPM on keybr/monkeytype -> Target 60 WPM', action: '35 WPM on keybr/monkeytype -> Target 60 WPM' }
 ];
 
-/* 8. SAUDI RELOCATION RUNWAY CONFIGURATION */
-const RELOCATION_BUFFER_CONFIG = {
-  currency: 'EGP',
-  targetTotal: 120000,
-  breakdown: [
-    { label: 'Visa, Attestations & Medical Processing', amount: 25000 },
-    { label: 'Round-trip Flight & Initial Baggage', amount: 20000 },
-    { label: 'First Month Housing Deposit in Riyadh/Jeddah', amount: 45000 },
-    { label: '60-Day Emergency Buffer & Living Runway', amount: 30000 }
-  ]
+/* ---------------------------------------------------------------
+   SAUDI ARABIA RELOCATION & LIFE STATUS CONFIGURATION
+   Updated to reflect Hadi's real situation:
+   - Travel is imminent: Late November 2026 window
+   - Major travel expenses ALREADY PAID & CLEARED
+   - Flight booking pending final confirmation
+   - Saudi phone number gated until arrival in KSA
+   --------------------------------------------------------------- */
+const RELOCATION_STATUS_CONFIG = {
+  currentLocation: 'Cairo, Egypt',
+  destination: 'Saudi Arabia (Riyadh / Jeddah)',
+  travelWindow: 'Late November 2026',
+  status: 'imminent_travel_prep',
+  expensesStatus: {
+    majorExpensesPaid: true,
+    label: 'Major Travel & Relocation Expenses',
+    state: 'PAID & CLEARED',
+    details: 'Visa processing, medical attestations, degree certification, and initial relocation arrangements are 100% paid.'
+  },
+  pendingArrangements: [
+    { item: 'Flight ticket confirmation', status: 'Pending Booking (Late Nov)', estimatedCost: '10,000 - 15,000 EGP' },
+    { item: 'Luggage & equipment packing', status: 'In Progress', estimatedCost: 'Complete' },
+    { item: 'Local Saudi SIM card & phone number', status: 'Gated (Upon Arrival in KSA)', estimatedCost: 'STC / Mobily' }
+  ],
+  jobSearchPolicy: {
+    directApplicationsAllowed: false,
+    reason: 'Submitting job applications without a local Saudi phone number drastically lowers response rates. Focus is strictly on CV tailoring, portfolio case studies, spoken English drills, and Riyadh company mapping.',
+    gateCondition: 'Local Saudi phone number verified in Life Command Center'
+  }
 };
+
+/* ---------------------------------------------------------------
+   FOUNDATION PROFILE (Solo Leveling Life OS - 14-Day Foundation Phase)
+   Defines user capacity, daily time budgets, progression rules,
+   and recovery mode specifications.
+   --------------------------------------------------------------- */
+const FOUNDATION_PROFILE = {
+  phase: '14-Day Foundation Period (Days 1–14)',
+  availableTimeDaily: '4+ hours daily',
+  mandatoryWorkloadMinutes: 220, /* ~3.66 hours */
+  mandatoryWorkloadDisplay: '3.5–4 hours',
+  estimatedEnglishLevel: 'B1/B2 (Practical Diagnostic Assessment)',
+  
+  /* Initial Daily Time Budgets (Flexible allocations, not rigid lists) */
+  timeBudgets: [
+    { domain: 'English Development', minutes: 60, icon: 'mic', color: 'var(--sys-blue)', desc: 'Speaking analysis, interview drills, pronunciation, practical grammar' },
+    { domain: 'Career & Professional Skills', minutes: 60, icon: 'career', color: '#c084fc', desc: 'Case study writeups, ATS CV bullet refinement, campaign metrics' },
+    { domain: 'Saudi Arabia Transition', minutes: 45, icon: 'globe', color: 'var(--gold)', desc: 'Travel docs, flight search, Riyadh agency mapping (no premature applications)' },
+    { domain: 'AI Automation', minutes: 35, icon: 'skills', color: 'var(--green)', desc: 'Google Sheets scripts, prompt engineering, automated reporting scenarios' },
+    { domain: 'Content Creation', minutes: 20, icon: 'shield', color: '#f472b6', desc: 'Ad script hooks, 60s video outlines, CapCut desktop workflow practice' },
+    { domain: 'Germany Master\'s Research', minutes: 0, weeklySessions: '2x 30–45 min/week', icon: 'selfdev', color: '#38bdf8', desc: 'Non-daily strategic research (DAAD programs, ECTS requirements)' }
+  ],
+
+  /* Progression Rules */
+  rules: {
+    initialDailyTasksRange: [3, 5],
+    foundationPeriodDays: 14,
+    escalationTrigger: 'Consistent completion + positive feedback over 14 days',
+    escalatedDailyTasksRange: [5, 7],
+    hardMaxDailyTasks: 10,
+    startingDifficulty: 1, /* Level 1 — Normal */
+    difficultyBasis: 'Consistency, demonstrated practical skills & raid milestones (NOT XP alone)',
+    splitOnFriction: true,
+    recoveryModeSupported: true
+  },
+
+  /* Saudi Arabia Transition Pre-Travel Rules */
+  saudiTransition: {
+    currentPhase: 'Pre-Travel Preparation',
+    expectedTravelWindow: 'Before end of November 2026',
+    majorExpensesPaid: true,
+    pendingItems: ['Flight ticket booking', 'Final packing & tech gear', 'Local Saudi SIM card upon arrival'],
+    hasSaudiPhone: false,
+    jobSearchQuotasAllowed: false,
+    jobSearchGatedReason: 'No local Saudi phone number yet. Cold portal applications without local contact drastically decrease response rates.',
+    preTravelFocus: ['ATS CV refinement', 'Hero case studies (PhD 1,544 leads @ 4.62 TL)', 'Spoken English defense of CPL turnaround', 'Riyadh agency roster mapping', 'Document verification'],
+    intensiveSearchUnlockCondition: 'Arrival in Saudi Arabia confirmed + local mobile phone verified in Life Command Center'
+  }
+};
+
+/* ---------------------------------------------------------------
+   PRACTICAL B1/B2 ENGLISH DEVELOPMENT TRACK
+   Structured speaking drills covering the 7 mandatory curriculum areas.
+   Every exercise features: Objective, Instructions, Self-Eval, Common Traps, Next Step.
+   --------------------------------------------------------------- */
+const B1_B2_ENGLISH_TRACK = [
+  {
+    id: 'eng_mod_speaking_analysis',
+    module: 'Speaking & Recorded-Answer Analysis',
+    level: 'B1/B2',
+    duration: '20 min',
+    objective: 'Explain the 130 to 50 TL CPL recovery narrative out loud in fluent English with zero speech blocks.',
+    instructions: [
+      '1. Review prompt: "Hadi, tell me about a time a campaign went wrong and how you turned it around."',
+      '2. Speak out loud continuously for 2.5 minutes without reading from notes.',
+      '3. Record your audio using phone or the speaking portal recorder.',
+      '4. Listen back immediately with a pen and notepad.'
+    ],
+    feedbackCriteria: [
+      'Spoke continuously for at least 2 minutes without reverting to Arabic.',
+      'Clearly explained: Problem (130 TL CPL), Diagnosis (creative fatigue), Action (new angles), Result (50 TL).',
+      'No more than 3 hesitation pauses or filler words (um, uh, like).'
+    ],
+    commonTraps: [
+      'Pronouncing "Performance" as "Berformance" (must be a crisp /p/ sound).',
+      'Rambling on ad set details instead of framing the executive business outcome.',
+      'Translating literally from Arabic sentence structures (e.g. "made to them" instead of "provided them with").'
+    ],
+    nextStep: 'Re-record once if filler words exceeded 3; save best take in English Practice archive.'
+  },
+  {
+    id: 'eng_mod_interview_pitch',
+    module: 'Job Interviews & Professional Experience Defense',
+    level: 'B1/B2',
+    duration: '25 min',
+    objective: 'Deliver a concise 90-second English elevator pitch summarizing your 14 months of Meta Ads management.',
+    instructions: [
+      '1. Read prompt: "Walk me through your background as a media buyer and performance marketing specialist."',
+      '2. Deliver answer focusing on: Education degree, IRA Academy experience, TL 171K spend managed, 11,406 qualified leads generated.',
+      '3. Record audio take 1, listen back to check tone and pacing.',
+      '4. Record take 2 with more confidence and upward vocal inflection at end of sentences eliminated.'
+    ],
+    feedbackCriteria: [
+      'Time was strictly between 75 and 100 seconds.',
+      'Included exact metrics (14 months, 27 programs, TL 171,000 spend, 11,406 leads).',
+      'Sounded enthusiastic, professional, and clear.'
+    ],
+    commonTraps: [
+      'Focusing on daily operational tasks instead of quantified business impact.',
+      'Speaking too fast when nervous; keep cadence steady at ~130 words per minute.'
+    ],
+    nextStep: 'Transcribe any mispronounced words and look them up on YouGlish / Forvo.'
+  },
+  {
+    id: 'eng_mod_marketing_vocab',
+    module: 'Marketing & Performance-Marketing Vocabulary',
+    level: 'B1/B2',
+    duration: '15 min',
+    objective: 'Incorporate 5 advanced technical terms into spontaneous spoken sentences.',
+    instructions: [
+      '1. Review 5 target terms: Attribution Window, Event Deduplication, Incrementality, Cost Cap, Churn Rate.',
+      '2. Formulate 1 original sentence for each term reflecting your real advertising experience.',
+      '3. Speak each sentence out loud 3 times emphasizing syllable stress.'
+    ],
+    feedbackCriteria: [
+      'Used each term in correct technical context.',
+      'Correct word stress: at-tri-BYOO-shun, in-cre-men-TAL-i-ty.',
+      'Sentences spoken smoothly without hesitation.'
+    ],
+    commonTraps: [
+      'Confusing "Attribution" with "Contribution".',
+      'Pronouncing "Cap" as "Cab" (keep the /p/ voiceless and sharp).'
+    ],
+    nextStep: 'Add terms to your active vocabulary bank in the Second Brain.'
+  },
+  {
+    id: 'eng_mod_pronunciation',
+    module: 'Pronunciation & Phonetic Calibration',
+    level: 'B1/B2',
+    duration: '15 min',
+    objective: 'Eliminate Arabic-speaker phonetic transfers (/p/ vs /b/, consonant clusters, vowel lengthening).',
+    instructions: [
+      '1. Drill the P vs B contrast pairs: Performance / Baseline, Paid / Budget, Pixel / Platform, Purpose / Brand.',
+      '2. Hold a paper slip 2 inches from your lips: the paper must flutter on P and stay still on B.',
+      '3. Say each pair out loud 5 times with conscious aspiration.'
+    ],
+    feedbackCriteria: [
+      'Paper moved noticeably on all P words.',
+      'Zero substitution of /b/ for /p/ in "performance" or "platform".'
+    ],
+    commonTraps: [
+      'Saying "El-platform" or inserting an intrusive vowel before "sp" / "st" (e.g. "es-strategy").'
+    ],
+    nextStep: 'Check recording on phone; repeat any words that sounded muted.'
+  },
+  {
+    id: 'eng_mod_listening',
+    module: 'Listening Comprehension & Note Taking',
+    level: 'B1/B2',
+    duration: '20 min',
+    objective: 'Listen to an 8-minute marketing podcast clip and summarize the 3 main arguments in English.',
+    instructions: [
+      '1. Open marketing podcast (e.g. Perpetual Traffic or Marketing Against the Grain).',
+      '2. Listen at 1.0x speed without subtitles.',
+      '3. Take bulleted notes on key takeaways.',
+      '4. Speak a 60-second audio summary of the podcast out loud in English.'
+    ],
+    feedbackCriteria: [
+      'Extracted the core strategic thesis accurately.',
+      'Summary spoken in under 75 seconds without pausing.'
+    ],
+    commonTraps: [
+      'Trying to transcribe every single word rather than identifying the high-level concept.'
+    ],
+    nextStep: 'Compare summary against podcast show notes.'
+  },
+  {
+    id: 'eng_mod_grammar',
+    module: 'Practical Business Grammar',
+    level: 'B1/B2',
+    duration: '15 min',
+    objective: 'Master Present Perfect vs Past Simple when discussing campaign results in interviews.',
+    instructions: [
+      '1. Review rule: Past Simple for finished time ("In 2024, I managed 27 programs"). Present Perfect for ongoing connection ("I have managed over 170K TL in ad spend across my career").',
+      '2. Write 4 interview sentences contrasting finished campaigns vs enduring capabilities.',
+      '3. Read aloud 3 times.'
+    ],
+    feedbackCriteria: [
+      'Zero confusion between "I managed" and "I have managed".',
+      'Used correct irregular past participles (run/ran/run, lead/led/led).'
+    ],
+    commonTraps: [
+      'Saying "I am managing ads since two years" (Arabic structure) instead of "I have been managing ads for two years".'
+    ],
+    nextStep: 'Audit your English CV for correct verb tenses.'
+  },
+  {
+    id: 'eng_mod_business_comm',
+    module: 'Professional & Business Communication',
+    level: 'B1/B2',
+    duration: '20 min',
+    objective: 'Draft a polite, high-converting professional follow-up email after a screening interview.',
+    instructions: [
+      '1. Write a 120-word follow-up email to a Riyadh agency recruiter.',
+      '2. Include: gratitude for their time, reference to 1 specific topic discussed, reiteration of value.',
+      '3. Use professional sign-offs ("Best regards", "Looking forward to hearing from you").'
+    ],
+    feedbackCriteria: [
+      'Professional tone without being overly formal or robotic.',
+      'Zero spelling or grammatical errors.'
+    ],
+    commonTraps: [
+      'Using archaic phrasing like "Kindly be informed" or "Respected Sir".'
+    ],
+    nextStep: 'Save email template in Communication Templates in Second Brain.'
+  }
+];
+
+/* ---------------------------------------------------------------
+   RECOVERY MODE DAILY TASKS (Minimal Momentum When Fatigued / Stressed)
+   2-3 gentle tasks, total ~30-45 min, ensuring 0% streak breakage.
+   --------------------------------------------------------------- */
+const RECOVERY_TASKS_DEF = [
+  {
+    id: 'q_rec_walk',
+    name: '15-Minute Outdoor Walk / Light Movement',
+    sub: 'Physical Recovery',
+    stat: 'health',
+    xp: 15,
+    duration: '15 min',
+    priority: 'high',
+    desc: 'Gentle walk or stretching without phone scrolling to oxygenate the brain and relieve tension.',
+    why: 'Movement resets dopamine levels and keeps mental clarity intact on high-friction days.',
+    steps: ['1. Put on comfortable shoes.', '2. Walk outside or do light mobility stretches for 15 minutes.', '3. Drink a glass of water.'],
+    criteria: '15 minutes of movement completed.',
+    related: 'b2',
+    level: 1
+  },
+  {
+    id: 'q_rec_english_listen',
+    name: '15-Minute Passive English Podcast / Video Listening',
+    sub: 'Low-Friction English',
+    stat: 'selfdev',
+    xp: 15,
+    duration: '15 min',
+    priority: 'high',
+    desc: 'Listen comfortably to a native English marketing or business video without pressure to speak.',
+    why: 'Passive immersion maintains auditory calibration even when mental energy for active speaking is low.',
+    steps: ['1. Put in earphones.', '2. Listen to 15 minutes of native marketing content.', '3. Absorb natural rhythm and pronunciation.'],
+    criteria: '15 minutes of listening finished.',
+    related: 'b2',
+    level: 1
+  },
+  {
+    id: 'q_rec_reflection',
+    name: 'Log Day\'s Expenses & Submit 1-Line Check-In',
+    sub: 'Discipline & Mindfulness',
+    stat: 'money',
+    xp: 15,
+    duration: '10 min',
+    priority: 'medium',
+    desc: 'Record today\'s expenditures in the calendar and submit a quick recovery check-in note.',
+    why: 'Financial awareness must never be broken, even on off days.',
+    steps: ['1. Open expenses ledger.', '2. Enter any money spent today.', '3. Mark Recovery Check-in in Life Command Center.'],
+    criteria: 'Expenses logged and check-in submitted.',
+    related: 'b2',
+    level: 1
+  }
+];

@@ -1,4 +1,4 @@
-/* =====================================================================
+﻿/* =====================================================================
    SOLO LEVELING — CORE ENGINE
    State, XP, penalties, streak freeze, courses, storage.
    ===================================================================== */
@@ -111,6 +111,37 @@ function blank(){
 }
 
 let S = read();
+if(!S.lifeStatus){
+  S.lifeStatus = {
+    location: 'Cairo, Egypt',
+    destination: 'Saudi Arabia (Riyadh / Jeddah)',
+    travelStatus: 'imminent',
+    targetTravelDate: 'Late November 2026',
+    expensesPaid: true,
+    flightBooked: false,
+    flightDetails: '',
+    documentsReady: true,
+    saudiPhone: false,
+    saudiPhoneNumber: '',
+    currentDifficulty: 1,
+    difficultyName: 'Level 1 â€” Normal',
+    activeBossFocus: 'b2',
+    checkinHistory: []
+  };
+}
+if(!S.systemUnlocks) S.systemUnlocks = [];
+if(!S.foundationProfile){
+  S.foundationProfile = {
+    dayIndex: 1,
+    foundationActive: true,
+    recoveryMode: false,
+    totalMandatoryMinutes: 220,
+    englishAssessed: false,
+    englishEstimatedLevel: 'B1/B2',
+    completedFoundationDays: 0,
+    weeklyReviewsCount: 0
+  };
+}
 
 function read(){
   try{
@@ -1910,6 +1941,13 @@ function toggleStep(bossId, i){
   if(!b) return;
   if(!S.boss[bossId]) S.boss[bossId] = b.steps.map(()=>false);
 
+  // GATING CHECK FOR BOSS RAID 02 (Saudi Arabia Professional Transition)
+  // Steps 9-14 correspond to Stage 3: Professional Job Search
+  if(bossId === 'b2' && i >= 9 && (!S.lifeStatus || !S.lifeStatus.saudiPhone)){
+    alert("âš ï¸ [SYSTEM GATE: STAGE 3 LOCKED]\n\nStage 3: Professional Job Search is locked until you arrive in Saudi Arabia and confirm your local Saudi phone number in the Life Command Center.\n\nSubmitting applications without a local Saudi phone number drastically lowers response rates. Focus on CV tailoring, case studies, and out-loud English defense drills first!");
+    return;
+  }
+
   const on = !S.boss[bossId][i];
   S.boss[bossId][i] = on;
 
@@ -1920,14 +1958,65 @@ function toggleStep(bossId, i){
     S.bossXp = false;
     log('RAID','<b>'+b.name+'</b> &mdash; '+b.steps[i] + ' <b>+'+b.xp+' XP</b>');
     if(typeof reactTo === 'function') reactTo('bossStep');
+
+    // SYSTEMIC UNLOCK TRIGGERS
+    if(!S.systemUnlocks) S.systemUnlocks = [];
+if(!S.foundationProfile){
+  S.foundationProfile = {
+    dayIndex: 1,
+    foundationActive: true,
+    recoveryMode: false,
+    totalMandatoryMinutes: 220,
+    englishAssessed: false,
+    englishEstimatedLevel: 'B1/B2',
+    completedFoundationDays: 0,
+    weeklyReviewsCount: 0
+  };
+}
+    S.systemUnlocks.unshift({
+      bossId: bossId,
+      bossName: b.name,
+      stepIndex: i,
+      stepText: b.steps[i],
+      date: new Date().toLocaleDateString(),
+      timestamp: Date.now()
+    });
+
+    // Special trigger: Stage 2 step 6 (index 6: Obtain local Saudi mobile SIM)
+    if(bossId === 'b2' && i === 6){
+      if(!S.lifeStatus) S.lifeStatus = {};
+      S.lifeStatus.saudiPhone = true;
+      setTimeout(()=>{
+        if(typeof ceremonyCard === 'function'){
+          ceremonyCard({
+            kicker: 'SYSTEM MILESTONE UNLOCKED',
+            big: 'Stage 3: Saudi Job Search Activated!',
+            sub: 'Local Saudi phone number verified. Direct application and outreach quests are now unlocked.',
+            stat: 'Unlocked: Riyadh & Jeddah direct agency recruitment pipelines',
+            rare: true
+          });
+        }
+      }, 500);
+      log('SYSTEM UNLOCK', '<b>Stage 3 Unlocked:</b> Saudi phone number active. Job search gates cleared.');
+    }
+
+    // Special trigger: Content Boss b3 step 4 (Master video scripting)
+    if(bossId === 'b3' && i === 4){
+      log('SKILL UNLOCKED', '<b>Video Scripting Mastered:</b> Advanced talking-head video production quests now available.');
+    }
+
+    // Special trigger: AI Boss b4 step 1 (Master prompt engineering)
+    if(bossId === 'b4' && i === 0){
+      log('AUTOMATION UNLOCKED', '<b>Prompt Engineering Certified:</b> Multi-step AI agent workflows enabled.');
+    }
+
     if(bossDone(bossId)){
-      /* clearing a whole raid is a big moment and pays a big bonus */
       const bonus = b.reward || 0;
       setTimeout(()=>{
         ceremonyCard({
-          kicker:'BOSS CLEARED',
+          kicker:'BOSS RAID CLEARED',
           big:b.name,
-          sub:'Every step completed. The raid is finished.',
+          sub:'Every milestone conquered. The raid is finished.',
           stat: bonus ? 'Completion bonus: <b>+'+bonus.toLocaleString()+' XP</b>' : 'The raid is complete.',
           rare:true
         });
@@ -2303,35 +2392,181 @@ function snapshotToday(){
 const MAX_DAILY_TASKS = 10;
 const TARGET_DAILY_TASKS = 7;
 
-/* Returns the active daily priorities list, strictly capped at MAX_DAILY_TASKS (10)
-   Excludes any established habits that have graduated to the Habits section. */
-function getDailyPriorities(){
-  let pool = [];
-  
-  if(typeof ACTIVE_DAILY_TASKS_DEF !== 'undefined'){
-    pool = pool.concat(ACTIVE_DAILY_TASKS_DEF);
+/* Returns the active daily priorities list based on Hadi's current difficulty level:
+   Level 1 Normal: 3-5 tasks (target 4)
+   Level 2 Developing: 4-6 tasks (target 5)
+   Level 3 Advanced: 5-7 tasks (target 6)
+   Level 4 Elite: 6-8 tasks (target 8, strictly capped at 10)
+   Strictly enforces Saudi Phone gating policy: Zero direct applications until phone is active. */
+function toggleRecoveryMode(){
+  if(!S.foundationProfile) S.foundationProfile = {};
+  const current = !!S.foundationProfile.recoveryMode;
+  const next = !current;
+  S.foundationProfile.recoveryMode = next;
+  if(next){
+    log('RECOVERY MODE ACTIVE', 'Workload dropped to 2-3 gentle momentum tasks (~35 min) to protect consistency.');
+    if(typeof sfx === 'function') sfx('badge');
+  } else {
+    log('STANDARD MODE RESTORED', 'Full daily foundation allocations active.');
+    if(typeof sfx === 'function') sfx('mission');
   }
-  
-  if(S.customTasks && S.customTasks.length){
-    const userActive = S.customTasks.filter(t => !t.archived && (t.status === 'today' || t.status === 'in_progress'));
-    pool = pool.concat(userActive);
-  }
-  
-  /* Exclude formed habits */
-  pool = pool.filter(t => {
-    if(S.formedHabits && S.formedHabits[t.id]) return false;
-    if(t.legacyId && S.formedHabits && S.formedHabits[t.legacyId]) return false;
-    return true;
-  });
-  
-  /* Sort by priority: high -> medium -> normal */
-  const pWeight = { high: 3, medium: 2, normal: 1 };
-  pool.sort((a, b) => (pWeight[b.priority] || 1) - (pWeight[a.priority] || 1));
-  
-  /* STRICT RULE: Never exceed 10 active tasks */
-  return pool.slice(0, MAX_DAILY_TASKS);
+  save();
+  renderAll();
+  return next;
 }
 
+/* Returns the active daily priorities list:
+   - If Recovery Mode is active: returns 2-3 gentle tasks (~35 min) to protect streak
+   - Days 1-14 Foundation Phase: strictly 3-5 tasks (target 4) matching ~220 min budget
+   - Days 15+: 5-7 tasks upon verified consistency
+   - Hard cap: Never exceeds 10 tasks
+   - Strictly enforces Saudi Phone gating policy: Zero direct applications until phone is active */
+function getDailyPriorities(){
+  if(S.foundationProfile && S.foundationProfile.recoveryMode){
+    if(typeof RECOVERY_TASKS_DEF !== 'undefined') {
+      return RECOVERY_TASKS_DEF.slice(0, 3);
+    }
+  }
+
+  const diffLevel = (S.lifeStatus && S.lifeStatus.currentDifficulty) || 1;
+  const isFoundation = !(S.foundationProfile && S.foundationProfile.dayIndex > 14);
+  const targetCounts = isFoundation ? { 1: 4, 2: 4, 3: 5, 4: 5 } : { 1: 4, 2: 5, 3: 6, 8: 8 };
+  const targetCount = targetCounts[diffLevel] || 4;
+  const diffLevel = (S.lifeStatus && S.lifeStatus.currentDifficulty) || 1;
+  const targetCounts = { 1: 4, 2: 5, 3: 6, 4: 8 };
+  const targetCount = targetCounts[diffLevel] || 4;
+
+  let pool = [];
+
+  if (typeof INTELLIGENT_QUESTS_POOL !== 'undefined' && INTELLIGENT_QUESTS_POOL.length) {
+    pool = INTELLIGENT_QUESTS_POOL.filter(q => q.level <= diffLevel);
+    if (pool.length < targetCount) {
+      pool = INTELLIGENT_QUESTS_POOL.slice();
+    }
+  } else if (typeof ACTIVE_DAILY_TASKS_DEF !== 'undefined') {
+    pool = pool.concat(ACTIVE_DAILY_TASKS_DEF);
+  }
+
+  if (S.customTasks && S.customTasks.length) {
+    const userActive = S.customTasks.filter(t => !t.archived && (t.status === 'today' || t.status === 'in_progress'));
+    pool = userActive.concat(pool);
+  }
+
+  // Filter 1: Saudi Phone gating policy
+  const hasSaudiPhone = !!(S.lifeStatus && S.lifeStatus.saudiPhone);
+  pool = pool.filter(t => {
+    if (t.requiresSaudiPhone && !hasSaudiPhone) return false;
+    return true;
+  });
+
+  // Filter 2: Exclude established habits that graduated to Habits section
+  pool = pool.filter(t => {
+    if (S.formedHabits && S.formedHabits[t.id]) return false;
+    if (t.legacyId && S.formedHabits && S.formedHabits[t.legacyId]) return false;
+    return true;
+  });
+
+  // Sort by priority and level match
+  const pWeight = { high: 3, medium: 2, normal: 1 };
+  pool.sort((a, b) => {
+    const aMatch = a.level === diffLevel ? 2 : 0;
+    const bMatch = b.level === diffLevel ? 2 : 0;
+    const sA = (pWeight[a.priority] || 1) + aMatch;
+    const sB = (pWeight[b.priority] || 1) + bMatch;
+    return sB - sA;
+  });
+
+  return pool.slice(0, Math.min(targetCount, MAX_DAILY_TASKS));
+}
+
+function updateLifeStatus(key, value){
+  if(!S.lifeStatus) S.lifeStatus = {};
+  S.lifeStatus[key] = value;
+
+  if(key === 'currentDifficulty'){
+    const levelNum = parseInt(value, 10) || 1;
+    const names = { 1: 'Level 1 â€” Normal', 2: 'Level 2 â€” Developing', 3: 'Level 3 â€” Advanced', 4: 'Level 4 â€” Elite' };
+    S.lifeStatus.currentDifficulty = levelNum;
+    S.lifeStatus.difficultyName = names[levelNum] || 'Level 1 â€” Normal';
+    log('DIFFICULTY UPDATED', 'Progression calibrated to <b>' + S.lifeStatus.difficultyName + '</b>');
+  }
+
+  if(key === 'saudiPhone'){
+    const on = !!value;
+    S.lifeStatus.saudiPhone = on;
+    if(on){
+      log('CONTACT VERIFIED', 'Saudi phone confirmed active. <b>Stage 3 Job Search unlocked!</b>');
+      if(typeof ceremonyCard === 'function'){
+        ceremonyCard({
+          kicker: 'SYSTEM RECONFIGURATION',
+          big: 'Saudi Contact Verified',
+          sub: 'Local phone active. Direct job search gates and recruiter outreach quests are now unlocked.',
+          stat: 'Stage 3: Professional Job Search Active',
+          rare: true
+        });
+      }
+    } else {
+      log('GATE RE-APPLIED', 'Saudi phone marked inactive. Stage 3 direct job applications gated.');
+    }
+  }
+
+  save();
+  renderAll();
+}
+
+function submitLifeCheckin(rating, feedback, lifeUpdates){
+  if(!S.lifeStatus) S.lifeStatus = {};
+  if(!S.lifeStatus.checkinHistory) S.lifeStatus.checkinHistory = [];
+
+  let difficultyAction = 'maintained';
+  let curDiff = S.lifeStatus.currentDifficulty || 1;
+
+  if(rating === 'too_hard'){
+    if(curDiff > 1){
+      curDiff--;
+      S.lifeStatus.currentDifficulty = curDiff;
+      const names = { 1: 'Level 1 â€” Normal', 2: 'Level 2 â€” Developing', 3: 'Level 3 â€” Advanced', 4: 'Level 4 â€” Elite' };
+      S.lifeStatus.difficultyName = names[curDiff];
+      difficultyAction = 'lowered to ' + S.lifeStatus.difficultyName;
+      log('SYSTEM ADJUSTED', 'Pacing calibrated: ' + difficultyAction + ' to protect consistency.');
+    } else {
+      difficultyAction = 'Level 1 maintained (focusing on core 3-5 tasks)';
+    }
+  } else if(rating === 'too_easy'){
+    if(curDiff < 4){
+      curDiff++;
+      S.lifeStatus.currentDifficulty = curDiff;
+      const names = { 1: 'Level 1 â€” Normal', 2: 'Level 2 â€” Developing', 3: 'Level 3 â€” Advanced', 4: 'Level 4 â€” Elite' };
+      S.lifeStatus.difficultyName = names[curDiff];
+      difficultyAction = 'upgraded to ' + S.lifeStatus.difficultyName;
+      log('LEVEL UPGRADE', 'Challenge increased: ' + difficultyAction + '!');
+    } else {
+      difficultyAction = 'Level 4 Elite maintained (maximum capacity)';
+    }
+  } else {
+    difficultyAction = 'maintained at current level';
+  }
+
+  const checkinRecord = {
+    date: new Date().toLocaleDateString(),
+    timestamp: Date.now(),
+    rating: rating,
+    feedback: feedback || '',
+    lifeUpdates: lifeUpdates || '',
+    resultingDifficulty: curDiff,
+    action: difficultyAction
+  };
+
+  S.lifeStatus.checkinHistory.unshift(checkinRecord);
+  if(S.lifeStatus.checkinHistory.length > 30) S.lifeStatus.checkinHistory.pop();
+
+  addXP(20, null, true, 'checkin');
+  log('CHECK-IN RECORDED', 'Reflection submitted: +20 XP. System calibrated.');
+
+  save();
+  renderAll();
+  return checkinRecord;
+}
 function createCustomTask(title, sub, xp, duration, priority, project, action, why){
   if(!title) return false;
   const currentToday = getDailyPriorities();

@@ -1,4 +1,4 @@
-/* =====================================================================
+﻿/* =====================================================================
    SOLO LEVELING — RENDER LAYER
    ===================================================================== */
 
@@ -819,8 +819,8 @@ function drawBosses(){
   }
 
   /* ===== GRAND CAMPAIGN RAIDS SECTION ===== */
-  html += '<div class="st" style="margin-top:34px"><h2>Grand Campaign Raids &mdash; Saudi Arabia 2027</h2><span class="tag">STRATEGIC MILESTONES</span></div>';
-  html += '<div class="hint">The 5 sovereign campaign gates. Clear every step to eliminate weaknesses and unlock the destination.</div>';
+  html += '<div class="st" style="margin-top:34px"><h2>The 4 Sovereign Master Boss Raids</h2><span class="tag">STRATEGIC MILESTONES</span></div>';
+  html += '<div class="hint">The 4 primary developmental campaigns guiding your progression. Complete milestones to trigger systemic unlocks and advance your real-world trajectory.</div>';
 
   html += BOSSES.map(b => {
     const st = S.boss[b.id] || b.steps.map(()=>false);
@@ -849,10 +849,26 @@ function drawBosses(){
       + '<div class="bar thin"><i style="width:'+pct+'%"></i></div>'
 
       + '<div class="steps">'
-      + b.steps.map((s,i) =>
-          '<div class="step '+(st[i]?'done':'')+'" onclick="toggleStep(\''+b.id+'\','+i+')">'
-          + '<div class="sb"></div><span>'+esc(s)+'</span>'
-          + '<b class="stepXp">'+(st[i]?ic('check',13)+' +'+b.xp:'+'+b.xp)+'</b></div>').join('')
+      + b.steps.map((s, i) => {
+          const isDone = !!st[i];
+          const isGated = b.id === 'b2' && i >= 9 && (!S.lifeStatus || !S.lifeStatus.saudiPhone);
+          let stageLabel = '';
+          if (b.stages) {
+            const foundStage = b.stages.find(stg => i === stg.stepsRange[0]);
+            if (foundStage) {
+              const isLockedStage = foundStage.gated && (!S.lifeStatus || !S.lifeStatus.saudiPhone);
+              stageLabel = '<div class="boss-stage-divider ' + (isLockedStage ? 'locked' : '') + '">'
+                + '<span class="bsd-name">' + esc(foundStage.name) + '</span>'
+                + (isLockedStage ? '<span class="bsd-lock-badge">&#128274; LOCKED (REQUIRES SAUDI PHONE)</span>' : '<span class="bsd-status-badge">&#9889; ACTIVE PHASE</span>')
+                + '</div>';
+            }
+          }
+          return stageLabel
+            + '<div class="step '+(isDone?'done':'')+' '+(isGated?'gated-step':'')+'" onclick="toggleStep(\''+b.id+'\','+i+')">'
+            + '<div class="sb">' + (isDone ? ic('check',13) : (isGated ? '&#128274;' : '')) + '</div>'
+            + '<span style="' + (isGated ? 'opacity:0.6;' : '') + '">'+esc(s)+'</span>'
+            + '<b class="stepXp">'+(isDone ? ic('check',13)+' +'+b.xp : (isGated ? 'LOCKED' : '+'+b.xp))+'</b></div>';
+        }).join('')
       + '</div>'
 
       + (fin && b.reward ? '<div class="bossDone">Completion bonus earned: <b>+'+b.reward.toLocaleString()+' XP</b></div>' : '')
@@ -867,17 +883,20 @@ function drawBosses(){
    --------------------------------------------------------------------- */
 function drawCourses(){
   const done = Object.keys(S.courses).length;
-  $('courseTag').textContent = done + ' / ' + COURSES.length + ' DONE';
+  courseTag.textContent = done + ' / ' + COURSES.length + ' DONE';
 
-  $('courseList').innerHTML = COURSES.map(c => {
+  courseList.innerHTML = COURSES.map(c => {
     const open = courseOpen(c);
     const fin = !!S.courses[c.id];
     return '<div class="course '+(fin?'done':'')+'" style="'+(open?'':'opacity:.5')+'">'
       + '<div class="sb2" onclick="toggleCourse(\''+c.id+'\')">'+(fin?ic('check',16):'')+'</div>'
       + '<div class="cin">'
       +   '<div class="cn">'+esc(c.name)+'</div>'
-      +   '<div class="cp">'+esc(c.platform)+' &middot; '+esc(c.hours)+' &middot; '+(open?'UNLOCKED':'UNLOCKS AT LEVEL '+STAGE_LEVELS[c.stage])+'</div>'
+      +   '<div class="cp">'+esc(c.provider || c.platform)+' &middot; '+esc(c.hours)+' &middot; '+(open?'UNLOCKED':'UNLOCKS AT LEVEL '+STAGE_LEVELS[c.stage])+'</div>'
       +   '<div class="cw">'+esc(c.why)+'</div>'
+      +   (c.objective ? '<div class="c-obj" style="margin-top:6px;font-size:12px;color:var(--text);"><b style="color:var(--sys-blue);">Objective:</b> '+esc(c.objective)+'</div>' : '')
+      +   (c.nextLesson ? '<div class="c-next" style="margin-top:4px;font-size:12px;color:var(--gold);"><b style="color:var(--gold);">Next Lesson:</b> '+esc(c.nextLesson)+'</div>' : '')
+      +   (c.practicalExercise ? '<div class="c-ex" style="margin-top:4px;font-size:12px;color:var(--green);"><b style="color:var(--green);">Hands-On Exercise:</b> '+esc(c.practicalExercise)+'</div>' : '')
       +   '<div class="cf2">'+esc(c.proof)+'</div>'
       + '</div>'
       + (open ? '<a class="xbtn" href="'+c.url+'" target="_blank" rel="noopener" onclick="event.stopPropagation()">OPEN &#8599;</a>' : '')
@@ -1977,7 +1996,8 @@ const PORTALS = {
     icon: '⚡',
     bg: 'assets/bg/bg-system-gate.jpg',
     tabs: [
-      { id: 'dash', label: 'System Dashboard' }
+      { id: 'dash', label: 'System Dashboard' },
+      { id: 'lifestatus', label: 'Life Command Center' }
     ]
   },
   quests: {
@@ -2007,7 +2027,7 @@ const PORTALS = {
     icon: '🎯',
     bg: 'assets/bg/bg-hunter.jpg',
     tabs: [
-      { id: 'roadmap', label: 'Saudi Arabia 2027' },
+      { id: 'roadmap', label: 'Career Transition' },
       { id: 'projects', label: 'Notion Projects' },
       { id: 'courses', label: 'Course Track' }
     ]
@@ -2128,6 +2148,7 @@ function renderAll(){
 function drawTab(page){
   switch(page){
     case 'dash':      drawDashboardLifeOS(); break;
+    case 'lifestatus': drawLifeCommandCenter(); break;
     case 'tasks':     drawTaskManager(); break;
     case 'daily':     drawTaskManager(); break;
     case 'habits':    drawHabitsSection(); break;
@@ -2305,6 +2326,7 @@ function setBG(src){
    ===================================================================== */
 
 /* 1. DASHBOARD LIFE OS ENGINE */
+/* 1. DASHBOARD LIFE OS ENGINE & FOUNDATION COMMAND */
 function drawDashboardLifeOS(){
   const dashList = $('dashList');
   if(!dashList) return;
@@ -2319,76 +2341,179 @@ function drawDashboardLifeOS(){
   if($('penBar')) $('penBar').style.width = pct + '%';
   if($('todayTag')) $('todayTag').textContent = completedCount + ' / ' + totalCount + ' CLEARED';
 
-  let html = '';
-  
-  /* Central Saudi Mission Hero Card */
-  const fundCurrent = (S.relocationFund && S.relocationFund.current) || 0;
-  const fundTarget = (S.relocationFund && S.relocationFund.target) || 120000;
-  const fundPct = Math.min(100, Math.round((fundCurrent / fundTarget) * 100));
+  const ls = S.lifeStatus || {
+    location: 'Cairo, Egypt',
+    destination: 'Saudi Arabia (Riyadh / Jeddah)',
+    travelStatus: 'imminent',
+    targetTravelDate: 'Late November 2026',
+    expensesPaid: true,
+    flightBooked: false,
+    flightDetails: '',
+    saudiPhone: false,
+    saudiPhoneNumber: '',
+    currentDifficulty: 1,
+    difficultyName: 'Level 1 â€” Normal',
+    activeBossFocus: 'b2'
+  };
+  const fp = S.foundationProfile || {
+    dayIndex: 1,
+    foundationActive: true,
+    recoveryMode: false,
+    totalMandatoryMinutes: 220
+  };
+  const diffLevel = ls.currentDifficulty || 1;
+  const isRecovery = !!fp.recoveryMode;
 
-  html += '<div class="saudi-hero-card">'
-    + '<div class="shc-header">'
-    +   '<div class="shc-badge"><span class="pulse-dot"></span> CENTRAL LIFE MISSION</div>'
-    +   '<div class="shc-target">TARGET: MID-2027</div>'
+  let html = '';
+
+  /* 1. Recovery Mode Alert Banner (If Active) */
+  if(isRecovery){
+    html += '<div class="recovery-mode-banner">'
+      + '<div class="rmb-left">'
+      +   '<span class="rmb-icon">ðŸ›¡ï¸</span>'
+      +   '<div>'
+      +     '<div class="rmb-title">RECOVERY MODE ACTIVE â€” REDUCED WORKLOAD</div>'
+      +     '<div class="rmb-sub">Daily priorities streamlined to 2â€“3 gentle momentum tasks (~35 min) to protect consistency, reset mental clarity, and maintain your 27-day streak.</div>'
+      +   '</div>'
+      + '</div>'
+      + '<button class="btn rmb-btn" onclick="toggleRecoveryMode()">Resume Full Workload</button>'
+      + '</div>';
+  }
+
+  /* 2. Foundation Period & Life Status Hero HUD */
+  html += '<div class="life-hud-card">'
+    + '<div class="lhc-top">'
+    +   '<div class="lhc-badge"><span class="pulse-dot"></span> FOUNDATION PHASE &bull; DAY ' + (fp.dayIndex || 1) + ' OF 14</div>'
+    +   '<div class="lhc-target">DEPARTURE WINDOW: ' + esc(ls.targetTravelDate) + ' (IMMINENT)</div>'
     + '</div>'
-    + '<div class="shc-title">PREPARING FOR SAUDI ARABIA RELOCATION & CAREER</div>'
-    + '<div class="shc-sub">Unified Progression &bull; Performance Marketing Leadership &bull; Financial Runway</div>'
-    + '<div class="shc-quote">&ldquo;What should I do today to become more qualified, financially prepared, and professionally competitive for Saudi Arabia?&rdquo;</div>'
-    + '<div class="shc-runway-row">'
-    +   '<div class="shc-runway-meta">'
-    +     '<span>Relocation Runway Fund ($2,500 Buffer)</span>'
-    +     '<span class="gold-num">' + fundCurrent.toLocaleString() + ' / ' + fundTarget.toLocaleString() + ' EGP (' + fundPct + '%)</span>'
+    + '<div class="lhc-main-row">'
+    +   '<div>'
+    +     '<div class="lhc-title">SAUDI ARABIA TRANSITION &bull; FOUNDATION OS</div>'
+    +     '<div class="lhc-sub">4+ Hours Daily Available &bull; ~3.5â€“4 Hours Mandatory Foundation Workload (220 min)</div>'
     +   '</div>'
-    +   '<div class="bar thin"><i style="width:' + fundPct + '%;background:linear-gradient(90deg,var(--gold),#ffe066)"></i></div>'
+    +   '<div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">'
+    +     '<button class="btn secondary" style="font-size:11.5px;padding:6px 10px;" onclick="toggleRecoveryMode()">'
+    +       (isRecovery ? 'ðŸ›¡ï¸ Recovery Active' : 'ðŸ›¡ï¸ Recovery Mode')
+    +     '</button>'
+    +     '<div class="lhc-difficulty-tag" onclick="goTab(\'lifestatus\')">'
+    +       '<span style="font-size:10px;color:var(--muted);display:block;">ACTIVE DIFFICULTY</span>'
+    +       '<b style="color:var(--sys-blue);">' + esc(ls.difficultyName || 'Level 1 â€” Normal') + '</b>'
+    +     '</div>'
+    +   '</div>'
     + '</div>'
-    + '<div class="shc-actions">'
-    +   '<button class="shc-btn" onclick="goTab(\'roadmap\')">View Saudi 5-Milestone Roadmap &rarr;</button>'
-    +   '<button class="shc-btn secondary" onclick="goTab(\'projects\')">View Active Projects &rarr;</button>'
+
+    /* Daily Time Allocation Budgets */
+    + '<div class="fp-budgets-bar">'
+    +   '<div class="fp-budget-pill"><span class="fp-bp-k">ðŸ—£ï¸ English</span><span class="fp-bp-v">60m</span></div>'
+    +   '<div class="fp-budget-pill"><span class="fp-bp-k">ðŸ’¼ Career</span><span class="fp-bp-v">60m</span></div>'
+    +   '<div class="fp-budget-pill"><span class="fp-bp-k">ðŸ‡¸ðŸ‡¦ Saudi Prep</span><span class="fp-bp-v">45m</span></div>'
+    +   '<div class="fp-budget-pill"><span class="fp-bp-k">âš™ï¸ AI Automation</span><span class="fp-bp-v">35m</span></div>'
+    +   '<div class="fp-budget-pill"><span class="fp-bp-k">ðŸŽ¬ Content</span><span class="fp-bp-v">20m</span></div>'
+    +   '<div class="fp-budget-pill secondary"><span class="fp-bp-k">ðŸŽ“ Germany M.Sc</span><span class="fp-bp-v">2x/wk</span></div>'
+    + '</div>'
+
+    /* Real-world arrangement quick pills */
+    + '<div class="lhc-pills-row">'
+    +   '<div class="lhc-pill success">'
+    +     '<span class="lhc-pill-icon">&#10003;</span>'
+    +     '<span>Major Relocation Expenses: <b>PAID &amp; CLEARED</b></span>'
+    +   '</div>'
+    +   '<div class="lhc-pill ' + (ls.flightBooked ? 'success' : 'pending') + '" onclick="toggleFlightStatus()">'
+    +     '<span class="lhc-pill-icon">' + (ls.flightBooked ? '&#10003;' : '&#9203;') + '</span>'
+    +     '<span>Flight Ticket: <b>' + (ls.flightBooked ? 'BOOKED' : 'PENDING BOOKING') + '</b></span>'
+    +   '</div>'
+    +   '<div class="lhc-pill ' + (ls.saudiPhone ? 'success' : 'locked') + '" onclick="toggleSaudiPhoneStatus()">'
+    +     '<span class="lhc-pill-icon">' + (ls.saudiPhone ? '&#10003;' : '&#128274;') + '</span>'
+    +     '<span>Saudi Phone: <b>' + (ls.saudiPhone ? 'ACTIVE' : 'GATED UNTIL LANDING') + '</b></span>'
+    +   '</div>'
+    + '</div>'
+
+    + '<div class="lhc-readiness-box">'
+    +   '<div class="lhc-readiness-head">TACTICAL MORNING ORIENTATION:</div>'
+    +   '<div class="lhc-q-grid">'
+    +     '<div class="lhc-q-item"><b>1. Current Phase:</b> Cairo, Egypt &mdash; Days 1â€“14 Foundation Period (3â€“5 daily tasks).</div>'
+    +     '<div class="lhc-q-item"><b>2. Primary Focus:</b> CV/portfolio polish, spoken English recorded drills, travel document folder.</div>'
+    +     '<div class="lhc-q-item"><b>3. Daily Saudi Job Applications:</b> <span style="color:var(--gold);font-weight:600;">Zero quota &mdash; gated until local Saudi phone is active.</span></div>'
+    +     '<div class="lhc-q-item"><b>4. Today\'s Capacity:</b> ' + (isRecovery ? 'Recovery Mode: 2â€“3 gentle tasks (~35 min total).' : (diffLevel === 1 ? '3â€“5 focused tasks (15â€“25m each) totaling ~220 min.' : (diffLevel === 2 ? '4â€“6 tasks (25â€“35m each).' : (diffLevel === 3 ? '5â€“7 tasks (30â€“45m each).' : '6â€“8 tasks (max 10).')))) + '</div>'
+    +   '</div>'
+    + '</div>'
+
+    + '<div class="lhc-actions">'
+    +   '<button class="shc-btn" onclick="goTab(\'lifestatus\')">Open Life Command Center &amp; B1/B2 English Lab &rarr;</button>'
+    +   '<button class="shc-btn secondary" onclick="goTab(\'boss\')">View 4 Master Boss Raids &rarr;</button>'
     + '</div>'
     + '</div>';
 
-  /* Priorities Section Header */
+  /* 3. Today's Strategic Priorities Header */
   html += '<div class="priority-section-head">'
     + '<div>'
-    +   '<h3 style="margin:0;font-family:var(--hud);font-size:15px;color:var(--sys-blue);letter-spacing:1px;">TODAY\'S STRATEGIC PRIORITIES</h3>'
-    +   '<div style="font-size:12px;color:var(--muted);margin-top:2px;">Strict Limit: Never more than 10 tasks &bull; Focused on Saudi career readiness</div>'
+    +   '<h3 style="margin:0;font-family:var(--hud);font-size:15px;color:var(--sys-blue);letter-spacing:1px;">TODAY\'S DAILY QUESTS &bull; ' + (isRecovery ? 'RECOVERY MODE (2â€“3 TASKS)' : esc((ls.difficultyName || 'LEVEL 1 â€” NORMAL').toUpperCase()) + ' (3â€“5 TASKS)') + '</h3>'
+    +   '<div style="font-size:12px;color:var(--muted);margin-top:2px;">Strict Limit: ' + totalCount + ' / ' + MAX_DAILY_TASKS + ' Active Tasks &bull; Clear criteria, time budgets, and step-by-step instructions</div>'
     + '</div>'
     + '<div class="priority-load-badge ' + (totalCount > 8 ? 'heavy' : 'optimal') + '">'
-    +   totalCount + ' / ' + MAX_DAILY_TASKS + ' ACTIVE TASKS'
+    +   completedCount + ' / ' + totalCount + ' CLEARED'
     + '</div>'
     + '</div>';
 
+  /* 4. Rich Daily Quest Cards */
   if(priorities.length === 0){
     html += '<div class="empty-priority-card">'
-      + '<div style="font-size:28px;margin-bottom:8px;">⚔️</div>'
-      + '<div style="font-family:var(--hud);font-size:14px;color:#fff;">NO ACTIVE PRIORITIES TODAY</div>'
-      + '<div style="font-size:12px;color:var(--muted);margin-top:4px;">All routine tasks have graduated to Habits. Add a custom task or rest.</div>'
+      + '<div style="font-size:28px;margin-bottom:8px;">âš”ï¸</div>'
+      + '<div style="font-family:var(--hud);font-size:14px;color:#fff;">ALL DAILY QUESTS CLEARED</div>'
+      + '<div style="font-size:12px;color:var(--muted);margin-top:4px;">Excellent work, Hunter. All daily objectives completed. Rest or review your knowledge bank.</div>'
       + '</div>';
   } else {
-    html += '<div class="priority-list">';
-    priorities.forEach(t => {
+    html += '<div class="rich-quest-list">';
+    priorities.forEach((t, qIdx) => {
       const isDone = !!(S.daily && S.daily[t.id]);
       const pColor = t.priority === 'high' ? 'var(--red)' : (t.priority === 'medium' ? 'var(--gold)' : 'var(--sys-blue)');
-      html += '<div class="priority-item ' + (isDone ? 'done' : '') + '" onclick="toggleLifeOSTask(\'' + t.id + '\', event)">'
-        + '<div class="p-check">' + (isDone ? '&#10003;' : '') + '</div>'
-        + '<div class="p-content">'
-        +   '<div class="p-top">'
-        +     '<span class="p-name">' + esc(t.name) + '</span>'
-        +     '<span class="p-badge" style="border-color:' + pColor + ';color:' + pColor + ';">' + (t.priority || 'medium').toUpperCase() + '</span>'
-        +     '<span class="p-duration">' + esc(t.duration || '25 min') + '</span>'
+      const raidNames = { b1: 'RAID 01: GERMANY', b2: 'RAID 02: SAUDI TRANSITION', b3: 'RAID 03: CONTENT BRAND', b4: 'RAID 04: AI AUTOMATION' };
+      const raidTag = raidNames[t.related] || 'CORE DEVELOPMENT';
+
+      html += '<div class="rich-quest-card ' + (isDone ? 'done' : '') + '">'
+        + '<div class="rq-top-row">'
+        +   '<div class="rq-left">'
+        +     '<div class="rq-check ' + (isDone ? 'checked' : '') + '" onclick="toggleLifeOSTask(\'' + t.id + '\', event)">'
+        +       (isDone ? '&#10003;' : '')
+        +     '</div>'
+        +     '<div>'
+        +       '<div class="rq-tags-row">'
+        +         '<span class="rq-badge-level">LEVEL ' + (t.level || 1) + '</span>'
+        +         '<span class="rq-badge-raid">' + esc(raidTag) + '</span>'
+        +         '<span class="rq-badge-prio" style="border-color:' + pColor + ';color:' + pColor + ';">' + (t.priority || 'NORMAL').toUpperCase() + '</span>'
+        +         '<span class="rq-duration">&#9201; ' + esc(t.duration || '20 min') + '</span>'
+        +       '</div>'
+        +       '<h4 class="rq-title ' + (isDone ? 'done-text' : '') + '" onclick="toggleLifeOSTask(\'' + t.id + '\', event)">' + esc(t.name) + '</h4>'
+        +     '</div>'
         +   '</div>'
-        +   '<div class="p-desc">' + esc(t.why || t.action || '') + '</div>'
-        +   (t.outcome ? '<div class="p-outcome">Target: ' + esc(t.outcome) + '</div>' : '')
+        +   '<div class="rq-xp-tag">+' + t.xp + ' XP</div>'
         + '</div>'
-        + '<div class="p-xp">+' + t.xp + ' XP</div>'
+
+        + (t.desc ? '<div class="rq-desc">' + esc(t.desc) + '</div>' : '')
+
+        + '<div class="rq-detail-grid">'
+        +   (t.why ? '<div class="rq-why-box"><b style="color:var(--gold);">&#9733; Why it matters:</b> ' + esc(t.why) + '</div>' : '')
+        +   (t.criteria ? '<div class="rq-crit-box"><b style="color:var(--green);">&#9678; Completion criteria:</b> ' + esc(t.criteria) + '</div>' : '')
+        + '</div>'
+
+        + (t.steps && t.steps.length ? 
+            '<div class="rq-steps-box">'
+            + '<div class="rq-steps-head">Numbered Execution Steps:</div>'
+            + '<ul class="rq-steps-list">'
+            + t.steps.map(s => '<li>' + esc(s) + '</li>').join('')
+            + '</ul>'
+            + '</div>'
+            : (t.action ? '<div class="rq-action-box"><b>Action:</b> ' + esc(t.action) + '</div>' : ''))
+
         + '</div>';
     });
     html += '</div>';
   }
 
+  /* Add Custom Task & Quick Navigation Buttons */
   html += '<div style="display:flex;gap:10px;margin-top:14px;flex-wrap:wrap;">'
-    + '<button class="btn" style="flex:1;" onclick="openTaskModal()">+ Add New Priority Task</button>'
-    + '<button class="btn secondary" onclick="goTab(\'tasks\')">Open Task Manager & Kanban &rarr;</button>'
+    + '<button class="btn" style="flex:1;" onclick="openTaskModal()">+ Add Custom Task</button>'
+    + '<button class="btn secondary" onclick="goTab(\'lifestatus\')">Calibrate Pacing in Life Command Center &rarr;</button>'
     + '</div>';
 
   /* Habits Quick Glance Bar */
@@ -2397,54 +2522,19 @@ function drawDashboardLifeOS(){
     html += '<div class="habits-glance-box">'
       + '<div class="hgb-head">'
       +   '<div>'
-      +     '<span style="font-family:var(--hud);font-size:13px;color:#fff;letter-spacing:1px;">ESTABLISHED ROUTINES QUICK-CHECK</span>'
-      +     '<span style="font-size:11.5px;color:var(--muted);margin-left:8px;">(Graduated from daily clutter)</span>'
+      +     '<span style="font-family:var(--hud);font-size:13px;color:#fff;letter-spacing:1px;">DAILY ROUTINES &amp; HABIT FOUNDATIONS</span>'
+      +     '<span style="font-size:11.5px;color:var(--muted);margin-left:8px;">(Tracked in Habits portal)</span>'
       +   '</div>'
       +   '<span class="tag">' + completedHabits + ' / ' + HABIT_ROUTINES_DEF.length + ' DONE</span>'
       + '</div>'
       + '<div class="hgb-grid">'
       + HABIT_ROUTINES_DEF.map(h => {
           const done = !!(S.daily && S.daily[h.id]);
-          const streak = (S.habitDays && S.habitDays[h.id] && S.habitDays[h.id].length) || 21;
+          const streak = (S.habitDays && S.habitDays[h.id] && S.habitDays[h.id].length) || 27;
           return '<div class="hgb-pill ' + (done ? 'done' : '') + '" onclick="toggleHabitRoutine(\'' + h.id + '\', event)">'
             + '<span class="hgb-check">' + (done ? '&#10003;' : '') + '</span>'
             + '<span class="hgb-name">' + esc(h.name) + '</span>'
             + '<span class="hgb-streak">&times;' + streak + '</span>'
-            + '</div>';
-        }).join('')
-      + '</div>'
-      + '<div style="margin-top:10px;text-align:right;">'
-      +   '<a href="javascript:void(0)" onclick="goTab(\'habits\')" style="font-size:11.5px;color:var(--sys-blue);text-decoration:none;">View Full Habits Tracker & Routines &rarr;</a>'
-      + '</div>'
-      + '</div>';
-  }
-
-  /* Projects Quick Glance Bar */
-  if(typeof LIFE_OS_PROJECTS !== 'undefined'){
-    html += '<div class="projects-glance-box">'
-      + '<div class="pgb-head">'
-      +   '<span style="font-family:var(--hud);font-size:13px;color:#fff;letter-spacing:1px;">ACTIVE LIFE OS PROJECTS</span>'
-      +   '<a href="javascript:void(0)" onclick="goTab(\'projects\')" style="font-size:11.5px;color:var(--sys-blue);text-decoration:none;">All Projects &rarr;</a>'
-      + '</div>'
-      + '<div class="pgb-list">'
-      + LIFE_OS_PROJECTS.slice(0, 4).map(p => {
-          const userP = (S.projects && S.projects[p.id]) || { progress: 0, subtasks: {} };
-          const pSubtasks = (p.subtasks && p.subtasks.length) ? p.subtasks : (p.tasks || []);
-          const subDone = pSubtasks.filter(s => (userP.subtasks && userP.subtasks[s.id]) || (userP.subtasks && userP.subtasks[s.id] === undefined && s.done)).length;
-          const subTotal = pSubtasks.length;
-          const progress = subTotal ? Math.round((subDone / subTotal) * 100) : (p.progress || userP.progress || 0);
-          const pName = p.title || p.name || 'Untitled Project';
-          const pCat = p.category || 'Initiative';
-          const pDate = p.deadline || p.targetDate || '2027';
-          return '<div class="pgb-row" onclick="goTab(\'projects\')">'
-            + '<div class="pgb-info">'
-            +   '<span class="pgb-name">' + esc(pName) + '</span>'
-            +   '<span class="pgb-cat">' + esc(pCat) + ' &bull; Target: ' + esc(pDate) + '</span>'
-            + '</div>'
-            + '<div class="pgb-bar-wrap">'
-            +   '<span class="pgb-pct">' + progress + '%</span>'
-            +   '<div class="bar thin" style="width:100px;"><i style="width:' + progress + '%;background:linear-gradient(90deg,var(--glow),var(--glow2))"></i></div>'
-            + '</div>'
             + '</div>';
         }).join('')
       + '</div>'
@@ -2478,7 +2568,8 @@ function drawTaskManager(){
   const allCustom = (S.customTasks || []).filter(t => !t.archived);
   
   let allTasks = [];
-  if(typeof ACTIVE_DAILY_TASKS_DEF !== 'undefined') allTasks = allTasks.concat(ACTIVE_DAILY_TASKS_DEF);
+  if(typeof INTELLIGENT_QUESTS_POOL !== 'undefined') allTasks = allTasks.concat(INTELLIGENT_QUESTS_POOL);
+  else if(typeof ACTIVE_DAILY_TASKS_DEF !== 'undefined') allTasks = allTasks.concat(ACTIVE_DAILY_TASKS_DEF);
   allTasks = allTasks.concat(allCustom);
 
   let filtered = [];
@@ -3179,4 +3270,297 @@ function submitNoteModal(){
 function closeHabitGradModal(){
   const m = $('habitGradModal');
   if(m) m.classList.remove('on');
+}
+
+/* =====================================================================
+   14. LIFE STATUS COMMAND CENTER ENGINE & REFLECTION CONTROLLER
+   ===================================================================== */
+function drawLifeCommandCenter(){
+  const root = $('lifeCommandRoot');
+  if(!root) return;
+
+  const ls = S.lifeStatus || {
+    location: 'Cairo, Egypt',
+    destination: 'Saudi Arabia (Riyadh / Jeddah)',
+    travelStatus: 'imminent',
+    targetTravelDate: 'Late November 2026',
+    expensesPaid: true,
+    flightBooked: false,
+    flightDetails: '',
+    documentsReady: true,
+    saudiPhone: false,
+    saudiPhoneNumber: '',
+    currentDifficulty: 1,
+    difficultyName: 'Level 1 â€” Normal',
+    activeBossFocus: 'b2',
+    checkinHistory: []
+  };
+
+  const fp = S.foundationProfile || {
+    dayIndex: 1,
+    foundationActive: true,
+    recoveryMode: false,
+    totalMandatoryMinutes: 220
+  };
+
+  const diffLevel = ls.currentDifficulty || 1;
+  const isRecovery = !!fp.recoveryMode;
+  const unlocks = S.systemUnlocks || [];
+  const checkins = ls.checkinHistory || [];
+
+  let html = '';
+
+  /* Header Hero */
+  html += '<div class="life-status-hero">'
+    + '<div class="lsh-top">'
+    +   '<div class="lsh-badge"><span class="pulse-dot"></span> 14-DAY FOUNDATION PHASE &bull; DAY ' + (fp.dayIndex || 1) + ' OF 14</div>'
+    +   '<div class="lsh-window">DEPARTURE WINDOW: ' + esc(ls.targetTravelDate) + ' (IMMINENT)</div>'
+    + '</div>'
+    + '<h1 class="lsh-title">PREPARING FOR SAUDI ARABIA TRANSITION</h1>'
+    + '<div class="lsh-sub">Cairo, Egypt &rarr; Riyadh / Jeddah, Saudi Arabia &bull; 4+ Hours Available Daily &bull; ~3.5â€“4h Mandatory Foundation Workload (220 min)</div>'
+    + '<div class="lsh-grid">'
+    +   '<div class="lsh-card">'
+    +     '<div class="lsh-card-k">RELOCATION EXPENSES</div>'
+    +     '<div class="lsh-card-v" style="color:var(--green);">&#10003; 100% PAID &amp; CLEARED</div>'
+    +     '<div class="lsh-card-sub">Visa, medical, and degree attestations fully settled</div>'
+    +   '</div>'
+    +   '<div class="lsh-card">'
+    +     '<div class="lsh-card-k">FLIGHT TICKET</div>'
+    +     '<div class="lsh-card-v" style="color:' + (ls.flightBooked ? 'var(--green)' : 'var(--gold)') + ';">'
+    +       (ls.flightBooked ? '&#10003; BOOKED &amp; CONFIRMED' : '&#9203; PENDING BOOKING (Late Nov)')
+    +     '</div>'
+    +     '<div class="lsh-card-sub">' + (ls.flightDetails || 'Final arrangement pending') + '</div>'
+    +   '</div>'
+    +   '<div class="lsh-card">'
+    +     '<div class="lsh-card-k">SAUDI PHONE NUMBER</div>'
+    +     '<div class="lsh-card-v" style="color:' + (ls.saudiPhone ? 'var(--green)' : 'var(--red)') + ';">'
+    +       (ls.saudiPhone ? '&#10003; ACTIVE: ' + esc(ls.saudiPhoneNumber || 'Confirmed') : '&#128274; GATED (Upon Arrival in KSA)')
+    +     '</div>'
+    +     '<div class="lsh-card-sub">Direct job search opens when verified</div>'
+    +   '</div>'
+    +   '<div class="lsh-card">'
+    +     '<div class="lsh-card-k">SYSTEM DIFFICULTY</div>'
+    +     '<div class="lsh-card-v" style="color:var(--sys-blue);">' + esc(ls.difficultyName || 'Level 1 â€” Normal') + '</div>'
+    +     '<div class="lsh-card-sub">' + (isRecovery ? 'Recovery Mode (2â€“3 tasks, ~35 min)' : 'Days 1â€“14: 3â€“5 tasks/day (~220 min)') + '</div>'
+    +   '</div>'
+    + '</div>'
+    + '</div>';
+
+  /* Daily Time Allocation Budgets Panel */
+  html += '<div class="panel" style="margin-top:16px;">'
+    + '<div class="st"><h2>Daily Time Budget Allocation (~3.5â€“4 Hours Total)</h2><span class="tag">FLEXIBLE BUDGETS</span></div>'
+    + '<div class="hint">These are time budgets, not rigid checklists. Rotate activities where appropriate and avoid creating unnecessary tasks.</div>'
+    + '<div class="diff-levels-grid" style="grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));">'
+    +   '<div class="diff-card"><div class="dc-name" style="font-size:14px;color:var(--sys-blue);">ðŸ—£ï¸ English Development</div><div class="dc-meta" style="font-size:16px;color:#fff;">60 Minutes</div><div class="dc-focus">Speaking analysis, pronunciation, interview defense, practical grammar</div></div>'
+    +   '<div class="diff-card"><div class="dc-name" style="font-size:14px;color:#c084fc;">ðŸ’¼ Career &amp; Skills</div><div class="dc-meta" style="font-size:16px;color:#fff;">60 Minutes</div><div class="dc-focus">Hero case studies (1,544 leads @ 4.62 TL), ATS CV, campaign analytics</div></div>'
+    +   '<div class="diff-card"><div class="dc-name" style="font-size:14px;color:var(--gold);">ðŸ‡¸ðŸ‡¦ Saudi Prep</div><div class="dc-meta" style="font-size:16px;color:#fff;">45 Minutes</div><div class="dc-focus">Document archives, flight check, Riyadh agency mapping (no premature apply)</div></div>'
+    +   '<div class="diff-card"><div class="dc-name" style="font-size:14px;color:var(--green);">âš™ï¸ AI Automation</div><div class="dc-meta" style="font-size:16px;color:#fff;">35 Minutes</div><div class="dc-focus">Google Sheets scripts, prompt engineering, reporting scenarios</div></div>'
+    +   '<div class="diff-card"><div class="dc-name" style="font-size:14px;color:#f472b6;">ðŸŽ¬ Content Creation</div><div class="dc-meta" style="font-size:16px;color:#fff;">20 Minutes</div><div class="dc-focus">Direct-response ad hooks, 60s video outlines, CapCut desktop editing</div></div>'
+    +   '<div class="diff-card"><div class="dc-name" style="font-size:14px;color:#38bdf8;">ðŸŽ“ Germany M.Sc</div><div class="dc-meta" style="font-size:16px;color:#fff;">2x / Week</div><div class="dc-focus">30â€“45 min research sessions (DAAD programs, ECTS requirements)</div></div>'
+    + '</div>'
+    + '</div>';
+
+  /* Interactive Status Controls */
+  html += '<div class="panel" style="margin-top:16px;">'
+    + '<div class="st"><h2>Interactive Life Status Controls</h2><span class="tag">REAL-TIME CALIBRATION</span></div>'
+    + '<div class="hint">Toggle these switches as real-world arrangements update. The system automatically recalculates tasks, gates, and downstream raid stages.</div>'
+    + '<div class="lsc-controls-grid">'
+    +   '<div class="lsc-ctrl-row">'
+    +     '<div>'
+    +       '<div class="lsc-ctrl-title">Flight Ticket to Saudi Arabia</div>'
+    +       '<div class="lsc-ctrl-desc">Mark booked once late November flight is purchased.</div>'
+    +     '</div>'
+    +     '<button class="btn ' + (ls.flightBooked ? '' : 'secondary') + '" onclick="toggleFlightStatus()">'
+    +       (ls.flightBooked ? '&#10003; Flight Booked' : 'Mark as Booked')
+    +     '</button>'
+    +   '</div>'
+    +   '<div class="lsc-ctrl-row">'
+    +     '<div>'
+    +       '<div class="lsc-ctrl-title">Local Saudi SIM &amp; Mobile Phone Number</div>'
+    +       '<div class="lsc-ctrl-desc">Gating rule: Direct Saudi job applications remain locked until this is active.</div>'
+    +     '</div>'
+    +     '<button class="btn ' + (ls.saudiPhone ? '' : 'secondary') + '" style="' + (ls.saudiPhone ? 'border-color:var(--green);color:var(--green);' : '') + '" onclick="toggleSaudiPhoneStatus()">'
+    +       (ls.saudiPhone ? '&#10003; Saudi Phone Active' : 'Activate Local Phone')
+    +     '</button>'
+    +   '</div>'
+    +   '<div class="lsc-ctrl-row">'
+    +     '<div>'
+    +       '<div class="lsc-ctrl-title">Recovery Mode (Difficult / Low-Energy Days)</div>'
+    +       '<div class="lsc-ctrl-desc">Drops daily task workload to 2â€“3 gentle tasks (~35 min) to protect consistency and preserve your streak.</div>'
+    +     '</div>'
+    +     '<button class="btn ' + (isRecovery ? '' : 'secondary') + '" style="' + (isRecovery ? 'border-color:var(--gold);color:var(--gold);' : '') + '" onclick="toggleRecoveryMode()">'
+    +       (isRecovery ? 'ðŸ›¡ï¸ Recovery Mode Active' : 'Enable Recovery Mode')
+    +     '</button>'
+    +   '</div>'
+    + '</div>'
+    + '</div>';
+
+  /* Gradual Difficulty Calibration */
+  html += '<div class="panel" style="margin-top:16px;">'
+    + '<div class="st"><h2>Gradual Difficulty Calibration (Levels 1 to 4)</h2><span class="tag">PACING ENGINE</span></div>'
+    + '<div class="hint">Days 1â€“14 Foundation Phase starts at Normal (3â€“5 daily tasks). Escalate to 5â€“7 tasks only after consistent completion and positive feedback. Never exceeds 10 tasks.</div>'
+    + '<div class="diff-levels-grid">'
+    + [
+        { lvl: 1, name: 'Normal', tasks: '3-5 tasks/day', time: '15-25 min', focus: '14-Day Foundation anchor, consistency building, zero burnout' },
+        { lvl: 2, name: 'Developing', tasks: '4-6 tasks/day', time: '25-35 min', focus: 'Skill expansion, deeper portfolio work, English fluency' },
+        { lvl: 3, name: 'Advanced', tasks: '5-7 tasks/day', time: '30-45 min', focus: 'Complex campaigns, video production, automation testing' },
+        { lvl: 4, name: 'Elite', tasks: '6-8 tasks/day', time: '30-45 min', focus: 'Maximum leverage, direct outreach, end-to-end pipelines' }
+      ].map(d => {
+        const isCurrent = diffLevel === d.lvl;
+        return '<div class="diff-card ' + (isCurrent ? 'active' : '') + '" onclick="setSystemDifficulty(' + d.lvl + ')">'
+          + '<div class="dc-head">'
+          +   '<span class="dc-badge">LEVEL ' + d.lvl + '</span>'
+          +   (isCurrent ? '<span class="dc-active-tag">CURRENT</span>' : '')
+          + '</div>'
+          + '<div class="dc-name">' + esc(d.name) + '</div>'
+          + '<div class="dc-meta">' + esc(d.tasks) + ' &bull; ' + esc(d.time) + '</div>'
+          + '<div class="dc-focus">' + esc(d.focus) + '</div>'
+          + '</div>';
+      }).join('')
+    + '</div>'
+    + '</div>';
+
+  /* Practical B1/B2 English Development Lab */
+  if(typeof B1_B2_ENGLISH_TRACK !== 'undefined'){
+    html += '<div class="panel" style="margin-top:16px;">'
+      + '<div class="st"><h2>Practical B1/B2 English Development Lab</h2><span class="tag">DIAGNOSTIC &amp; RECORDED</span></div>'
+      + '<div class="hint">Every speaking drill features a clear objective, recording instructions, self-evaluation criteria, identified common traps, and a measurable next step. Level assessed through recorded evidence, not assumed.</div>'
+      + '<div class="eng-track-grid">'
+      + B1_B2_ENGLISH_TRACK.map(m => {
+          return '<div class="eng-module-card">'
+            + '<div class="emc-head">'
+            +   '<h4 class="emc-title">' + esc(m.module) + '</h4>'
+            +   '<div class="emc-meta">'
+            +     '<span class="tag" style="color:var(--sys-blue);border-color:rgba(0,212,255,0.3);">' + esc(m.level) + '</span>'
+            +     '<span class="tag" style="color:var(--gold);border-color:rgba(255,204,77,0.3);">&#9201; ' + esc(m.duration) + '</span>'
+            +   '</div>'
+            + '</div>'
+            + '<div class="emc-obj"><b>Target Objective:</b> ' + esc(m.objective) + '</div>'
+            + '<div class="emc-steps-box">'
+            +   '<div style="font-family:var(--hud);font-size:11px;color:var(--sys-blue);margin-bottom:4px;">Recording Instructions:</div>'
+            +   m.instructions.map(ins => '<div>' + esc(ins) + '</div>').join('')
+            + '</div>'
+            + '<div class="emc-grid">'
+            +   '<div class="emc-crit-box">'
+            +     '<div style="font-family:var(--hud);font-size:10.5px;color:var(--green);margin-bottom:4px;">&#10003; Self-Evaluation Checklist:</div>'
+            +     m.feedbackCriteria.map(fc => '<div>&bull; ' + esc(fc) + '</div>').join('')
+            +   '</div>'
+            +   '<div class="emc-traps-box">'
+            +     '<div style="font-family:var(--hud);font-size:10.5px;color:var(--red);margin-bottom:4px;">&#9888; Traps &amp; Common Mistakes to Avoid:</div>'
+            +     m.commonTraps.map(ct => '<div>&bull; ' + esc(ct) + '</div>').join('')
+            +   '</div>'
+            + '</div>'
+            + '<div class="emc-next-box"><b>Measurable Next Step:</b> ' + esc(m.nextStep) + '</div>'
+            + '<div style="margin-top:10px;text-align:right;">'
+            +   '<button class="btn secondary" style="font-size:11.5px;padding:4px 10px;" onclick="goTab(\'speaking\')">Launch Speaking Recorder &rarr;</button>'
+            + '</div>'
+            + '</div>';
+        }).join('')
+      + '</div>'
+      + '</div>';
+  }
+
+  /* Interactive Daily / Weekly Reflection Widget */
+  html += '<div class="panel" style="margin-top:16px;">'
+    + '<div class="st"><h2>Daily / Weekly Tactical Check-in</h2><span class="tag">AI CALIBRATION</span></div>'
+    + '<div class="hint">Check in with the System. If tasks feel overwhelming or too simple, the System adjusts your daily load automatically. Earns <b>+20 XP</b>.</div>'
+    + '<div class="checkin-box">'
+    +   '<div class="cb-field">'
+    +     '<label class="cb-label">1. How did your tasks feel today / this week?</label>'
+    +     '<div class="cb-options">'
+    +       '<button type="button" class="cb-opt-btn" id="cbOptHard" onclick="selectCheckinRating(\'too_hard\')">&#128308; Too Difficult / Heavy (Lower Difficulty / Split Tasks)</button>'
+    +       '<button type="button" class="cb-opt-btn selected" id="cbOptRight" onclick="selectCheckinRating(\'just_right\')">&#128994; Just Right / Productive Pace (Maintain)</button>'
+    +       '<button type="button" class="cb-opt-btn" id="cbOptEasy" onclick="selectCheckinRating(\'too_easy\')">&#128309; Too Easy / Want More Challenge (Level Up)</button>'
+    +     '</div>'
+    +   '</div>'
+    +   '<div class="cb-field" style="margin-top:12px;">'
+    +     '<label class="cb-label">2. Any real life changes or travel updates?</label>'
+    +     '<input type="text" class="cb-input" id="cbLifeUpdates" placeholder="e.g. Flight booked for Nov 26, passport stamped, or arrived in Riyadh...">'
+    +   '</div>'
+    +   '<div class="cb-field" style="margin-top:12px;">'
+    +     '<label class="cb-label">3. Notes or reflections on today\'s execution:</label>'
+    +     '<textarea class="cb-textarea" id="cbNotes" rows="2" placeholder="What went well? Any friction points or English speaking insights?"></textarea>'
+    +   '</div>'
+    +   '<div style="margin-top:14px;display:flex;justify-content:flex-end;">'
+    +     '<button class="btn" onclick="handleCheckinSubmit()">Submit Reflection &amp; Calibrate System &rarr;</button>'
+    +   '</div>'
+    + '</div>'
+    + '</div>';
+
+  /* Systemic Unlocks History */
+  html += '<div class="panel" style="margin-top:16px;">'
+    + '<div class="st"><h2>Systemic Unlocks &amp; Milestones</h2><span class="tag">' + unlocks.length + ' UNLOCKED</span></div>'
+    + '<div class="hint">Milestones achieved and downstream features unlocked across the 4 Master Boss Raids.</div>';
+  if(unlocks.length === 0){
+    html += '<div class="hint" style="font-style:italic;">No boss raid milestones checked off yet. Clear steps in Boss Raids to trigger systemic unlocks.</div>';
+  } else {
+    html += '<div class="unlocks-timeline">';
+    unlocks.forEach(u => {
+      html += '<div class="ut-item">'
+        + '<div class="ut-dot">&#10003;</div>'
+        + '<div class="ut-body">'
+        +   '<div class="ut-title">' + esc(u.bossName || u.bossId) + ' &bull; ' + esc(u.date) + '</div>'
+        +   '<div class="ut-desc">' + esc(u.stepText) + '</div>'
+        + '</div>'
+        + '</div>';
+    });
+    html += '</div>';
+  }
+  html += '</div>';
+
+  root.innerHTML = html;
+}
+
+window._selectedCheckinRating = 'just_right';
+function selectCheckinRating(rating){
+  window._selectedCheckinRating = rating;
+  ['cbOptHard', 'cbOptRight', 'cbOptEasy'].forEach(id => {
+    const el = $(id);
+    if(el) el.classList.remove('selected');
+  });
+  if(rating === 'too_hard' && $('cbOptHard')) $('cbOptHard').classList.add('selected');
+  if(rating === 'just_right' && $('cbOptRight')) $('cbOptRight').classList.add('selected');
+  if(rating === 'too_easy' && $('cbOptEasy')) $('cbOptEasy').classList.add('selected');
+}
+
+function handleCheckinSubmit(){
+  const rating = window._selectedCheckinRating || 'just_right';
+  const updates = $('cbLifeUpdates') ? $('cbLifeUpdates').value.trim() : '';
+  const notes = $('cbNotes') ? $('cbNotes').value.trim() : '';
+
+  if(typeof submitLifeCheckin === 'function'){
+    submitLifeCheckin(rating, notes, updates);
+  }
+}
+
+function setSystemDifficulty(lvl){
+  if(typeof updateLifeStatus === 'function'){
+    updateLifeStatus('currentDifficulty', lvl);
+  }
+}
+
+function toggleFlightStatus(){
+  const current = !!(S.lifeStatus && S.lifeStatus.flightBooked);
+  const next = !current;
+  let details = '';
+  if(next){
+    details = prompt('Enter flight details (e.g. Cairo to Riyadh, Nov 26, Flynas / Saudia):', 'Cairo to Riyadh, Late Nov 2026') || 'Late Nov 2026';
+    if(S.lifeStatus) S.lifeStatus.flightDetails = details;
+  }
+  if(typeof updateLifeStatus === 'function'){
+    updateLifeStatus('flightBooked', next);
+  }
+}
+
+function toggleSaudiPhoneStatus(){
+  const current = !!(S.lifeStatus && S.lifeStatus.saudiPhone);
+  const next = !current;
+  let number = '';
+  if(next){
+    number = prompt('Enter your local Saudi phone number (e.g. +966 5X XXX XXXX):', '+966 5') || '+966';
+    if(S.lifeStatus) S.lifeStatus.saudiPhoneNumber = number;
+  }
+  if(typeof updateLifeStatus === 'function'){
+    updateLifeStatus('saudiPhone', next);
+  }
 }
