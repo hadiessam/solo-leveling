@@ -389,8 +389,8 @@ const WEEKLY = [
   {id:'w_cyc1_3', t:1, name:'Complete 1 high-value certification module', sub:'Self-Development', stat:'selfdev', xp:30, unlock:null, cycle:1,
    guide:'Complete 1 full module from Google Ads Search, GA4, or Meta Media Buying certification tracks.'},
 
-  {id:'w8', t:1, name:'Send 5 tailored performance marketing applications', sub:'Career', stat:'career', xp:35, unlock:null, cycle:1,
-   guide:'Send 5 real, customized applications via Wuzzuf, LinkedIn, or Gulf portals. Tailor the opening pitch to the company requirements.'},
+  {id:'w8', t:1, name:'Research & map 5 target Saudi agencies in Riyadh & Jeddah', sub:'Saudi Prep', stat:'career', xp:35, unlock:null, cycle:1,
+   guide:'Identify 5 established performance marketing agencies in Riyadh and Jeddah. Log decision-makers and client niches in your pipeline database. Do NOT send premature applications until local Saudi contact details are active.'},
 
   /* ---------- CYCLE 2: Direct Revenue & Market Pitch Execution ---------- */
   {id:'w9', t:1, name:'Pitch 1 paid audit offer to a local business', sub:'Money', stat:'money', xp:45, unlock:null, cycle:2,
@@ -470,7 +470,7 @@ const WEEKLY_RAID_BOSSES = [
     reward: 450,
     phases: [
       { text: 'تحديث الـ CV الإنجليزي ومطابقته لكلمات ATS في 3 وظائف بالرياض', dmg: 300, xp: 75 },
-      { text: 'إرسال 5 تقديمات مباشرة ومخصصة لشركات ووكالات تسويق في السعودية', dmg: 300, xp: 75 },
+      { text: 'حصر وتوثيق 5 وكالات وشركات تسويق مستهدفة بالرياض وجدة (قاعدة بيانات الفرص — دون إرسال متسرع)', dmg: 300, xp: 75 },
       { text: 'ممارسة 3 إجابات للمقابلات باللغة الإنجليزية بصوت عالٍ وتسجيلها', dmg: 300, xp: 75 },
       { text: 'التفاعل وبناء تواصل احترافي مع 3 مديري تسويق خليجيين على LinkedIn', dmg: 300, xp: 75 }
     ]
@@ -1685,7 +1685,7 @@ const REVIEW_QS = [
   {k:'saudi', q:'3. Career Readiness & Saudi Transition Milestones: What progress was made on CV, portfolio case studies, and Riyadh agency research?'},
   {k:'ai_content', q:'4. AI Automation & Content Projects: What scripts, CapCut reels, or automation workflows were tested or built?'},
   {k:'adjust', q:'5. Task Difficulty & Workload Adjustment: Were the tasks too hard, too easy, or just right? Do tasks need to be simplified or split?'},
-  {k:'sustain', q:'6. Sustainability Check: Is the current 3.5â€“4 hour daily mandatory workload sustainable for me, or should I activate Recovery Mode?'}
+  {k:'sustain', q:'6. Sustainability Check: Is the current 3.5–4 hour daily mandatory workload sustainable for me, or should I activate Recovery Mode?'}
 ];
 
 /* ---------------------------------------------------------------
@@ -2612,7 +2612,7 @@ const INTELLIGENT_QUESTS_POOL = [
       '1. Research top Saudi agencies (e.g. 2P PR & Digital, UBRAND, FP7 Riyadh, Magna, Wavemaker KSA).',
       '2. Note company name, primary client sectors (e-commerce, real estate, education), and Riyadh office location.',
       '3. Identify the Head of Performance or Media Buying Director on LinkedIn.',
-      '4. Log company details into the Saudi Opportunity Pipeline database (strictly research only â€” no premature messages!).'
+      '4. Log company details into the Saudi Opportunity Pipeline database (strictly research only — no premature messages!).'
     ],
     criteria: '10 agencies profiled with key executive names recorded in research database.',
     outcome: 'High-value target list ready for in-person and local telephone engagement upon landing.'

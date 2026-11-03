@@ -4,7 +4,7 @@
    Bump CACHE when you change any file, otherwise the phone serves the old one.
    ===================================================================== */
 
-const CACHE   = 'solo-leveling-v49.2-full-boot-restored';
+const CACHE   = 'solo-leveling-v49.4-system-restored';
 
 /* code + markup — these MUST always be fresh */
 const CORE = [

@@ -2212,7 +2212,7 @@ function renderEverything(){
    --------------------------------------------------------------------- */
 function boot(){
   buildGuideIndex();
-  /* 1. Immediately render using local/seed authentic state â€” ZERO BLANK SCREEN, ZERO LEVEL 1 FLASH */
+  /* 1. Immediately render using local/seed authentic state — ZERO BLANK SCREEN, ZERO LEVEL 1 FLASH */
   renderEverything();
 
   /* 2. Safe daily reset check & backup */
@@ -2220,7 +2220,7 @@ function boot(){
   autoBackup();
   checkForUpdates();
 
-  /* 3. Pull cloud save asynchronously â€” if newer or higher progress, smoothly refresh */
+  /* 3. Pull cloud save asynchronously — if newer or higher progress, smoothly refresh */
   cloudLoad().then(function(pulled){
     if(pulled){
       renderEverything();
@@ -2360,7 +2360,7 @@ function drawDashboardLifeOS(){
     saudiPhone: false,
     saudiPhoneNumber: '',
     currentDifficulty: 1,
-    difficultyName: 'Level 1 â€” Normal',
+    difficultyName: 'Level 1 — Normal',
     activeBossFocus: 'b2'
   };
   const fp = S.foundationProfile || {
@@ -2378,10 +2378,10 @@ function drawDashboardLifeOS(){
   if(isRecovery){
     html += '<div class="recovery-mode-banner">'
       + '<div class="rmb-left">'
-      +   '<span class="rmb-icon">ðŸ›¡ï¸</span>'
+      +   '<span class="rmb-icon">🛡️</span>'
       +   '<div>'
-      +     '<div class="rmb-title">RECOVERY MODE ACTIVE â€” REDUCED WORKLOAD</div>'
-      +     '<div class="rmb-sub">Daily priorities streamlined to 2â€“3 gentle momentum tasks (~35 min) to protect consistency, reset mental clarity, and maintain your 27-day streak.</div>'
+      +     '<div class="rmb-title">RECOVERY MODE ACTIVE — REDUCED WORKLOAD</div>'
+      +     '<div class="rmb-sub">Daily priorities streamlined to 2–3 gentle momentum tasks (~35 min) to protect consistency, reset mental clarity, and maintain your 27-day streak.</div>'
       +   '</div>'
       + '</div>'
       + '<button class="btn rmb-btn" onclick="toggleRecoveryMode()">Resume Full Workload</button>'
@@ -2397,27 +2397,27 @@ function drawDashboardLifeOS(){
     + '<div class="lhc-main-row">'
     +   '<div>'
     +     '<div class="lhc-title">SAUDI ARABIA TRANSITION &bull; FOUNDATION OS</div>'
-    +     '<div class="lhc-sub">4+ Hours Daily Available &bull; ~3.5â€“4 Hours Mandatory Foundation Workload (220 min)</div>'
+    +     '<div class="lhc-sub">4+ Hours Daily Available &bull; ~3.5–4 Hours Mandatory Foundation Workload (220 min)</div>'
     +   '</div>'
     +   '<div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">'
     +     '<button class="btn secondary" style="font-size:11.5px;padding:6px 10px;" onclick="toggleRecoveryMode()">'
-    +       (isRecovery ? 'ðŸ›¡ï¸ Recovery Active' : 'ðŸ›¡ï¸ Recovery Mode')
+    +       (isRecovery ? '🛡️ Recovery Active' : '🛡️ Recovery Mode')
     +     '</button>'
     +     '<div class="lhc-difficulty-tag" onclick="goTab(\'lifestatus\')">'
     +       '<span style="font-size:10px;color:var(--muted);display:block;">ACTIVE DIFFICULTY</span>'
-    +       '<b style="color:var(--sys-blue);">' + esc(ls.difficultyName || 'Level 1 â€” Normal') + '</b>'
+    +       '<b style="color:var(--sys-blue);">' + esc(ls.difficultyName || 'Level 1 — Normal') + '</b>'
     +     '</div>'
     +   '</div>'
     + '</div>'
 
     /* Daily Time Allocation Budgets */
     + '<div class="fp-budgets-bar">'
-    +   '<div class="fp-budget-pill"><span class="fp-bp-k">ðŸ—£ï¸ English</span><span class="fp-bp-v">60m</span></div>'
-    +   '<div class="fp-budget-pill"><span class="fp-bp-k">ðŸ’¼ Career</span><span class="fp-bp-v">60m</span></div>'
-    +   '<div class="fp-budget-pill"><span class="fp-bp-k">ðŸ‡¸ðŸ‡¦ Saudi Prep</span><span class="fp-bp-v">45m</span></div>'
-    +   '<div class="fp-budget-pill"><span class="fp-bp-k">âš™ï¸ AI Automation</span><span class="fp-bp-v">35m</span></div>'
-    +   '<div class="fp-budget-pill"><span class="fp-bp-k">ðŸŽ¬ Content</span><span class="fp-bp-v">20m</span></div>'
-    +   '<div class="fp-budget-pill secondary"><span class="fp-bp-k">ðŸŽ“ Germany M.Sc</span><span class="fp-bp-v">2x/wk</span></div>'
+    +   '<div class="fp-budget-pill"><span class="fp-bp-k">🗣️ English</span><span class="fp-bp-v">60m</span></div>'
+    +   '<div class="fp-budget-pill"><span class="fp-bp-k">💼 Career</span><span class="fp-bp-v">60m</span></div>'
+    +   '<div class="fp-budget-pill"><span class="fp-bp-k">🇸🇦 Saudi Prep</span><span class="fp-bp-v">45m</span></div>'
+    +   '<div class="fp-budget-pill"><span class="fp-bp-k">⚙️ AI Automation</span><span class="fp-bp-v">35m</span></div>'
+    +   '<div class="fp-budget-pill"><span class="fp-bp-k">🎬 Content</span><span class="fp-bp-v">20m</span></div>'
+    +   '<div class="fp-budget-pill secondary"><span class="fp-bp-k">🎓 Germany M.Sc</span><span class="fp-bp-v">2x/wk</span></div>'
     + '</div>'
 
     /* Real-world arrangement quick pills */
@@ -2439,10 +2439,10 @@ function drawDashboardLifeOS(){
     + '<div class="lhc-readiness-box">'
     +   '<div class="lhc-readiness-head">TACTICAL MORNING ORIENTATION:</div>'
     +   '<div class="lhc-q-grid">'
-    +     '<div class="lhc-q-item"><b>1. Current Phase:</b> Cairo, Egypt &mdash; Days 1â€“14 Foundation Period (3â€“5 daily tasks).</div>'
+    +     '<div class="lhc-q-item"><b>1. Current Phase:</b> Cairo, Egypt &mdash; Days 1–14 Foundation Period (3–5 daily tasks).</div>'
     +     '<div class="lhc-q-item"><b>2. Primary Focus:</b> CV/portfolio polish, spoken English recorded drills, travel document folder.</div>'
     +     '<div class="lhc-q-item"><b>3. Daily Saudi Job Applications:</b> <span style="color:var(--gold);font-weight:600;">Zero quota &mdash; gated until local Saudi phone is active.</span></div>'
-    +     '<div class="lhc-q-item"><b>4. Today\'s Capacity:</b> ' + (isRecovery ? 'Recovery Mode: 2â€“3 gentle tasks (~35 min total).' : (diffLevel === 1 ? '3â€“5 focused tasks (15â€“25m each) totaling ~220 min.' : (diffLevel === 2 ? '4â€“6 tasks (25â€“35m each).' : (diffLevel === 3 ? '5â€“7 tasks (30â€“45m each).' : '6â€“8 tasks (max 10).')))) + '</div>'
+    +     '<div class="lhc-q-item"><b>4. Today\'s Capacity:</b> ' + (isRecovery ? 'Recovery Mode: 2–3 gentle tasks (~35 min total).' : (diffLevel === 1 ? '3–5 focused tasks (15–25m each) totaling ~220 min.' : (diffLevel === 2 ? '4–6 tasks (25–35m each).' : (diffLevel === 3 ? '5–7 tasks (30–45m each).' : '6–8 tasks (max 10).')))) + '</div>'
     +   '</div>'
     + '</div>'
 
@@ -2455,7 +2455,7 @@ function drawDashboardLifeOS(){
   /* 3. Today's Strategic Priorities Header */
   html += '<div class="priority-section-head">'
     + '<div>'
-    +   '<h3 style="margin:0;font-family:var(--hud);font-size:15px;color:var(--sys-blue);letter-spacing:1px;">TODAY\'S DAILY QUESTS &bull; ' + (isRecovery ? 'RECOVERY MODE (2â€“3 TASKS)' : esc((ls.difficultyName || 'LEVEL 1 â€” NORMAL').toUpperCase()) + ' (3â€“5 TASKS)') + '</h3>'
+    +   '<h3 style="margin:0;font-family:var(--hud);font-size:15px;color:var(--sys-blue);letter-spacing:1px;">TODAY\'S DAILY QUESTS &bull; ' + (isRecovery ? 'RECOVERY MODE (2–3 TASKS)' : esc((ls.difficultyName || 'LEVEL 1 — NORMAL').toUpperCase()) + ' (3–5 TASKS)') + '</h3>'
     +   '<div style="font-size:12px;color:var(--muted);margin-top:2px;">Strict Limit: ' + totalCount + ' / ' + MAX_DAILY_TASKS + ' Active Tasks &bull; Clear criteria, time budgets, and step-by-step instructions</div>'
     + '</div>'
     + '<div class="priority-load-badge ' + (totalCount > 8 ? 'heavy' : 'optimal') + '">'
@@ -2466,7 +2466,7 @@ function drawDashboardLifeOS(){
   /* 4. Rich Daily Quest Cards */
   if(priorities.length === 0){
     html += '<div class="empty-priority-card">'
-      + '<div style="font-size:28px;margin-bottom:8px;">âš”ï¸</div>'
+      + '<div style="font-size:28px;margin-bottom:8px;">⚔️</div>'
       + '<div style="font-family:var(--hud);font-size:14px;color:#fff;">ALL DAILY QUESTS CLEARED</div>'
       + '<div style="font-size:12px;color:var(--muted);margin-top:4px;">Excellent work, Hunter. All daily objectives completed. Rest or review your knowledge bank.</div>'
       + '</div>';
@@ -3299,7 +3299,7 @@ function drawLifeCommandCenter(){
     saudiPhone: false,
     saudiPhoneNumber: '',
     currentDifficulty: 1,
-    difficultyName: 'Level 1 â€” Normal',
+    difficultyName: 'Level 1 — Normal',
     activeBossFocus: 'b2',
     checkinHistory: []
   };
@@ -3325,7 +3325,7 @@ function drawLifeCommandCenter(){
     +   '<div class="lsh-window">DEPARTURE WINDOW: ' + esc(ls.targetTravelDate) + ' (IMMINENT)</div>'
     + '</div>'
     + '<h1 class="lsh-title">PREPARING FOR SAUDI ARABIA TRANSITION</h1>'
-    + '<div class="lsh-sub">Cairo, Egypt &rarr; Riyadh / Jeddah, Saudi Arabia &bull; 4+ Hours Available Daily &bull; ~3.5â€“4h Mandatory Foundation Workload (220 min)</div>'
+    + '<div class="lsh-sub">Cairo, Egypt &rarr; Riyadh / Jeddah, Saudi Arabia &bull; 4+ Hours Available Daily &bull; ~3.5–4h Mandatory Foundation Workload (220 min)</div>'
     + '<div class="lsh-grid">'
     +   '<div class="lsh-card">'
     +     '<div class="lsh-card-k">RELOCATION EXPENSES</div>'
@@ -3348,23 +3348,23 @@ function drawLifeCommandCenter(){
     +   '</div>'
     +   '<div class="lsh-card">'
     +     '<div class="lsh-card-k">SYSTEM DIFFICULTY</div>'
-    +     '<div class="lsh-card-v" style="color:var(--sys-blue);">' + esc(ls.difficultyName || 'Level 1 â€” Normal') + '</div>'
-    +     '<div class="lsh-card-sub">' + (isRecovery ? 'Recovery Mode (2â€“3 tasks, ~35 min)' : 'Days 1â€“14: 3â€“5 tasks/day (~220 min)') + '</div>'
+    +     '<div class="lsh-card-v" style="color:var(--sys-blue);">' + esc(ls.difficultyName || 'Level 1 — Normal') + '</div>'
+    +     '<div class="lsh-card-sub">' + (isRecovery ? 'Recovery Mode (2–3 tasks, ~35 min)' : 'Days 1–14: 3–5 tasks/day (~220 min)') + '</div>'
     +   '</div>'
     + '</div>'
     + '</div>';
 
   /* Daily Time Allocation Budgets Panel */
   html += '<div class="panel" style="margin-top:16px;">'
-    + '<div class="st"><h2>Daily Time Budget Allocation (~3.5â€“4 Hours Total)</h2><span class="tag">FLEXIBLE BUDGETS</span></div>'
+    + '<div class="st"><h2>Daily Time Budget Allocation (~3.5–4 Hours Total)</h2><span class="tag">FLEXIBLE BUDGETS</span></div>'
     + '<div class="hint">These are time budgets, not rigid checklists. Rotate activities where appropriate and avoid creating unnecessary tasks.</div>'
     + '<div class="diff-levels-grid" style="grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));">'
-    +   '<div class="diff-card"><div class="dc-name" style="font-size:14px;color:var(--sys-blue);">ðŸ—£ï¸ English Development</div><div class="dc-meta" style="font-size:16px;color:#fff;">60 Minutes</div><div class="dc-focus">Speaking analysis, pronunciation, interview defense, practical grammar</div></div>'
-    +   '<div class="diff-card"><div class="dc-name" style="font-size:14px;color:#c084fc;">ðŸ’¼ Career &amp; Skills</div><div class="dc-meta" style="font-size:16px;color:#fff;">60 Minutes</div><div class="dc-focus">Hero case studies (1,544 leads @ 4.62 TL), ATS CV, campaign analytics</div></div>'
-    +   '<div class="diff-card"><div class="dc-name" style="font-size:14px;color:var(--gold);">ðŸ‡¸ðŸ‡¦ Saudi Prep</div><div class="dc-meta" style="font-size:16px;color:#fff;">45 Minutes</div><div class="dc-focus">Document archives, flight check, Riyadh agency mapping (no premature apply)</div></div>'
-    +   '<div class="diff-card"><div class="dc-name" style="font-size:14px;color:var(--green);">âš™ï¸ AI Automation</div><div class="dc-meta" style="font-size:16px;color:#fff;">35 Minutes</div><div class="dc-focus">Google Sheets scripts, prompt engineering, reporting scenarios</div></div>'
-    +   '<div class="diff-card"><div class="dc-name" style="font-size:14px;color:#f472b6;">ðŸŽ¬ Content Creation</div><div class="dc-meta" style="font-size:16px;color:#fff;">20 Minutes</div><div class="dc-focus">Direct-response ad hooks, 60s video outlines, CapCut desktop editing</div></div>'
-    +   '<div class="diff-card"><div class="dc-name" style="font-size:14px;color:#38bdf8;">ðŸŽ“ Germany M.Sc</div><div class="dc-meta" style="font-size:16px;color:#fff;">2x / Week</div><div class="dc-focus">30â€“45 min research sessions (DAAD programs, ECTS requirements)</div></div>'
+    +   '<div class="diff-card"><div class="dc-name" style="font-size:14px;color:var(--sys-blue);">🗣️ English Development</div><div class="dc-meta" style="font-size:16px;color:#fff;">60 Minutes</div><div class="dc-focus">Speaking analysis, pronunciation, interview defense, practical grammar</div></div>'
+    +   '<div class="diff-card"><div class="dc-name" style="font-size:14px;color:#c084fc;">💼 Career &amp; Skills</div><div class="dc-meta" style="font-size:16px;color:#fff;">60 Minutes</div><div class="dc-focus">Hero case studies (1,544 leads @ 4.62 TL), ATS CV, campaign analytics</div></div>'
+    +   '<div class="diff-card"><div class="dc-name" style="font-size:14px;color:var(--gold);">🇸🇦 Saudi Prep</div><div class="dc-meta" style="font-size:16px;color:#fff;">45 Minutes</div><div class="dc-focus">Document archives, flight check, Riyadh agency mapping (no premature apply)</div></div>'
+    +   '<div class="diff-card"><div class="dc-name" style="font-size:14px;color:var(--green);">⚙️ AI Automation</div><div class="dc-meta" style="font-size:16px;color:#fff;">35 Minutes</div><div class="dc-focus">Google Sheets scripts, prompt engineering, reporting scenarios</div></div>'
+    +   '<div class="diff-card"><div class="dc-name" style="font-size:14px;color:#f472b6;">🎬 Content Creation</div><div class="dc-meta" style="font-size:16px;color:#fff;">20 Minutes</div><div class="dc-focus">Direct-response ad hooks, 60s video outlines, CapCut desktop editing</div></div>'
+    +   '<div class="diff-card"><div class="dc-name" style="font-size:14px;color:#38bdf8;">🎓 Germany M.Sc</div><div class="dc-meta" style="font-size:16px;color:#fff;">2x / Week</div><div class="dc-focus">30–45 min research sessions (DAAD programs, ECTS requirements)</div></div>'
     + '</div>'
     + '</div>';
 
@@ -3394,10 +3394,10 @@ function drawLifeCommandCenter(){
     +   '<div class="lsc-ctrl-row">'
     +     '<div>'
     +       '<div class="lsc-ctrl-title">Recovery Mode (Difficult / Low-Energy Days)</div>'
-    +       '<div class="lsc-ctrl-desc">Drops daily task workload to 2â€“3 gentle tasks (~35 min) to protect consistency and preserve your streak.</div>'
+    +       '<div class="lsc-ctrl-desc">Drops daily task workload to 2–3 gentle tasks (~35 min) to protect consistency and preserve your streak.</div>'
     +     '</div>'
     +     '<button class="btn ' + (isRecovery ? '' : 'secondary') + '" style="' + (isRecovery ? 'border-color:var(--gold);color:var(--gold);' : '') + '" onclick="toggleRecoveryMode()">'
-    +       (isRecovery ? 'ðŸ›¡ï¸ Recovery Mode Active' : 'Enable Recovery Mode')
+    +       (isRecovery ? '🛡️ Recovery Mode Active' : 'Enable Recovery Mode')
     +     '</button>'
     +   '</div>'
     + '</div>'
@@ -3406,7 +3406,7 @@ function drawLifeCommandCenter(){
   /* Gradual Difficulty Calibration */
   html += '<div class="panel" style="margin-top:16px;">'
     + '<div class="st"><h2>Gradual Difficulty Calibration (Levels 1 to 4)</h2><span class="tag">PACING ENGINE</span></div>'
-    + '<div class="hint">Days 1â€“14 Foundation Phase starts at Normal (3â€“5 daily tasks). Escalate to 5â€“7 tasks only after consistent completion and positive feedback. Never exceeds 10 tasks.</div>'
+    + '<div class="hint">Days 1–14 Foundation Phase starts at Normal (3–5 daily tasks). Escalate to 5–7 tasks only after consistent completion and positive feedback. Never exceeds 10 tasks.</div>'
     + '<div class="diff-levels-grid">'
     + [
         { lvl: 1, name: 'Normal', tasks: '3-5 tasks/day', time: '15-25 min', focus: '14-Day Foundation anchor, consistency building, zero burnout' },

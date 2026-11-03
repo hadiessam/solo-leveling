@@ -246,7 +246,21 @@ function drawExpenseCalendar(){
 
   /* Quick Log row for selected day */
   html += '<div class="exp-quick-add-box">';
-  html += '<div class="exp-quick-title">+ Quick Log for ' + activeSelected + ':</div>';
+  html += '<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:8px;">';
+  html += '  <div class="exp-quick-title">+ Quick Log for ' + activeSelected + ':</div>';
+  html += '  <button class="xbtn" style="border-color:rgba(34,197,94,0.4);color:var(--green);font-size:11.5px;padding:3px 10px;" onclick="logZeroSpendDay(\'' + activeSelected + '\')">🛡️ Log Zero Spend Day (0 EGP)</button>';
+  html += '</div>';
+
+  /* Quick Preset Chips */
+  html += '<div class="exp-preset-chips" style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px;">';
+  html += '  <span style="font-size:11px;color:var(--muted);align-self:center;">Presets:</span>';
+  html += '  <button type="button" class="xbtn" style="font-size:11px;padding:2px 8px;" onclick="fillQuickPreset(\'food\', \'Food / Meal\')">🍕 Food</button>';
+  html += '  <button type="button" class="xbtn" style="font-size:11px;padding:2px 8px;" onclick="fillQuickPreset(\'food\', \'Ahwa / Cafe\')">☕ Cafe / Ahwa</button>';
+  html += '  <button type="button" class="xbtn" style="font-size:11px;padding:2px 8px;" onclick="fillQuickPreset(\'entertainment\', \'Football with friends\')">⚽ Football</button>';
+  html += '  <button type="button" class="xbtn" style="font-size:11px;padding:2px 8px;" onclick="fillQuickPreset(\'transport\', \'Mwaslat / Uber\')">🚗 Transport</button>';
+  html += '  <button type="button" class="xbtn" style="font-size:11px;padding:2px 8px;" onclick="fillQuickPreset(\'food\', \'7warat el sfr\')">✈️ Travel Prep</button>';
+  html += '</div>';
+
   html += '<div class="exp-quick-fields">';
   html += '<input type="number" id="quickExpAmount" placeholder="Amount (EGP)" min="0" step="0.01" style="max-width:130px">';
   html += '<select id="quickExpCategory" style="max-width:160px">';
@@ -254,7 +268,7 @@ function drawExpenseCalendar(){
     html += '<option value="' + ck + '">' + EXPENSE_CATEGORIES[ck].icon + ' ' + EXPENSE_CATEGORIES[ck].label + '</option>';
   });
   html += '</select>';
-  html += '<input type="text" id="quickExpNote" placeholder="What did you spend on? (e.g. food, transport, bills)" style="flex:1">';
+  html += '<input type="text" id="quickExpNote" placeholder="What did you spend on? (e.g. food, transport, ahwa)" style="flex:1">';
   html += '<button class="btn" style="padding:6px 14px;white-space:nowrap" onclick="addQuickExpense(\'' + activeSelected + '\')">Log Expense</button>';
   html += '</div>';
   html += '</div>';
@@ -262,6 +276,35 @@ function drawExpenseCalendar(){
   html += '</div>';
 
   el.innerHTML = html;
+}
+
+
+function logZeroSpendDay(dateKey){
+  const targetDate = dateKey || expSelectedDate || dayKey();
+  if(!S.expenses) S.expenses = {};
+  if(!S.expenses[targetDate]) S.expenses[targetDate] = [];
+  
+  // Check if zero spend already logged
+  const hasZero = S.expenses[targetDate].some(e => e.amount <= 0.02);
+  if(hasZero){
+    alert('Zero spend already logged for ' + targetDate + '.');
+    return;
+  }
+  
+  S.expenses[targetDate].push({ amount: 0.01, note: "i didn't spend anything today", category: "other" });
+  addXP(5, 'money', false, 'expense');
+  log('ZERO SPEND', 'Logged <b>0 EGP</b> on ' + targetDate + '. Financial discipline shield maintained (+5 XP).');
+  save();
+  renderAll();
+}
+
+function fillQuickPreset(category, defaultNote){
+  const catEl = document.getElementById('quickExpCategory');
+  const noteEl = document.getElementById('quickExpNote');
+  if(catEl) catEl.value = category;
+  if(noteEl && (!noteEl.value || noteEl.value.trim() === '')){
+    noteEl.value = defaultNote;
+  }
 }
 
 function addQuickExpense(dateKey){

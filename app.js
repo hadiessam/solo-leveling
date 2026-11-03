@@ -124,7 +124,7 @@ if(!S.lifeStatus){
     saudiPhone: false,
     saudiPhoneNumber: '',
     currentDifficulty: 1,
-    difficultyName: 'Level 1 â€” Normal',
+    difficultyName: 'Level 1 — Normal',
     activeBossFocus: 'b2',
     checkinHistory: []
   };
@@ -1094,7 +1094,7 @@ function cloudLoad(){
           saudiPhone: false,
           saudiPhoneNumber: '',
           currentDifficulty: 1,
-          difficultyName: 'Level 1 â€” Normal',
+          difficultyName: 'Level 1 — Normal',
           activeBossFocus: 'b2',
           checkinHistory: []
         };
@@ -1844,6 +1844,9 @@ function toggleWeeklyBossPhase(bossId, phaseIdx){
 }
 
 function toggleMission(kind, id, ev){
+  if(id && (id.startsWith('q_') || id.startsWith('iq_') || id.startsWith('rec_') || id.startsWith('ct_') || id.startsWith('act_'))){
+    return toggleLifeOSTask(id, ev);
+  }
   const list = kind === 'daily' ? DAILY : WEEKLY;
   const m = list.find(x => x.id === id);
   if(!m) return;
@@ -1908,7 +1911,7 @@ function toggleStep(bossId, i){
   // GATING CHECK FOR BOSS RAID 02 (Saudi Arabia Professional Transition)
   // Steps 9-14 correspond to Stage 3: Professional Job Search
   if(bossId === 'b2' && i >= 9 && (!S.lifeStatus || !S.lifeStatus.saudiPhone)){
-    alert("âš ï¸ [SYSTEM GATE: STAGE 3 LOCKED]\n\nStage 3: Professional Job Search is locked until you arrive in Saudi Arabia and confirm your local Saudi phone number in the Life Command Center.\n\nSubmitting applications without a local Saudi phone number drastically lowers response rates. Focus on CV tailoring, case studies, and out-loud English defense drills first!");
+    alert("⚠️ [SYSTEM GATE: STAGE 3 LOCKED]\n\nStage 3: Professional Job Search is locked until you arrive in Saudi Arabia and confirm your local Saudi phone number in the Life Command Center.\n\nSubmitting applications without a local Saudi phone number drastically lowers response rates. Focus on CV tailoring, case studies, and out-loud English defense drills first!");
     return;
   }
 
@@ -2400,44 +2403,82 @@ function getDailyPriorities(){
   let pool = [];
 
   if (typeof INTELLIGENT_QUESTS_POOL !== 'undefined' && INTELLIGENT_QUESTS_POOL.length) {
-    pool = INTELLIGENT_QUESTS_POOL.filter(q => q.level <= diffLevel);
-    if (pool.length < targetCount) {
-      pool = INTELLIGENT_QUESTS_POOL.slice();
+    const hasSaudiPhone = !!(S.lifeStatus && S.lifeStatus.saudiPhone);
+    const validQuests = INTELLIGENT_QUESTS_POOL.filter(q => {
+      if (q.level > diffLevel + 1) return false;
+      if (q.requiresSaudiPhone && !hasSaudiPhone) return false;
+      if (S.formedHabits && (S.formedHabits[q.id] || (q.legacyId && S.formedHabits[q.legacyId]))) return false;
+      return true;
+    });
+
+    // Hash current date string to rotate dynamically every day
+    const todayStr = dayKey();
+    let dateHash = 0;
+    for (let i = 0; i < todayStr.length; i++) {
+      dateHash = (dateHash * 31 + todayStr.charCodeAt(i)) & 0xffffffff;
     }
+    const daySeed = Math.abs(dateHash);
+
+    // Group available quests into the 4 core developmental pillars
+    const englishPillar = validQuests.filter(q => q.sub && (q.sub.includes('English') || q.sub.includes('Spoken') || q.sub.includes('Fluency') || q.stat === 'selfdev'));
+    const careerPillar = validQuests.filter(q => q.sub && (q.sub.includes('Portfolio') || q.sub.includes('Career') || q.sub.includes('Saudi') || q.stat === 'career'));
+    const contentAiPillar = validQuests.filter(q => q.sub && (q.sub.includes('Content') || q.sub.includes('Automation') || q.sub.includes('Brand') || q.stat === 'skills' || q.stat === 'tech'));
+    const healthPrepPillar = validQuests.filter(q => q.stat === 'health' || (q.sub && (q.sub.includes('Health') || q.sub.includes('Stamina') || q.sub.includes('Readiness'))));
+
+    const selected = [];
+    const usedIds = new Set();
+
+    function pickFromPillar(arr, offset) {
+      if (!arr || !arr.length) return;
+      const startIdx = (daySeed + offset) % arr.length;
+      for (let j = 0; j < arr.length; j++) {
+        const candidate = arr[(startIdx + j) % arr.length];
+        if (!usedIds.has(candidate.id)) {
+          selected.push(candidate);
+          usedIds.add(candidate.id);
+          break;
+        }
+      }
+    }
+
+    // Always ensure balanced representation across essential focus areas
+    pickFromPillar(englishPillar, 0);
+    pickFromPillar(careerPillar, 1);
+    pickFromPillar(contentAiPillar, 2);
+    if (selected.length < targetCount) {
+      pickFromPillar(healthPrepPillar, 3);
+    }
+
+    // Fill remaining slots up to targetCount
+    for (let i = 0; i < validQuests.length && selected.length < targetCount; i++) {
+      const idx = (daySeed + i) % validQuests.length;
+      const candidate = validQuests[idx];
+      if (!usedIds.has(candidate.id)) {
+        selected.push(candidate);
+        usedIds.add(candidate.id);
+      }
+    }
+
+    // Always keep any task that was already completed today visible as checked
+    validQuests.forEach(q => {
+      if (S.daily && S.daily[q.id] && !usedIds.has(q.id)) {
+        selected.push(q);
+        usedIds.add(q.id);
+      }
+    });
+
+    pool = selected;
   } else if (typeof ACTIVE_DAILY_TASKS_DEF !== 'undefined') {
     pool = pool.concat(ACTIVE_DAILY_TASKS_DEF);
   }
 
+  // Prepend active user custom tasks
   if (S.customTasks && S.customTasks.length) {
-    const userActive = S.customTasks.filter(t => !t.archived && (t.status === 'today' || t.status === 'in_progress'));
-    pool = userActive.concat(pool);
+    const userActive = S.customTasks.filter(t => !t.archived && (t.status === 'today' || t.status === 'in_progress' || (S.daily && S.daily[t.id])));
+    pool = userActive.concat(pool.filter(p => !userActive.some(u => u.id === p.id)));
   }
 
-  // Filter 1: Saudi Phone gating policy
-  const hasSaudiPhone = !!(S.lifeStatus && S.lifeStatus.saudiPhone);
-  pool = pool.filter(t => {
-    if (t.requiresSaudiPhone && !hasSaudiPhone) return false;
-    return true;
-  });
-
-  // Filter 2: Exclude established habits that graduated to Habits section
-  pool = pool.filter(t => {
-    if (S.formedHabits && S.formedHabits[t.id]) return false;
-    if (t.legacyId && S.formedHabits && S.formedHabits[t.legacyId]) return false;
-    return true;
-  });
-
-  // Sort by priority and level match
-  const pWeight = { high: 3, medium: 2, normal: 1 };
-  pool.sort((a, b) => {
-    const aMatch = a.level === diffLevel ? 2 : 0;
-    const bMatch = b.level === diffLevel ? 2 : 0;
-    const sA = (pWeight[a.priority] || 1) + aMatch;
-    const sB = (pWeight[b.priority] || 1) + bMatch;
-    return sB - sA;
-  });
-
-  return pool.slice(0, Math.min(targetCount, MAX_DAILY_TASKS));
+  return pool.slice(0, MAX_DAILY_TASKS);
 }
 
 function updateLifeStatus(key, value){
@@ -2446,9 +2487,9 @@ function updateLifeStatus(key, value){
 
   if(key === 'currentDifficulty'){
     const levelNum = parseInt(value, 10) || 1;
-    const names = { 1: 'Level 1 â€” Normal', 2: 'Level 2 â€” Developing', 3: 'Level 3 â€” Advanced', 4: 'Level 4 â€” Elite' };
+    const names = { 1: 'Level 1 — Normal', 2: 'Level 2 — Developing', 3: 'Level 3 — Advanced', 4: 'Level 4 — Elite' };
     S.lifeStatus.currentDifficulty = levelNum;
-    S.lifeStatus.difficultyName = names[levelNum] || 'Level 1 â€” Normal';
+    S.lifeStatus.difficultyName = names[levelNum] || 'Level 1 — Normal';
     log('DIFFICULTY UPDATED', 'Progression calibrated to <b>' + S.lifeStatus.difficultyName + '</b>');
   }
 
@@ -2486,7 +2527,7 @@ function submitLifeCheckin(rating, feedback, lifeUpdates){
     if(curDiff > 1){
       curDiff--;
       S.lifeStatus.currentDifficulty = curDiff;
-      const names = { 1: 'Level 1 â€” Normal', 2: 'Level 2 â€” Developing', 3: 'Level 3 â€” Advanced', 4: 'Level 4 â€” Elite' };
+      const names = { 1: 'Level 1 — Normal', 2: 'Level 2 — Developing', 3: 'Level 3 — Advanced', 4: 'Level 4 — Elite' };
       S.lifeStatus.difficultyName = names[curDiff];
       difficultyAction = 'lowered to ' + S.lifeStatus.difficultyName;
       log('SYSTEM ADJUSTED', 'Pacing calibrated: ' + difficultyAction + ' to protect consistency.');
@@ -2497,7 +2538,7 @@ function submitLifeCheckin(rating, feedback, lifeUpdates){
     if(curDiff < 4){
       curDiff++;
       S.lifeStatus.currentDifficulty = curDiff;
-      const names = { 1: 'Level 1 â€” Normal', 2: 'Level 2 â€” Developing', 3: 'Level 3 â€” Advanced', 4: 'Level 4 â€” Elite' };
+      const names = { 1: 'Level 1 — Normal', 2: 'Level 2 — Developing', 3: 'Level 3 — Advanced', 4: 'Level 4 — Elite' };
       S.lifeStatus.difficultyName = names[curDiff];
       difficultyAction = 'upgraded to ' + S.lifeStatus.difficultyName;
       log('LEVEL UPGRADE', 'Challenge increased: ' + difficultyAction + '!');
@@ -2561,7 +2602,38 @@ function createCustomTask(title, sub, xp, duration, priority, project, action, w
   return true;
 }
 
+/* Helper to locate any task object across all existing definitions and custom tasks */
+function findTaskAnywhere(id){
+  if(!id) return null;
+  if(S.customTasks && S.customTasks.length){
+    const ct = S.customTasks.find(t => t.id === id);
+    if(ct) return ct;
+  }
+  if(typeof INTELLIGENT_QUESTS_POOL !== 'undefined'){
+    const q = INTELLIGENT_QUESTS_POOL.find(t => t.id === id);
+    if(q) return q;
+  }
+  if(typeof RECOVERY_TASKS_DEF !== 'undefined'){
+    const r = RECOVERY_TASKS_DEF.find(t => t.id === id);
+    if(r) return r;
+  }
+  if(typeof ACTIVE_DAILY_TASKS_DEF !== 'undefined'){
+    const a = ACTIVE_DAILY_TASKS_DEF.find(t => t.id === id);
+    if(a) return a;
+  }
+  if(typeof DAILY !== 'undefined'){
+    const d = DAILY.find(t => t.id === id);
+    if(d) return d;
+  }
+  if(typeof WEEKLY !== 'undefined'){
+    const w = WEEKLY.find(t => t.id === id);
+    if(w) return w;
+  }
+  return { id: id, name: 'Task ' + id, xp: 25, stat: 'career' };
+}
+
 function updateTaskStatus(taskId, newStatus){
+  if(!taskId) return;
   if(!S.taskStatus) S.taskStatus = {};
   S.taskStatus[taskId] = newStatus;
   
@@ -2572,35 +2644,92 @@ function updateTaskStatus(taskId, newStatus){
       if(newStatus === 'archived') ct.archived = true;
     }
   }
+
+  // Synchronize dropdown completion with S.daily and XP
+  const isCurrentlyDone = !!(S.daily && S.daily[taskId]);
+  if(newStatus === 'completed' && !isCurrentlyDone){
+    toggleLifeOSTask(taskId);
+    return;
+  } else if(newStatus !== 'completed' && isCurrentlyDone){
+    toggleLifeOSTask(taskId);
+    return;
+  }
+
   save();
   renderAll();
 }
 
 function toggleLifeOSTask(taskId, ev){
   if(ev && ev.stopPropagation) ev.stopPropagation();
-  const isCustom = taskId.startsWith('ct_');
-  const task = isCustom 
-    ? (S.customTasks && S.customTasks.find(t => t.id === taskId))
-    : (typeof ACTIVE_DAILY_TASKS_DEF !== 'undefined' ? ACTIVE_DAILY_TASKS_DEF.find(t => t.id === taskId) : null);
-    
-  if(!task) return;
-  
+  if(!taskId) return;
+  if(!S.daily) S.daily = {};
+
+  const task = findTaskAnywhere(taskId);
   const isDone = !!S.daily[taskId];
+  const today = dayKey();
+
   if(isDone){
     delete S.daily[taskId];
+    if(!S.taskStatus) S.taskStatus = {};
+    S.taskStatus[taskId] = 'today';
+    if(S.customTasks){
+      const ct = S.customTasks.find(t => t.id === taskId);
+      if(ct) ct.status = 'today';
+    }
     sfx('uncheck');
-    updateTaskStatus(taskId, 'today');
-    subXP(task.xp, task.stat || 'career', 'task', task.xp);
+    const actualGain = (S.taskXP && S.taskXP[taskId] != null) ? S.taskXP[taskId] : (task.xp || 25);
+    const stat = task.stat || (task.related === 'b1' ? 'edu' : (task.related === 'b2' ? 'career' : (task.related === 'b3' ? 'creative' : (task.related === 'b4' ? 'tech' : 'career'))));
+    subXP(task.xp || 25, stat, 'task', actualGain);
+    if(S.taskXP) delete S.taskXP[taskId];
+    S.qDone = Math.max(0, (S.qDone || 0) - 1);
+    log('TASK REOPENED', '<b>' + esc(task.name) + '</b> returned to active.');
   } else {
-    S.daily[taskId] = dayKey();
+    /* If the system was not yet started, initialize */
+    if(!S.started){
+      S.started = true;
+      S.startedOn = today;
+      S.streak = Math.max(S.streak || 0, 1);
+      S.best = Math.max(S.best || 0, 1);
+      S.lastActive = today;
+      sfx('boot');
+      log('SYSTEM', 'System activated. Day 1 logged.');
+    }
+    S.daily[taskId] = today;
+    if(!S.taskStatus) S.taskStatus = {};
+    S.taskStatus[taskId] = 'completed';
+    if(S.customTasks){
+      const ct = S.customTasks.find(t => t.id === taskId);
+      if(ct) ct.status = 'completed';
+    }
+    S.qDone = (S.qDone || 0) + 1;
+    markActive();
     sfx('check');
-    updateTaskStatus(taskId, 'completed');
-    addXP(task.xp, task.stat || 'career', true, 'task');
-    log('TASK COMPLETE', '<b>' + esc(task.name) + '</b> cleared! +' + task.xp + ' XP.');
+    
+    const xpGain = task.xp || 25;
+    const stat = task.stat || (task.related === 'b1' ? 'edu' : (task.related === 'b2' ? 'career' : (task.related === 'b3' ? 'creative' : (task.related === 'b4' ? 'tech' : 'career'))));
+    const xpBefore = S.xp;
+    addXP(xpGain, stat, false, 'task');
+    if(!S.taskXP) S.taskXP = {};
+    S.taskXP[taskId] = S.xp - xpBefore;
+
+    if(ev && typeof floatXP === 'function' && ev.clientX && ev.clientY){
+      floatXP(ev.clientX, ev.clientY, S.taskXP[taskId] || xpGain, false);
+    }
+    if(typeof growShadow === 'function') growShadow();
+    if(typeof regenMana === 'function') regenMana(3);
+    if(typeof maybeDropLoot === 'function') maybeDropLoot();
+    if(typeof reactTo === 'function') reactTo('missionDone');
+
+    log('TASK COMPLETE', '<b>' + esc(task.name) + '</b> cleared! +' + (S.taskXP[taskId] || xpGain) + ' XP.');
     
     /* If task is linked to a project, advance project progress */
     if(task.project){
       advanceProject(task.project, 15);
+    }
+    if(task.bossId && task.stageIdx != null && typeof toggleStep === 'function'){
+      if(S.boss && S.boss[task.bossId] && !S.boss[task.bossId][task.stageIdx]){
+        toggleStep(task.bossId, task.stageIdx);
+      }
     }
   }
   save();
