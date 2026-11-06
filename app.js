@@ -2449,6 +2449,13 @@ function getDailyPriorities(){
       pickFromPillar(healthPrepPillar, 3);
     }
 
+    // Always guarantee Daily Raid Training - Bassem School is included as the primary core quest
+    const bassemQuest = validQuests.find(q => q.id === 'q_bassem_daily');
+    if (bassemQuest && !usedIds.has(bassemQuest.id)) {
+      selected.unshift(bassemQuest);
+      usedIds.add(bassemQuest.id);
+    }
+
     // Fill remaining slots up to targetCount
     for (let i = 0; i < validQuests.length && selected.length < targetCount; i++) {
       const idx = (daySeed + i) % validQuests.length;

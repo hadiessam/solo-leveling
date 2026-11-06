@@ -818,6 +818,11 @@ function drawBosses(){
           + '</div>';
   }
 
+  /* ===== PARALLEL S-RANK MASTERY RAID: BASSEM SCHOOL ===== */
+  if(typeof renderBassemRaidBossDetailedView === 'function'){
+    html += renderBassemRaidBossDetailedView();
+  }
+
   /* ===== GRAND CAMPAIGN RAIDS SECTION ===== */
   html += '<div class="st" style="margin-top:34px"><h2>The 4 Sovereign Master Boss Raids</h2><span class="tag">STRATEGIC MILESTONES</span></div>';
   html += '<div class="hint">The 4 primary developmental campaigns guiding your progression. Complete milestones to trigger systemic unlocks and advance your real-world trajectory.</div>';
@@ -2388,7 +2393,12 @@ function drawDashboardLifeOS(){
       + '</div>';
   }
 
-  /* 2. Foundation Period & Life Status Hero HUD */
+  /* 2. Bassem School Legendary Raid Hero Card */
+  if(typeof renderBassemDashboardCard === 'function'){
+    html += renderBassemDashboardCard();
+  }
+
+  /* 3. Foundation Period & Life Status Hero HUD */
   html += '<div class="life-hud-card">'
     + '<div class="lhc-top">'
     +   '<div class="lhc-badge"><span class="pulse-dot"></span> FOUNDATION PHASE &bull; DAY ' + (fp.dayIndex || 1) + ' OF 14</div>'

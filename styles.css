@@ -4295,3 +4295,249 @@ body{font-family:var(--body);background:var(--bg);color:var(--text);min-height:1
   padding: 6px 10px;
   border-radius: 0 4px 4px 0;
 }
+/* =====================================================================
+   BASSEM SCHOOL MASTERY RAID & DASHBOARD STYLES
+   ===================================================================== */
+.bassem-hero-card {
+  border: 1px solid rgba(0, 212, 255, 0.35);
+  border-radius: 8px;
+  background: linear-gradient(135deg, rgba(14, 25, 48, 0.95), rgba(7, 13, 26, 0.98));
+  padding: 20px;
+  margin-bottom: 24px;
+  box-shadow: 0 8px 32px rgba(0, 212, 255, 0.12);
+  position: relative;
+  overflow: hidden;
+}
+.bassem-hero-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--sys-blue), var(--glow2), var(--gold));
+}
+.bhc-top-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.bhc-badge {
+  font-family: var(--hud);
+  font-size: 11px;
+  letter-spacing: 1.5px;
+  color: var(--sys-blue);
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.bhc-tag {
+  font-family: var(--hud);
+  font-size: 11px;
+  letter-spacing: 1px;
+  padding: 4px 10px;
+  border-radius: 4px;
+  border: 1px solid var(--line);
+}
+.bhc-tag.cleared {
+  color: var(--green);
+  border-color: rgba(37, 224, 122, 0.4);
+  background: rgba(37, 224, 122, 0.08);
+}
+.bhc-tag.pending {
+  color: var(--gold);
+  border-color: rgba(255, 215, 0, 0.4);
+  background: rgba(255, 215, 0, 0.08);
+}
+.bhc-title-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+.bhc-title {
+  font-family: var(--hud);
+  font-size: 18px;
+  letter-spacing: 1px;
+  color: #fff;
+  margin: 0 0 4px 0;
+}
+.bhc-sub {
+  font-size: 12.5px;
+  color: var(--muted);
+  line-height: 1.4;
+}
+.bhc-overall-box {
+  background: rgba(0, 212, 255, 0.06);
+  border: 1px solid rgba(0, 212, 255, 0.25);
+  border-radius: 6px;
+  padding: 8px 16px;
+  text-align: center;
+  flex: 0 0 auto;
+}
+.bhc-ob-pct {
+  font-family: var(--hud);
+  font-size: 24px;
+  font-weight: bold;
+  color: var(--glow2);
+}
+.bhc-ob-lbl {
+  font-size: 9.5px;
+  letter-spacing: 1px;
+  color: var(--muted);
+}
+.bhc-phases-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
+  margin-bottom: 16px;
+}
+.bhc-phase-item {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 10px 12px;
+}
+.bhc-pi-head {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  margin-bottom: 6px;
+}
+.bhc-pi-head span { color: var(--text); }
+.bhc-pi-head b { font-family: var(--hud); color: #fff; }
+.bhc-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 10px;
+  margin-bottom: 16px;
+}
+.bhc-stat-box {
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.bhc-sb-k {
+  font-size: 10px;
+  letter-spacing: 1px;
+  color: var(--muted);
+}
+.bhc-sb-v {
+  font-family: var(--hud);
+  font-size: 15px;
+  color: #fff;
+}
+.bhc-next-box {
+  background: rgba(0, 212, 255, 0.04);
+  border: 1px dashed rgba(0, 212, 255, 0.3);
+  border-radius: 6px;
+  padding: 12px 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.bhc-nb-left {
+  flex: 1;
+}
+.bhc-nb-lbl {
+  font-size: 10.5px;
+  letter-spacing: 1px;
+  color: var(--sys-blue);
+  font-family: var(--hud);
+}
+.bhc-nb-title {
+  font-size: 14.5px;
+  font-weight: 600;
+  color: #fff;
+  margin-top: 2px;
+}
+.bhc-nb-meta {
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 2px;
+}
+.bhc-nb-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+/* Detailed Boss view styles */
+.bassem-boss-card {
+  border-color: rgba(0, 212, 255, 0.3);
+  background: rgba(10, 18, 36, 0.6);
+  margin-bottom: 24px;
+}
+.bassem-phase-section {
+  margin-top: 18px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 12px 14px;
+  background: rgba(0, 0, 0, 0.2);
+}
+.bassem-phase-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+}
+.bph-num {
+  font-family: var(--hud);
+  font-size: 10.5px;
+  letter-spacing: 1px;
+  color: var(--sys-blue);
+  display: block;
+}
+.bph-title {
+  font-size: 15px;
+  color: #fff;
+}
+.bph-ar {
+  font-size: 12px;
+  color: var(--gold);
+  direction: rtl;
+}
+.bph-pct {
+  font-family: var(--hud);
+  font-size: 16px;
+  color: var(--glow2);
+  font-weight: bold;
+}
+.bassem-courses-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 14px;
+  margin-top: 12px;
+}
+.bassem-course-box {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  padding: 10px 12px;
+}
+.bcb-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 8px;
+}
+.bcb-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: #fff;
+}
+.bcb-lessons-list {
+  max-height: 240px;
+  overflow-y: auto;
+  margin-top: 8px;
+}

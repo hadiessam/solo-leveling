@@ -2366,6 +2366,29 @@ const EXPANDED_VOCAB_DATA = [
    - Gated direct Saudi applications until local Saudi phone confirmed
    --------------------------------------------------------------- */
 const INTELLIGENT_QUESTS_POOL = [
+  /* === DAILY RAID TRAINING: BASSEM SCHOOL (Fixed Core Mastery Quest) === */
+  {
+    id: 'q_bassem_daily',
+    name: 'Daily Raid Training — Bassem School',
+    sub: 'Bassem School Mastery Track',
+    stat: 'career',
+    xp: 30,
+    duration: '60 min',
+    priority: 'high',
+    level: 1,
+    related: 'bassem_school',
+    requiresSaudiPhone: false,
+    desc: 'Complete at least 60 minutes of focused study on the Bassem School AI Digital Marketing Mastery curriculum today.',
+    why: 'Continuous daily immersion builds comprehensive marketing, media buying, and AI content creation competence.',
+    steps: [
+      '1. Open Bassem School curriculum portal or video module.',
+      '2. Study for at least 60 minutes (bonus XP unlocked at 90m and 120m).',
+      '3. Take practical notes or review actionable frameworks.',
+      '4. Mark completed lesson(s) in the Raid Boss curriculum to advance overall progress.'
+    ],
+    criteria: 'Minimum 60 minutes dedicated course study completed today.',
+    outcome: 'Advancement in all 3 phases of digital marketing, content, and e-commerce mastery.'
+  },
   /* === LEVEL 1: NORMAL (Consistency & Low Friction: 15-25 min, 3-5 tasks/day) === */
   {
     id: 'q_eng_defense_l1',
