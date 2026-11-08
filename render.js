@@ -2026,6 +2026,8 @@ const PORTALS = {
     bg: 'assets/bg/bg-hunter-status.jpg',
     tabs: [
       { id: 'habits', label: 'Daily Routines' },
+      { id: 'health', label: 'Health & Recovery' },
+      { id: 'planner', label: 'Time & Goal Planner' },
       { id: 'insight', label: 'Streak & Insights' }
     ]
   },
@@ -2036,6 +2038,7 @@ const PORTALS = {
     bg: 'assets/bg/bg-hunter.jpg',
     tabs: [
       { id: 'roadmap', label: 'Career Transition' },
+      { id: 'career', label: 'Job Hunt HQ & Arena' },
       { id: 'projects', label: 'Notion Projects' },
       { id: 'courses', label: 'Course Track' }
     ]
@@ -2046,7 +2049,8 @@ const PORTALS = {
     icon: '🧠',
     bg: 'assets/bg/bg-academy-training.jpg',
     tabs: [
-      { id: 'knowledge', label: 'Second Brain' },
+      { id: 'knowledge', label: 'Knowledge Base' },
+      { id: 'brain', label: 'Second Brain & ADRs' },
       { id: 'skills', label: 'Skills Matrix' },
       { id: 'vocab', label: 'Vocabulary Bank' },
       { id: 'speaking', label: 'Speaking Lab' },
@@ -2160,6 +2164,10 @@ function drawTab(page){
     case 'tasks':     drawTaskManager(); break;
     case 'daily':     drawTaskManager(); break;
     case 'habits':    drawHabitsSection(); break;
+    case 'health':    if(window.HealthSystem) window.HealthSystem.render('health-portal-content'); break;
+    case 'planner':   if(window.PlannerSystem) window.PlannerSystem.render('planner-portal-content'); break;
+    case 'career':    if(window.CareerSystem) window.CareerSystem.render('career-portal-content'); break;
+    case 'brain':     if(window.SecondBrain) window.SecondBrain.render('second-brain-portal-content'); break;
     case 'roadmap':   drawRoadmapSection(); break;
     case 'projects':  drawProjectsSection(); break;
     case 'knowledge': drawKnowledgeBaseSection(); break;
@@ -2378,6 +2386,11 @@ function drawDashboardLifeOS(){
   const isRecovery = !!fp.recoveryMode;
 
   let html = '';
+
+  /* 0. System Command Center & Next Best Action Directive */
+  if (typeof renderSystemCommandCenter === 'function') {
+    html += renderSystemCommandCenter();
+  }
 
   /* 1. Recovery Mode Alert Banner (If Active) */
   if(isRecovery){

@@ -15,9 +15,18 @@ const IS_DEV_MODE = false;
 const SAVE_KEY    = 'soloV6';
 
 /* CLOUD SYNC — JSONBin.io (syncs progress across devices) */
-const JSONBIN_ID   = '6ac48da3ac6210605a17e2dd';
-const JSONBIN_KEY  = '$2a$10$jgpu4pY.Ko3o5V7S4noudO0kC9/.KL0macRsDFNx8CwMGuFO9bHKS';
-const JSONBIN_URL  = 'https://api.jsonbin.io/v3/b/' + JSONBIN_ID;
+/* OPTIONAL CLOUD SYNC (Optional zero-dependency sync)
+   Local-first architecture: Zero hardcoded secret keys in code repository.
+   If user enables optional remote backup, credentials are read safely from localStorage. */
+function getCloudSyncConfig(){
+  try {
+    const id = localStorage.getItem('solo_cloud_bin_id') || '';
+    const key = localStorage.getItem('solo_cloud_key') || '';
+    return { id, key, enabled: !!(id && key), url: id ? ('https://api.jsonbin.io/v3/b/' + id) : '' };
+  } catch(e) {
+    return { id: '', key: '', enabled: false, url: '' };
+  }
+}
 
 /* streak multiplier: consistency pays, but it is capped */
 const MULT_MAX    = 1.5;   /* +50% XP at a 100-day streak */
@@ -1034,14 +1043,16 @@ function getNextCourse(){
    the same save. LocalStorage stays as the fast local cache.
    --------------------------------------------------------------------- */
 function cloudSave(){
-  if(typeof IS_DEV_MODE !== 'undefined' && IS_DEV_MODE) return; /* DEV ISOLATION: never push to live JSONBin */
+  if(typeof IS_DEV_MODE !== 'undefined' && IS_DEV_MODE) return; /* DEV ISOLATION */
+  const cfg = getCloudSyncConfig();
+  if(!cfg.enabled) return; /* Pure local-first: no-op if no credentials provided */
   if(typeof fetch === 'undefined') return;
   /* SAFETY GUARD: NEVER overwrite authentic cloud data with empty or reset save! */
   if(!S || !S.started || S.xp < 1000 || S.streak < 10) return;
   try{
-    fetch(JSONBIN_URL, {
+    fetch(cfg.url, {
       method:'PUT',
-      headers:{'Content-Type':'application/json','X-Master-Key':JSONBIN_KEY},
+      headers:{'Content-Type':'application/json','X-Master-Key':cfg.key},
       body: JSON.stringify(S)
     }).catch(()=>{});
   }catch(e){}
@@ -1049,9 +1060,11 @@ function cloudSave(){
 
 function cloudLoad(){
   if(typeof IS_DEV_MODE !== 'undefined' && IS_DEV_MODE) return Promise.resolve(false); /* DEV ISOLATION */
+  const cfg = getCloudSyncConfig();
+  if(!cfg.enabled) return Promise.resolve(false); /* Pure local-first */
   if(typeof fetch === 'undefined') return Promise.resolve(false);
-  return fetch(JSONBIN_URL + '/latest', {
-    headers:{'X-Master-Key':JSONBIN_KEY}
+  return fetch(cfg.url + '/latest', {
+    headers:{'X-Master-Key':cfg.key}
   }).then(r=>r.json()).then(j=>{
     if(j && j.record && j.record.xp !== undefined){
       const cloud = j.record;

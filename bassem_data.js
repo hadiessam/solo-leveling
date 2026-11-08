@@ -581,3 +581,12 @@ const BASSEM_RAID_DEF = {
     }
   ]
 };
+
+
+if (typeof window !== 'undefined') {
+  window.BASSEM_RAID_DEF = BASSEM_RAID_DEF;
+  window.BASSEM_CURRICULUM = BASSEM_RAID_DEF.phases;
+}
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = BASSEM_RAID_DEF;
+}

@@ -435,3 +435,33 @@ function toggleBassemPhaseCollapse(elementId){
     el.style.display = 'none';
   }
 }
+
+
+if (typeof window !== 'undefined') {
+  window.BassemEngine = {
+    initState: initBassemState,
+    getTotalLessonsCount: getBassemTotalLessonsCount,
+    getCompletedCount: getBassemCompletedCount,
+    getOverallPct: getBassemOverallPct,
+    getPhasePct: getBassemPhasePct,
+    getCourseProgress: getBassemCourseProgress,
+    getNextIncompleteLesson: getBassemNextLesson,
+    toggleLesson: toggleBassemLesson,
+    logStudySession: logBassemStudySession,
+    renderDashboardCard: renderBassemDashboardCard,
+    renderRaidBossView: renderBassemRaidBossDetailedView
+  };
+}
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = {
+    initBassemState,
+    getBassemTotalLessonsCount,
+    getBassemCompletedCount,
+    getBassemOverallPct,
+    getBassemPhasePct,
+    getBassemCourseProgress,
+    getBassemNextLesson,
+    toggleLesson: toggleBassemLesson,
+    logStudySession: logBassemStudySession
+  };
+}

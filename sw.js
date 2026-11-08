@@ -4,7 +4,7 @@
    Bump CACHE when you change any file, otherwise the phone serves the old one.
    ===================================================================== */
 
-const CACHE   = 'solo-leveling-v49.5-bassem-school-raid';
+const CACHE   = 'solo-leveling-v50-life-os-master';
 
 /* code + markup — these MUST always be fresh */
 const CORE = [
@@ -15,14 +15,26 @@ const CORE = [
   './data.js',
   './vocab.js',
   './icons.js',
+  './core_storage.js',
+  './core_system.js',
   './app.js',
+  './core_xp.js',
+  './core_tasks.js',
   './render.js',
   './habits.js',
   './speaking.js',
   './uptodate.js',
   './expenses.js',
+  './life_health.js',
+  './life_career.js',
+  './life_planner.js',
+  './life_finance.js',
+  './life_brain.js',
   './bassem_data.js',
   './bassem_engine.js',
+  './ui_command_center.js',
+  './ui_command_palette.js',
+  './ui_diagnostics.js',
   './podcasts.js',
   './_features1.js',
   './_features2.js',
