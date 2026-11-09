@@ -18,7 +18,7 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Orbitron:wght@500;700;900&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -26,6 +26,7 @@
 <div id="bgLayer"></div>
 <div id="veil"></div>
 <div id="lines"></div>
+<div class="scanline-overlay"></div>
 <div id="log"></div>
 
 <!-- ============ JIN-WOO FLOATING GUIDE ============ -->
@@ -225,6 +226,8 @@
         <div class="badge"><div class="k">Prestige</div><div class="v" id="prestigeBadge">P0 &bull; x1.0</div></div>
         <div class="badge"><div class="k">Freezes</div><div class="v" id="bFreeze">2</div></div>
         <div class="badge"><div class="k">Missions</div><div class="v" id="bQuests">438</div></div>
+        <div class="badge"><div class="k">Gold</div><div class="v" id="bGold">1,450</div></div>
+        <div class="badge"><div class="k">Stat Pts</div><div class="v" id="bStatPts">5</div></div>
       </div>
     </div>
 
@@ -317,7 +320,14 @@
     <div class="panel">
       <div class="st"><h2>Today's Missions</h2><span class="tag" id="todayTag">TODAY</span></div>
       <div class="hint">Complete missions to earn XP. The daily quest resets at midnight. Your streak starts at <b>1</b> on your first day and grows by one each day you complete at least one mission. Tap <b>?</b> on any mission for exact instructions.</div>
-      <div class="bar thin" style="margin-bottom:14px"><i id="dashBar"></i></div>
+      <div class="quest-progress-container" style="margin-bottom:16px;">
+        <div class="bar thin quest-bar-relative">
+          <i id="dashBar"></i>
+          <div class="threshold-marker marker-50" title="50% Streak Protection Threshold"><span class="marker-flag">50% SAFE</span></div>
+          <div class="threshold-marker marker-100" title="100% S-Rank Bonus Threshold"><span class="marker-flag">100% S-RANK</span></div>
+        </div>
+        <div class="quest-threshold-status" id="dashThresholdStatus"></div>
+      </div>
       <div id="dashList"></div>
     </div>
 

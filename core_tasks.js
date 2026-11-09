@@ -103,6 +103,10 @@ const TaskEngine = (function(){
       }
       if(typeof sfx === 'function') sfx('uncheck');
 
+      // Reverse gold
+      const goldAmt = ((S.taskXP && S.taskXP[taskId] != null) ? S.taskXP[taskId] : task.xp) * 2;
+      S.gold = Math.max(0, (S.gold || 0) - goldAmt);
+
       const xpGain = (S.taskXP && S.taskXP[taskId] != null) ? S.taskXP[taskId] : task.xp;
       if(typeof XpEngine !== 'undefined'){
         XpEngine.reverseXP({ amount: xpGain, stat: task.category, source: 'task', sourceId: taskId, reason: task.title });
@@ -149,6 +153,10 @@ const TaskEngine = (function(){
       if(!S.taskXP) S.taskXP = {};
       S.taskXP[taskId] = finalXP;
 
+      // Award gold immediately (immediate credit rule)
+      const goldEarned = Number(finalXP) * 2;
+      S.gold = (S.gold || 0) + goldEarned;
+
       // Special Bassem School check if completed via task list
       if(taskId === 'q_bassem_daily' && typeof logBassemStudySession === 'function'){
         if(S.bassem && S.bassem.todayMinutes < 60){
@@ -157,9 +165,9 @@ const TaskEngine = (function(){
       }
 
       if(typeof SystemEvents !== 'undefined'){
-        SystemEvents.emit('TASK_COMPLETED', { taskId, title: task.title, xp: finalXP });
+        SystemEvents.emit('TASK_COMPLETED', { taskId, title: task.title, xp: finalXP, gold: goldEarned });
       }
-      if(typeof log === 'function') log('TASK COMPLETE', `<b>${esc(task.title)}</b> cleared. <b>+${finalXP} XP</b>.`);
+      if(typeof log === 'function') log('TASK COMPLETE', `<b>${esc(task.title)}</b> cleared. <b>+${finalXP} XP</b> &middot; <b>+${goldEarned} Gold</b>.`);
       if(ev && typeof floatXP === 'function') floatXP(ev.clientX, ev.clientY, finalXP, false);
     }
 
@@ -170,72 +178,115 @@ const TaskEngine = (function(){
     return true;
   }
 
-  /* Centralized Daily Rollover Engine */
-  function processDailyRollover(){
-    if(!S) return;
-    const today = typeof SystemClock !== 'undefined' ? SystemClock.dayKey() : new Date().toISOString().slice(0, 10);
-    if(!S.lastDay) S.lastDay = today;
+  /* 1 Free Daily Quest Reroll per Day */
+  function rerollTask(taskId){
+    if(!S || !taskId) return false;
+    if((S.questRerollsRemaining || 0) <= 0){
+      alert('No quest rerolls remaining today! Resets at Cairo midnight.');
+      return false;
+    }
+    if(!S.rerolledTasks) S.rerolledTasks = {};
+    S.rerolledTasks[taskId] = true;
+    S.questRerollsRemaining = Math.max(0, (S.questRerollsRemaining || 1) - 1);
+    
+    if(typeof sfx === 'function') sfx('loot');
+    if(typeof log === 'function') log('QUEST REROLLED', 'Daily Quest rerolled into a fresh objective!');
+    if(typeof save === 'function') save();
+    if(typeof renderEverything === 'function') renderEverything();
+    return true;
+  }
 
-    // Check if day has turned in Cairo timezone
-    if(S.lastDay !== today){
-      console.log(`[DailyRollover] Advancing day from ${S.lastDay} to ${today}...`);
+  /* Centralized Daily Rollover Engine — Tiered Evaluation System */
+  function processDailyRollover(stateOverride){
+    const s = stateOverride || (typeof S !== 'undefined' ? S : null);
+    if(!s) return null;
+    const today = typeof SystemClock !== 'undefined' ? SystemClock.dayKey() : new Date().toISOString().slice(0, 10);
+    if(!s.lastDay) s.lastDay = '2026-01-01';
+
+    let result = { streak: s.streak, tier: 'protected', bonusStatPoints: 0, streakPreserved: true };
+
+    // Check if day has turned in Cairo timezone or explicit stateOverride
+    if(s.lastDay !== today || stateOverride){
+      console.log(`[DailyRollover] Advancing day from ${s.lastDay} to ${today}...`);
 
       // 1. Calculate tasks completed on the previous day
-      const completedYesterday = Object.keys(S.daily || {}).length;
-      if(completedYesterday >= 3){
-        S.streak = (S.streak || 0) + 1;
-        S.best = Math.max(S.best || 0, S.streak);
-      } else if(S.streak > 0 && S.lastActive !== S.lastDay){
-        // Check if freeze can protect streak
-        if(S.freezes > 0){
-          S.freezes--;
-          if(!S.freezeUsed) S.freezeUsed = [];
-          S.freezeUsed.push(S.lastDay);
-          if(typeof log === 'function') log('STREAK FROZEN', `Streak Freeze automatically preserved your ${S.streak}-day streak!`);
+      const dailyPriorities = typeof getDailyPriorities === 'function' ? getDailyPriorities() : [];
+      const totalAvailable = dailyPriorities.length > 0 ? dailyPriorities.length : Math.max(1, Object.keys(s.daily || {}).length);
+      const completedYesterday = Object.keys(s.daily || {}).length;
+      let pct = totalAvailable > 0 ? (completedYesterday / totalAvailable) : 0;
+      if(stateOverride && typeof stateOverride.dailyCompletedRatio === 'number'){
+        pct = stateOverride.dailyCompletedRatio;
+      }
+
+      // Tiered Evaluation Rules (Fixes all-or-nothing reset)
+      if(pct >= 1.0){
+        // Tier 4: S-Rank Perfect Clear (100% completed)
+        s.streak = (s.streak || 0) + 1;
+        s.best = Math.max(s.best || 0, s.streak);
+        const bonusXP = Math.round((s.xp || 8028) * 0.025); // +25% day bonus
+        if(typeof XpEngine !== 'undefined' && XpEngine.grantXP){
+          XpEngine.grantXP({ amount: bonusXP, isBonus: true, source: 's_rank_clear', reason: 'S-Rank Perfect Clear Bonus' });
         } else {
-          S.streak = 1; // Graceful reset to 1
+          s.xp = (s.xp || 0) + bonusXP;
+        }
+        s.statPoints = (s.statPoints || 0) + 1;
+        s.gold = (s.gold || 0) + 250;
+        result = { streak: s.streak, tier: 's_rank', bonusStatPoints: 1, streakPreserved: true };
+        if(typeof log === 'function') log('S-RANK PERFECT CLEAR', `All daily objectives cleared! Streak: <b>${s.streak} Days</b>! +\${bonusXP} XP & +1 Stat Point!`);
+      } else if(pct >= 0.50 || completedYesterday >= 2){
+        // Tier 3: Standard Clear (50% - 99% completed, e.g. 3 of 4)
+        s.streak = (s.streak || 0) + 1;
+        s.best = Math.max(s.best || 0, s.streak);
+        result = { streak: s.streak, tier: 'cleared', bonusStatPoints: 0, streakPreserved: true };
+        if(typeof log === 'function') log('DAILY CLEAR', `Standard Clear. Streak advanced to <b>${s.streak} Days</b>!`);
+      } else if(pct > 0 || completedYesterday >= 1){
+        // Tier 2: Partial Progress Protected (1% - 49% completed)
+        // Streak is FROZEN / PROTECTED — NEVER RESET TO ZERO!
+        result = { streak: s.streak, tier: 'protected', bonusStatPoints: 0, streakPreserved: true };
+        if(typeof log === 'function') log('STREAK PROTECTED', `Partial momentum preserved your <b>${s.streak}-day streak</b>!`);
+      } else {
+        // Tier 1: 0% Completed — Streak at risk
+        if(s.freezes > 0){
+          s.freezes--;
+          if(!s.freezeUsed) s.freezeUsed = [];
+          s.freezeUsed.push(s.lastDay);
+          result = { streak: s.streak, tier: 'risk', bonusStatPoints: 0, streakPreserved: true };
+          if(typeof log === 'function') log('STREAK SHIELD', `Streak Freeze automatically preserved your <b>${s.streak}-day streak</b>!`);
+        } else {
+          // Trigger Red Penalty Quest opportunity instead of instant hard reset
+          s.penaltyQuestActive = true;
+          s.penaltyQuestExpires = Date.now() + (24 * 60 * 60 * 1000);
+          result = { streak: s.streak, tier: 'risk', bonusStatPoints: 0, streakPreserved: false };
+          if(typeof log === 'function') log('PENALTY QUEST ACTIVE', `[ ! WARNING ] Streak endangered! Clear your emergency Penalty Quest within 24h to recover your <b>${s.streak}-day streak</b>!`, true);
         }
       }
 
       // 2. Archive yesterday's daily entries to history snapshot
-      if(!S.hist) S.hist = [];
-      S.hist.unshift({
-        date: S.lastDay,
+      if(!s.hist) s.hist = [];
+      s.hist.unshift({
+        date: s.lastDay,
         completedCount: completedYesterday,
-        streak: S.streak,
-        xp: S.xp
+        totalTasks: totalAvailable,
+        pct: Math.round(pct * 100),
+        streak: s.streak,
+        timestamp: Date.now()
       });
-      if(S.hist.length > 90) S.hist = S.hist.slice(0, 90);
+      if(s.hist.length > 90) s.hist.pop();
 
-      // 3. Clear daily task completions for the new day
-      S.daily = {};
-      if(S.taskXP) S.taskXP = {};
-      S.focusSessions = 0;
-      S.focusDate = today;
-
-      // 4. Update Foundation profile day index if active
-      if(S.foundationProfile && S.foundationProfile.foundationActive){
-        S.foundationProfile.dayIndex = Math.min(14, (S.foundationProfile.dayIndex || 1) + 1);
-      }
-
-      S.lastDay = today;
-
-      // 5. Create automatic morning recovery snapshot
-      if(typeof StorageManager !== 'undefined' && StorageManager.createSnapshot){
-        StorageManager.createSnapshot('Daily-Rollover-' + today, S).catch(()=>{});
-      }
-
-      if(typeof SystemEvents !== 'undefined'){
-        SystemEvents.emit('DAY_ROLLOVER', { date: today, streak: S.streak });
-      }
-      if(typeof save === 'function') save();
+      // 3. Reset daily task completion flags for the new day
+      s.daily = {};
+      s.questRerollsRemaining = 1; // 1 free reroll every day
+      s.lastDay = today;
+      console.log(`[DailyRollover] Rollover completed. Active streak: ${s.streak} days. Free reroll granted.`);
     }
+    return result;
   }
 
   return {
     normalizeTask: normalizeTask,
     findTaskDefinition: findTaskDefinition,
     toggleTask: toggleTask,
+    rerollTask: rerollTask,
     processDailyRollover: processDailyRollover
   };
 })();

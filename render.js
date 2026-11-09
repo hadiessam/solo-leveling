@@ -87,6 +87,16 @@ function sfx(name){
     };
 
     switch(name){
+      /* --- HOLOGRAPHIC SYSTEM SFX --- */
+      case 'system_beep':
+        note(1200, 0, 0.05, 'sine', 0.06); note(1600, 0.06, 0.07, 'sine', 0.05); break;
+      case 'quest_chime':
+        [587, 740, 880, 1174].forEach((f, i) => note(f, i * 0.07, 0.25, 'triangle', 0.06)); break;
+      case 'arise_fanfare':
+        [220, 293, 370, 440, 587, 740, 880].forEach((f, i) => note(f, i * 0.09, 0.5, 'triangle', 0.075)); break;
+      case 'alarm':
+        note(880, 0, 0.15, 'sawtooth', 0.08); note(440, 0.15, 0.2, 'sawtooth', 0.07);
+        note(880, 0.35, 0.15, 'sawtooth', 0.08); note(440, 0.5, 0.2, 'sawtooth', 0.07); break;
       /* --- SYSTEM BOOT --- */
       case 'boot':
         note(330,0,.12,'sine',.05); note(440,.1,.12,'sine',.05);
@@ -489,6 +499,16 @@ function drawHUD(){
   if($('manaBar')) $('manaBar').style.width = Math.min(100, Math.max(0, (S.mana !== undefined ? S.mana : 50)/(S.maxMana || 50)*100)) + '%';
   if($('hudClass')) $('hudClass').textContent = (S.classId ? S.classId.toUpperCase() : 'ROGUE');
   if($('rankBadgeMini')) $('rankBadgeMini').textContent = (cur.name || 'E')[0];
+  const avatarFrame = document.querySelector('.avatar-frame');
+  if(avatarFrame){
+    avatarFrame.classList.remove('aura-e', 'aura-d', 'aura-c', 'aura-b', 'aura-a', 'aura-s', 'aura-monarch');
+    const rChar = (cur.name || 'E')[0].toLowerCase();
+    if(ri >= 5 || (S.level || 0) >= 20) avatarFrame.classList.add('aura-monarch');
+    else if(rChar === 's') avatarFrame.classList.add('aura-s');
+    else avatarFrame.classList.add('aura-' + rChar);
+  }
+  if($('bGold')) $('bGold').textContent = (S.gold !== undefined ? S.gold : 1450).toLocaleString();
+  if($('bStatPts')) $('bStatPts').textContent = S.statPoints !== undefined ? S.statPoints : 5;
 
   /* Ghost features HUD sync */
   if(typeof drawStatsHUD === 'function') drawStatsHUD();
@@ -554,6 +574,7 @@ function missionRow(m, kind){
   const store = kind === 'daily' ? S.daily : S.weekly;
   const on = !!store[m.id];
   const nm = esc(m.name).replace(/'/g, "\\'");
+  const canReroll = (kind === 'daily') && !on && ((S.questRerollsRemaining || 0) > 0);
   return '<div class="q '+(on?'done':'')+'">'
     + '<div class="box" onclick="toggleMission(\''+kind+'\',\''+m.id+'\',event)"></div>'
     + '<div class="qmain" onclick="toggleMission(\''+kind+'\',\''+m.id+'\',event)">'
@@ -561,6 +582,7 @@ function missionRow(m, kind){
     +   '<div class="qsb">'+esc(m.sub)+'</div>'
     + '</div>'
     + '<div class="xp" onclick="toggleMission(\''+kind+'\',\''+m.id+'\',event)">+'+m.xp+' XP</div>'
+    + (canReroll ? '<button class="xbtn reroll-btn" title="Reroll Quest (1 Free Daily)" onclick="event.stopPropagation(); if(window.TaskEngine && TaskEngine.rerollTask) { TaskEngine.rerollTask(\''+m.id+'\'); renderAll(); }">🎲</button>' : '')
     + (m.guide ? '<button class="xbtn" onclick="event.stopPropagation();openModal(\''+nm+'\',\'How to do it\',GUIDE_TEXT[\''+m.id+'\'])">?</button>' : '')
     + '</div>';
 }
@@ -607,8 +629,26 @@ function drawDaily(){
     : '<div class="hint" style="color:var(--green);margin:0">Daily quest complete. All missions cleared. Well done, Hunter.</div>';
 
   const done = av.filter(m => S.daily[m.id]).length;
-  $('dashBar').style.width = (av.length ? done/av.length*100 : 0) + '%';
-  $('dailyTag').textContent = done + ' / ' + av.length + ' COMPLETE';
+  const pct = av.length ? Math.round(done / av.length * 100) : 0;
+  if($('dashBar')) $('dashBar').style.width = pct + '%';
+  if($('dailyTag')) $('dailyTag').textContent = done + ' / ' + av.length + ' COMPLETE';
+
+  const statEl = $('dashThresholdStatus');
+  if(statEl){
+    if(done === 0){
+      statEl.className = 'quest-threshold-status tier-danger';
+      statEl.innerHTML = '⚠️ <b>0% Complete:</b> Streak at risk! Complete &ge;50% to secure today\'s streak.';
+    } else if(pct < 50){
+      statEl.className = 'quest-threshold-status tier-protect';
+      statEl.innerHTML = '🛡️ <b>' + pct + '% Partial Progress:</b> Streak Frozen &amp; Protected! Reach 50% to gain +1 Streak day.';
+    } else if(pct < 100){
+      statEl.className = 'quest-threshold-status tier-cleared';
+      statEl.innerHTML = '⚔️ <b>' + pct + '% Standard Clear:</b> +1 Day Streak secured! Push to 100% for S-Rank Loot &amp; +1 Stat Point.';
+    } else {
+      statEl.className = 'quest-threshold-status tier-srank';
+      statEl.innerHTML = '👑 <b>100% S-RANK PERFECT CLEAR!</b> +25% Bonus XP &amp; +1 Stat Point Awarded!';
+    }
+  }
 }
 
 function drawWeekly(){
@@ -1419,8 +1459,8 @@ function drawVocab(){
   const el = $('vocabToday');
   if(!el) return;
 
-  const words = todaysVocab();
-  const learned = vocabLearnedToday();
+  const words = typeof todaysVocab === 'function' ? todaysVocab() : [];
+  const learned = typeof vocabLearnedToday === 'function' ? vocabLearnedToday() : 0;
 
   const vt = $('vocabTag');
   if(vt){
@@ -1428,24 +1468,50 @@ function drawVocab(){
     vt.style.color = learned === words.length ? 'var(--green)' : 'var(--glow)';
   }
 
-  el.innerHTML = words.map(w => {
+  let html = '';
+  html += '<div class="vocab-action-bar" style="display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap;">'
+        + '<button class="btn vq-btn" onclick="loadMoreVocab()" style="background:rgba(0,240,255,0.12);border:1px solid var(--glow);color:var(--glow);font-weight:700;padding:8px 16px;">'
+        +   ic('plus', 14) + ' LOAD 5 MORE WORDS (GRIND)'
+        + '</button>'
+        + '<button class="btn vq-btn" onclick="openVocabQuizModal()" style="background:rgba(251,191,36,0.12);border:1px solid var(--gold);color:var(--gold);font-weight:700;padding:8px 16px;">'
+        +   '⚡ 60s SPEED QUIZ (+INT XP)'
+        + '</button>'
+        + '</div>';
+
+  html += words.map(w => {
     const k = vocabKey(w.w);
-    const on = S.vocab && S.vocab[k];
-    return '<div class="vocabCard' + (on ? ' learned' : '') + '" onclick="learnVocab(\'' + k + '\')">'
+    const status = (S.vocabStatus && S.vocabStatus[k]) || (S.vocab && S.vocab[k] ? 'mastered' : 'new');
+    const isMastered = status === 'mastered';
+    const isLearning = status === 'learning';
+    const cleanWord = esc(w.w).replace(/'/g, "\\'");
+
+    return '<div class="vocabCard ' + status + '">'
       + '<div class="vcHead">'
-      +   '<div class="vcWord">' + esc(w.w) + '</div>'
-      +   '<div class="vcCheck">' + (on ? ic('check',18) : '') + '</div>'
+      +   '<div style="display:flex;align-items:center;gap:8px;">'
+      +     '<div class="vcWord">' + esc(w.w) + '</div>'
+      +     '<button class="speak-btn" title="Pronounce with Web Speech" onclick="event.stopPropagation(); speakVocabWord(\'' + cleanWord + '\');" style="background:transparent;border:none;color:var(--glow);cursor:pointer;font-size:1.1rem;padding:0 4px;">🔊</button>'
+      +   '</div>'
+      +   '<div class="vcPhonetic" style="font-size:0.8rem;color:var(--muted);font-style:italic;">' + esc(w.phonetic || '') + '</div>'
       + '</div>'
       + '<div class="vcAr">' + esc(w.ar) + '</div>'
       + '<div class="vcDef">' + esc(w.def) + '</div>'
       + '<div class="vcEx">&ldquo;' + esc(w.ex) + '&rdquo;</div>'
-      + '<div class="vcCat">' + esc(w.cat) + '</div>'
+      + '<div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px;padding-top:10px;border-top:1px solid rgba(255,255,255,0.08);flex-wrap:wrap;gap:8px;">'
+      +   '<div class="vcCat">' + esc(w.cat) + '</div>'
+      +   '<div class="vocab-status-pills" style="display:flex;gap:6px;">'
+      +     '<button class="v-pill ' + (status === 'new' ? 'active' : '') + '" onclick="event.stopPropagation(); setVocabStatus(\'' + cleanWord + '\', \'new\');">New</button>'
+      +     '<button class="v-pill ' + (isLearning ? 'active' : '') + '" onclick="event.stopPropagation(); setVocabStatus(\'' + cleanWord + '\', \'learning\');">Learning (+5)</button>'
+      +     '<button class="v-pill ' + (isMastered ? 'active' : '') + '" onclick="event.stopPropagation(); setVocabStatus(\'' + cleanWord + '\', \'mastered\');">Mastered (+15)</button>'
+      +   '</div>'
+      + '</div>'
       + '</div>';
   }).join('');
 
+  el.innerHTML = html;
+
   /* progress panel */
-  const total = S.vocabTotal || 0;
-  const pool = VOCAB.length;
+  const total = Object.values(S.vocabStatus || {}).filter(s => s === 'mastered').length || (S.vocabTotal || 0);
+  const pool = typeof VOCAB !== 'undefined' ? VOCAB.length : 180;
   const doneDays = S.vocabDays || 0;
 
   if($('vTotal')) $('vTotal').textContent = total;
@@ -1456,7 +1522,7 @@ function drawVocab(){
 
   /* word bank, grouped */
   const bank = $('vocabBank');
-  if(bank){
+  if(bank && typeof VOCAB !== 'undefined'){
     const cats = {};
     VOCAB.forEach(w => { (cats[w.cat] = cats[w.cat] || []).push(w); });
     bank.innerHTML = Object.keys(cats).map(cat =>
@@ -1464,9 +1530,12 @@ function drawVocab(){
       + '<div class="vcatHead">' + esc(cat) + '<span>' + cats[cat].length + '</span></div>'
       + cats[cat].map(w => {
           const k = vocabKey(w.w);
-          const on = S.vocab && S.vocab[k];
-          return '<div class="vbRow' + (on ? ' learned' : '') + '">'
+          const st = (S.vocabStatus && S.vocabStatus[k]) || (S.vocab && S.vocab[k] ? 'mastered' : 'new');
+          const on = st === 'mastered';
+          const cleanW = esc(w.w).replace(/'/g, "\\'");
+          return '<div class="vbRow ' + st + '">'
             + '<span class="vbWord">' + esc(w.w) + '</span>'
+            + '<button class="speak-btn-mini" onclick="speakVocabWord(\'' + cleanW + '\')" style="background:transparent;border:none;color:var(--glow);cursor:pointer;font-size:0.8rem;padding:0 2px;">🔊</button>'
             + '<span class="vbAr">' + esc(w.ar) + '</span>'
             + (on ? '<span class="vbTick">' + ic('check',14) + '</span>' : '')
             + '</div>';

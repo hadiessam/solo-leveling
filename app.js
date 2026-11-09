@@ -1396,24 +1396,26 @@ function judgeDay(day){
 
   /* Penalties are proportional, not fixed counts — otherwise a 21-mission day
      punishes someone who did 18 of them. What matters is the share you cleared. */
+  /* Tiered Daily Evaluation (Fixes all-or-nothing penalty logic) */
   const pctDone = avail.length ? done / avail.length : 1;
 
   let cost = 0, note = '', hpLoss = 0;
   if(done === 0 && avail.length > 0){
-    cost = 60; note = 'Zero missions completed. Full failure.'; hpLoss = 30;
-  } else if(pctDone < 0.4){
-    cost = 35; note = 'Only ' + done + ' of ' + avail.length + ' missions cleared.'; hpLoss = 15;
-  } else if(pctDone < 0.7){
-    cost = 15; note = done + ' of ' + avail.length + ' missions cleared.'; hpLoss = 6;
-  }
-  /* 70% or better is a passing day — no penalty, and it heals you */
-
-  /* a clean day heals you instead of hurting you */
-  if(hpLoss === 0 && done > 0){
+    cost = 40; note = 'Zero missions completed.'; hpLoss = 20;
+    S.penaltyQuestActive = true;
+    S.penaltyQuestExpires = Date.now() + (24 * 60 * 60 * 1000);
+    log('PENALTY QUEST', 'Streak at risk! Clear your emergency Penalty Quest within 24h to reclaim momentum.', true);
+  } else if(pctDone < 0.5){
+    // Tier 2: 1% - 49% -> Streak Protected, NO penalty XP deducted!
+    cost = 0; hpLoss = 0;
+    log('STREAK HELD', 'Partial progress (' + done + '/' + avail.length + ') preserved your streak.');
+  } else {
+    // Tier 3 & 4: 50%+ -> Standard Clear or S-Rank Perfect Clear
+    cost = 0; hpLoss = 0;
     healHP(10);
-    if(done === avail.length && avail.length > 0){
-      healHP(10);
-      log('HEAL','Full day cleared. <b>+20 HP</b> restored.');
+    if(pctDone >= 1.0){
+      healHP(15);
+      log('S-RANK CLEAR', 'All daily objectives cleared! <b>+25 HP</b> restored & S-Rank bonus applied.');
     }
   }
 
