@@ -128,8 +128,7 @@ function allocateStat(statName){
   }
   if(!confirm('Spend ' + STAT_COST + ' XP to raise ' + def.name + ' by 1?\n\nCurrent: ' + (S[statName] || 0) + ' → ' + ((S[statName] || 0) + 1))) return;
 
-  S.xp -= STAT_COST;
-  S.level = Math.floor(S.xp / LEVEL_XP) + 1;
+  if(typeof XpEngine !== 'undefined'){ XpEngine.reverseXP({ amount: STAT_COST, source: 'stat_alloc', type: 'STAT_ALLOCATION', reason: 'Allocated +1 ' + def.name }); } else { S.xp = Math.max(0, S.xp - STAT_COST); S.level = Math.floor(S.xp / LEVEL_XP) + 1; }
   S[statName] = (S[statName] || 0) + 1;
   S.statPoints = (S.statPoints || 0) + 1;
 

@@ -91,12 +91,12 @@
         }
       }
 
-      // 3. Medium Energy: English Practice or Career Portfolio Review
+      // 3. Medium Energy: English Practice or Daily Missions
       if (energy === 'medium') {
-        const vocabPending = (S.vocabMastered ? Object.keys(S.vocabMastered).length : 0) < 150;
+        const vocabPending = (S.masteredVocabulary ? Object.keys(S.masteredVocabulary).length : (S.vocabTotal || 0)) < 150;
         if (vocabPending) {
           return {
-            title: 'English B1->B2: Master 5 Advertising Vocab Words',
+            title: 'English B1->B2: Master 15 Daily Vocab Words',
             category: 'English Lab',
             icon: '🗣️',
             reason: 'Reinforce marketing interview vocabulary (leverage, bottleneck, conversion funnel, CAPI).',
@@ -106,23 +106,23 @@
         }
 
         return {
-          title: 'Review Saudi Job Pipeline & Network CRM',
-          category: 'Saudi Relocation',
-          icon: '🇸🇦',
-          reason: 'Review target Riyadh & Jeddah digital marketing agencies and optimize recruiter touchpoints.',
-          actionLabel: 'Open Career HQ',
-          actionFn: "window.goTab('career')"
+          title: 'Advance Bassem School & Skills Mastery',
+          category: 'Skills & Career',
+          icon: '📈',
+          reason: 'Practice Meta Ads tracking, media buying optimization, and certification progress.',
+          actionLabel: 'Open Courses',
+          actionFn: "window.goTab('courses')"
         };
       }
 
       // 4. Low Energy / Recovery Mode: Light maintenance
       return {
-        title: 'Review Second Brain Playbooks & Lessons',
+        title: 'Review Knowledge Base & Reading Notes',
         category: 'Passive Learning',
         icon: '🧠',
-        reason: 'Low energy mode: absorb high-converting Meta Ads notes or review past lessons without strain.',
-        actionLabel: 'Open Second Brain',
-        actionFn: "window.goTab('brain')"
+        reason: 'Low energy mode: absorb practical marketing notes or practice 15-word vocab recall.',
+        actionLabel: 'Open Knowledge',
+        actionFn: "window.goTab('knowledge')"
       };
     },
 
@@ -173,22 +173,28 @@
       return `
         <div style="display: flex; gap: 8px; overflow-x: auto; padding-bottom: 12px; margin-bottom: 16px;">
           <button onclick="window.goTab('lifestatus')" style="background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 8px 14px; color: #cbd5e1; font-size: 0.82rem; font-weight: 700; display: flex; align-items: center; gap: 6px; cursor: pointer; white-space: nowrap;">
-            <span>🧭</span> Life OS HQ
+            <span>🧭</span> Overview
+          </button>
+          <button onclick="window.goTab('daily')" style="background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 8px 14px; color: #cbd5e1; font-size: 0.82rem; font-weight: 700; display: flex; align-items: center; gap: 6px; cursor: pointer; white-space: nowrap;">
+            <span>⚔️</span> Daily Missions
+          </button>
+          <button onclick="window.goTab('habits')" style="background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 8px 14px; color: #cbd5e1; font-size: 0.82rem; font-weight: 700; display: flex; align-items: center; gap: 6px; cursor: pointer; white-space: nowrap;">
+            <span>🔄</span> Daily Habits
+          </button>
+          <button onclick="window.goTab('vocab')" style="background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 8px 14px; color: #cbd5e1; font-size: 0.82rem; font-weight: 700; display: flex; align-items: center; gap: 6px; cursor: pointer; white-space: nowrap;">
+            <span>📖</span> 15/Day Vocab
+          </button>
+          <button onclick="window.goTab('insight')" style="background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 8px 14px; color: #cbd5e1; font-size: 0.82rem; font-weight: 700; display: flex; align-items: center; gap: 6px; cursor: pointer; white-space: nowrap;">
+            <span>📊</span> Insights &amp; Streak
           </button>
           <button onclick="window.goTab('health')" style="background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 8px 14px; color: #cbd5e1; font-size: 0.82rem; font-weight: 700; display: flex; align-items: center; gap: 6px; cursor: pointer; white-space: nowrap;">
-            <span>🩺</span> Health & Sleep
-          </button>
-          <button onclick="window.goTab('career')" style="background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 8px 14px; color: #cbd5e1; font-size: 0.82rem; font-weight: 700; display: flex; align-items: center; gap: 6px; cursor: pointer; white-space: nowrap;">
-            <span>💼</span> Job Hunt & Arena
+            <span>🩺</span> Health &amp; Sleep
           </button>
           <button onclick="window.goTab('planner')" style="background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 8px 14px; color: #cbd5e1; font-size: 0.82rem; font-weight: 700; display: flex; align-items: center; gap: 6px; cursor: pointer; white-space: nowrap;">
-            <span>⏱️</span> Time Blocks & Reviews
+            <span>⏱️</span> Planner
           </button>
           <button onclick="window.goTab('expenses')" style="background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 8px 14px; color: #cbd5e1; font-size: 0.82rem; font-weight: 700; display: flex; align-items: center; gap: 6px; cursor: pointer; white-space: nowrap;">
-            <span>💰</span> Runway & Finance
-          </button>
-          <button onclick="window.goTab('brain')" style="background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 8px 14px; color: #cbd5e1; font-size: 0.82rem; font-weight: 700; display: flex; align-items: center; gap: 6px; cursor: pointer; white-space: nowrap;">
-            <span>🧠</span> Second Brain & ADRs
+            <span>💰</span> Runway &amp; Finance
           </button>
         </div>
       `;
@@ -215,7 +221,7 @@
             <span style="color: #f59e0b; font-weight: 700;">CURRENT BLOCK:</span> ${blockName}
           </div>
           <div>
-            <span style="color: #10b981; font-weight: 700;">SYSTEM:</span> v50 LIFE OS MASTER (OFFLINE-FIRST)
+            <span style="color: #10b981; font-weight: 700;">SYSTEM:</span> v52 UNIFIED ENGINE (OFFLINE-FIRST)
           </div>
         </div>
       `;

@@ -447,57 +447,55 @@ function clearCustomPhrase(){
    HUD
    --------------------------------------------------------------------- */
 function drawHUD(){
-  const ri = rankIdx(S.xp);
-  const cur = RANKS[ri], nxt = RANKS[ri+1];
+  const ri = typeof rankIdx === 'function' ? rankIdx(S.xp || 0) : 0;
+  const cur = RANKS[ri] || RANKS[0], nxt = RANKS[ri+1];
+  const analytics = (typeof XpEngine !== 'undefined' && XpEngine.getAnalytics) ? XpEngine.getAnalytics() : { today: 0, thisWeek: 0 };
 
-  $('bLevel').textContent  = S.level;
-  $('bXP').textContent     = S.xp.toLocaleString();
-  $('bStreak').textContent = S.streak;
-  $('bQuests').textContent = S.qDone;
-  $('rankName').textContent = cur.name;
-  $('bFreeze').textContent = S.freezes;
+  if($('bLevel'))  $('bLevel').textContent  = S.level || 1;
+  if($('bXP'))     $('bXP').textContent     = (S.xp || 0).toLocaleString();
+  if($('bStreak')) $('bStreak').textContent = S.streak || 0;
+  if($('bQuests')) $('bQuests').textContent = S.qDone || 0;
+  if($('rankName')) $('rankName').textContent = cur.name;
+  if($('bFreeze')) $('bFreeze').textContent = S.freezes || 0;
 
-  const inLv = S.xp % LEVEL_XP;
-  $('xpNow').textContent = inLv;
-  $('xpNeed').textContent = LEVEL_XP;
-  $('xpBar').style.width = (inLv/LEVEL_XP*100) + '%';
+  const inLv = (S.xp || 0) % LEVEL_XP;
+  if($('xpNow')) $('xpNow').textContent = inLv;
+  if($('xpNeed')) $('xpNeed').textContent = LEVEL_XP;
+  if($('xpBar')) $('xpBar').style.width = (inLv / LEVEL_XP * 100) + '%';
 
   if(nxt){
-    const span = nxt.xp - cur.xp, done = S.xp - cur.xp;
-    $('nextRank').textContent = nxt.name;
-    $('rankNow').textContent = done;
-    $('rankNeed').textContent = span;
-    $('rankBar').style.width = Math.min(100, done/span*100) + '%';
+    const span = nxt.xp - cur.xp, done = Math.max(0, (S.xp || 0) - cur.xp);
+    if($('nextRank')) $('nextRank').textContent = nxt.name;
+    if($('rankNow'))  $('rankNow').textContent  = done;
+    if($('rankNeed')) $('rankNeed').textContent = span;
+    if($('rankBar'))  $('rankBar').style.width  = Math.min(100, done / span * 100) + '%';
   } else {
-    $('nextRank').textContent = 'MAX RANK';
-    $('rankNow').textContent = S.xp;
-    $('rankNeed').textContent = S.xp;
-    $('rankBar').style.width = '100%';
+    if($('nextRank')) $('nextRank').textContent = 'MAX RANK';
+    if($('rankNow'))  $('rankNow').textContent  = S.xp || 0;
+    if($('rankNeed')) $('rankNeed').textContent = S.xp || 0;
+    if($('rankBar'))  $('rankBar').style.width  = '100%';
   }
 
-  /* debt bar */
-  const d = $('debtRow');
-  if(S.punishment > 0){
-    d.style.display = 'block';
-    $('debtVal').textContent = S.punishment;
-  } else {
-    d.style.display = 'none';
+  /* Hunter Progress Panel (replaces removed HP/Mana Vitals) */
+  if($('hpLevelVal'))  $('hpLevelVal').textContent = 'LEVEL ' + (S.level || 1);
+  if($('hpXpVal'))     $('hpXpVal').textContent = (S.xp || 0).toLocaleString() + ' XP';
+  if($('hpNextLvVal')) $('hpNextLvVal').textContent = (LEVEL_XP - inLv) + ' XP remaining';
+  if($('hpRankVal'))   $('hpRankVal').textContent = cur.name;
+  if($('hpDailyVal'))  $('hpDailyVal').textContent = '+' + (analytics.today || 0).toLocaleString() + ' XP';
+  if($('hpWeeklyVal')) $('hpWeeklyVal').textContent = '+' + (analytics.thisWeek || 0).toLocaleString() + ' XP';
+  if($('hpStreakVal')) $('hpStreakVal').textContent = (S.streak || 0) + ' Days';
+
+  /* Daily Mission Meter strictly based on today's Daily Missions */
+  const missions = (typeof TaskEngine !== 'undefined' && TaskEngine.getDailyMissions) ? TaskEngine.getDailyMissions() : [];
+  const doneCount = missions.filter(m => S.daily && S.daily[m.id]).length;
+  const pct = missions.length ? Math.round((doneCount / missions.length) * 100) : 0;
+  if($('penBar'))   $('penBar').style.width = pct + '%';
+  if($('penLabel')) {
+    $('penLabel').textContent = doneCount + ' / ' + missions.length;
+    $('penLabel').style.color = pct === 100 ? 'var(--green)' : (pct < 50 ? 'var(--red)' : 'var(--glow)');
   }
+  if($('bStatPts')) $('bStatPts').textContent = S.statPoints || 0;
 
-  /* daily quest meter */
-  const av = available(DAILY);
-  const done = av.filter(m => S.daily[m.id]).length;
-  const pct = av.length ? done/av.length*100 : 0;
-  $('penBar').style.width = pct + '%';
-  $('penLabel').textContent = done + ' / ' + av.length;
-  $('penLabel').style.color = pct === 100 ? 'var(--green)' : (pct < 40 ? 'var(--red)' : 'var(--gold)');
-
-  /* Vitals: HP & Mana */
-  if($('hpVal')) $('hpVal').textContent = (S.hp !== undefined ? S.hp : 100) + ' / ' + (S.maxHp || 100);
-  if($('hpBar')) $('hpBar').style.width = Math.min(100, Math.max(0, (S.hp !== undefined ? S.hp : 100)/(S.maxHp || 100)*100)) + '%';
-  if($('manaVal')) $('manaVal').textContent = (S.mana !== undefined ? S.mana : 50) + ' / ' + (S.maxMana || 50);
-  if($('manaBar')) $('manaBar').style.width = Math.min(100, Math.max(0, (S.mana !== undefined ? S.mana : 50)/(S.maxMana || 50)*100)) + '%';
-  if($('hudClass')) $('hudClass').textContent = (S.classId ? S.classId.toUpperCase() : 'ROGUE');
   if($('rankBadgeMini')) $('rankBadgeMini').textContent = (cur.name || 'E')[0];
   const avatarFrame = document.querySelector('.avatar-frame');
   if(avatarFrame){
@@ -507,148 +505,96 @@ function drawHUD(){
     else if(rChar === 's') avatarFrame.classList.add('aura-s');
     else avatarFrame.classList.add('aura-' + rChar);
   }
-  if($('bGold')) $('bGold').textContent = (S.gold !== undefined ? S.gold : 1450).toLocaleString();
-  if($('bStatPts')) $('bStatPts').textContent = S.statPoints !== undefined ? S.statPoints : 5;
 
-  /* Ghost features HUD sync */
   if(typeof drawStatsHUD === 'function') drawStatsHUD();
   if(typeof drawPrestigeHUD === 'function') drawPrestigeHUD();
   if(typeof drawPauseHUD === 'function') drawPauseHUD();
 
-  /* streak multiplier badge */
-  const mult = streakMult();
+  const mult = typeof streakMult === 'function' ? streakMult() : 1;
   const mb = $('multBadge');
   if(mb){
     mb.textContent = 'x' + mult.toFixed(2);
     mb.style.color = mult > 1.25 ? 'var(--green)' : (mult > 1.05 ? 'var(--gold)' : 'var(--muted)');
-    mb.title = 'Streak multiplier: ' + S.streak + ' days of consistency. Cap is x' + MULT_MAX.toFixed(2) + '.';
   }
 
-  /* not-started banner */
-  $('startBanner').style.display = S.started ? 'none' : 'block';
-
-  /* weekly review reminder */
+  if($('startBanner')) $('startBanner').style.display = S.started ? 'none' : 'block';
   const rb = $('reviewBanner');
-  if(rb) rb.style.display = reviewDue() ? 'block' : 'none';
+  if(rb && typeof reviewDue === 'function') rb.style.display = reviewDue() ? 'block' : 'none';
 
-  /* streak danger warning — shows late in the day when nothing is done */
   const sd = $('streakDanger');
   if(sd){
     const h = (typeof getCairoHour === 'function') ? getCairoHour() : new Date().getHours();
-    const av2 = available(DAILY);
-    const doneToday = av2.filter(m => S.daily[m.id]).length;
-    const late = h >= 20;
-    const atRisk = S.started && S.streak > 0 && doneToday === 0 && late;
+    const atRisk = S.started && (S.streak || 0) > 0 && doneCount === 0 && h >= 20;
     sd.style.display = atRisk ? 'block' : 'none';
     if(atRisk){
-      if($('sdHours')) $('sdHours').textContent = (24 - h) + ' hour' + ((24 - h) !== 1 ? 's' : '');
-      if($('sdStreak')) $('sdStreak').textContent = S.streak;
+      if($('sdHours'))  $('sdHours').textContent = (24 - h) + ' hour' + ((24 - h) !== 1 ? 's' : '');
+      if($('sdStreak')) $('sdStreak').textContent = S.streak || 0;
     }
   }
 
-  /* next-rank teaser in the HUD */
   const nt = $('rankTease');
   if(nt){
-    const ri2 = rankIdx(S.xp), nx = RANKS[ri2 + 1];
-    nt.textContent = nx
-      ? (nx.xp - S.xp).toLocaleString() + ' XP to ' + nx.name
+    nt.textContent = nxt
+      ? Math.max(0, nxt.xp - (S.xp || 0)).toLocaleString() + ' XP to ' + nxt.name
       : 'Maximum rank reached';
   }
 }
 
-/* jump to a tab by page name */
 function goTab(name){
-  const t = document.querySelector('.tab[data-page="' + name + '"]');
-  if(t) t.click();
+  const mapped = (name === 'tasks') ? 'daily' : name;
+  if(mapped === 'career' || mapped === 'brain' || mapped === 'hunter'){
+    switchTab('dash');
+    return;
+  }
+  switchTab(mapped);
 }
 
-/* ---------------------------------------------------------------------
-   MISSION ROWS
-   --------------------------------------------------------------------- */
 const GUIDE_TEXT = {};
 function buildGuideIndex(){
-  DAILY.concat(WEEKLY).forEach(m => { if(m.guide) GUIDE_TEXT[m.id] = m.guide; });
+  if(typeof DAILY !== 'undefined') DAILY.concat(typeof WEEKLY !== 'undefined' ? WEEKLY : []).forEach(m => { if(m.guide) GUIDE_TEXT[m.id] = m.guide; });
 }
 
 function missionRow(m, kind){
-  const store = kind === 'daily' ? S.daily : S.weekly;
+  const isDaily = kind === 'daily';
+  const store = isDaily ? (S.daily || {}) : (S.weekly || {});
   const on = !!store[m.id];
   const nm = esc(m.name).replace(/'/g, "\\'");
-  const canReroll = (kind === 'daily') && !on && ((S.questRerollsRemaining || 0) > 0);
+  const canReroll = isDaily && !on && ((S.questRerollsRemaining || 0) > 0);
+  const penaltyAmt = (m.xp || 20) * 2;
+  const stepsHtml = (m.steps && m.steps.length) ? esc(m.steps.join('\n')) : (GUIDE_TEXT[m.id] || '');
   return '<div class="q '+(on?'done':'')+'">'
     + '<div class="box" onclick="toggleMission(\''+kind+'\',\''+m.id+'\',event)"></div>'
     + '<div class="qmain" onclick="toggleMission(\''+kind+'\',\''+m.id+'\',event)">'
     +   '<div class="qnm">'+esc(m.name)+'</div>'
-    +   '<div class="qsb">'+esc(m.sub)+'</div>'
+    +   '<div class="qsb">'+esc(m.sub || '')+(m.duration ? ' &middot; '+esc(m.duration) : '')+(isDaily && !on ? ' &middot; <span style="color:var(--red);font-size:11px;">Miss: -'+penaltyAmt+' XP</span>' : '')+'</div>'
     + '</div>'
     + '<div class="xp" onclick="toggleMission(\''+kind+'\',\''+m.id+'\',event)">+'+m.xp+' XP</div>'
-    + (canReroll ? '<button class="xbtn reroll-btn" title="Reroll Quest (1 Free Daily)" onclick="event.stopPropagation(); if(window.TaskEngine && TaskEngine.rerollTask) { TaskEngine.rerollTask(\''+m.id+'\'); renderAll(); }">🎲</button>' : '')
-    + (m.guide ? '<button class="xbtn" onclick="event.stopPropagation();openModal(\''+nm+'\',\'How to do it\',GUIDE_TEXT[\''+m.id+'\'])">?</button>' : '')
+    + (canReroll ? '<button class="xbtn reroll-btn" title="Swap this mission (1 free/day)" onclick="event.stopPropagation(); if(window.TaskEngine) TaskEngine.rerollTask(\''+m.id+'\');">🎲</button>' : '')
+    + (stepsHtml ? '<button class="xbtn" onclick="event.stopPropagation();openModal(\''+nm+'\',\'Mission Steps\',\''+stepsHtml.replace(/'/g,"\\'")+'\')">?</button>' : '')
     + '</div>';
 }
 
 function lockRow(m){
-  return '<div class="lockrow">' + ic('lock',16) + ' <b style="color:var(--text)">'+esc(m.name)+'</b>'
-    + ' &mdash; unlocks at level '+(m.unlock.level)+'</div>';
+  return '<div class="lockrow">' + ic('lock',16) + ' <b style="color:var(--text)">'+esc(m.name)+'</b> &mdash; unlocks at level '+(m.unlock.level)+'</div>';
 }
 
 function drawDaily(){
-  const av = available(DAILY), lk = lockedOf(DAILY);
+  const missions = (typeof TaskEngine !== 'undefined' && TaskEngine.getDailyMissions) ? TaskEngine.getDailyMissions() : [];
+  const doneCount = missions.filter(m => S.daily && S.daily[m.id]).length;
+  const pct = missions.length ? Math.round((doneCount / missions.length) * 100) : 0;
 
-  // Today's rotating weakness focus banner
-  const todayDow = typeof getCairoDayOfWeek === 'function' ? getCairoDayOfWeek() : new Date().getDay();
-  const themeObj = (typeof DAILY_THEMES !== 'undefined' && DAILY_THEMES[todayDow]) ? DAILY_THEMES[todayDow] : null;
-
-  let html = '';
-  if(themeObj){
-    html += '<div class="daily-theme-card">'
-          + '<div class="daily-theme-tag">TODAY\'S ROTATING WEAKNESS FOCUS &middot; ' + esc(themeObj.dayName) + '</div>'
-          + '<div class="daily-theme-title">' + esc(themeObj.title) + '</div>'
-          + '<div class="daily-theme-ar">' + esc(themeObj.titleAr) + '</div>'
-          + '</div>';
+  const listEl = $('dailyList');
+  if(listEl){
+    let html = '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:8px;">'
+      + '<div style="font-size:12.5px;color:var(--muted);"><b>'+doneCount+' / '+missions.length+'</b> Missions Completed Today &bull; Rotates daily at 00:00 Cairo &bull; Unchecked at midnight: <span style="color:var(--red)">-2&times; Base XP</span></div>'
+      + '<button class="btn" style="padding:6px 12px;font-size:12px;" onclick="openTaskModal()">+ Add Custom Mission</button>'
+      + '</div>';
+    html += '<div class="bar thin" style="margin-bottom:14px;"><i style="width:'+pct+'%;"></i></div>';
+    html += missions.map(m => missionRow(m, 'daily')).join('');
+    listEl.innerHTML = html;
   }
 
-  html += av.map(m => missionRow(m,'daily')).join('');
-  if(lk.length) html += lk.map(lockRow).join('');
-
-  /* after 21 days a mission becomes a habit automatically — no extra tracking */
-  const formed = formedHabits();
-  if(formed.length){
-    html += '<div class="st" style="margin-top:22px"><h2>Formed Habits</h2><span class="tag">' + formed.length + ' AUTOMATIC</span></div>';
-    html += '<div class="hint" style="margin-bottom:14px">These missions ran for 21 days straight. They are habits now — they no longer appear in your daily quest. They just happen.</div>';
-    html += '<div class="habitList">' + formed.map(h =>
-      '<div class="habitChip">' + ic(h.icon || 'check', 16) + esc(h.name) + '</div>'
-    ).join('') + '</div>';
-  }
-
-  $('dailyList').innerHTML = html;
-
-  const pend = av.filter(m => !S.daily[m.id]);
-  $('dashList').innerHTML = pend.length
-    ? pend.slice(0,6).map(m => missionRow(m,'daily')).join('')
-    : '<div class="hint" style="color:var(--green);margin:0">Daily quest complete. All missions cleared. Well done, Hunter.</div>';
-
-  const done = av.filter(m => S.daily[m.id]).length;
-  const pct = av.length ? Math.round(done / av.length * 100) : 0;
-  if($('dashBar')) $('dashBar').style.width = pct + '%';
-  if($('dailyTag')) $('dailyTag').textContent = done + ' / ' + av.length + ' COMPLETE';
-
-  const statEl = $('dashThresholdStatus');
-  if(statEl){
-    if(done === 0){
-      statEl.className = 'quest-threshold-status tier-danger';
-      statEl.innerHTML = '⚠️ <b>0% Complete:</b> Streak at risk! Complete &ge;50% to secure today\'s streak.';
-    } else if(pct < 50){
-      statEl.className = 'quest-threshold-status tier-protect';
-      statEl.innerHTML = '🛡️ <b>' + pct + '% Partial Progress:</b> Streak Frozen &amp; Protected! Reach 50% to gain +1 Streak day.';
-    } else if(pct < 100){
-      statEl.className = 'quest-threshold-status tier-cleared';
-      statEl.innerHTML = '⚔️ <b>' + pct + '% Standard Clear:</b> +1 Day Streak secured! Push to 100% for S-Rank Loot &amp; +1 Stat Point.';
-    } else {
-      statEl.className = 'quest-threshold-status tier-srank';
-      statEl.innerHTML = '👑 <b>100% S-RANK PERFECT CLEAR!</b> +25% Bonus XP &amp; +1 Stat Point Awarded!';
-    }
-  }
+  if($('dailyTag')) $('dailyTag').textContent = doneCount + ' / ' + missions.length + ' COMPLETE';
 }
 
 function drawWeekly(){
@@ -1252,40 +1198,7 @@ function drawSkills(){
     + 'One skill. Ten points. Everything else is already close or above.';
 }
 
-/* ---------------------------------------------------------------------
-   CLASS SYSTEM
-   --------------------------------------------------------------------- */
-function drawClass(){
-  const list = $('classList');
-  if(!list) return;
-
-  if(S.classId){
-    const c = CLASSES.find(x => x.id === S.classId);
-    list.innerHTML = '<div class="hint">You are a <b>' + ic(c.icon,18) + ' ' + c.name + '</b>. ' + c.passive + '</div>';
-  } else if(S.level < 10){
-    list.innerHTML = '<div class="hint">Classes unlock at <b>level 10</b>. You are currently level ' + S.level + '.</div>';
-  } else {
-    list.innerHTML = CLASSES.map(c =>
-      '<div class="bk classCard" onclick="chooseClass(\'' + c.id + '\')">'
-      + '<div class="exTop"><span class="t">' + ic(c.icon,20) + ' ' + esc(c.name) + '</span><span class="exTag">' + esc(c.stat.toUpperCase()) + '</span></div>'
-      + '<div class="w">' + esc(c.desc) + '</div>'
-      + '<div class="exLearn"><div class="exLearnHead">ABILITY</div>'
-      + '<div class="exItem"><div class="exLink">' + esc(c.ability.name) + ' (' + c.ability.cost + ' mana)</div>'
-      + '<div class="exWhy">' + esc(c.ability.desc) + '</div></div>'
-      + '<div class="exLearnHead" style="margin-top:8px">PASSIVE</div>'
-      + '<div class="exItem"><div class="exWhy">' + esc(c.passive) + '</div></div></div>'
-      + '</div></div>').join('');
-  }
-
-  if($('classHpVal')) $('classHpVal').textContent = S.hp + '/' + S.maxHp;
-  if($('classHpBar')) $('classHpBar').style.width = (S.hp/S.maxHp*100) + '%';
-  if($('classManaVal')) $('classManaVal').textContent = S.mana + '/' + S.maxMana;
-  if($('classManaBar')) $('classManaBar').style.width = (S.mana/S.maxMana*100) + '%';
-  if($('hpVal')) $('hpVal').textContent = S.hp + '/' + S.maxHp;
-  if($('hpBar')) $('hpBar').style.width = (S.hp/S.maxHp*100) + '%';
-  if($('manaVal')) $('manaVal').textContent = S.mana + '/' + S.maxMana;
-  if($('manaBar')) $('manaBar').style.width = (S.mana/S.maxMana*100) + '%';
-}
+/* Hunter Vitals & Class Resource system removed cleanly (XP is core currency) */
 
 /* ---------------------------------------------------------------------
    SHADOW SOLDIER
@@ -1460,27 +1373,27 @@ function drawVocab(){
   if(!el) return;
 
   const words = typeof todaysVocab === 'function' ? todaysVocab() : [];
-  const learned = typeof vocabLearnedToday === 'function' ? vocabLearnedToday() : 0;
+  const learnedCount = typeof vocabLearnedTodayCount === 'function' ? vocabLearnedTodayCount() : 0;
+  const totalBase = Math.min(words.length, typeof VOCAB_PER_DAY !== 'undefined' ? VOCAB_PER_DAY : 15);
 
   const vt = $('vocabTag');
   if(vt){
-    vt.textContent = learned + ' / ' + words.length;
-    vt.style.color = learned === words.length ? 'var(--green)' : 'var(--glow)';
+    vt.textContent = learnedCount + ' / ' + words.length + ' LEARNED';
+    vt.style.color = learnedCount >= words.length && words.length > 0 ? 'var(--green)' : 'var(--glow)';
   }
 
   let html = '';
-  html += '<div class="vocab-action-bar" style="display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap;">'
-        + '<button class="btn vq-btn" onclick="loadMoreVocab()" style="background:rgba(0,240,255,0.12);border:1px solid var(--glow);color:var(--glow);font-weight:700;padding:8px 16px;">'
-        +   ic('plus', 14) + ' LOAD 5 MORE WORDS (GRIND)'
-        + '</button>'
-        + '<button class="btn vq-btn" onclick="openVocabQuizModal()" style="background:rgba(251,191,36,0.12);border:1px solid var(--gold);color:var(--gold);font-weight:700;padding:8px 16px;">'
-        +   '⚡ 60s SPEED QUIZ (+INT XP)'
-        + '</button>'
+  html += '<div class="vocab-action-bar" style="display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap;">'
+        + '<div style="font-size:13px;color:var(--text);"><b>' + totalBase + ' New Words Today</b> &bull; <span style="color:var(--glow);">' + learnedCount + ' / ' + words.length + ' Practiced</span></div>'
+        + '<div style="display:flex;gap:8px;flex-wrap:wrap;">'
+        +   '<button class="btn vq-btn" onclick="loadMoreVocab()" style="background:rgba(0,240,255,0.12);border:1px solid var(--glow);color:var(--glow);font-weight:700;padding:7px 14px;">+ Load 5 More</button>'
+        +   '<button class="btn vq-btn" onclick="openVocabQuizModal()" style="background:rgba(251,191,36,0.12);border:1px solid var(--gold);color:var(--gold);font-weight:700;padding:7px 14px;">⚡ 60s Speed Quiz</button>'
+        + '</div>'
         + '</div>';
 
   html += words.map(w => {
     const k = vocabKey(w.w);
-    const status = (S.vocabStatus && S.vocabStatus[k]) || (S.vocab && S.vocab[k] ? 'mastered' : 'new');
+    const status = typeof getVocabStatus === 'function' ? getVocabStatus(w.w) : 'new';
     const isMastered = status === 'mastered';
     const isLearning = status === 'learning';
     const cleanWord = esc(w.w).replace(/'/g, "\\'");
@@ -1489,7 +1402,7 @@ function drawVocab(){
       + '<div class="vcHead">'
       +   '<div style="display:flex;align-items:center;gap:8px;">'
       +     '<div class="vcWord">' + esc(w.w) + '</div>'
-      +     '<button class="speak-btn" title="Pronounce with Web Speech" onclick="event.stopPropagation(); speakVocabWord(\'' + cleanWord + '\');" style="background:transparent;border:none;color:var(--glow);cursor:pointer;font-size:1.1rem;padding:0 4px;">🔊</button>'
+      +     '<button class="speak-btn" title="Listen (Web Speech)" onclick="event.stopPropagation(); speakVocabWord(\'' + cleanWord + '\');" style="background:transparent;border:none;color:var(--glow);cursor:pointer;font-size:1.1rem;padding:0 4px;">🔊</button>'
       +   '</div>'
       +   '<div class="vcPhonetic" style="font-size:0.8rem;color:var(--muted);font-style:italic;">' + esc(w.phonetic || '') + '</div>'
       + '</div>'
@@ -1500,8 +1413,8 @@ function drawVocab(){
       +   '<div class="vcCat">' + esc(w.cat) + '</div>'
       +   '<div class="vocab-status-pills" style="display:flex;gap:6px;">'
       +     '<button class="v-pill ' + (status === 'new' ? 'active' : '') + '" onclick="event.stopPropagation(); setVocabStatus(\'' + cleanWord + '\', \'new\');">New</button>'
-      +     '<button class="v-pill ' + (isLearning ? 'active' : '') + '" onclick="event.stopPropagation(); setVocabStatus(\'' + cleanWord + '\', \'learning\');">Learning (+5)</button>'
-      +     '<button class="v-pill ' + (isMastered ? 'active' : '') + '" onclick="event.stopPropagation(); setVocabStatus(\'' + cleanWord + '\', \'mastered\');">Mastered (+15)</button>'
+      +     '<button class="v-pill ' + (isLearning ? 'active' : '') + '" onclick="event.stopPropagation(); setVocabStatus(\'' + cleanWord + '\', \'learning\');">Learning (+5 XP)</button>'
+      +     '<button class="v-pill ' + (isMastered ? 'active' : '') + '" onclick="event.stopPropagation(); setVocabStatus(\'' + cleanWord + '\', \'mastered\');">Mastered (+15 XP)</button>'
       +   '</div>'
       + '</div>'
       + '</div>';
@@ -1509,18 +1422,16 @@ function drawVocab(){
 
   el.innerHTML = html;
 
-  /* progress panel */
-  const total = Object.values(S.vocabStatus || {}).filter(s => s === 'mastered').length || (S.vocabTotal || 0);
-  const pool = typeof VOCAB !== 'undefined' ? VOCAB.length : 180;
-  const doneDays = S.vocabDays || 0;
+  const masteredCount = S.masteredVocabulary ? Object.keys(S.masteredVocabulary).length : (S.vocabTotal || 0);
+  const poolSize = typeof VOCAB !== 'undefined' ? VOCAB.length : 0;
+  const histDaysCount = S.vocabularyHistory ? Object.keys(S.vocabularyHistory).length : 0;
 
-  if($('vTotal')) $('vTotal').textContent = total;
-  if($('vToday')) $('vToday').textContent = learned + ' / ' + words.length;
-  if($('vDays'))  $('vDays').textContent = doneDays;
-  if($('vPool'))  $('vPool').textContent = pool;
-  if($('vocabTotalTag')) $('vocabTotalTag').textContent = total + ' / ' + pool + ' WORDS';
+  if($('vTotal')) $('vTotal').textContent = masteredCount;
+  if($('vToday')) $('vToday').textContent = learnedCount + ' / ' + words.length;
+  if($('vDays'))  $('vDays').textContent  = histDaysCount;
+  if($('vPool'))  $('vPool').textContent  = poolSize;
+  if($('vocabTotalTag')) $('vocabTotalTag').textContent = masteredCount + ' / ' + poolSize + ' MASTERED';
 
-  /* word bank, grouped */
   const bank = $('vocabBank');
   if(bank && typeof VOCAB !== 'undefined'){
     const cats = {};
@@ -1529,8 +1440,7 @@ function drawVocab(){
       '<div class="vocabCat">'
       + '<div class="vcatHead">' + esc(cat) + '<span>' + cats[cat].length + '</span></div>'
       + cats[cat].map(w => {
-          const k = vocabKey(w.w);
-          const st = (S.vocabStatus && S.vocabStatus[k]) || (S.vocab && S.vocab[k] ? 'mastered' : 'new');
+          const st = typeof getVocabStatus === 'function' ? getVocabStatus(w.w) : 'new';
           const on = st === 'mastered';
           const cleanW = esc(w.w).replace(/'/g, "\\'");
           return '<div class="vbRow ' + st + '">'
@@ -1715,100 +1625,114 @@ function submitReview(){
    INSIGHTS
    --------------------------------------------------------------------- */
 function drawInsights(){
-  /* --- MONTHLY STREAK CALENDAR --- */
+  const today = typeof dayKey === 'function' ? dayKey() : new Date().toISOString().slice(0,10);
+  if(typeof TaskEngine !== 'undefined' && TaskEngine.syncTodayHistory) TaskEngine.syncTodayHistory();
+
   const cal = streakCalendar();
-  $('heatMap').innerHTML = cal.html;
+  if($('heatMap')) $('heatMap').innerHTML = cal.html;
 
-  const active = cal.active;
-  const perfect = (S.perfectDays || []).length;
-  const misses = cal.missed;
+  const analytics = (typeof XpEngine !== 'undefined' && XpEngine.getAnalytics) ? XpEngine.getAnalytics() : { today: 0, thisWeek: 0, thisMonth: 0, trend14: [], bySource: {} };
+  const todayRec = (S.dailyHistory && S.dailyHistory[today]) || { missionsCompleted: 0, missionsTotal: 6 };
 
-  $('streakStats').innerHTML =
-      statCard('Current Streak', S.streak, 'days in a row', 'var(--gold)')
-    + statCard('Best Streak', S.best, 'your record', 'var(--glow)')
-    + statCard('Active Days', active + '/30', 'last 30 days', active >= 24 ? 'var(--green)' : 'var(--gold)')
-    + statCard('Perfect Days', perfect, 'all missions cleared', 'var(--green)')
-    + statCard('Missed Days', misses, 'last 30 days', misses > 5 ? 'var(--red)' : 'var(--muted)')
-    + statCard('Multiplier', 'x' + streakMult().toFixed(2), 'XP bonus from consistency', streakMult() > 1.25 ? 'var(--green)' : 'var(--gold)');
+  // Compute real 7-day & 30-day completion metrics from S.dailyHistory
+  let wkDone = 0, wkTot = 0, active30 = 0, missed30 = 0, tot30Done = 0, tot30Total = 0;
+  for(let i = 0; i < 30; i++){
+    const dt = typeof SystemClock !== 'undefined' ? SystemClock.shiftDayKey(today, -i) : today;
+    const rec = S.dailyHistory && S.dailyHistory[dt];
+    if(i < 7 && rec){
+      wkDone += Number(rec.missionsCompleted || 0);
+      wkTot  += Number(rec.missionsTotal || 0);
+    }
+    if(rec){
+      if(rec.activeDay || (rec.missionsCompleted > 0)) active30++;
+      else if(i > 0) missed30++;
+      tot30Done  += Number(rec.missionsCompleted || 0);
+      tot30Total += Number(rec.missionsTotal || 0);
+    }
+  }
+  const compRate = tot30Total > 0 ? Math.round((tot30Done / tot30Total) * 100) : 0;
 
-  /* --- where XP comes from ---
-     real totals are tracked as they are earned, not estimated afterwards */
-  const src = S.xpSource || {};
-  const fromSteps    = src.boss     || 0;
-  const fromMissions = src.mission  || 0;
-  const fromCourses  = src.course   || 0;
-  const fromBonus    = src.bonus    || 0;
-  const fromVocab    = src.vocab    || 0;
-  const fromOther    = Math.max(0, S.xp - (fromSteps + fromMissions + fromCourses + fromBonus + fromVocab));
-  const total = Math.max(1, fromSteps + fromMissions + fromCourses + fromBonus + fromVocab + fromOther);
-
-  const rows = [
-    {n:'Daily missions',    v:fromMissions, c:'var(--glow)'},
-    {n:'Boss raid steps',   v:fromSteps,    c:'var(--glow2)'},
-    {n:'Bonuses & rewards', v:fromBonus,    c:'var(--gold)'},
-    {n:'Courses',           v:fromCourses,  c:'var(--green)'},
-    {n:'Vocabulary',        v:fromVocab,    c:'#25e07a'},
-    {n:'Other',             v:fromOther,    c:'var(--muted)'}
-  ].filter(r => r.v > 0).sort((a,b)=>b.v-a.v);
-
-  $('xpBreak').innerHTML = (rows.length ? rows : [{n:'Nothing earned yet', v:0, c:'var(--muted)'}]).map(r =>
-    '<div class="skillrow">'
-    + '<div class="skhead"><span class="skname">' + r.n + '</span>'
-    + '<span class="skval" style="color:' + r.c + '">' + r.v.toLocaleString() + '</span></div>'
-    + '<div class="sktrack"><i class="skfill" style="width:' + Math.min(100, r.v/total*100)
-    + '%;background:' + r.c + '"></i></div>'
-    + '<div class="skmeta"><span>' + Math.round(r.v/total*100) + '% of your XP</span><span></span></div>'
-    + '</div>').join('');
-
-  /* --- rank progress --- */
-  const ri = rankIdx(S.xp);
-  const cur = RANKS[ri], nxt = RANKS[ri+1];
-  $('rankProgTag').textContent = cur.name;
-
-  if(nxt){
-    const span = nxt.xp - cur.xp, done = S.xp - cur.xp;
-    const pct = Math.min(100, done/span*100);
-    const left = nxt.xp - S.xp;
-    const perDay = active > 0 ? Math.round((S.xp - (S.startedOn ? 0 : 0)) / Math.max(1, active)) : 0;
-    const daysLeft = perDay > 0 ? Math.ceil(left / perDay) : null;
-
-    $('rankProg').innerHTML =
-        '<div class="skhead"><span class="skname">' + cur.name + ' &rarr; ' + nxt.name + '</span>'
-      + '<span class="skval" style="color:var(--glow)">' + done.toLocaleString() + ' / ' + span.toLocaleString() + '</span></div>'
-      + '<div class="sktrack"><i class="skfill" style="width:' + pct + '%;background:linear-gradient(90deg,var(--glow),var(--glow2))"></i></div>'
-      + '<div class="skmeta"><span>' + Math.round(pct) + '% of the way there</span>'
-      + '<span>' + left.toLocaleString() + ' XP to go</span></div>'
-      + '<div class="hint" style="margin-top:14px;margin-bottom:0">'
-      + (perDay > 0
-          ? 'You are earning roughly <b>' + perDay.toLocaleString() + ' XP per active day</b>. '
-            + 'At that pace you reach <b>' + nxt.name + '</b> in about <b>' + daysLeft + ' active days</b>.'
-          : 'Complete a few missions and this will start estimating your pace.')
-      + '</div>';
-  } else {
-    $('rankProg').innerHTML = '<div class="hint" style="margin:0;color:var(--green)">Maximum rank reached. There is nothing above you.</div>';
+  if($('streakStats')){
+    $('streakStats').innerHTML =
+        statCard('Current Streak', (S.streak || 0) + ' Days', 'consecutive active days', 'var(--gold)')
+      + statCard('Best Streak', (S.best || 0) + ' Days', 'all-time record', 'var(--glow)')
+      + statCard('Today', todayRec.missionsCompleted + ' / ' + todayRec.missionsTotal, 'missions cleared today', 'var(--glow)')
+      + statCard('Weekly Completion', wkDone + ' / ' + (wkTot || 0), 'last 7 days', 'var(--green)')
+      + statCard('Weekly XP', '+' + (analytics.thisWeek || 0).toLocaleString(), 'last 7 days from ledger', 'var(--glow)')
+      + statCard('Monthly XP', '+' + (analytics.thisMonth || 0).toLocaleString(), 'this month from ledger', 'var(--gold)')
+      + statCard('Active Days (30d)', active30, missed30 + ' missed days', active30 >= 20 ? 'var(--green)' : 'var(--gold)')
+      + statCard('Completion Rate', compRate + '%', '30-day mission rate', compRate >= 60 ? 'var(--green)' : 'var(--muted)');
   }
 
-  /* --- domain balance --- */
-  const vals = STATS.map(s => ({key:s.key, name:s.name, icon:s.icon, xp:S.statXP[s.key]||0}));
-  const maxV = Math.max(1, ...vals.map(v => v.xp));
-  const minV = Math.min(...vals.map(v => v.xp));
-  $('domainBal').innerHTML = vals.map(v => {
-    const weak = v.xp <= minV + 20 && maxV > 200;
-    return '<div class="skillrow">'
-      + '<div class="skhead"><span class="skname">' + ic(v.icon,17) + ' ' + v.name + '</span>'
-      + '<span class="skval" style="color:' + (weak ? 'var(--red)' : 'var(--glow)') + '">' + v.xp.toLocaleString() + '</span></div>'
-      + '<div class="sktrack"><i class="skfill" style="width:' + (v.xp/maxV*100) + '%;background:'
-      + (weak ? 'linear-gradient(90deg,var(--red),var(--gold))' : 'linear-gradient(90deg,var(--glow),var(--glow2))') + '"></i></div>'
-      + (weak ? '<div class="skmeta"><span style="color:var(--red)">Neglected &mdash; give this attention</span><span></span></div>' : '')
-      + '</div>';
-  }).join('');
+  /* XP Trend (Last 14 Days from Ledger) & Source Breakdown */
+  const xb = $('xpBreak');
+  if(xb){
+    const trend = analytics.trend14 || [];
+    const maxDayXP = Math.max(10, ...trend.map(t => Math.max(t.earned, t.penalty)));
+    let trendHtml = '<div style="margin-bottom:18px;">'
+      + '<div style="font-size:12px;color:var(--muted);margin-bottom:8px;text-transform:uppercase;letter-spacing:1px;">14-Day XP Trend (Real Ledger)</div>'
+      + '<div style="display:flex;align-items:flex-end;gap:6px;height:90px;padding:8px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:6px;">'
+      + trend.map(t => {
+          const hPct = Math.round((t.earned / maxDayXP) * 100);
+          const lbl = t.date.slice(5);
+          return '<div style="flex:1;display:flex;flex-direction:column;align-items:center;height:100%;justify-content:flex-end;" title="'+t.date+': +'+t.earned+' XP earned / -'+t.penalty+' penalty">'
+            + '<div style="width:100%;max-width:22px;height:'+Math.max(4, hPct)+'%;background:'+(t.earned > 0 ? 'var(--glow)' : 'rgba(255,255,255,0.08)')+';border-radius:3px 3px 0 0;"></div>'
+            + '<div style="font-size:9px;color:var(--muted);margin-top:4px;">'+lbl+'</div>'
+            + '</div>';
+        }).join('')
+      + '</div></div>';
 
-  /* --- the status window that used to live in the Status tab --- */
+    const bySrc = analytics.bySource || S.xpSource || {};
+    const rows = Object.keys(bySrc)
+      .map(k => ({ n: k.toUpperCase(), v: bySrc[k] || 0 }))
+      .filter(r => r.v > 0)
+      .sort((a,b) => b.v - a.v);
+    const totalSrc = Math.max(1, rows.reduce((acc, r) => acc + r.v, 0));
+
+    xb.innerHTML = trendHtml + (rows.length ? rows.map(r =>
+      '<div class="skillrow">'
+      + '<div class="skhead"><span class="skname">' + esc(r.n) + '</span>'
+      + '<span class="skval" style="color:var(--glow);">' + r.v.toLocaleString() + ' XP</span></div>'
+      + '<div class="sktrack"><i class="skfill" style="width:' + Math.min(100, r.v/totalSrc*100) + '%;background:var(--glow);"></i></div>'
+      + '</div>').join('') : '<div class="hint">Complete missions to populate your XP breakdown.</div>');
+  }
+
+  /* Rank progress */
+  const ri = rankIdx(S.xp || 0);
+  const cur = RANKS[ri], nxt = RANKS[ri+1];
+  if($('rankProgTag')) $('rankProgTag').textContent = cur.name;
+  if($('rankProg')){
+    if(nxt){
+      const span = nxt.xp - cur.xp, done = Math.max(0, (S.xp || 0) - cur.xp);
+      const pct = Math.min(100, done/span*100);
+      const left = Math.max(0, nxt.xp - (S.xp || 0));
+      $('rankProg').innerHTML =
+          '<div class="skhead"><span class="skname">' + cur.name + ' &rarr; ' + nxt.name + '</span>'
+        + '<span class="skval" style="color:var(--glow)">' + done.toLocaleString() + ' / ' + span.toLocaleString() + '</span></div>'
+        + '<div class="sktrack"><i class="skfill" style="width:' + pct + '%;background:linear-gradient(90deg,var(--glow),var(--glow2))"></i></div>'
+        + '<div class="skmeta"><span>' + Math.round(pct) + '% complete</span><span>' + left.toLocaleString() + ' XP remaining</span></div>';
+    } else {
+      $('rankProg').innerHTML = '<div class="hint" style="margin:0;color:var(--green)">Maximum rank reached.</div>';
+    }
+  }
+
+  /* Domain balance */
+  if($('domainBal')){
+    const vals = STATS.map(s => ({key:s.key, name:s.name, icon:s.icon, xp:(S.statXP && S.statXP[s.key])||0}));
+    const maxV = Math.max(1, ...vals.map(v => v.xp));
+    $('domainBal').innerHTML = vals.map(v =>
+      '<div class="skillrow">'
+      + '<div class="skhead"><span class="skname">' + ic(v.icon,17) + ' ' + v.name + '</span>'
+      + '<span class="skval" style="color:var(--glow)">' + v.xp.toLocaleString() + ' XP</span></div>'
+      + '<div class="sktrack"><i class="skfill" style="width:' + (v.xp/maxV*100) + '%;background:linear-gradient(90deg,var(--glow),var(--glow2))"></i></div>'
+      + '</div>').join('');
+  }
+
   const sg = $('statGrid');
   if(sg){
     sg.innerHTML = STATS.map(s => {
       const lv = statOverall(s.key);
-      const xp = S.statXP[s.key] || 0;
+      const xp = (S.statXP && S.statXP[s.key]) || 0;
       const inLv = xp % STAT_XP;
       return '<div class="stat">'
         + '<div class="h"><span class="n">'+ic(s.icon,18)+' '+s.name+'</span><span class="lv">Lv '+lv+'</span></div>'
@@ -1821,25 +1745,33 @@ function drawInsights(){
   if(al){
     al.innerHTML = ASSESSMENT.map(a =>
       '<div class="bk"><div class="t">'+esc(a.title)+'</div>'
-      + '<div class="w">'+esc(a.body).replace(/\n/g,'<br>')+'</div></div>').join('');
+      + '<div class="w">'+esc(a.body).replace(/\\n/g,'<br>')+'</div></div>').join('');
   }
 
-  drawBadges();
-  drawRecords();
+  if(typeof drawBadges === 'function') drawBadges();
+  if(typeof drawRecords === 'function') drawRecords();
 }
 
-/* build the monthly streak calendar */
+let CAL_OFFSET = 0;
+function calMonth(dir){
+  CAL_OFFSET += dir;
+  drawInsights();
+}
+
+/* Monthly streak calendar strictly using Africa/Cairo keys & S.dailyHistory */
 function streakCalendar(){
-  const now = new Date();
-  const y = now.getFullYear(), m = now.getMonth();
-  const daysInMonth = new Date(y, m+1, 0).getDate();
-  const firstDay = new Date(y, m, 1).getDay();
+  const todayStr = typeof dayKey === 'function' ? dayKey() : new Date().toISOString().slice(0,10);
+  const [ty, tm, td] = todayStr.split('-').map(Number);
+
+  const viewDate = new Date(Date.UTC(ty, tm - 1 + CAL_OFFSET, 1));
+  const y = viewDate.getUTCFullYear();
+  const m = viewDate.getUTCMonth();
+  const daysInMonth = new Date(Date.UTC(y, m + 1, 0)).getUTCDate();
+  const firstDay = new Date(Date.UTC(y, m, 1)).getUTCDay();
   const monthNames = ['January','February','March','April','May','June','July','August','September','October','November','December'];
   const dayNames = ['S','M','T','W','T','F','S'];
-  const today = dayKey();
 
   let active = 0, missed = 0, cells = '';
-
   cells += '<div class="calHead"><button class="calNav" onclick="calMonth(-1)">&larr;</button>'
          + '<div class="calTitle">' + monthNames[m] + ' ' + y + '</div>'
          + '<button class="calNav" onclick="calMonth(1)">&rarr;</button></div>';
@@ -1849,87 +1781,47 @@ function streakCalendar(){
 
   for(let day = 1; day <= daysInMonth; day++){
     const k = y + '-' + String(m+1).padStart(2,'0') + '-' + String(day).padStart(2,'0');
-    const isToday = (k === today);
-    const rec = (S.log30 && S.log30[k]) || null;
-    const perfect = (S.perfectDays || []).includes(k);
-    const isFuture = day > now.getDate();
+    const isToday = (k === todayStr);
+    const isFuture = k > todayStr;
+    const rec = (S.dailyHistory && S.dailyHistory[k]) || null;
 
-    let pct = 0, done = 0, tot = 0, cls = 'calCell';
-    if(isFuture){ cls += ' future'; }
-    else if(rec){ done = rec.done; tot = rec.total; pct = tot ? done/tot : 0; }
-    else if(perfect){ done = 1; tot = 1; pct = 1; }
-
-    if(!isFuture){
-      if(pct >= 1)      { cls += ' dFull';   active++; }
-      else if(pct >= .6){ cls += ' dHigh';   active++; }
-      else if(pct > 0)  { cls += ' dSome';   active++; }
-      else if(S.started && S.startedOn && k >= S.startedOn){ cls += ' dMiss'; missed++; }
-      else { cls += ' dNone'; }
+    let done = 0, tot = 0, cls = 'calCell';
+    if(isFuture){
+      cls += ' future';
+    } else if(rec){
+      done = Number(rec.missionsCompleted || 0);
+      tot  = Number(rec.missionsTotal || 0);
+      const pct = tot > 0 ? done / tot : (rec.activeDay ? 1 : 0);
+      if(pct >= 1)      { cls += ' dFull'; active++; }
+      else if(pct > 0 || rec.activeDay) { cls += ' dSome'; active++; }
+      else { cls += ' dMiss'; missed++; }
+    } else if(S.started && S.startedOn && k >= S.startedOn && k < todayStr){
+      cls += ' dMiss'; missed++;
+    } else {
+      cls += ' dNone';
     }
+
     if(isToday) cls += ' today';
-    if(perfect) cls += ' perfect';
-
     const detail = isFuture ? 'Future'
-      : (done || tot ? done + '/' + tot + ' missions'
-        : (S.started && S.startedOn && k >= S.startedOn ? 'No missions' : ''));
+      : (rec && (tot > 0 || done > 0) ? done + '/' + Math.max(done, tot) + ' missions'
+        : (cls.includes('dMiss') ? '0 missions (Missed)' : ''));
 
-    cells += '<div class="' + cls + '" title="' + k + (detail ? ' \u00b7 ' + detail : '') + '">'
+    cells += '<div class="' + cls + '" title="' + k + (detail ? ' · ' + detail : '') + '">'
            + '<span class="calNum">' + day + '</span>'
-           + (perfect ? '<span class="calStar">&#9733;</span>' : '')
+           + (done > 0 && done >= tot && tot > 0 ? '<span class="calStar">&#9733;</span>' : '')
            + (detail ? '<span class="calInfo">' + detail + '</span>' : '')
            + '</div>';
   }
   cells += '</div>';
 
-  /* legend + the streak run itself */
-  let runs = '';
-  const last30 = (window.last30 ? null : null);
-  runs += '<div class="calLegend">'
-        + '<span><i class="calCell dFull"></i> Perfect</span>'
-        + '<span><i class="calCell dHigh"></i> Strong</span>'
-        + '<span><i class="calCell dSome"></i> Partial</span>'
-        + '<span><i class="calCell dMiss"></i> Missed</span>'
-        + '<span><i class="calCell dNone"></i> Before you started</span>'
+  const runs = '<div class="calLegend">'
+        + '<span><i class="calCell dFull"></i> Completed (All)</span>'
+        + '<span><i class="calCell dSome"></i> Active (Partial)</span>'
+        + '<span><i class="calCell dMiss"></i> Missed (0)</span>'
+        + '<span><i class="calCell dNone"></i> Before start</span>'
         + '</div>';
 
-  /* streak run: how many consecutive days ending today */
-  let run = 0, runCells = '';
-  for(let i = 0; i < 45; i++){
-    const d = new Date(); d.setDate(d.getDate() - i);
-    const k = ymd(d);
-    const rec = S.log30 && S.log30[k];
-    const perfect = (S.perfectDays || []).includes(k);
-    let on = false;
-    if(rec && rec.done > 0) on = true;
-    else if(perfect) on = true;
-    if(i === 0 && !on){ /* today may still be in progress */ }
-    if(!on) break;
-    run++;
-  }
-  for(let i = run - 1; i >= 0; i--){
-    const d = new Date(); d.setDate(d.getDate() - i);
-    runCells += '<div class="streakDot on" title="' + ymd(d) + '"></div>';
-  }
-  for(let i = run; i < Math.max(7, run + 4); i++){
-    runCells += '<div class="streakDot"></div>';
-  }
-
-  const streakHtml = '<div class="streakRunWrap"><div class="streakRunHead">'
-    + '<span>CONSECUTIVE DAYS</span><span class="streakRunNum">' + S.streak + '</span></div>'
-    + '<div class="streakRun">' + runCells + '</div>'
-    + '<div class="streakRunHint">Days in a row you completed at least one mission.</div></div>';
-
-  return { html: cells + runs + streakHtml, active: active, missed: missed };
-}
-
-function ymd(d){
-  return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
-}
-
-let CAL_OFFSET = 0;
-function calMonth(dir){
-  CAL_OFFSET += dir;
-  drawInsights();
+  return { html: cells + runs, active: active, missed: missed };
 }
 
 function statCard(label, value, sub, colour){
@@ -1937,8 +1829,6 @@ function statCard(label, value, sub, colour){
     + '<span class="lv" style="color:' + colour + '">' + value + '</span></div>'
     + '<div class="sb">' + esc(sub) + '</div></div>';
 }
-
-
 
 /* ---------------------------------------------------------------------
    DAILY BRIEFING
@@ -1963,101 +1853,7 @@ function showBriefing(){
   openModal('Daily Briefing', 'From your guide', txt);
 }
 
-/* ---------------------------------------------------------------------
-   21-DAY HABIT TRACKER — UI Functions
-   --------------------------------------------------------------------- */
-
-/* ADD HABIT — add a custom habit to track */
-function addHabit(name) {
-  if (!name || !name.trim()) {
-    alert('Please enter a habit name.');
-    return null;
-  }
-
-  var habitId = 'custom_' + Date.now();
-  var newHabit = {
-    id: habitId,
-    name: name.trim(),
-    icon: 'target',
-    category: 'Career',
-    why: 'Custom habit added by you.',
-    custom: true
-  };
-
-  /* Add to HABITS array */
-  HABITS.push(newHabit);
-
-  /* Initialize state */
-  HABIT_TRACKER.ensureHabitState(habitId);
-
-  save();
-  sfx('success');
-  log('HABIT', 'New habit added: <b>' + esc(name) + '</b>');
-  return habitId;
-}
-
-/* CHECK / UNCHECK HABIT — toggle today's completion */
-function checkHabit(habitId) {
-  var state = HABIT_TRACKER.ensureHabitState(habitId);
-  var today = dayKey();
-  var idx = state.days.indexOf(today);
-  var wasDone = idx !== -1;
-
-  if (wasDone) {
-    /* Uncheck: remove today from days array */
-    state.days.splice(idx, 1);
-    sfx('uncheck');
-    log('HABIT', 'Unchecked: <b>' + esc(getHabitName(habitId)) + '</b>');
-
-    /* Recalculate streaks */
-    recalculateStreaks(state);
-
-    save();
-    } else {
-    /* Check: add today to days array */
-    state.days.push(today);
-
-    /* Recalculate streaks */
-    recalculateStreaks(state);
-
-    /* Award XP for completing this habit */
-    var gained = addXP(HABIT_TRACKER.xpPerHabit, null, false, 'habit');
-
-    sfx('success');
-    log('HABIT', 'Completed: <b>' + esc(getHabitName(habitId)) + '</b> — <b>+' + gained + ' XP</b>');
-
-    /* Check if all habits are now done — award bonus */
-    if (HABIT_TRACKER.allDoneToday()) {
-      var bonusGained = addXP(HABIT_TRACKER.xpAllHabitsBonus, null, false, 'habitBonus');
-      setTimeout(function() {
-        log('ALL HABITS', 'Perfect day! All habits completed — <b>+' + bonusGained + ' XP</b> bonus!');
-        sfx('levelup');
-      }, 300);
-    }
-
-    save();
-    }
-}
-
-/* REMOVE HABIT — remove a custom habit */
-function removeHabit(habitId) {
-  var habit = HABITS.find(function(h) { return h.id === habitId; });
-  if (!habit) return;
-
-  if (!confirm('Remove "' + habit.name + '" from tracking?')) return;
-
-  /* Remove from HABITS array */
-  var idx = HABITS.indexOf(habit);
-  if (idx !== -1) HABITS.splice(idx, 1);
-
-  /* Remove from state */
-  if (S.habits && S.habits[habitId]) {
-    delete S.habits[habitId];
-  }
-
-  save();
-  log('HABIT', 'Removed: <b>' + esc(habit.name) + '</b>');
-}
+/* Habit actions (addHabit, checkHabit, removeHabit) live exclusively in habits.js (HabitEngine) */
 
 /* ---------------------------------------------------------------------
    MASTER RENDER
@@ -2073,18 +1869,18 @@ const PORTALS = {
     icon: '⚡',
     bg: 'assets/bg/bg-system-gate.jpg',
     tabs: [
-      { id: 'dash', label: 'System Dashboard' },
-      { id: 'lifestatus', label: 'Life Command Center' }
+      { id: 'dash', label: 'Dashboard' },
+      { id: 'lifestatus', label: 'Overview' }
     ]
   },
   quests: {
     id: 'quests',
-    name: 'Tasks',
+    name: 'Missions',
     icon: '⚔️',
     bg: 'assets/bg/bg-system-gate.jpg',
     tabs: [
-      { id: 'tasks', label: 'Task Manager' },
-      { id: 'weekly', label: 'Weekly Quests' },
+      { id: 'daily', label: 'Daily Missions' },
+      { id: 'weekly', label: 'Weekly Missions' },
       { id: 'boss', label: 'Boss Raids' }
     ]
   },
@@ -2094,22 +1890,21 @@ const PORTALS = {
     icon: '🔄',
     bg: 'assets/bg/bg-hunter-status.jpg',
     tabs: [
-      { id: 'habits', label: 'Daily Routines' },
+      { id: 'habits', label: 'Daily Habits' },
+      { id: 'insight', label: 'Streak & Insights' },
       { id: 'health', label: 'Health & Recovery' },
-      { id: 'planner', label: 'Time & Goal Planner' },
-      { id: 'insight', label: 'Streak & Insights' }
+      { id: 'planner', label: 'Planner' }
     ]
   },
   roadmap: {
     id: 'roadmap',
-    name: 'Roadmap',
+    name: 'Progress',
     icon: '🎯',
     bg: 'assets/bg/bg-hunter.jpg',
     tabs: [
-      { id: 'roadmap', label: 'Career Transition' },
-      { id: 'career', label: 'Job Hunt HQ & Arena' },
-      { id: 'projects', label: 'Notion Projects' },
-      { id: 'courses', label: 'Course Track' }
+      { id: 'roadmap', label: 'Roadmap' },
+      { id: 'projects', label: 'Projects' },
+      { id: 'courses', label: 'Courses' }
     ]
   },
   knowledge: {
@@ -2119,25 +1914,23 @@ const PORTALS = {
     bg: 'assets/bg/bg-academy-training.jpg',
     tabs: [
       { id: 'knowledge', label: 'Knowledge Base' },
-      { id: 'brain', label: 'Second Brain & ADRs' },
-      { id: 'skills', label: 'Skills Matrix' },
-      { id: 'vocab', label: 'Vocabulary Bank' },
-      { id: 'speaking', label: 'Speaking Lab' },
+      { id: 'skills', label: 'Skills' },
+      { id: 'vocab', label: 'Vocabulary (15/day)' },
+      { id: 'speaking', label: 'Speaking' },
       { id: 'podcasts', label: 'Podcasts' },
       { id: 'library', label: 'Library' }
     ]
   },
   resources: {
     id: 'resources',
-    name: 'Operations',
+    name: 'System',
     icon: '💎',
     bg: 'assets/bg/bg-vault.jpg',
     tabs: [
-      { id: 'expenses', label: 'Runway & Expenses' },
-      { id: 'journal', label: 'Daily Reflections' },
+      { id: 'expenses', label: 'Expenses' },
+      { id: 'journal', label: 'Journal' },
       { id: 'review', label: 'Weekly Review' },
-      { id: 'shadow', label: 'Shadow Army' },
-      { id: 'hunter', label: 'Hunter Vitals' }
+      { id: 'shadow', label: 'Shadow Army' }
     ]
   }
 };
@@ -2166,9 +1959,10 @@ function switchPortal(portalId, targetTabId){
 }
 
 function switchTab(tabId){
+  const cleanId = (tabId === 'tasks') ? 'daily' : tabId;
   let ownerPortal = null;
   for(const pid in PORTALS){
-    if(PORTALS[pid].tabs.some(t => t.id === tabId)){
+    if(PORTALS[pid].tabs.some(t => t.id === cleanId)){
       ownerPortal = pid;
       break;
     }
@@ -2187,130 +1981,98 @@ function switchTab(tabId){
     }
   }
 
-  currentActiveTab = tabId;
+  currentActiveTab = cleanId;
 
   document.querySelectorAll('.subnav-pill').forEach(p => {
-    p.classList.toggle('active', p.dataset.page === tabId);
-  });
-
-  document.querySelectorAll('.tab').forEach(t => {
-    t.classList.toggle('active', t.dataset.page === tabId);
+    p.classList.toggle('active', p.dataset.page === cleanId);
   });
 
   document.querySelectorAll('.page').forEach(page => {
-    page.classList.toggle('active', page.id === tabId);
+    page.classList.toggle('active', page.id === cleanId);
   });
 
   const bg = (PORTALS[ownerPortal] && PORTALS[ownerPortal].bg) || 'assets/bg/bg-system-gate.jpg';
   setBG(bg);
 
   sfx('tab');
-  drawTab(tabId);
+  drawTab(cleanId);
 }
 
 window.goTab = switchTab;
 
 function renderAll(){
   drawHUD();
-  checkHabitFormation();
-
   drawTab(currentActiveTab || 'dash');
-
-  /* dynamic numbers that live outside the tab system */
   if($('fCost'))  $('fCost').textContent  = FREEZE.costXP;
   if($('fDebt'))  $('fDebt').textContent  = FREEZE.punishmentXP;
   if($('fEvery')) $('fEvery').textContent = FREEZE.earnEvery;
-  if($('courseTag')) $('courseTag').textContent = Object.keys(S.courses).length + ' / ' + COURSES.length + ' DONE';
-  if($('badgeTag'))  $('badgeTag').textContent  = S.badges.length + ' / ' + BADGES.length + ' EARNED';
+  if($('courseTag')) $('courseTag').textContent = Object.keys(S.courses || {}).length + ' / ' + COURSES.length + ' DONE';
+  if($('badgeTag'))  $('badgeTag').textContent  = (S.badges || []).length + ' / ' + BADGES.length + ' EARNED';
   if($('libTag'))    $('libTag').textContent    = booksRead() + ' / ' + allBooks().length + ' READ';
 }
 
-/* draw one tab — the only place a tab's markup is rebuilt */
 function drawTab(page){
   switch(page){
-    case 'dash':      drawDashboardLifeOS(); break;
+    case 'dash':       drawDashboardLifeOS(); break;
     case 'lifestatus': drawLifeCommandCenter(); break;
-    case 'tasks':     drawTaskManager(); break;
-    case 'daily':     drawTaskManager(); break;
-    case 'habits':    drawHabitsSection(); break;
-    case 'health':    if(window.HealthSystem) window.HealthSystem.render('health-portal-content'); break;
-    case 'planner':   if(window.PlannerSystem) window.PlannerSystem.render('planner-portal-content'); break;
-    case 'career':    if(window.CareerSystem) window.CareerSystem.render('career-portal-content'); break;
-    case 'brain':     if(window.SecondBrain) window.SecondBrain.render('second-brain-portal-content'); break;
-    case 'roadmap':   drawRoadmapSection(); break;
-    case 'projects':  drawProjectsSection(); break;
-    case 'knowledge': drawKnowledgeBaseSection(); break;
-    case 'skills':    drawSkillsSection(); break;
-    case 'vocab':     drawVocabSection(); break;
-    case 'expenses':  drawFinanceSection(); break;
-    case 'journal':   drawJournalSection(); break;
-    case 'weekly':    drawWeekly(); break;
-    case 'boss':      drawBosses(); break;
-    case 'courses':   drawCourses(); drawCourseTree(); break;
-    case 'library':   drawLibrary(); break;
-    case 'review':    drawReview(); break;
-    case 'insight':   drawInsights(); break;
-    case 'hunter':    drawClass(); drawVision(); if(typeof renderEquipmentPanel === 'function') renderEquipmentPanel(); break;
-    case 'shadow':    drawEggs(); drawShadow(); break;
-    case 'money':     drawMoney(); break;
-    case 'speaking':  drawSpeaking(); break;
-    case 'uptodate':  drawUpToDate(); break;
-    case 'podcasts':  drawPodcasts(); break;
+    case 'tasks':
+    case 'daily':      drawDaily(); if(typeof renderStrengthBars === 'function') renderStrengthBars(); break;
+    case 'habits':     drawHabitsSection(); break;
+    case 'health':     if(window.HealthSystem) window.HealthSystem.render('health-portal-content'); break;
+    case 'planner':    if(window.PlannerSystem) window.PlannerSystem.render('planner-portal-content'); break;
+    case 'roadmap':    drawRoadmapSection(); break;
+    case 'projects':   drawProjectsSection(); break;
+    case 'knowledge':  drawKnowledgeBaseSection(); break;
+    case 'skills':     drawSkillsSection(); break;
+    case 'vocab':      drawVocab(); break;
+    case 'expenses':   drawFinanceSection(); break;
+    case 'journal':    drawJournalSection(); break;
+    case 'weekly':     drawWeekly(); break;
+    case 'boss':       drawBosses(); break;
+    case 'courses':    drawCourses(); drawCourseTree(); break;
+    case 'library':    drawLibrary(); break;
+    case 'review':     drawReview(); break;
+    case 'insight':    drawInsights(); break;
+    case 'shadow':     drawEggs(); drawShadow(); drawVision(); if(typeof renderEquipmentPanel === 'function') renderEquipmentPanel(); break;
+    case 'speaking':   drawSpeaking(); break;
+    case 'uptodate':   drawUpToDate(); break;
+    case 'podcasts':   drawPodcasts(); break;
   }
 }
 
-/* force a full rebuild — only used when data structure changes, not on
-   every render tick */
 function renderEverything(){
   drawHUD();
-  drawDashboardLifeOS();
-  drawTaskManager();
-  drawHabitsSection();
-  drawRoadmapSection();
-  drawProjectsSection();
-  drawKnowledgeBaseSection();
-  drawSkillsSection();
-  drawVocabSection();
-  drawFinanceSection();
-  drawJournalSection();
-  drawWeekly(); drawBosses();
-  drawCourses();
-  drawLibrary();
-  drawReview(); drawInsights(); drawCourseTree();
-  drawClass(); drawVision();
-  drawEggs();   /* this also draws the shadow + characters */
-  drawMoney();
-  drawSpeaking(); drawUpToDate(); drawPodcasts();
-  if(typeof renderCoachPanel === 'function') renderCoachPanel();
-  if(typeof renderStrengthBars === 'function') renderStrengthBars();
-  if(typeof renderNegativeHabits === 'function') renderNegativeHabits();
-  if(typeof renderEquipmentPanel === 'function') renderEquipmentPanel();
-  if(typeof drawStatsHUD === 'function') drawStatsHUD();
-  checkHabitFormation();
+  drawTab(currentActiveTab || 'dash');
 }
 
-/* ---------------------------------------------------------------------
-   BOOT
-   --------------------------------------------------------------------- */
 function boot(){
   buildGuideIndex();
-  /* 1. Immediately render using local/seed authentic state — ZERO BLANK SCREEN, ZERO LEVEL 1 FLASH */
-  renderEverything();
 
-  /* 2. Safe daily reset check & backup */
-  resets();
+  /* 1. Start unified Daily Rollover & Cairo Midnight Scheduler FIRST so state is fresh before first render */
+  if(typeof TaskEngine !== 'undefined' && TaskEngine.startDailyScheduler){
+    TaskEngine.startDailyScheduler();
+  }
+
+  /* 2. Render initial portal smoothly */
+  const initialHash = (location.hash || '').replace('#','');
+  if (initialHash && $(initialHash)) {
+    switchTab(initialHash);
+  } else {
+    switchPortal('dash', 'dash');
+  }
+  drawHUD();
+
   autoBackup();
   checkForUpdates();
 
-  /* 3. Pull cloud save asynchronously — if newer or higher progress, smoothly refresh */
   cloudLoad().then(function(pulled){
     if(pulled){
       renderEverything();
     }
   });
   resumePomodoro();
-
   showPhrase();
+
   if(S.guideHidden){
     const g = $('guidePop');
     if(g) g.classList.add('hidden');
@@ -2318,92 +2080,20 @@ function boot(){
     if(btn) btn.style.display = 'flex';
   }
   sfx('boot');
-  /* reflect the saved mute state on the button */
   const mb = $('muteBtn');
   if(mb){
     const m = sfxMuted();
     mb.textContent = m ? 'Sound Off' : 'Sound On';
     mb.classList.toggle('off', m);
   }
-  $('todayTag').textContent = new Date()
-    .toLocaleDateString('en-GB',{timeZone:'Africa/Cairo',weekday:'short',day:'numeric',month:'short'}).toUpperCase();
 
-  /* Initialize Portal Command Bar */
-  document.querySelectorAll('.portal-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      switchPortal(btn.dataset.portal);
-    });
-  });
-
-  /* Keep legacy .tab selector working if present */
-  document.querySelectorAll('.tab[data-page]').forEach(t => {
-    t.addEventListener('click', () => {
-      switchTab(t.dataset.page);
-    });
-  });
-
-  /* Initial portal & tab boot */
-  const initialHash = (location.hash || '').replace('#','');
-  if (initialHash && $(initialHash)) {
-    switchTab(initialHash);
-  } else {
-    switchPortal('dash', 'dash');
-  }
-
-  /* the guide changes his line every 10 minutes, and pops up on its own */
-  /* rotate every 3 minutes — fast enough to feel alive */
   guideTimer = setInterval(() => { nextPhrase(true); popGuide(); }, 3*60*1000);
-
-  /* ------------------------------------------------------------------
-     MIDNIGHT ROLLOVER — the daily quest must reset at 00:00 Cairo time
-     even when the page stays open all night.
-
-     Why this needs three layers:
-       1. A timer while the tab is focused
-       2. A timer when the tab is in the background (browsers throttle
-          setInterval to 1 call/minute when the tab is hidden)
-       3. A check on visibility, focus and scroll — the moment you look
-          at the page, it fixes itself
-
-     Before this, the page only checked ONCE at boot, so if you left the
-     tab open overnight the missions stayed frozen until you reloaded.
-     ------------------------------------------------------------------ */
-  function rolloverCheck(quiet){
-    const t = dayKey();
-    if(S.lastDay !== t){
-      resets();
-      autoBackup();
-      renderAll();
-      log('SYSTEM', 'A new day has begun. Daily quests reset. Prove yourself again, Hunter.');
-      if(!quiet) sfx('boot');
-      return true;
-    }
-    return false;
-  }
-
-  /* layer 1: every 20 seconds while focused */
-  dayTimer = setInterval(function(){ rolloverCheck(false); }, 20*1000);
-
-  /* layer 2: a wider net for when the tab is hidden (browsers throttle) */
-  setInterval(function(){ rolloverCheck(false); }, 60*1000);
-
-  /* layer 3: the instant you come back to the page */
-  document.addEventListener('visibilitychange', function(){
-    if(!document.hidden) rolloverCheck(false);
-  });
-  window.addEventListener('focus', function(){ rolloverCheck(true); });
-  window.addEventListener('online', function(){ rolloverCheck(false); });
-
-  if(!S.hist.length){
-    setTimeout(() => log('SYSTEM',
-      'Complete your first mission to activate the System. No penalties apply until you start.'), 800);
-  }
-
   document.addEventListener('keydown', e => { if(e.key === 'Escape') closeModal(); });
 }
 
 function setBG(src){
   const l = $('bgLayer');
+  if(!l) return;
   l.classList.remove('on');
   setTimeout(() => {
     l.style.backgroundImage = "url('" + src + "')";
@@ -2411,434 +2101,158 @@ function setBG(src){
   }, 150);
 }
 
-/* =====================================================================
-   SOLO LEVELING PERSONAL LIFE OS — RENDERING ENGINES
-   ===================================================================== */
-
 /* 1. DASHBOARD LIFE OS ENGINE */
 /* 1. DASHBOARD LIFE OS ENGINE & FOUNDATION COMMAND */
 function drawDashboardLifeOS(){
   const dashList = $('dashList');
   if(!dashList) return;
 
-  const priorities = getDailyPriorities();
-  const completedCount = priorities.filter(t => S.daily && S.daily[t.id]).length;
-  const totalCount = priorities.length;
-  const pct = totalCount ? Math.round((completedCount / totalCount) * 100) : 0;
-  
-  if($('dashBar')) $('dashBar').style.width = pct + '%';
-  if($('penLabel')) $('penLabel').textContent = completedCount + ' / ' + totalCount;
-  if($('penBar')) $('penBar').style.width = pct + '%';
-  if($('todayTag')) $('todayTag').textContent = completedCount + ' / ' + totalCount + ' CLEARED';
+  const missions = (typeof TaskEngine !== 'undefined' && TaskEngine.getDailyMissions) ? TaskEngine.getDailyMissions() : [];
+  const doneCount = missions.filter(m => S.daily && S.daily[m.id]).length;
+  const totalCount = missions.length;
+  const pct = totalCount ? Math.round((doneCount / totalCount) * 100) : 0;
 
-  const ls = S.lifeStatus || {
-    location: 'Cairo, Egypt',
-    destination: 'Saudi Arabia (Riyadh / Jeddah)',
-    travelStatus: 'imminent',
-    targetTravelDate: 'Late November 2026',
-    expensesPaid: true,
-    flightBooked: false,
-    flightDetails: '',
-    saudiPhone: false,
-    saudiPhoneNumber: '',
-    currentDifficulty: 1,
-    difficultyName: 'Level 1 — Normal',
-    activeBossFocus: 'b2'
-  };
-  const fp = S.foundationProfile || {
-    dayIndex: 1,
-    foundationActive: true,
-    recoveryMode: false,
-    totalMandatoryMinutes: 220
-  };
-  const diffLevel = ls.currentDifficulty || 1;
-  const isRecovery = !!fp.recoveryMode;
+  const analytics = (typeof XpEngine !== 'undefined' && XpEngine.getAnalytics) ? XpEngine.getAnalytics() : { today: 0, thisWeek: 0 };
+  const hr = typeof getCairoHour === 'function' ? getCairoHour() : new Date().getHours();
+  const greeting = hr < 12 ? 'GOOD MORNING, HUNTER' : (hr < 18 ? 'GOOD AFTERNOON, HUNTER' : 'GOOD EVENING, HUNTER');
+
+  if($('dashBar')) $('dashBar').style.width = pct + '%';
+  if($('todayTag')) $('todayTag').textContent = doneCount + ' / ' + totalCount + ' MISSIONS';
+  if($('dashThresholdStatus')){
+    $('dashThresholdStatus').className = 'quest-threshold-status ' + (doneCount === 0 ? 'tier-danger' : (pct >= 100 ? 'tier-srank' : 'tier-cleared'));
+    $('dashThresholdStatus').innerHTML = doneCount === 0
+      ? '⚠️ Complete at least <b>1 mission</b> to keep your streak active. Unchecked missions cost <b>-2&times; XP</b> at midnight.'
+      : (pct >= 100
+        ? '👑 <b>All ' + totalCount + ' Daily Missions Cleared!</b> Active Day secured.'
+        : '⚔️ <b>' + doneCount + ' / ' + totalCount + ' Missions Cleared</b> &bull; Active Day secured!');
+  }
 
   let html = '';
 
-  /* 0. System Command Center & Next Best Action Directive */
-  if (typeof renderSystemCommandCenter === 'function') {
-    html += renderSystemCommandCenter();
-  }
+  /* 1. 2-Second Hero Clarity Strip */
+  html += '<div class="life-hud-card" style="padding:14px 18px;margin-bottom:14px;">'
+    + '<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;">'
+    +   '<div>'
+    +     '<div style="font-family:var(--hud);font-size:15px;color:#00f0ff;letter-spacing:1.2px;font-weight:800;">' + greeting + '</div>'
+    +     '<div style="font-size:12.5px;color:var(--muted);margin-top:2px;">Cairo Day: <b>' + (typeof dayKey === 'function' ? dayKey() : '') + '</b> &bull; Resets 00:00 AM</div>'
+    +   '</div>'
+    +   '<div style="display:flex;gap:14px;flex-wrap:wrap;">'
+    +     '<div><span style="font-size:11px;color:var(--muted);display:block;">TODAY</span><b style="color:#fff;font-size:14px;">' + doneCount + ' / ' + totalCount + ' Missions</b></div>'
+    +     '<div><span style="font-size:11px;color:var(--muted);display:block;">TODAY XP</span><b style="color:var(--gold);font-size:14px;">+' + (analytics.today || 0) + ' XP</b></div>'
+    +     '<div><span style="font-size:11px;color:var(--muted);display:block;">STREAK</span><b style="color:var(--green);font-size:14px;">' + (S.streak || 0) + ' Days</b></div>'
+    +   '</div>'
+    + '</div>'
+    + '</div>';
 
-  /* 1. Recovery Mode Alert Banner (If Active) */
-  if(isRecovery){
-    html += '<div class="recovery-mode-banner">'
-      + '<div class="rmb-left">'
-      +   '<span class="rmb-icon">🛡️</span>'
-      +   '<div>'
-      +     '<div class="rmb-title">RECOVERY MODE ACTIVE — REDUCED WORKLOAD</div>'
-      +     '<div class="rmb-sub">Daily priorities streamlined to 2–3 gentle momentum tasks (~35 min) to protect consistency, reset mental clarity, and maintain your 27-day streak.</div>'
-      +   '</div>'
-      + '</div>'
-      + '<button class="btn rmb-btn" onclick="toggleRecoveryMode()">Resume Full Workload</button>'
-      + '</div>';
-  }
+  /* 2. Today's Clear Missions Checklist */
+  html += missions.map(m => missionRow(m, 'daily')).join('');
+  html += '<div style="display:flex;gap:10px;margin-top:12px;margin-bottom:16px;flex-wrap:wrap;">'
+    + '<button class="btn" style="flex:1;" onclick="openTaskModal()">+ Add Custom Mission</button>'
+    + '<button class="btn secondary" onclick="switchTab(\'daily\')">Full Daily View &rarr;</button>'
+    + '</div>';
 
-  /* 2. Bassem School Legendary Raid Hero Card */
+  /* 3. Quick Cards: Vocabulary (0 / 15) + Today's Habits + Bassem School */
+  const vWords = typeof todaysVocab === 'function' ? todaysVocab() : [];
+  const vLearned = typeof vocabLearnedTodayCount === 'function' ? vocabLearnedTodayCount() : 0;
+  const hList = typeof HabitEngine !== 'undefined' ? HabitEngine.getHabitsList() : [];
+  const hDone = typeof HabitEngine !== 'undefined' ? HabitEngine.getTodayCount() : 0;
+
+  html += '<div class="grid" style="margin-bottom:16px;">'
+    + '<div class="stat" style="cursor:pointer;" onclick="switchTab(\'vocab\')">'
+    +   '<div class="h"><span class="n">Today\'s Vocabulary</span><span class="lv" style="color:var(--glow);">' + vLearned + ' / ' + vWords.length + '</span></div>'
+    +   '<div class="sb">15 daily words &middot; Tap to practice &rarr;</div>'
+    + '</div>'
+    + '<div class="stat" style="cursor:pointer;" onclick="switchTab(\'habits\')">'
+    +   '<div class="h"><span class="n">Daily Habits</span><span class="lv" style="color:var(--green);">' + hDone + ' / ' + hList.length + '</span></div>'
+    +   '<div class="sb">Resets daily &middot; History preserved &rarr;</div>'
+    + '</div>'
+    + '<div class="stat" style="cursor:pointer;" onclick="switchTab(\'insight\')">'
+    +   '<div class="h"><span class="n">Streak &amp; Insights</span><span class="lv" style="color:var(--gold);">' + (S.streak || 0) + ' Days</span></div>'
+    +   '<div class="sb">Best: ' + (S.best || 0) + ' days &middot; View heatmap &rarr;</div>'
+    + '</div>'
+    + '</div>';
+
+  /* 4. Bassem School Raid Card (if loaded) */
   if(typeof renderBassemDashboardCard === 'function'){
     html += renderBassemDashboardCard();
-  }
-
-  /* 3. Foundation Period & Life Status Hero HUD */
-  html += '<div class="life-hud-card">'
-    + '<div class="lhc-top">'
-    +   '<div class="lhc-badge"><span class="pulse-dot"></span> FOUNDATION PHASE &bull; DAY ' + (fp.dayIndex || 1) + ' OF 14</div>'
-    +   '<div class="lhc-target">DEPARTURE WINDOW: ' + esc(ls.targetTravelDate) + ' (IMMINENT)</div>'
-    + '</div>'
-    + '<div class="lhc-main-row">'
-    +   '<div>'
-    +     '<div class="lhc-title">SAUDI ARABIA TRANSITION &bull; FOUNDATION OS</div>'
-    +     '<div class="lhc-sub">4+ Hours Daily Available &bull; ~3.5–4 Hours Mandatory Foundation Workload (220 min)</div>'
-    +   '</div>'
-    +   '<div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">'
-    +     '<button class="btn secondary" style="font-size:11.5px;padding:6px 10px;" onclick="toggleRecoveryMode()">'
-    +       (isRecovery ? '🛡️ Recovery Active' : '🛡️ Recovery Mode')
-    +     '</button>'
-    +     '<div class="lhc-difficulty-tag" onclick="goTab(\'lifestatus\')">'
-    +       '<span style="font-size:10px;color:var(--muted);display:block;">ACTIVE DIFFICULTY</span>'
-    +       '<b style="color:var(--sys-blue);">' + esc(ls.difficultyName || 'Level 1 — Normal') + '</b>'
-    +     '</div>'
-    +   '</div>'
-    + '</div>'
-
-    /* Daily Time Allocation Budgets */
-    + '<div class="fp-budgets-bar">'
-    +   '<div class="fp-budget-pill"><span class="fp-bp-k">🗣️ English</span><span class="fp-bp-v">60m</span></div>'
-    +   '<div class="fp-budget-pill"><span class="fp-bp-k">💼 Career</span><span class="fp-bp-v">60m</span></div>'
-    +   '<div class="fp-budget-pill"><span class="fp-bp-k">🇸🇦 Saudi Prep</span><span class="fp-bp-v">45m</span></div>'
-    +   '<div class="fp-budget-pill"><span class="fp-bp-k">⚙️ AI Automation</span><span class="fp-bp-v">35m</span></div>'
-    +   '<div class="fp-budget-pill"><span class="fp-bp-k">🎬 Content</span><span class="fp-bp-v">20m</span></div>'
-    +   '<div class="fp-budget-pill secondary"><span class="fp-bp-k">🎓 Germany M.Sc</span><span class="fp-bp-v">2x/wk</span></div>'
-    + '</div>'
-
-    /* Real-world arrangement quick pills */
-    + '<div class="lhc-pills-row">'
-    +   '<div class="lhc-pill success">'
-    +     '<span class="lhc-pill-icon">&#10003;</span>'
-    +     '<span>Major Relocation Expenses: <b>PAID &amp; CLEARED</b></span>'
-    +   '</div>'
-    +   '<div class="lhc-pill ' + (ls.flightBooked ? 'success' : 'pending') + '" onclick="toggleFlightStatus()">'
-    +     '<span class="lhc-pill-icon">' + (ls.flightBooked ? '&#10003;' : '&#9203;') + '</span>'
-    +     '<span>Flight Ticket: <b>' + (ls.flightBooked ? 'BOOKED' : 'PENDING BOOKING') + '</b></span>'
-    +   '</div>'
-    +   '<div class="lhc-pill ' + (ls.saudiPhone ? 'success' : 'locked') + '" onclick="toggleSaudiPhoneStatus()">'
-    +     '<span class="lhc-pill-icon">' + (ls.saudiPhone ? '&#10003;' : '&#128274;') + '</span>'
-    +     '<span>Saudi Phone: <b>' + (ls.saudiPhone ? 'ACTIVE' : 'GATED UNTIL LANDING') + '</b></span>'
-    +   '</div>'
-    + '</div>'
-
-    + '<div class="lhc-readiness-box">'
-    +   '<div class="lhc-readiness-head">TACTICAL MORNING ORIENTATION:</div>'
-    +   '<div class="lhc-q-grid">'
-    +     '<div class="lhc-q-item"><b>1. Current Phase:</b> Cairo, Egypt &mdash; Days 1–14 Foundation Period (3–5 daily tasks).</div>'
-    +     '<div class="lhc-q-item"><b>2. Primary Focus:</b> CV/portfolio polish, spoken English recorded drills, travel document folder.</div>'
-    +     '<div class="lhc-q-item"><b>3. Daily Saudi Job Applications:</b> <span style="color:var(--gold);font-weight:600;">Zero quota &mdash; gated until local Saudi phone is active.</span></div>'
-    +     '<div class="lhc-q-item"><b>4. Today\'s Capacity:</b> ' + (isRecovery ? 'Recovery Mode: 2–3 gentle tasks (~35 min total).' : (diffLevel === 1 ? '3–5 focused tasks (15–25m each) totaling ~220 min.' : (diffLevel === 2 ? '4–6 tasks (25–35m each).' : (diffLevel === 3 ? '5–7 tasks (30–45m each).' : '6–8 tasks (max 10).')))) + '</div>'
-    +   '</div>'
-    + '</div>'
-
-    + '<div class="lhc-actions">'
-    +   '<button class="shc-btn" onclick="goTab(\'lifestatus\')">Open Life Command Center &amp; B1/B2 English Lab &rarr;</button>'
-    +   '<button class="shc-btn secondary" onclick="goTab(\'boss\')">View 4 Master Boss Raids &rarr;</button>'
-    + '</div>'
-    + '</div>';
-
-  /* 3. Today's Strategic Priorities Header */
-  html += '<div class="priority-section-head">'
-    + '<div>'
-    +   '<h3 style="margin:0;font-family:var(--hud);font-size:15px;color:var(--sys-blue);letter-spacing:1px;">TODAY\'S DAILY QUESTS &bull; ' + (isRecovery ? 'RECOVERY MODE (2–3 TASKS)' : esc((ls.difficultyName || 'LEVEL 1 — NORMAL').toUpperCase()) + ' (3–5 TASKS)') + '</h3>'
-    +   '<div style="font-size:12px;color:var(--muted);margin-top:2px;">Strict Limit: ' + totalCount + ' / ' + MAX_DAILY_TASKS + ' Active Tasks &bull; Clear criteria, time budgets, and step-by-step instructions</div>'
-    + '</div>'
-    + '<div class="priority-load-badge ' + (totalCount > 8 ? 'heavy' : 'optimal') + '">'
-    +   completedCount + ' / ' + totalCount + ' CLEARED'
-    + '</div>'
-    + '</div>';
-
-  /* 4. Rich Daily Quest Cards */
-  if(priorities.length === 0){
-    html += '<div class="empty-priority-card">'
-      + '<div style="font-size:28px;margin-bottom:8px;">⚔️</div>'
-      + '<div style="font-family:var(--hud);font-size:14px;color:#fff;">ALL DAILY QUESTS CLEARED</div>'
-      + '<div style="font-size:12px;color:var(--muted);margin-top:4px;">Excellent work, Hunter. All daily objectives completed. Rest or review your knowledge bank.</div>'
-      + '</div>';
-  } else {
-    html += '<div class="rich-quest-list">';
-    priorities.forEach((t, qIdx) => {
-      const isDone = !!(S.daily && S.daily[t.id]);
-      const pColor = t.priority === 'high' ? 'var(--red)' : (t.priority === 'medium' ? 'var(--gold)' : 'var(--sys-blue)');
-      const raidNames = { b1: 'RAID 01: GERMANY', b2: 'RAID 02: SAUDI TRANSITION', b3: 'RAID 03: CONTENT BRAND', b4: 'RAID 04: AI AUTOMATION' };
-      const raidTag = raidNames[t.related] || 'CORE DEVELOPMENT';
-
-      html += '<div class="rich-quest-card ' + (isDone ? 'done' : '') + '">'
-        + '<div class="rq-top-row">'
-        +   '<div class="rq-left">'
-        +     '<div class="rq-check ' + (isDone ? 'checked' : '') + '" onclick="toggleLifeOSTask(\'' + t.id + '\', event)">'
-        +       (isDone ? '&#10003;' : '')
-        +     '</div>'
-        +     '<div>'
-        +       '<div class="rq-tags-row">'
-        +         '<span class="rq-badge-level">LEVEL ' + (t.level || 1) + '</span>'
-        +         '<span class="rq-badge-raid">' + esc(raidTag) + '</span>'
-        +         '<span class="rq-badge-prio" style="border-color:' + pColor + ';color:' + pColor + ';">' + (t.priority || 'NORMAL').toUpperCase() + '</span>'
-        +         '<span class="rq-duration">&#9201; ' + esc(t.duration || '20 min') + '</span>'
-        +       '</div>'
-        +       '<h4 class="rq-title ' + (isDone ? 'done-text' : '') + '" onclick="toggleLifeOSTask(\'' + t.id + '\', event)">' + esc(t.name) + '</h4>'
-        +     '</div>'
-        +   '</div>'
-        +   '<div class="rq-xp-tag">+' + t.xp + ' XP</div>'
-        + '</div>'
-
-        + (t.desc ? '<div class="rq-desc">' + esc(t.desc) + '</div>' : '')
-
-        + '<div class="rq-detail-grid">'
-        +   (t.why ? '<div class="rq-why-box"><b style="color:var(--gold);">&#9733; Why it matters:</b> ' + esc(t.why) + '</div>' : '')
-        +   (t.criteria ? '<div class="rq-crit-box"><b style="color:var(--green);">&#9678; Completion criteria:</b> ' + esc(t.criteria) + '</div>' : '')
-        + '</div>'
-
-        + (t.steps && t.steps.length ? 
-            '<div class="rq-steps-box">'
-            + '<div class="rq-steps-head">Numbered Execution Steps:</div>'
-            + '<ul class="rq-steps-list">'
-            + t.steps.map(s => '<li>' + esc(s) + '</li>').join('')
-            + '</ul>'
-            + '</div>'
-            : (t.action ? '<div class="rq-action-box"><b>Action:</b> ' + esc(t.action) + '</div>' : ''))
-
-        + '</div>';
-    });
-    html += '</div>';
-  }
-
-  /* Add Custom Task & Quick Navigation Buttons */
-  html += '<div style="display:flex;gap:10px;margin-top:14px;flex-wrap:wrap;">'
-    + '<button class="btn" style="flex:1;" onclick="openTaskModal()">+ Add Custom Task</button>'
-    + '<button class="btn secondary" onclick="goTab(\'lifestatus\')">Calibrate Pacing in Life Command Center &rarr;</button>'
-    + '</div>';
-
-  /* Habits Quick Glance Bar */
-  if(typeof HABIT_ROUTINES_DEF !== 'undefined'){
-    const completedHabits = HABIT_ROUTINES_DEF.filter(h => S.daily && S.daily[h.id]).length;
-    html += '<div class="habits-glance-box">'
-      + '<div class="hgb-head">'
-      +   '<div>'
-      +     '<span style="font-family:var(--hud);font-size:13px;color:#fff;letter-spacing:1px;">DAILY ROUTINES &amp; HABIT FOUNDATIONS</span>'
-      +     '<span style="font-size:11.5px;color:var(--muted);margin-left:8px;">(Tracked in Habits portal)</span>'
-      +   '</div>'
-      +   '<span class="tag">' + completedHabits + ' / ' + HABIT_ROUTINES_DEF.length + ' DONE</span>'
-      + '</div>'
-      + '<div class="hgb-grid">'
-      + HABIT_ROUTINES_DEF.map(h => {
-          const done = !!(S.daily && S.daily[h.id]);
-          const streak = (S.habitDays && S.habitDays[h.id] && S.habitDays[h.id].length) || 27;
-          return '<div class="hgb-pill ' + (done ? 'done' : '') + '" onclick="toggleHabitRoutine(\'' + h.id + '\', event)">'
-            + '<span class="hgb-check">' + (done ? '&#10003;' : '') + '</span>'
-            + '<span class="hgb-name">' + esc(h.name) + '</span>'
-            + '<span class="hgb-streak">&times;' + streak + '</span>'
-            + '</div>';
-        }).join('')
-      + '</div>'
-      + '</div>';
   }
 
   dashList.innerHTML = html;
 }
 
-/* 2. TASK MANAGER & KANBAN ENGINE */
-let taskViewState = {
-  view: 'list',
-  filter: 'today'
-};
+function drawTaskManager(){ drawDaily(); }
 
-function setTaskView(v){
-  taskViewState.view = v;
-  drawTaskManager();
-}
-
-function setTaskFilter(f){
-  taskViewState.filter = f;
-  drawTaskManager();
-}
-
-function drawTaskManager(){
-  const container = $('taskManagerContainer');
-  if(!container) return;
-
-  const priorities = getDailyPriorities();
-  const allCustom = (S.customTasks || []).filter(t => !t.archived);
-  
-  let allTasks = [];
-  if(typeof INTELLIGENT_QUESTS_POOL !== 'undefined') allTasks = allTasks.concat(INTELLIGENT_QUESTS_POOL);
-  else if(typeof ACTIVE_DAILY_TASKS_DEF !== 'undefined') allTasks = allTasks.concat(ACTIVE_DAILY_TASKS_DEF);
-  allTasks = allTasks.concat(allCustom);
-
-  let filtered = [];
-  if(taskViewState.filter === 'today'){
-    filtered = priorities;
-  } else if(taskViewState.filter === 'in_progress'){
-    filtered = allTasks.filter(t => (S.taskStatus && S.taskStatus[t.id] === 'in_progress') && !(S.daily && S.daily[t.id]));
-  } else if(taskViewState.filter === 'upcoming'){
-    filtered = allTasks.filter(t => t.status === 'upcoming' || (S.taskStatus && S.taskStatus[t.id] === 'upcoming'));
-  } else if(taskViewState.filter === 'completed'){
-    filtered = allTasks.filter(t => S.daily && S.daily[t.id]);
-  } else {
-    filtered = allTasks;
-  }
-
-  let html = '<div class="tm-header">'
-    + '<div class="tm-top-bar">'
-    +   '<div class="tm-views">'
-    +     '<button class="tm-view-btn ' + (taskViewState.view === 'list' ? 'active' : '') + '" onclick="setTaskView(\'list\')">&#9776; List View</button>'
-    +     '<button class="tm-view-btn ' + (taskViewState.view === 'kanban' ? 'active' : '') + '" onclick="setTaskView(\'kanban\')">&#9638; Kanban Board</button>'
-    +   '</div>'
-    +   '<button class="btn tm-add-btn" onclick="openTaskModal()">+ New Task</button>'
-    + '</div>'
-    + '<div class="tm-filter-bar">'
-    +   '<button class="tm-filter-pill ' + (taskViewState.filter === 'today' ? 'active' : '') + '" onclick="setTaskFilter(\'today\')">Today (' + priorities.length + ')</button>'
-    +   '<button class="tm-filter-pill ' + (taskViewState.filter === 'in_progress' ? 'active' : '') + '" onclick="setTaskFilter(\'in_progress\')">In Progress</button>'
-    +   '<button class="tm-filter-pill ' + (taskViewState.filter === 'upcoming' ? 'active' : '') + '" onclick="setTaskFilter(\'upcoming\')">Upcoming</button>'
-    +   '<button class="tm-filter-pill ' + (taskViewState.filter === 'completed' ? 'active' : '') + '" onclick="setTaskFilter(\'completed\')">Completed</button>'
-    +   '<button class="tm-filter-pill ' + (taskViewState.filter === 'all' ? 'active' : '') + '" onclick="setTaskFilter(\'all\')">All Tasks</button>'
-    +   '<div class="tm-cap-tag ' + (priorities.length >= MAX_DAILY_TASKS ? 'full' : '') + '">'
-    +     'Capacity: ' + priorities.length + ' / ' + MAX_DAILY_TASKS
-    +   '</div>'
-    + '</div>'
-    + '</div>';
-
-  if(taskViewState.view === 'list'){
-    html += '<div class="tm-list-view">';
-    if(filtered.length === 0){
-      html += '<div class="empty-priority-card" style="margin-top:20px;">No tasks match this filter.</div>';
-    } else {
-      filtered.forEach(t => {
-        const isDone = !!(S.daily && S.daily[t.id]);
-        const pColor = t.priority === 'high' ? 'var(--red)' : (t.priority === 'medium' ? 'var(--gold)' : 'var(--sys-blue)');
-        html += '<div class="tm-task-row ' + (isDone ? 'done' : '') + '">'
-          + '<div class="tm-task-left" onclick="toggleLifeOSTask(\'' + t.id + '\', event)">'
-          +   '<div class="p-check">' + (isDone ? '&#10003;' : '') + '</div>'
-          +   '<div>'
-          +     '<div class="tm-task-title">' + esc(t.name) + '</div>'
-          +     '<div class="tm-task-meta">'
-          +       '<span class="p-badge" style="border-color:' + pColor + ';color:' + pColor + ';">' + (t.priority || 'medium').toUpperCase() + '</span>'
-          +       '<span>' + esc(t.duration || '25 min') + '</span>'
-          +       '<span>&bull;</span>'
-          +       '<span>' + esc(t.sub || 'Career & Saudi') + '</span>'
-          +       (t.project ? '<span class="tm-proj-tag">' + esc(t.project) + '</span>' : '')
-          +     '</div>'
-          +   '</div>'
-          + '</div>'
-          + '<div class="tm-task-right">'
-          +   '<span class="p-xp">+' + t.xp + ' XP</span>'
-          +   '<select class="tm-status-select" onchange="updateTaskStatus(\'' + t.id + '\', this.value)" onclick="event.stopPropagation()">'
-          +     '<option value="today" ' + (((S.taskStatus && S.taskStatus[t.id] === 'today') || !S.taskStatus || !S.taskStatus[t.id]) ? 'selected' : '') + '>Today</option>'
-          +     '<option value="in_progress" ' + (S.taskStatus && S.taskStatus[t.id] === 'in_progress' ? 'selected' : '') + '>In Progress</option>'
-          +     '<option value="upcoming" ' + (S.taskStatus && S.taskStatus[t.id] === 'upcoming' ? 'selected' : '') + '>Upcoming</option>'
-          +     '<option value="completed" ' + (isDone ? 'selected' : '') + '>Completed</option>'
-          +   '</select>'
-          + '</div>'
-          + '</div>';
-      });
-    }
-    html += '</div>';
-  } else {
-    const cols = [
-      { id: 'today', name: "Today's Priorities", items: priorities.filter(t => !S.daily[t.id] && (!S.taskStatus || S.taskStatus[t.id] !== 'in_progress')) },
-      { id: 'in_progress', name: 'In Progress', items: allTasks.filter(t => (S.taskStatus && S.taskStatus[t.id] === 'in_progress') && !S.daily[t.id]) },
-      { id: 'upcoming', name: 'Upcoming & Inbox', items: allTasks.filter(t => (t.status === 'upcoming' || (S.taskStatus && S.taskStatus[t.id] === 'upcoming')) && !S.daily[t.id]) },
-      { id: 'completed', name: 'Completed Today', items: allTasks.filter(t => S.daily && S.daily[t.id]) }
-    ];
-
-    html += '<div class="kanban-board">';
-    cols.forEach(col => {
-      html += '<div class="kanban-col">'
-        + '<div class="kanban-col-head">'
-        +   '<span>' + col.name + '</span>'
-        +   '<span class="tag">' + col.items.length + '</span>'
-        + '</div>'
-        + '<div class="kanban-card-list">'
-        + col.items.map(t => {
-            const isDone = !!(S.daily && S.daily[t.id]);
-            const pColor = t.priority === 'high' ? 'var(--red)' : (t.priority === 'medium' ? 'var(--gold)' : 'var(--sys-blue)');
-            return '<div class="kanban-card ' + (isDone ? 'done' : '') + '" onclick="toggleLifeOSTask(\'' + t.id + '\', event)">'
-              + '<div class="kc-top">'
-              +   '<span class="p-badge" style="border-color:' + pColor + ';color:' + pColor + ';">' + (t.priority || 'medium').toUpperCase() + '</span>'
-              +   '<span class="p-xp">+' + t.xp + ' XP</span>'
-              + '</div>'
-              + '<div class="kc-title">' + esc(t.name) + '</div>'
-              + '<div class="kc-desc">' + esc(t.why || t.action || '') + '</div>'
-              + '<div class="kc-footer">'
-              +   '<span>' + esc(t.duration || '25 min') + '</span>'
-              +   '<span class="kc-shift-btn" onclick="event.stopPropagation(); updateTaskStatus(\'' + t.id + '\', \'' + (col.id === 'today' ? 'in_progress' : (col.id === 'in_progress' ? 'completed' : 'today')) + '\')">Shift &rarr;</span>'
-              + '</div>'
-              + '</div>';
-          }).join('')
-        + (col.items.length === 0 ? '<div class="kanban-empty">Empty</div>' : '')
-        + '</div>'
-        + '</div>';
-    });
-    html += '</div>';
-  }
-
-  container.innerHTML = html;
-}
-
-/* 3. HABITS SECTION ENGINE */
+/* 3. UNIFIED DAILY HABITS & HISTORY RENDERER */
 function drawHabitsSection(){
   const container = $('habitTrackerContainer');
   if(!container) return;
 
-  const routines = typeof HABIT_ROUTINES_DEF !== 'undefined' ? HABIT_ROUTINES_DEF : [];
-  const completedCount = routines.filter(h => S.daily && S.daily[h.id]).length;
-  const totalCount = routines.length;
+  const list = typeof HabitEngine !== 'undefined' ? HabitEngine.getHabitsList() : [];
+  const completedCount = typeof HabitEngine !== 'undefined' ? HabitEngine.getTodayCount() : 0;
+  const totalCount = list.length;
 
-  let morning = routines.filter(h => (h.time === 'Morning') || (h.timeOfDay || '').toLowerCase().includes('morn') || (h.category || '').toLowerCase().includes('morn'));
-  let day = routines.filter(h => (h.time === 'Day') || (h.timeOfDay || '').toLowerCase().includes('day') || (h.category || '').toLowerCase().includes('day') || (h.category || '').toLowerCase().includes('prof') || (h.category || '').toLowerCase().includes('strat') || (h.category || '').toLowerCase().includes('work'));
-  let night = routines.filter(h => (h.time === 'Night') || (h.timeOfDay || '').toLowerCase().includes('even') || (h.timeOfDay || '').toLowerCase().includes('night') || (h.category || '').toLowerCase().includes('even') || (h.category || '').toLowerCase().includes('night') || (h.category || '').toLowerCase().includes('recov'));
+  const morning = list.filter(h => (h.timeOfDay || '').includes('morn'));
+  const day     = list.filter(h => (h.timeOfDay || '').includes('day') || (!h.timeOfDay && !h.custom));
+  const night   = list.filter(h => (h.timeOfDay || '').includes('even') || (h.timeOfDay || '').includes('night'));
+  const custom  = list.filter(h => !!h.custom);
 
   let html = '<div class="panel">'
     + '<div class="st">'
-    +   '<h2>Habits & Routines Management</h2>'
+    +   '<h2>Daily Habits</h2>'
     +   '<span class="tag">' + completedCount + ' / ' + totalCount + ' COMPLETED TODAY</span>'
     + '</div>'
-    + '<div class="hint">'
-    +   '<b>Intelligent Habit Recognition System:</b> When a daily action reaches <b>21+ completions</b>, it automatically graduates from your active quest list to your permanent Habits section. It builds long-term discipline without cluttering your daily priorities.'
-    + '</div>'
-    + '<div class="habits-stats-row">'
-    +   '<div class="stat"><div class="h"><span class="n">Active Habits</span><span class="lv" style="color:var(--sys-blue);">' + totalCount + '</span></div><div class="sb">Graduated routines</div></div>'
-    +   '<div class="stat"><div class="h"><span class="n">Today\'s Progress</span><span class="lv" style="color:var(--green);">' + completedCount + '/' + totalCount + '</span></div><div class="sb">' + Math.round((completedCount/totalCount)*100 || 0) + '% completed</div></div>'
-    +   '<div class="stat"><div class="h"><span class="n">Formation Threshold</span><span class="lv" style="color:var(--gold);">21 Days</span></div><div class="sb">Neuroplasticity lock</div></div>'
-    +   '<div class="stat"><div class="h"><span class="n">Consistency Score</span><span class="lv" style="color:var(--glow);">' + (S.streak >= 21 ? 'EXEMPLARY' : 'STABLE') + '</span></div><div class="sb">' + S.streak + '-day streak</div></div>'
+    + '<div class="hint">Every habit starts <b>Incomplete (&#9744;)</b> at Cairo midnight (00:00 AM). Checking a habit logs today in permanent history without locking tomorrow.</div>'
+    + '<div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;">'
+    +   '<input type="text" id="newHabitInput" placeholder="Add new custom habit..." style="flex:1;min-width:200px;padding:8px 12px;background:rgba(0,0,0,0.4);border:1px solid var(--line);border-radius:6px;color:#fff;">'
+    +   '<button class="btn" onclick="const inp=$(\'newHabitInput\'); if(inp && inp.value.trim()){ HabitEngine.addCustomHabit(inp.value); inp.value=\'\'; }">+ Add Habit</button>'
     + '</div>'
     + '</div>';
 
-  const renderRoutineGroup = (title, icon, items) => {
-    let groupHtml = '<div class="panel">'
-      + '<div class="st"><h2 style="color:var(--sys-blue);">' + icon + ' ' + title + '</h2><span class="tag">' + items.filter(h => S.daily && S.daily[h.id]).length + ' / ' + items.length + ' DONE</span></div>'
+  const renderGroup = (title, items) => {
+    if(!items.length) return '';
+    let gHtml = '<div class="panel">'
+      + '<div class="st"><h2>' + title + '</h2><span class="tag">' + items.filter(h => HabitEngine.isDoneToday(h.id)).length + ' / ' + items.length + ' TODAY</span></div>'
       + '<div class="habit-group-grid">';
     items.forEach(h => {
-      const isDone = !!(S.daily && S.daily[h.id]);
-      const streak = (S.habitDays && S.habitDays[h.id] && S.habitDays[h.id].length) || 21;
-      groupHtml += '<div class="habit-routine-card ' + (isDone ? 'done' : '') + '" onclick="toggleHabitRoutine(\'' + h.id + '\', event)">'
+      const doneToday = HabitEngine.isDoneToday(h.id);
+      const stats = HabitEngine.getHabitStats(h.id);
+      const dots = stats.last14.map(d => '<span title="'+d.date+': '+(d.completed?'Done':'Missed')+'" style="display:inline-block;width:9px;height:9px;border-radius:2px;background:'+(d.completed?'var(--green)':'rgba(255,255,255,0.1)')+';margin-right:2px;"></span>').join('');
+      gHtml += '<div class="habit-routine-card ' + (doneToday ? 'done' : '') + '" onclick="HabitEngine.toggleHabit(\'' + h.id + '\', event)">'
         + '<div class="hrc-left">'
-        +   '<div class="p-check">' + (isDone ? '&#10003;' : '') + '</div>'
+        +   '<div class="p-check">' + (doneToday ? '&#10003;' : '') + '</div>'
         +   '<div>'
         +     '<div class="hrc-title">' + esc(h.name) + '</div>'
-        +     '<div class="hrc-why">' + esc(h.why) + '</div>'
+        +     '<div class="hrc-why">' + esc(h.why || '') + '</div>'
+        +     '<div style="margin-top:6px;" title="Last 14 days history">' + dots + ' <span style="font-size:11px;color:var(--muted);margin-left:6px;">' + stats.totalCompletions + ' total days &middot; Streak: ' + stats.currentStreak + '</span></div>'
         +   '</div>'
         + '</div>'
         + '<div class="hrc-right">'
-        +   '<span class="hrc-grad-badge">&#127942; ESTABLISHED (' + streak + 'D)</span>'
-        +   '<span class="p-xp">+10 XP</span>'
+        +   '<span class="p-xp">+' + HabitEngine.XP_PER_HABIT + ' XP</span>'
+        +   (h.custom ? '<button class="xbtn" style="margin-left:6px;" onclick="event.stopPropagation(); HabitEngine.removeCustomHabit(\'' + h.id + '\');">✕</button>' : '')
         + '</div>'
         + '</div>';
     });
-    groupHtml += '</div></div>';
-    return groupHtml;
+    gHtml += '</div></div>';
+    return gHtml;
   };
 
-  html += renderRoutineGroup('Morning Routine — Foundation & Focus', '🌅', morning);
-  html += renderRoutineGroup('Day & Work Routine — High Performance & Strategy', '⚡', day);
-  html += renderRoutineGroup('Night Routine — Recovery, Expense Audit & Reflection', '🌙', night);
+  html += renderGroup('🌅 Morning Habits', morning);
+  html += renderGroup('⚡ Daytime Habits', day);
+  html += renderGroup('🌙 Evening Habits', night);
+  html += renderGroup('✨ Custom Habits', custom);
+
+  /* Explicit Habit History Panel (Yesterday + Recent 7 Days) */
+  if(typeof HabitEngine !== 'undefined' && HabitEngine.getRecentHistoryRows){
+    const histRows = HabitEngine.getRecentHistoryRows(7);
+    html += '<div class="panel">'
+      + '<div class="st"><h2>Habit History (Last 7 Days)</h2><span class="tag">PERSISTENT LOG</span></div>'
+      + '<div class="hint">Past habit completions stay permanently archived here even after today resets to unchecked.</div>'
+      + histRows.map(r => '<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.06);flex-wrap:wrap;gap:6px;">'
+          + '<div><b style="color:var(--glow);">' + r.date + '</b> <span style="font-size:12px;color:var(--muted);">(' + r.completedCount + ' / ' + r.totalCount + ' habits)</span></div>'
+          + '<div style="font-size:12px;color:' + (r.completedCount > 0 ? 'var(--green)' : 'var(--muted)') + ';">' + (r.completedNames.length ? r.completedNames.slice(0,4).map(esc).join(', ') + (r.completedNames.length > 4 ? ' +' + (r.completedNames.length - 4) + ' more' : '') : 'No habits logged') + '</div>'
+          + '</div>').join('')
+      + '</div>';
+  }
 
   container.innerHTML = html;
 }
@@ -3136,79 +2550,8 @@ function drawSkillsSection(){
   if(typeof drawSkillTree === 'function') drawSkillTree();
 }
 
-/* 8. VOCABULARY ENGINE WITH AUDIO TTS */
-function speakWord(term){
-  if('speechSynthesis' in window){
-    window.speechSynthesis.cancel();
-    const u = new SpeechSynthesisUtterance(term);
-    u.lang = 'en-US';
-    u.rate = 0.9;
-    window.speechSynthesis.speak(u);
-  } else {
-    alert('Speech synthesis audio is not supported in this browser.');
-  }
-}
-
-function drawVocabSection(){
-  const todayContainer = $('vocabToday');
-  if(!todayContainer) return;
-
-  const vocabPool = typeof EXPANDED_VOCAB_DATA !== 'undefined' ? EXPANDED_VOCAB_DATA : (typeof VOCAB_DATA !== 'undefined' ? VOCAB_DATA : []);
-  
-  if($('vPool')) $('vPool').textContent = vocabPool.length;
-  const learnedTotal = (S.vocabLearned || []).length;
-  if($('vTotal')) $('vTotal').textContent = learnedTotal;
-  if($('vocabTotalTag')) $('vocabTotalTag').textContent = learnedTotal + ' WORDS';
-
-  let html = '<div class="vocab-cards-grid">';
-  vocabPool.forEach(v => {
-    const word = v.word || v.w || '';
-    const isLearned = (S.vocabLearned || []).includes(word);
-    const category = v.category || v.cat || 'Marketing';
-    const ipa = v.ipa || '';
-    const def = v.def || v.meaning || v.ctx || '';
-    const ar = v.arabic || v.ar || '';
-    const ex = v.example || v.ex || '';
-
-    html += '<div class="vocab-card ' + (isLearned ? 'learned' : '') + '">'
-      + '<div class="vc-top">'
-      +   '<span class="vc-cat">' + esc(category) + '</span>'
-      +   '<button class="vc-audio-btn" onclick="speakWord(\'' + esc(word).replace(/'/g, "\\'") + '\')">&#128266; Listen</button>'
-      + '</div>'
-      + '<div class="vc-word-row">'
-      +   '<h3 class="vc-word">' + esc(word) + '</h3>'
-      +   (ipa ? '<span class="vc-ipa">' + esc(ipa) + '</span>' : '')
-      + '</div>'
-      + '<div class="vc-def">' + esc(def) + '</div>'
-      + (ar ? '<div class="vc-ar"><b>المعنى بالعربي:</b> ' + esc(ar) + '</div>' : '')
-      + (ex ? '<div class="vc-ex">&ldquo;' + esc(ex) + '&rdquo;</div>' : '')
-      + '<div class="vc-footer">'
-      +   '<button class="vc-learn-btn ' + (isLearned ? 'done' : '') + '" onclick="toggleVocabLearned(\'' + esc(word).replace(/'/g, "\\'") + '\')">'
-      +     (isLearned ? '&#10003; Learned' : 'Mark Learned (+8 XP)')
-      +   '</button>'
-      + '</div>'
-      + '</div>';
-  });
-  html += '</div>';
-  todayContainer.innerHTML = html;
-}
-
-function toggleVocabLearned(word){
-  if(!S.vocabLearned) S.vocabLearned = [];
-  const idx = S.vocabLearned.indexOf(word);
-  if(idx !== -1){
-    S.vocabLearned.splice(idx, 1);
-    subXP(8, 'english', 'vocab', 8);
-    sfx('uncheck');
-  } else {
-    S.vocabLearned.push(word);
-    addXP(8, 'english', true, 'vocab');
-    sfx('check');
-    log('VOCAB LEARNED', 'Learned vocabulary: <b>' + esc(word) + '</b> (+8 XP).');
-  }
-  save();
-  renderAll();
-}
+/* Vocabulary UI unified in drawVocab() */
+function drawVocabSection(){ drawVocab(); }
 
 /* 9. FINANCE & RUNWAY BUFFER ENGINE */
 function drawFinanceSection(){

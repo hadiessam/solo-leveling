@@ -1,4 +1,4 @@
-﻿/* =====================================================================
+/* =====================================================================
    SOLO LEVELING — CORE ENGINE
    State, XP, penalties, streak freeze, courses, storage.
    ===================================================================== */
@@ -46,80 +46,64 @@ const MILESTONES  = {5:'TIER 2 UNLOCKED', 10:'COURSE STAGE 2', 15:'TIER 3 UNLOCK
    --------------------------------------------------------------------- */
 function blank(){
   return {
-    ver:5,
-    xp:0, level:1, streak:0, best:0,
-    lastActive:'', lastDay:'', lastWeek:'',
-    daily:{}, weekly:{}, boss:{},
-    statXP:{}, rewards:[], msgs:[], courses:{},
-    qDone:0, sDone:0,
-    penCount:0, xpLost:0, penaltyDay:'',
-    freezes:0, freezeUsed:[], punishment:0,
-    started:false, startedOn:'',
-    milestones:[], badges:[],
-    lastBackup:'', lastAuto:'', perfectDays:[], perfectPending:'', perfectBonusScheduled:'', missionXP:{}, warnings:[],
-    reviews:[], lastReview:'', log30:{},
-    typing:{now:0, target:60, hist:[]},
-    books:{},
-    hp:100, maxHp:100,
-    mana:50, maxMana:50,
-    classId:'',
-    shadowLevel:0, shadowXp:0,
-    focusSessions:0, focusDate:'',
-    vision:[],
-    shadowChars:[],
-    xpSource:{},
-    vocab:{}, vocabTotal:0, vocabDays:0,
-    eggs:{}, eggsTotal:0, eggDay:'', eggMissionsToday:0, eggMissionTotal:0,
-    eggStreakMark:0, eggLevelMark:0,
-    pomoRunning:false, pomoEndsAt:0, pomoMode:'work',
-    hist:[],
-    /* Prestige System */
-    prestige:0, prestigeMult:1, prestigeBadges:[],
-    /* Pause System */
-    paused:false, pauseDate:'', pauseReason:'',
-    /* Character Stats */
-    str:0, int:0, agi:0, end:0, statPoints:0,
-    /* Monthly Boss Challenge */
-    monthlyBoss:{active:false, progress:0, target:0, reward:0, month:''},
-    /* Equipment */
-    equipment:{weapon:null, armor:null, accessory:null},
-    /* AI Coach */
-    coachMsg:'', coachDate:'',
-    /* Habit Strength */
-    habitStrength:{},
-    /* Negative Habits */
-    negativeHabits:{}, negHabitDamage:0,
-    /* Skill Tree */
-    skillTree:{},
-    /* Jin-Woo custom phrase */
-    customPhrase:'',
-    /* Habit formation tracking */
-    habitDays:{}, formedHabits:{},
-    /* Money ideas progress */
-    moneyProgress:{},
-    /* Speaking / pronunciation */
-    speaking:{wordsDone:[], recordings:[]},
-    /* 21-Day Habit Tracker */
-    habits:{},
-    /* Up to Date — social platform news tracker */
-    uptodate:{readNews:[]},
-    /* Money Expenses calendar */
-    expenses:{},
-    /* Podcasts — last category viewed + which ones were listened to */
-    podcastCat:'all', podcastsListened:[],
-    /* Personal Life OS Fields */
-    projects:{},
-    customTasks:[],
-    taskStatus:{},
-    habitNotifications:[],
-    knowledgeNotes:[],
-    journal:{},
-    relocationFund:{target:120000, current:0, currency:'EGP'},
-    activeRoadmap:'saudi'
+    ver: 52,
+    stateVersion: 6,
+    xp: 0, level: 1, streak: 0, best: 0,
+    lastActive: '', lastDay: '', lastProcessedDate: '', lastStreakDate: '', lastWeek: '',
+    daily: {},
+    dailyMissions: { date: '', ids: [] },
+    dailyHistory: {},
+    habitsToday: {},
+    habitHistory: {},
+    customHabits: [],
+    dailyVocabulary: { date: '', words: [] },
+    seenVocabulary: [],
+    learnedVocabulary: {},
+    masteredVocabulary: {},
+    vocabularyHistory: {},
+    weekly: {}, boss: {}, weeklyBoss: {},
+    statXP: {}, rewards: [], msgs: [], courses: {},
+    qDone: 0, sDone: 0,
+    penCount: 0, xpLost: 0, penaltyDay: '', penaltyLog: {},
+    freezes: 0, freezeUsed: [], punishment: 0,
+    started: false, startedOn: '',
+    milestones: [], badges: [],
+    lastBackup: '', lastAuto: '', perfectDays: [], perfectPending: '', perfectBonusScheduled: '',
+    missionXP: {}, taskXP: {}, warnings: [],
+    reviews: [], lastReview: '', log30: {},
+    typing: { now: 0, target: 60, hist: [] },
+    books: {},
+    shadowLevel: 0, shadowXp: 0,
+    focusSessions: 0, focusDate: '',
+    vision: [], shadowChars: [],
+    xpSource: {}, xpLedger: [],
+    vocab: {}, vocabStatus: {}, vocabTotal: 0, vocabDays: 0,
+    eggs: {}, eggsTotal: 0, eggDay: '', eggMissionsToday: 0, eggMissionTotal: 0,
+    eggStreakMark: 0, eggLevelMark: 0,
+    pomoRunning: false, pomoEndsAt: 0, pomoMode: 'work',
+    hist: [],
+    prestige: 0, prestigeMult: 1, prestigeBadges: [],
+    paused: false, pauseDate: '', pauseReason: '',
+    str: 0, int: 0, agi: 0, end: 0, statPoints: 0,
+    monthlyBoss: { active: false, progress: 0, target: 0, reward: 0, month: '' },
+    equipment: { weapon: null, armor: null, accessory: null },
+    coachMsg: '', coachDate: '',
+    habitStrength: {}, negativeHabits: {}, negHabitDamage: 0,
+    skillTree: {}, customPhrase: '',
+    habitDays: {}, formedHabits: {},
+    moneyProgress: {}, speaking: { wordsDone: [], recordings: [] },
+    habits: {}, uptodate: { readNews: [] }, expenses: {},
+    podcastCat: 'all', podcastsListened: [],
+    projects: {}, customTasks: [], taskStatus: {}, habitNotifications: [],
+    knowledgeNotes: [], journal: {},
+    relocationFund: { target: 120000, current: 0, currency: 'EGP' },
+    activeRoadmap: 'saudi',
+    questRerollsRemaining: 1
   };
 }
 
-let S = read();
+var S = read();
+if(typeof window !== 'undefined') window.S = S;
 if(!S.lifeStatus){
   S.lifeStatus = {
     location: 'Cairo, Egypt',
@@ -152,108 +136,69 @@ if(!S.foundationProfile){
   };
 }
 
+function finalizeLoadedState(rawState){
+  if(!rawState || typeof rawState !== 'object') return blank();
+  let src = Object.assign({}, rawState);
+  if(typeof migrateState === 'function'){
+    src = migrateState(src);
+  }
+  const o = Object.assign(blank(), src || {});
+  o.level = Math.max(1, Math.floor((o.xp || 0) / LEVEL_XP) + 1);
+  return o;
+}
+
 function read(){
   try{
-    /* 1. First try to load from the primary save key */
     let raw = localStorage.getItem(SAVE_KEY);
-
-    /* In Dev Mode: if dev key is empty, safely clone production soloV6 into soloV6_dev without mutating prod */
-    if(!raw && typeof IS_DEV_MODE !== 'undefined' && IS_DEV_MODE){
-      const prod = localStorage.getItem('soloV6') || (typeof DEV_SEED_STATE !== 'undefined' ? JSON.stringify(DEV_SEED_STATE) : null);
-      if(prod){
-        try{
-          localStorage.setItem(SAVE_KEY, prod);
-          raw = prod;
-        }catch(e){}
-      }
-    }
-
-    /* 2. If raw exists and has genuine authentic progress (xp >= 1000), parse and use it */
     if(raw){
       try{
         const parsed = JSON.parse(raw);
-        if(parsed && parsed.xp && parsed.xp >= 1000){
-          const o = Object.assign(blank(), parsed);
-          o.level = Math.floor(o.xp / LEVEL_XP) + 1;
-          return o;
+        if(parsed && typeof parsed.xp === 'number'){
+          return finalizeLoadedState(parsed);
         }
       }catch(e){}
     }
 
-    /* 3. If primary save is missing or zeroed, prioritize authentic seed baseline (Level 21, 8028 XP, 28 Streak) */
     if(typeof DEV_SEED_STATE !== 'undefined' && DEV_SEED_STATE && (DEV_SEED_STATE.xp >= 1000 || DEV_SEED_STATE.streak >= 20)){
-      const seeded = Object.assign(blank(), DEV_SEED_STATE);
-      seeded.level = Math.floor(seeded.xp / LEVEL_XP) + 1;
+      const seeded = finalizeLoadedState(DEV_SEED_STATE);
       try{ localStorage.setItem(SAVE_KEY, JSON.stringify(seeded)); }catch(e){}
       return seeded;
     }
 
-    /* 4. If that fails, try the auto-backup */
     if(!raw) raw = localStorage.getItem('soloAutoState');
     if(raw){
       try{
         const parsed = JSON.parse(raw);
-        if(parsed && parsed.xp && parsed.xp >= 1000){
-          const o = Object.assign(blank(), parsed);
-          o.level = Math.floor(o.xp / LEVEL_XP) + 1;
-          return o;
+        if(parsed && typeof parsed.xp === 'number'){
+          return finalizeLoadedState(parsed);
         }
       }catch(e){}
     }
 
-    /* 5. Legacy migration - only if genuine progress existed */
     const old = localStorage.getItem('soloV5') || localStorage.getItem('soloV4') || localStorage.getItem('soloV3');
     if(old){
       try{
         const parsedOld = JSON.parse(old);
-        if(parsedOld && parsedOld.xp && parsedOld.xp >= 1000){
-          const o = Object.assign(blank(), parsedOld);
-          o.ver = 6;
-          o.level = Math.floor(o.xp / LEVEL_XP) + 1;
-          return o;
+        if(parsedOld && typeof parsedOld.xp === 'number'){
+          return finalizeLoadedState(parsedOld);
         }
       }catch(e){}
     }
 
-    /* 6. Default fallback */
-    if(typeof DEV_SEED_STATE !== 'undefined' && DEV_SEED_STATE){
-      return Object.assign(blank(), DEV_SEED_STATE);
-    }
     return blank();
   }catch(e){
-    if(typeof DEV_SEED_STATE !== 'undefined' && DEV_SEED_STATE){
-      return Object.assign(blank(), DEV_SEED_STATE);
-    }
     return blank();
   }
 }
-/* ---------------------------------------------------------------------
-   CLASS SYSTEM 
-   --------------------------------------------------------------------- */
-function chooseClass(classId){
-  if(S.level < 10){ sfx('error'); alert('Classes unlock at level 10.'); return; }
-  if(S.classId){ sfx('error'); alert('You already chose a class.'); return; }
-  const c = CLASSES.find(x => x.id === classId);
-  if(!c){ sfx('error'); return; }
-  S.classId = classId;
-  save();
-  sfx('badge');
-  overlay('CLASS CHOSEN', ic(c.icon,50) + '  ' + c.name, c.passive, false);
-  log('CLASS', 'You chose the <b>' + c.name + '</b> path. ' + c.passive);
-  renderAll();
-}
-
 /* ---------------------------------------------------------------------
    SHADOW — grows automatically as you complete missions
    --------------------------------------------------------------------- */
 function growShadow(){
   S.shadowXp = (S.shadowXp || 0) + 1;
-  /* one shadow level every 8 missions */
   const lvl = Math.floor(S.shadowXp / 8);
   if(lvl > (S.shadowLevel || 0)){
     const was = S.shadowLevel || 0;
     S.shadowLevel = lvl;
-    /* announce only when the stage itself changes */
     const oldStage = SHADOW_SOLDIER.stages.filter(s => s.level <= was).pop();
     const newStage = shadowStage();
     if(newStage.name !== (oldStage && oldStage.name)){
@@ -272,115 +217,25 @@ function growShadow(){
   }
 }
 
-/* ---------------------------------------------------------------------
-   LOOT — random drops from real missions, not a button
-   --------------------------------------------------------------------- */
+/* Loot drops grant XP bonuses cleanly via XpEngine */
 function maybeDropLoot(){
-  /* 18% chance per mission — rare enough to feel good */
-  if(Math.random() > 0.18) return;
+  if(Math.random() > 0.18) return null;
   const roll = Math.random() * 100;
   let cumulative = 0;
   for(const item of LOOT){
     cumulative += item.chance * 100;
     if(roll <= cumulative){
-      if(item.hp) healHP(item.hp);
-      if(item.mana) restoreMana(item.mana);
-      if(item.xp) addXP(item.xp, null, true, 'bonus');
+      const xpAmt = item.xp || 15;
+      addXP(xpAmt, null, true, 'bonus');
       sfx(item.id === 'gem' || item.id === 'chest' ? 'gem' : 'loot');
-      const bonus = item.xp ? '+' + item.xp + ' XP'
-                  : item.hp ? '+' + item.hp + ' HP'
-                  : '+' + item.mana + ' mana';
       setTimeout(()=>{
-        overlay('LOOT FOUND', ic(item.icon,50) + '  ' + item.name, bonus, false);
-        log('LOOT','Found <b>'+item.name+'</b> — '+bonus+'.');
+        overlay('LOOT FOUND', ic(item.icon,50) + '  ' + item.name, '+' + xpAmt + ' XP', false);
+        log('LOOT','Found <b>'+item.name+'</b> — +' + xpAmt + ' XP.');
       }, 700);
       return item;
     }
   }
   return null;
-}
-
-/* ---------------------------------------------------------------------
-   MANA — regenerates on each completed mission
-   --------------------------------------------------------------------- */
-function regenMana(n){
-  const before = S.mana;
-  S.mana = Math.min(S.maxMana, S.mana + (n || 3));
-  return S.mana - before;
-}
-
-/* ---------------------------------------------------------------------
-   CLASS ABILITY — actually does something
-   --------------------------------------------------------------------- */
-function useAbility(){
-  const c = CLASSES.find(x => x.id === S.classId);
-  if(!c){ sfx('error'); alert('Choose a class first.'); return; }
-  if(S.mana < c.ability.cost){ sfx('error'); alert('Not enough mana. You need ' + c.ability.cost + ' mana. Complete missions to regenerate it.'); return; }
-
-  S.mana -= c.ability.cost;
-  let result = '';
-
-  switch(c.id){
-    case 'mage':
-      addXP(50, null, true, 'bonus');
-      result = '+50 XP granted immediately.';
-      break;
-    case 'healer':
-      healHP(20);
-      S.shieldNext = true;
-      result = '+20 HP restored. Your next penalty is halved.';
-      break;
-    case 'warrior':
-      S.smashNext = true;
-      result = 'Your next boss step awards double XP.';
-      break;
-    case 'rogue':
-      const got = maybeDropLoot();
-      result = got ? 'Found ' + got.name + '!' : 'No loot this time — try again after more missions.';
-      break;
-    default:
-      result = 'Ability used.';
-  }
-
-  sfx('badge');
-  overlay('ABILITY USED', ic(c.icon,50) + '  ' + c.ability.name, result, false);
-  log('ABILITY','Used <b>'+c.ability.name+'</b>. '+result);
-  save();
-  renderAll();
-}
-
-/* ---------------------------------------------------------------------
-   HP & MANA — health and mana system
-   --------------------------------------------------------------------- */
-function damageHP(n, silent){
-  const c = CLASSES.find(x => x.id === S.classId);
-  if(c && c.id === 'healer') n = Math.round(n * 0.8);
-  /* a healer shield halves the next penalty */
-  if(S.shieldNext){ n = Math.round(n / 2); S.shieldNext = false; }
-  if(n <= 0) return 0;
-
-  S.hp = Math.max(0, S.hp - n);
-  if(S.hp === 0){
-    S.hp = Math.round(S.maxHp * 0.5);
-    sfx('damage');
-    overlay('KNOCKED OUT', ic('heart',50) + '  HP 0', 'You pushed too hard. Rest and come back tomorrow.', true);
-    log('DAMAGE', 'You were knocked out. HP restored to 50%.');
-  } else if(!silent){
-    sfx('damage');
-    log('DAMAGE', 'Lost <b>' + n + ' HP</b>. ' + S.hp + ' / ' + S.maxHp + ' remaining.', true);
-  }
-  save();
-  return n;
-}
-
-function healHP(n){
-  S.hp = Math.min(S.maxHp, S.hp + n);
-  save();
-}
-
-function restoreMana(n){
-  S.mana = Math.min(S.maxMana, S.mana + n);
-  save();
 }
 
 /* ---------------------------------------------------------------------
@@ -708,74 +563,25 @@ function upgradeCharacter(charId){
   renderAll();
 }
 
-/* ---------------------------------------------------------------------
-   VOCABULARY — 5 words a day, tracked
-   --------------------------------------------------------------------- */
-function learnVocab(key){
-  if(!S.vocab) S.vocab = {};
-  const words = todaysVocab();
-  const word = words.find(w => vocabKey(w.w) === key);
-  if(!word) return;
-
-  if(S.vocab[key]){
-    delete S.vocab[key];
-    subXP(8, 'selfdev', 'vocab');
-    sfx('uncheck');
-  } else {
-    S.vocab[key] = dayKey();
-    S.vocabTotal = (S.vocabTotal || 0) + 1;
-    addXP(8, 'selfdev', false, 'vocab');
-    sfx('vocab');
-  }
-  save();
-  renderAll();
-}
-
-function vocabLearnedToday(){
-  if(!S.vocab) return 0;
-  const words = todaysVocab();
-  return words.filter(w => S.vocab[vocabKey(w.w)]).length;
-}
-
-/* mark all of today's words as learned in one tap */
-function learnAllVocab(){
-  const words = todaysVocab();
-  let n = 0;
-  words.forEach(w => {
-    const k = vocabKey(w.w);
-    if(!S.vocab[k]){
-      S.vocab[k] = dayKey();
-      S.vocabTotal = (S.vocabTotal || 0) + 1;
-      addXP(8, 'selfdev', false, 'vocab');
-      n++;
-    }
-  });
-  if(n){
-    sfx('vocab');
-    overlay('WORDS LEARNED', n + ' WORDS', 'Today\u2019s vocabulary is done. +' + (n * 8) + ' XP.', false);
-    log('VOCAB', 'Learned <b>' + n + '</b> new words. +' + (n * 8) + ' XP.');
-  }
-  save();
-  renderAll();
-}
+/* Vocabulary unified in vocab.js */
 
 function save(){
-  /* safety net: if any critical field is missing, restore it from blank() */
-  let dirty = false;
-  if(!S.speaking){ S.speaking = {wordsDone:[], recordings:[]}; dirty = true; }
-  if(!S.expenses){ S.expenses = {}; dirty = true; }
-  if(!S.uptodate){ S.uptodate = {readNews:[]}; dirty = true; }
-  if(!S.habits){ S.habits = {}; dirty = true; }
-  if(!S.habitDays){ S.habitDays = {}; dirty = true; }
-  if(!S.formedHabits){ S.formedHabits = {}; dirty = true; }
-  if(!S.moneyProgress){ S.moneyProgress = {}; dirty = true; }
+  if(typeof S === 'undefined' || !S) return;
+  if(!S.speaking) S.speaking = {wordsDone:[], recordings:[]};
+  if(!S.expenses) S.expenses = {};
+  if(!S.uptodate) S.uptodate = {readNews:[]};
+  if(!S.daily) S.daily = {};
+  if(!S.dailyHistory) S.dailyHistory = {};
+  if(!S.habitsToday) S.habitsToday = {};
+  if(!S.habitHistory) S.habitHistory = {};
 
-  /* every save gets a timestamp so devices can compare fairly */
   S.lastModified = Date.now();
-
-  try{ localStorage.setItem(SAVE_KEY, JSON.stringify(S)); }catch(e){}
-  cloudSave();   /* sync to cloud in the background */
-  if(dirty) log('SYSTEM', 'Save integrity check: restored missing fields.');
+  if(typeof StorageManager !== 'undefined' && StorageManager.save){
+    StorageManager.save(S).catch(()=>{});
+  } else {
+    try{ localStorage.setItem(SAVE_KEY, JSON.stringify(S)); }catch(e){}
+  }
+  cloudSave();
 }
 
 /* ---------------------------------------------------------------------
@@ -834,48 +640,9 @@ function checkForUpdates(){
   save();
 }
 
-/* ---------------------------------------------------------------------
-   FORMED HABITS — missions that ran 21 days straight become habits.
-   They leave the daily quest and join the "Formed Habits" list.
-   --------------------------------------------------------------------- */
-function formedHabits(){
-  if(!S.formedHabits) S.formedHabits = {};
-  const out = [];
-  DAILY.forEach(m => {
-    if(S.formedHabits[m.id]) out.push(m);
-  });
-  return out;
-}
-
-function checkHabitFormation(){
-  if(!S.habitDays) S.habitDays = {};
-  const today = dayKey();
-  DAILY.forEach(m => {
-    if(!S.habitDays[m.id]) S.habitDays[m.id] = [];
-    const days = S.habitDays[m.id];
-    if(S.daily[m.id] && days.indexOf(today) === -1){
-      days.push(today);
-      if(days.length >= 21 && (!S.formedHabits || !S.formedHabits[m.id])){
-        S.formedHabits = S.formedHabits || {};
-        S.formedHabits[m.id] = true;
-        const notif = {
-          id: m.id,
-          name: m.name,
-          date: today,
-          days: days.length,
-          title: 'NEW HABIT ESTABLISHED',
-          body: 'You have consistently completed this activity. It is no longer an ordinary quest.\nIt is now part of your daily routine.\nYour progress continues to be tracked in the Habits section.'
-        };
-        S.habitNotifications = S.habitNotifications || [];
-        S.habitNotifications.unshift(notif);
-        log('HABIT ESTABLISHED', '<b>' + esc(m.name) + '</b> established! Moved to Habits section.');
-        sfx('levelup');
-        overlay('NEW HABIT ESTABLISHED', m.name, 'You have consistently completed this activity. It is no longer an ordinary quest.\nIt is now part of your daily routine.\nYour progress continues to be tracked in the Habits section.', false);
-      }
-    }
-  });
-  save();
-}
+/* Daily Habits unified in habits.js */
+function formedHabits(){ return []; }
+function checkHabitFormation(){ return false; }
 
 /* ---------------------------------------------------------------------
    MONEY TRACKER — practical ideas to earn from home until Riyadh.
@@ -1134,462 +901,36 @@ function cloudLoad(){
    DATE & TIMEZONE HELPERS
    --------------------------------------------------------------------- */
 const CAIRO_TZ = 'Africa/Cairo';
-
-/* Dynamic Cairo date key (YYYY-MM-DD), automatically adjusting between
-   Egypt winter time (UTC+2) and summer time (UTC+3) using IANA timezone */
-function dayKey(d){
-  const dateObj = d ? (d instanceof Date ? d : new Date(d)) : new Date();
-  const parts = new Intl.DateTimeFormat('en-US', {
-    timeZone: CAIRO_TZ,
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit'
-  }).formatToParts(dateObj);
-  let y = '', mo = '', da = '';
-  for(let i = 0; i < parts.length; i++){
-    if(parts[i].type === 'year') y = parts[i].value;
-    else if(parts[i].type === 'month') mo = parts[i].value;
-    else if(parts[i].type === 'day') da = parts[i].value;
-  }
-  return y + '-' + mo + '-' + da;
-}
-
-/* Current hour (0-23) in Africa/Cairo timezone */
+function dayKey(d){ return typeof SystemClock !== 'undefined' ? SystemClock.dayKey(d) : new Date(d || Date.now()).toISOString().slice(0,10); }
 function getCairoHour(d){
-  const dateObj = d ? (d instanceof Date ? d : new Date(d)) : new Date();
-  const parts = new Intl.DateTimeFormat('en-US', {
-    timeZone: CAIRO_TZ,
-    hour: 'numeric',
-    hourCycle: 'h23'
-  }).formatToParts(dateObj);
-  const p = parts.find(x => x.type === 'hour');
-  return p ? parseInt(p.value, 10) : dateObj.getHours();
+  if(typeof SystemClock !== 'undefined'){ return parseInt(SystemClock.getCairoParts(d).hour, 10) || 0; }
+  return (d ? new Date(d) : new Date()).getHours();
 }
-
-/* Current day of week (0=Sunday, 1=Monday, ..., 5=Friday, 6=Saturday) in Africa/Cairo */
 function getCairoDayOfWeek(d){
-  const dateObj = d ? (d instanceof Date ? d : new Date(d)) : new Date();
-  const weekday = new Intl.DateTimeFormat('en-US', {
-    timeZone: CAIRO_TZ,
-    weekday: 'short'
-  }).format(dateObj);
-  const map = { Sun: 0, Mon: 1, Tue: 2, Wed: 3, Thu: 4, Fri: 5, Sat: 6 };
-  return map[weekday] !== undefined ? map[weekday] : dateObj.getDay();
+  if(typeof SystemClock !== 'undefined'){
+    const map = { Sun: 0, Mon: 1, Tue: 2, Wed: 3, Thu: 4, Fri: 5, Sat: 6 };
+    return map[SystemClock.getCairoParts(d).weekday] ?? 0;
+  }
+  return (d ? new Date(d) : new Date()).getDay();
 }
-
-function weekKey(d){
-  /* Week starts on FRIDAY in Egypt — weekly missions reset every Friday */
-  const dateObj = d ? (d instanceof Date ? d : new Date(d)) : new Date();
-  const dow = getCairoDayOfWeek(dateObj);
-  const off = (dow + 2) % 7; // Friday=0, Saturday=1, Sunday=2, Monday=3...
-  const m = new Date(dateObj);
-  m.setDate(m.getDate() - off);
-  return dayKey(m);
-}
-
-function daysBetween(a,b){
-  return Math.round((new Date(b) - new Date(a)) / 86400000);
-}
+function weekKey(d){ return typeof SystemClock !== 'undefined' ? SystemClock.weekKey(d) : dayKey(d); }
+function daysBetween(a,b){ return typeof SystemClock !== 'undefined' ? SystemClock.daysBetween(a, b) : 0; }
 
 /* ---------------------------------------------------------------------
    THE SYSTEM ONLY JUDGES YOU ONCE YOU HAVE STARTED.
    Before the first mission is ever completed, no penalty applies.
    --------------------------------------------------------------------- */
+/* Rollover delegated exclusively to TaskEngine.processDailyRollover() */
 function resets(){
-  const t = dayKey(), w = weekKey();
-
-  if(S.lastDay !== t){
-    /* judge the day that just ended — but ONLY if the player was active */
-    if(S.started && S.lastDay && S.penaltyDay !== S.lastDay){
-      judgeDay(S.lastDay);
-    }
-    S.lastDay = t;
-    S.daily = {};
+  if(typeof TaskEngine !== 'undefined' && TaskEngine.processDailyRollover){
+    return TaskEngine.processDailyRollover({ quiet: true });
   }
-  if(S.lastWeek !== w){
-    /* the week is over — judge it before clearing, so the player is told
-       which weekly missions were left undone and what that costs */
-    weeklyConsequence();
-    S.lastWeek = w; S.weekly = {};
-    S.weeklyBoss = {};
-  }
-  save();
 }
-
-/* ---------------------------------------------------------------------
-   CONSEQUENCE WARNING — when a mission is missed, explain WHAT IT COSTS.
-
-   The user's request: "لو فوت اي مهمة ان ديه هتؤثر علي حاجة تانية"
-   (if I miss a mission, show that it affects something else).
-
-   Instead of a generic penalty we name the real consequence: the domain
-   that stops growing, the boss raid that stalls, the XP never earned.
-   --------------------------------------------------------------------- */
-const MISSION_CONSEQUENCES = {
-  d6:  {domain:'selfdev', title:'Writing skill stalled',
-        body:'This is the ONLY thing standing between you and English B2. Writing is at 33 — the lowest of your four skills.'},
-  d15: {domain:'selfdev', title:'Speaking practice skipped',
-        body:'Speaking is at 50, one point from B2. Interviews in Cairo and Dubai test exactly this.'},
-  d21: {domain:'skills', title:'Skill practice skipped',
-        body:'Twenty minutes of real skill work — the thing that makes you hireable.'},
-  d24: {domain:'selfdev', title:'Course work skipped',
-        body:'Certifications get your CV past the filter. You have completed 0 of 36 courses.'},
-  d16: {domain:'selfdev', title:'Course module skipped',
-        body:'One finished module. You are still at 0 courses completed.'},
-  d13: {domain:'career', title:'Market study skipped',
-        body:'You cannot hit a target you have not looked at. This keeps the job search honest.'},
-  d14: {domain:'career', title:'Interview practice skipped',
-        body:'You have real numbers: 27 campaigns, 11,406 leads, TL 15.06 CPL. Skipping means hesitating when they ask.'},
-  d17: {domain:'career', title:'LinkedIn output skipped',
-        body:'You manage 27 programs and TL 171K of spend. Nobody knows that yet. Posting is how they learn it.'},
-  d11: {domain:'money', title:'Expenses not logged',
-        body:'You cannot fix money you do not look at. Money is your weakest domain at 114 XP.'},
-  d12: {domain:'money', title:'No income attempt today',
-        body:'No salary is coming. Today produced zero attempts to change that.'},
-  d27: {domain:'money', title:'Money idea not worked',
-        body:'Eight ideas are written in the Money tab. You have done zero. This mission forces one.'},
-  d5:  {domain:'health', title:'Workout skipped',
-        body:'You are 85 kg at 167 cm. This is the cheapest health change available and you skipped it.'},
-  d4:  {domain:'health', title:'Water not tracked',
-        body:'Two litres. At your weight this matters more than you think.'},
-  d2:  {domain:'health', title:'Morning routine skipped',
-        body:'Two minutes. The morning routine is the base everything else sits on.'},
-  d3:  {domain:'health', title:'Night routine skipped',
-        body:'Two minutes before sleep. Skipping this costs you tomorrow morning.'},
-  d1:  {domain:'discipline', title:'Fajr missed',
-        body:'This is the anchor of the whole day. If it slips, everything else follows it down.'},
-  d8:  {domain:'discipline', title:'Morning phone control lost',
-        body:'The first 30 minutes set the tone. You gave them away.'},
-  d9:  {domain:'discipline', title:'Late-night phone control lost',
-        body:'This single habit fixes your Fajr more than any alarm will.'},
-  d10: {domain:'discipline', title:'Phone-free hour skipped',
-        body:'One hour away from the phone. That is the hour that could have gone to a skill.'},
-  d22: {domain:'discipline', title:'Tomorrow not planned',
-        body:'Two minutes of planning makes tomorrow 10x easier.'},
-  d26: {domain:'relations', title:'No real conversation',
-        body:'Most marketing jobs in Egypt come through people, not applications. Relationships had ZERO daily missions until this was added.'},
-  d7:  {domain:'selfdev', title:'Reading skipped',
-        body:'Ten pages. The Library has real books you can open right now — As a Man Thinketh is 35 minutes. Skipping this means another day with no input.'}
-};
-
-const WEEKLY_CONSEQUENCES = {
-  w1:  {domain:'career', title:'No LinkedIn post this week',
-        body:'Your material is strong: CPL recovered from 130.62 to 50.79, a 1,544-lead campaign at TL 4.62. Real case studies. Still not posted.'},
-  w2:  {domain:'relations', title:'No new contact this week',
-        body:'One message. The recruiter who remembers you, the media buyer who mentions you — it starts with one message.'},
-  w3:  {domain:'relations', title:'No family or friend contact',
-        body:'One of the few things on this list that will still matter to you in ten years.'},
-  w4:  {domain:'selfdev', title:'Nothing summarised this week',
-        body:'Reading without writing it down is entertainment. Five bullets is all it takes.'},
-  w5:  {domain:'career', title:'CV not updated',
-        body:'You keep skipping this one. Your CV is your first impression and it has not been touched.'},
-  w6:  {domain:'career', title:'No company research',
-        body:'You keep skipping this too. Know the company and you are ahead of most candidates.'},
-  w7:  {domain:'system', title:'Week not reviewed',
-        body:'A week that is not reviewed is a week that is repeated. This is the one mission that makes all the others count.'},
-  w8:  {domain:'career', title:'No applications sent',
-        body:'THIS IS THE ONE. Five applications a week is 20 a month. You cannot get a job without sending them.'},
-  w9:  {domain:'money', title:'No paid offer sent',
-        body:'You have done zero of the eight money ideas. This mission forces one. Skipped again.'}
-};
-
-function consequenceWarning(missedList, availList){
-  if(!missedList.length) return null;
-
-  const order = ['career','money','selfdev','skills','health','relations','discipline','system'];
-  const byDomain = {};
-  missedList.forEach(m => {
-    const c = MISSION_CONSEQUENCES[m.id] || WEEKLY_CONSEQUENCES[m.id];
-    const d = c ? c.domain : 'discipline';
-    if(!byDomain[d]) byDomain[d] = [];
-    byDomain[d].push({m, c});
-  });
-
-  let pick = null, pickDomain = null;
-  for(const d of order){
-    if(byDomain[d]){ pick = byDomain[d]; pickDomain = d; break; }
-  }
-  if(!pick){ pick = missedList.map(m => ({m, c:null})); pickDomain = 'discipline'; }
-
-  const first = pick[0];
-  const title = first.c ? first.c.title : 'Mission missed: ' + first.m.name;
-  const body  = first.c ? first.c.body : 'You missed this one.';
-
-  const xpLost = pick.reduce((a,x) => a + (x.m.xp || 0), 0);
-  const share = availList.length ? Math.round(missedList.length / availList.length * 100) : 0;
-
-  let sev = 'low';
-  if(share >= 60) sev = 'high';
-  else if(share >= 30) sev = 'mid';
-
-  let neglectNote = '';
-  const recent = (S.warnings || []).slice(0,5);
-  const sameDomain = recent.filter(w => w.domain === pickDomain).length;
-  if(sameDomain >= 2){
-    neglectNote = ' This is the ' + (sameDomain+1) + 'th time recently. ' + pickDomain.toUpperCase() + ' is being neglected.';
-  }
-
-  return {
-    title: title,
-    body: body + (xpLost ? ' — that is ' + xpLost + ' XP that never arrived.' : '') + neglectNote,
-    cost: xpLost, sev: sev, domain: pickDomain
-  };
-}
-
-/* called when the week rolls over with weekly work undone */
-function weeklyConsequence(){
-  const av = available(WEEKLY);
-  if(!av.length) return null;
-  const missed = av.filter(m => !S.weekly[m.id]);
-  if(missed.length < 2) return null;
-
-  const w = consequenceWarning(missed, av);
-  if(!w) return null;
-
-  S.warnings = S.warnings || [];
-  S.warnings.unshift({
-    d: dayKey(), kind: 'weekly',
-    title: 'WEEKLY: ' + w.title,
-    body: w.body, cost: w.cost, sev: w.sev, domain: w.domain
-  });
-  if(S.warnings.length > 30) S.warnings.pop();
-  log('WARNING', 'WEEKLY — ' + w.title + '. ' + w.body, true);
-  return w;
-}
-
-function judgeDay(day){
-  if(!S.started) return;
-
-  const avail  = available(DAILY);
-  const done   = avail.filter(m => S.daily[m.id]).length;
-  const missed = avail.length - done;
-
-  /* record what was missed BEFORE the day is cleared, so the warning
-     can name the real consequence instead of a generic penalty */
-  const missedMissions = avail.filter(m => !S.daily[m.id]);
-  if(missedMissions.length){
-    const w = consequenceWarning(missedMissions, avail);
-    if(w){
-      S.warnings = S.warnings || [];
-      S.warnings.unshift({
-        d: day, kind: 'daily',
-        title: w.title, body: w.body,
-        cost: w.cost, sev: w.sev, domain: w.domain
-      });
-      if(S.warnings.length > 30) S.warnings.pop();
-      log('WARNING', w.title + ' — ' + w.body, true);
-    }
-  }
-
-  /* streak freeze: nothing done but a freeze is held */
-  if(done === 0 && S.freezes > 0 && S.streak > 0){
-    S.freezes--;
-    S.freezeUsed.push(day);
-    S.punishment += FREEZE.punishmentXP;
-    damageHP(15);
-    log('FREEZE USED',
-      'Streak saved. You now owe <b>'+FREEZE.punishmentXP+' XP</b> in missions before the debt clears.', true);
-    S.penaltyDay = day;
-    save();
-    return;
-  }
-
-  /* Penalties are proportional, not fixed counts — otherwise a 21-mission day
-     punishes someone who did 18 of them. What matters is the share you cleared. */
-  /* Tiered Daily Evaluation (Fixes all-or-nothing penalty logic) */
-  const pctDone = avail.length ? done / avail.length : 1;
-
-  let cost = 0, note = '', hpLoss = 0;
-  if(done === 0 && avail.length > 0){
-    cost = 40; note = 'Zero missions completed.'; hpLoss = 20;
-    S.penaltyQuestActive = true;
-    S.penaltyQuestExpires = Date.now() + (24 * 60 * 60 * 1000);
-    log('PENALTY QUEST', 'Streak at risk! Clear your emergency Penalty Quest within 24h to reclaim momentum.', true);
-  } else if(pctDone < 0.5){
-    // Tier 2: 1% - 49% -> Streak Protected, NO penalty XP deducted!
-    cost = 0; hpLoss = 0;
-    log('STREAK HELD', 'Partial progress (' + done + '/' + avail.length + ') preserved your streak.');
-  } else {
-    // Tier 3 & 4: 50%+ -> Standard Clear or S-Rank Perfect Clear
-    cost = 0; hpLoss = 0;
-    healHP(10);
-    if(pctDone >= 1.0){
-      healHP(15);
-      log('S-RANK CLEAR', 'All daily objectives cleared! <b>+25 HP</b> restored & S-Rank bonus applied.');
-    }
-  }
-
-  if(hpLoss > 0) damageHP(hpLoss, true);
-
-  if(cost > 0){
-    /* an outstanding freeze debt is paid down first */
-    if(S.punishment > 0){
-      const pay = Math.min(S.punishment, cost);
-      S.punishment -= pay;
-      cost -= pay;
-      if(pay > 0) log('DEBT','Freeze debt reduced by <b>'+pay+' XP</b>. '+S.punishment+' remaining.', true);
-    }
-    if(cost > 0){
-      S.xp = Math.max(0, S.xp - cost);
-      S.level = Math.floor(S.xp/LEVEL_XP) + 1;
-      S.penCount++;
-      S.xpLost += cost;
-      log('PENALTY', note + ' <b>-' + cost + ' XP</b>.', true);
-    }
-  }
-  S.penaltyDay = day;
-}
-
-/* ---------------------------------------------------------------------
-   STREAK MULTIPLIER — consistency pays
-   --------------------------------------------------------------------- */
-function streakMult(){
-  const m = 1 + Math.min(MULT_MAX - 1, (S.streak / MULT_SPAN) * (MULT_MAX - 1));
-  return Math.round(m * 100) / 100;
-}
-function applyMult(base){
-  return Math.round(base * streakMult());
-}
-
-/* ---------------------------------------------------------------------
-   XP
-   --------------------------------------------------------------------- */
-function addXP(n, statKey, raw, source){
-  const lv0 = S.level, rk0 = rankIdx(S.xp);
-
-  /* outstanding freeze debt is paid down first */
-  if(S.punishment > 0 && n > 0){
-    const pay = Math.min(S.punishment, n);
-    S.punishment -= pay;
-    log('DEBT','Freeze debt reduced by <b>'+pay+' XP</b>. '+S.punishment+' remaining.');
-  }
-
-  /* streak multiplier applies to mission XP, not to bonuses */
-  let gain = raw ? n : applyMult(n);
-
-  /* class passives — these are real now */
-  const cls = CLASSES.find(c => c.id === S.classId);
-  if(cls && gain > 0){
-    if(cls.id === 'mage' && !raw) gain = Math.round(gain * 1.10);
-    if(cls.id === 'warrior' && raw && S.bossXp) gain = Math.round(gain * 1.10);
-    if(cls.id === 'rogue' && !raw && Math.random() < 0.25){
-      gain = Math.round(gain * 1.5);
-      log('ROGUE','Critical strike! <b>+50% XP</b> on that mission.');
-    }
-  }
-
-  S.xp += gain;
-  /* remember where it came from, so the breakdown is real */
-  if(!S.xpSource) S.xpSource = {};
-  if(gain > 0 && source) S.xpSource[source] = (S.xpSource[source] || 0) + gain;
-
-  if(statKey) S.statXP[statKey] = (S.statXP[statKey]||0) + gain;
-  S.level = Math.floor(S.xp/LEVEL_XP) + 1;
-
-  const rk1 = rankIdx(S.xp);
-
-  if(rk1 > rk0){
-    rankCeremony(rk0, rk1);
-    if(typeof reactTo === 'function') reactTo('rankUp');
-  } else if(S.level > lv0){
-    levelCeremony(lv0, S.level);
-    if(typeof reactTo === 'function') reactTo('levelUp');
-  } else {
-    sfx('success');
-  }
-
-  checkUnlocks(lv0);
-  checkBadges();
-
-  if(S.streak > 0 && S.streak % FREEZE.earnEvery === 0 && S.freezes < FREEZE.max){
-    S.freezes++;
-    setTimeout(()=>log('FREEZE EARNED','You earned a streak freeze. You hold <b>'+S.freezes+'</b>.'), 900);
-  }
-  save();
-  return gain;
-}
-
-/* ---------------------------------------------------------------------
-   PERFECT DAY — clear everything and get paid for it
-   --------------------------------------------------------------------- */
-function checkPerfectDay(){
-  const av = available(DAILY);
-  if(!av.length) return;
-  const all = av.every(m => S.daily[m.id]);
-  if(!all) return;
-
-  const today = dayKey();
-  if(S.perfectDays && S.perfectDays.includes(today)) return;
-  if(!S.perfectDays) S.perfectDays = [];
-
-  /* ------------------------------------------------------------------
-     GUARD: checkPerfectDay runs once per mission completion, so it is
-     called N times on the same day. Without this flag it scheduled N
-     setTimeouts and the +75 XP bonus was paid N times.
-
-     perfectBonusScheduled remembers that today's bonus already has a
-     timer running — only the first call is allowed to schedule one.
-     ------------------------------------------------------------------ */
-  if(S.perfectBonusScheduled === today) return;
-  S.perfectBonusScheduled = today;
-
-  S.perfectDays.push(today);
-
-  /* mark the bonus as pending so an uncheck can cancel it before it lands */
-  S.perfectPending = today;
-  save();
-
-  setTimeout(()=>{
-    /* the player may have unchecked a mission before this fired */
-    if(S.perfectPending !== today) return;
-    const stillAll = available(DAILY).every(m => S.daily[m.id]);
-    if(!stillAll){
-      S.perfectPending = '';
-      const i = S.perfectDays.indexOf(today);
-      if(i >= 0) S.perfectDays.splice(i, 1);
-      save();
-      return;
-    }
-    S.perfectPending = '';
-    S.perfectBonusScheduled = '';
-    ceremonyCard({
-      kicker:'PERFECT DAY',
-      big:'ALL MISSIONS CLEARED',
-      sub:'Every single mission completed today.',
-      stat:'Bonus: <b>+'+PERFECT_BONUS+' XP</b> &middot; ' + S.perfectDays.length + ' perfect day(s) all time.',
-      rare:true
-    });
-    addXP(PERFECT_BONUS, null, true, 'bonus');
-    log('PERFECT DAY','Every mission cleared. <b>+'+PERFECT_BONUS+' XP</b> bonus.');
-    save();
-  }, 1200);
-}
-
-/* if a mission is unchecked after a perfect day was banked, take the bonus back */
-function unbankPerfectDay(){
-  const today = dayKey();
-  /* if the bonus hasn't landed yet, just cancel it */
-  if(S.perfectPending === today){
-    S.perfectPending = '';
-    if(S.perfectDays && S.perfectDays.includes(today)){
-      const i = S.perfectDays.indexOf(today);
-      S.perfectDays.splice(i, 1);
-    }
-    log('PERFECT DAY CANCELLED','A mission was unchecked before the bonus landed.', true);
-    return true;
-  }
-  /* bonus has already been added — remove it */
-  if(!S.perfectDays || !S.perfectDays.includes(today)) return false;
-  const i = S.perfectDays.indexOf(today);
-  S.perfectDays.splice(i, 1);
-  S.xp = Math.max(0, S.xp - PERFECT_BONUS);
-  S.level = Math.floor(S.xp / LEVEL_XP) + 1;
-  if(S.xpSource && S.xpSource.bonus){
-    S.xpSource.bonus = Math.max(0, S.xpSource.bonus - PERFECT_BONUS);
-  }
-  log('PERFECT DAY LOST','A mission was unchecked — the Perfect Day bonus was removed.', true);
-  return true;
-}
+function consequenceWarning(){ return null; }
+function weeklyConsequence(){ return null; }
+function judgeDay(){ return null; }
+function checkPerfectDay(){}
+function unbankPerfectDay(){ return false; }
 
 /* ---------------------------------------------------------------------
    CEREMONIES — every level feels like something
@@ -1673,20 +1014,7 @@ function checkBadges(){
   if(awarded){ save(); drawBadges(); }
 }
 
-function subXP(n, statKey, source, actualGain){
-  /* Pass the EXACT amount that was added (after streak mult + class passives),
-     so unchecking a mission never leaks or over-charges XP. */
-  const amount = actualGain != null ? actualGain : n;
-  S.xp = Math.max(0, S.xp - amount);
-  if(statKey) S.statXP[statKey] = Math.max(0, (S.statXP[statKey]||0) - amount);
-  /* the source ledger must shrink too, or the breakdown stops adding up */
-  if(source && S.xpSource && S.xpSource[source]){
-    S.xpSource[source] = Math.max(0, S.xpSource[source] - amount);
-  }
-  S.level = Math.floor(S.xp/LEVEL_XP) + 1;
-  save();
-}
-
+/* subXP & addXP provided authoritatively by core_xp.js */
 function checkUnlocks(oldLevel){
   for(const t in TIER_LEVELS){
     const need = TIER_LEVELS[t];
@@ -1732,43 +1060,25 @@ function startSystem(){
    STREAK
    --------------------------------------------------------------------- */
 function markActive(){
-  const t = dayKey();
-  if(S.lastActive !== t){
-    const gap = S.lastActive ? daysBetween(S.lastActive, t) : 1;
-    if(gap === 2 && S.freezes > 0){
-      S.freezes--;
-      S.freezeUsed.push(S.lastActive);
-      S.punishment += FREEZE.punishmentXP;
-      log('FREEZE USED','Missed one day — freeze spent. Streak preserved. Debt: <b>'+S.punishment+' XP</b>.', true);
-    } else if(gap > 1){
-      S.streak = 0;
-      if(typeof reactTo === 'function') reactTo('streakLost');
-    }
-    S.lastActive = t;
-    /* first day ever: streak becomes 1, not 2 */
-    if(!S.started || S.streak === 0) S.streak = 1;
-    else S.streak++;
-    if(S.streak > S.best) S.best = S.streak;
-    log('SYSTEM','Streak: <b>'+S.streak+' day'+(S.streak>1?'s':'')+'</b>.');
-    if(typeof reactTo === 'function') reactTo('streakUp');
-  }
+  if(typeof S !== 'undefined' && S) S.lastActive = dayKey();
 }
 
 function buyFreeze(){
   if(S.freezes >= FREEZE.max){ alert('You already hold the maximum of '+FREEZE.max+' freezes.'); return; }
   if(S.xp < FREEZE.costXP){ alert('Not enough XP. A freeze costs '+FREEZE.costXP+' XP.'); return; }
   if(!confirm('Spend '+FREEZE.costXP+' XP on a streak freeze?')) return;
-  S.xp -= FREEZE.costXP;
-  S.level = Math.floor(S.xp/LEVEL_XP) + 1;
+  if(typeof XpEngine !== 'undefined'){
+    XpEngine.reverseXP({ amount: FREEZE.costXP, source: 'freeze', type: 'FREEZE_PURCHASE', reason: 'Purchased streak freeze' });
+  } else {
+    S.xp = Math.max(0, S.xp - FREEZE.costXP);
+    S.level = Math.max(1, Math.floor(S.xp / LEVEL_XP) + 1);
+  }
   S.freezes++;
   save();
   log('FREEZE','Purchased a streak freeze. You hold <b>'+S.freezes+'</b>.');
   renderAll();
 }
 
-/* ---------------------------------------------------------------------
-   MISSIONS & EVOLVING ROTATIONS
-   --------------------------------------------------------------------- */
 function getWeeklyCycleIndex(){
   const start = (S && S.startedOn) ? S.startedOn : '2026-10-06';
   const days = Math.max(0, daysBetween(start, dayKey()));
@@ -1782,11 +1092,6 @@ function getActiveWeeklyBoss(){
 }
 
 function isMissionActiveToday(m){
-  if(S && S.daily && S.daily[m.id]) return true;
-  if(typeof m.rotDay === 'number'){
-    const dow = getCairoDayOfWeek();
-    return m.rotDay === dow;
-  }
   return true;
 }
 
@@ -1800,15 +1105,12 @@ function isMissionActiveThisWeek(m){
 }
 
 function available(list){
+  if(list === DAILY && typeof TaskEngine !== 'undefined' && TaskEngine.getDailyMissions){
+    return TaskEngine.getDailyMissions();
+  }
   return list.filter(m => {
     if(m.unlock && S.level < m.unlock.level) return false;
-    if(list === DAILY){
-      if(S.formedHabits && S.formedHabits[m.id]) return false;
-      if(!isMissionActiveToday(m)) return false;
-    }
-    if(list === WEEKLY){
-      if(!isMissionActiveThisWeek(m)) return false;
-    }
+    if(list === WEEKLY && !isMissionActiveThisWeek(m)) return false;
     return true;
   });
 }
@@ -1816,7 +1118,6 @@ function available(list){
 function lockedOf(list){
   return list.filter(m => {
     if(!m.unlock || S.level >= m.unlock.level) return false;
-    if(list === DAILY && !isMissionActiveToday(m)) return false;
     if(list === WEEKLY && !isMissionActiveThisWeek(m)) return false;
     return true;
   });
@@ -1825,95 +1126,66 @@ function lockedOf(list){
 function toggleWeeklyBossPhase(bossId, phaseIdx){
   if(!S.weeklyBoss) S.weeklyBoss = {};
   if(!S.weeklyBoss[bossId]) S.weeklyBoss[bossId] = [false, false, false, false];
-
   const b = typeof WEEKLY_RAID_BOSSES !== 'undefined' ? WEEKLY_RAID_BOSSES.find(x => x.id === bossId) : null;
   if(!b || !b.phases || !b.phases[phaseIdx]) return;
 
   const phase = b.phases[phaseIdx];
   const current = !!S.weeklyBoss[bossId][phaseIdx];
+  const sid = 'wboss:' + weekKey() + ':' + bossId + ':' + phaseIdx;
 
   if(current){
     S.weeklyBoss[bossId][phaseIdx] = false;
-    subXP(phase.xp, 'skills', 'boss', phase.xp);
+    if(typeof XpEngine !== 'undefined') XpEngine.reverseXP({ sourceId: sid, stat: 'skills', source: 'boss', reason: phase.text });
     sfx('uncheck');
-    log('RAID', 'Phase unchecked: ' + phase.text);
   } else {
     S.weeklyBoss[bossId][phaseIdx] = true;
-    addXP(phase.xp, 'skills', false, 'boss');
-    sfx('questComplete');
-    log('RAID', 'Weekly Boss hit! <b>+' + phase.dmg + ' DMG dealt</b> (+'+ phase.xp +' XP).');
-
-    // Check if all phases cleared
-    const allDone = S.weeklyBoss[bossId].every(Boolean);
-    if(allDone){
-      addXP(b.reward, 'skills', true, 'boss');
-      sfx('levelUp');
-      log('RAID', '<b>GATE CONQUERED!</b> Conquered ' + b.name + ' (+ ' + b.reward + ' XP loot)!');
-      if(typeof overlay === 'function'){
-        overlay('WEEKLY GATE CONQUERED!', b.name, 'You have defeated the weekly raid boss and purged the dungeon.\nBonus Loot: +' + b.reward + ' XP earned!\nYour discipline grows stronger.');
-      }
+    if(typeof XpEngine !== 'undefined') XpEngine.grantXP({ amount: phase.xp, baseXP: phase.xp, stat: 'skills', source: 'boss', sourceId: sid, type: 'BOSS_PHASE', reason: phase.text });
+    sfx('mission');
+    if(S.weeklyBoss[bossId].every(Boolean)){
+      if(typeof XpEngine !== 'undefined') XpEngine.grantXP({ amount: b.reward, baseXP: b.reward, stat: 'skills', source: 'boss', sourceId: 'wboss_clear:' + weekKey() + ':' + bossId, isBonus: true, type: 'BOSS_CLEAR', reason: b.name });
+      sfx('levelup');
+      overlay('WEEKLY GATE CONQUERED!', b.name, 'Bonus Loot: +' + b.reward + ' XP earned!');
     }
   }
   save();
-  renderAll();
+  if(typeof drawHUD === 'function') drawHUD();
+  if(typeof drawWeekly === 'function') drawWeekly();
+}
+
+function toggleWeeklyMission(id, ev){
+  if(ev && ev.stopPropagation) ev.stopPropagation();
+  const m = typeof WEEKLY !== 'undefined' ? WEEKLY.find(x => x.id === id) : null;
+  if(!m) return;
+  if(m.unlock && S.level < m.unlock.level) return;
+  if(!S.weekly) S.weekly = {};
+  const sid = 'weekly:' + weekKey() + ':' + id;
+
+  if(S.weekly[id]){
+    delete S.weekly[id];
+    if(typeof XpEngine !== 'undefined') XpEngine.reverseXP({ sourceId: sid, stat: m.stat, source: 'mission', reason: m.name });
+    S.qDone = Math.max(0, (S.qDone || 0) - 1);
+    sfx('uncheck');
+  } else {
+    S.weekly[id] = true;
+    S.qDone = (S.qDone || 0) + 1;
+    let gained = m.xp;
+    if(typeof XpEngine !== 'undefined'){
+      const res = XpEngine.grantXP({ amount: m.xp, baseXP: m.xp, stat: m.stat, source: 'mission', sourceId: sid, type: 'WEEKLY_COMPLETION', reason: m.name });
+      if(res.granted) gained = res.finalXP;
+    }
+    sfx('mission');
+    if(ev && ev.clientX && typeof floatXP === 'function') floatXP(ev.clientX, ev.clientY, gained, false);
+  }
+  save();
+  if(typeof drawHUD === 'function') drawHUD();
+  if(typeof drawWeekly === 'function') drawWeekly();
 }
 
 function toggleMission(kind, id, ev){
-  if(id && (id.startsWith('q_') || id.startsWith('iq_') || id.startsWith('rec_') || id.startsWith('ct_') || id.startsWith('act_'))){
-    return toggleLifeOSTask(id, ev);
-  }
-  const list = kind === 'daily' ? DAILY : WEEKLY;
-  const m = list.find(x => x.id === id);
-  if(!m) return;
-  if(m.unlock && S.level < m.unlock.level) return;
-
-  const store = kind === 'daily' ? S.daily : S.weekly;
-
-  if(store[id]){
-    delete store[id];
-    const actualGain = (S.missionXP && S.missionXP[id]) || m.xp;
-    subXP(m.xp, m.stat, 'mission', actualGain);
-    if(S.missionXP) delete S.missionXP[id];
-    unbankPerfectDay();
-    S.qDone = Math.max(0, S.qDone - 1);
-    sfx('uncheck');
-    if(kind === 'daily' && typeof updateHabitStrength === 'function') updateHabitStrength(id, false);
-    if(typeof reactTo === 'function') reactTo('missionUnchecked');
-  } else {
-    /* re-checking a mission that was already unchecked */
-    /* the first ever completion starts the System */
-    if(!S.started){
-      S.started = true;
-      S.startedOn = dayKey();
-      S.streak = 1;
-      S.best = Math.max(S.best, 1);
-      S.lastActive = dayKey();
-      sfx('boot');
-      log('SYSTEM','You have started. Day 1 logged.');
-    }
-    store[id] = true;
-    S.qDone++;
-    markActive();
-    const xpBefore = S.xp;
-    addXP(m.xp, m.stat, false, 'mission');
-    S.missionXP = S.missionXP || {};
-    S.missionXP[id] = S.xp - xpBefore;
-    sfx('mission');
-    if(ev) floatXP(ev.clientX, ev.clientY, m.xp, false);
-    growShadow();
-    regenMana(3);
-    maybeDropLoot();
-    if(typeof reactTo === 'function') reactTo('missionDone');
-    if(kind === 'daily' && typeof updateHabitStrength === 'function') updateHabitStrength(id, true);
-    checkPerfectDay();
-    checkEggDrops();
-  }
-  snapshotToday();
-  save();
-  renderAll();
+  if(kind === 'weekly') return toggleWeeklyMission(id, ev);
+  if(typeof TaskEngine !== 'undefined' && TaskEngine.toggleTask) return TaskEngine.toggleTask(id, ev);
+  return false;
 }
-
-
 
 /* ---------------------------------------------------------------------
    BOSS RAID STEPS
@@ -2324,62 +1596,30 @@ function reviewDue(){
    --------------------------------------------------------------------- */
 function last30(){
   const out = [];
+  const today = dayKey();
   for(let i = 29; i >= 0; i--){
-    const d = new Date();
-    d.setDate(d.getDate() - i);
-    const k = dayKey(d);
-    const isToday = (i === 0);
-    let done = 0, total = 0;
-
-    if(isToday){
-      const av = available(DAILY);
-      total = av.length;
-      done = av.filter(m => S.daily[m.id]).length;
+    const k = typeof SystemClock !== 'undefined' ? SystemClock.shiftDayKey(today, -i) : today;
+    const rec = (S.dailyHistory && S.dailyHistory[k]) || null;
+    if(i === 0 && typeof TaskEngine !== 'undefined' && TaskEngine.syncTodayHistory){
+      const tRec = TaskEngine.syncTodayHistory();
+      out.push({ day: k, done: tRec.missionsCompleted, total: tRec.missionsTotal, active: tRec.activeDay, future: false });
+    } else if(rec){
+      out.push({ day: k, done: rec.missionsCompleted || 0, total: rec.missionsTotal || 1, active: !!rec.activeDay, future: false });
     } else if(S.log30 && S.log30[k]){
-      done = S.log30[k].done;
-      total = S.log30[k].total;
-    } else if(S.perfectDays && S.perfectDays.includes(k)){
-      /* a recorded perfect day is a full day */
-      total = 1; done = 1;
-    } else if(S.started && S.startedOn && k >= S.startedOn){
-      /* the day passed and we have no record — it was a miss */
-      total = 1; done = 0;
+      out.push({ day: k, done: S.log30[k].done || 0, total: S.log30[k].total || 1, active: (S.log30[k].done || 0) > 0, future: false });
+    } else {
+      out.push({ day: k, done: 0, total: 0, active: false, future: false });
     }
-    out.push({day:k, done:done, total:total, active:done > 0, future:false});
   }
   return out;
 }
 
-/* ---------------------------------------------------------------------
-   DAILY SNAPSHOT — record today's progress so history exists tomorrow
-   --------------------------------------------------------------------- */
 function snapshotToday(){
-  if(!S.log30) S.log30 = {};
-  const av = available(DAILY);
-  S.log30[dayKey()] = {
-    done: av.filter(m => S.daily[m.id]).length,
-    total: av.length,
-    xp: S.xp,
-    level: S.level
-  };
-  save();
+  if(typeof TaskEngine !== 'undefined' && TaskEngine.syncTodayHistory){
+    TaskEngine.syncTodayHistory();
+  }
 }
 
-
-
-
-/* =====================================================================
-   SMART DAILY PLANNING ENGINE & LIFE OS CORE CONTROLLER
-   ===================================================================== */
-const MAX_DAILY_TASKS = 10;
-const TARGET_DAILY_TASKS = 7;
-
-/* Returns the active daily priorities list based on Hadi's current difficulty level:
-   Level 1 Normal: 3-5 tasks (target 4)
-   Level 2 Developing: 4-6 tasks (target 5)
-   Level 3 Advanced: 5-7 tasks (target 6)
-   Level 4 Elite: 6-8 tasks (target 8, strictly capped at 10)
-   Strictly enforces Saudi Phone gating policy: Zero direct applications until phone is active. */
 function toggleRecoveryMode(){
   if(!S.foundationProfile) S.foundationProfile = {};
   const current = !!S.foundationProfile.recoveryMode;
@@ -2404,103 +1644,10 @@ function toggleRecoveryMode(){
    - Hard cap: Never exceeds 10 tasks
    - Strictly enforces Saudi Phone gating policy: Zero direct applications until phone is active */
 function getDailyPriorities(){
-  if(S.foundationProfile && S.foundationProfile.recoveryMode){
-    if(typeof RECOVERY_TASKS_DEF !== 'undefined') {
-      return RECOVERY_TASKS_DEF.slice(0, 3);
-    }
+  if(typeof TaskEngine !== 'undefined' && TaskEngine.getDailyMissions){
+    return TaskEngine.getDailyMissions();
   }
-
-  const diffLevel = (S.lifeStatus && S.lifeStatus.currentDifficulty) || 1;
-  const isFoundation = !(S.foundationProfile && S.foundationProfile.dayIndex > 14);
-  const targetCounts = isFoundation ? { 1: 4, 2: 4, 3: 5, 4: 5 } : { 1: 4, 2: 5, 3: 6, 4: 8 };
-  const targetCount = targetCounts[diffLevel] || 4;
-
-  let pool = [];
-
-  if (typeof INTELLIGENT_QUESTS_POOL !== 'undefined' && INTELLIGENT_QUESTS_POOL.length) {
-    const hasSaudiPhone = !!(S.lifeStatus && S.lifeStatus.saudiPhone);
-    const validQuests = INTELLIGENT_QUESTS_POOL.filter(q => {
-      if (q.level > diffLevel + 1) return false;
-      if (q.requiresSaudiPhone && !hasSaudiPhone) return false;
-      if (S.formedHabits && (S.formedHabits[q.id] || (q.legacyId && S.formedHabits[q.legacyId]))) return false;
-      return true;
-    });
-
-    // Hash current date string to rotate dynamically every day
-    const todayStr = dayKey();
-    let dateHash = 0;
-    for (let i = 0; i < todayStr.length; i++) {
-      dateHash = (dateHash * 31 + todayStr.charCodeAt(i)) & 0xffffffff;
-    }
-    const daySeed = Math.abs(dateHash);
-
-    // Group available quests into the 4 core developmental pillars
-    const englishPillar = validQuests.filter(q => q.sub && (q.sub.includes('English') || q.sub.includes('Spoken') || q.sub.includes('Fluency') || q.stat === 'selfdev'));
-    const careerPillar = validQuests.filter(q => q.sub && (q.sub.includes('Portfolio') || q.sub.includes('Career') || q.sub.includes('Saudi') || q.stat === 'career'));
-    const contentAiPillar = validQuests.filter(q => q.sub && (q.sub.includes('Content') || q.sub.includes('Automation') || q.sub.includes('Brand') || q.stat === 'skills' || q.stat === 'tech'));
-    const healthPrepPillar = validQuests.filter(q => q.stat === 'health' || (q.sub && (q.sub.includes('Health') || q.sub.includes('Stamina') || q.sub.includes('Readiness'))));
-
-    const selected = [];
-    const usedIds = new Set();
-
-    function pickFromPillar(arr, offset) {
-      if (!arr || !arr.length) return;
-      const startIdx = (daySeed + offset) % arr.length;
-      for (let j = 0; j < arr.length; j++) {
-        const candidate = arr[(startIdx + j) % arr.length];
-        if (!usedIds.has(candidate.id)) {
-          selected.push(candidate);
-          usedIds.add(candidate.id);
-          break;
-        }
-      }
-    }
-
-    // Always ensure balanced representation across essential focus areas
-    pickFromPillar(englishPillar, 0);
-    pickFromPillar(careerPillar, 1);
-    pickFromPillar(contentAiPillar, 2);
-    if (selected.length < targetCount) {
-      pickFromPillar(healthPrepPillar, 3);
-    }
-
-    // Always guarantee Daily Raid Training - Bassem School is included as the primary core quest
-    const bassemQuest = validQuests.find(q => q.id === 'q_bassem_daily');
-    if (bassemQuest && !usedIds.has(bassemQuest.id)) {
-      selected.unshift(bassemQuest);
-      usedIds.add(bassemQuest.id);
-    }
-
-    // Fill remaining slots up to targetCount
-    for (let i = 0; i < validQuests.length && selected.length < targetCount; i++) {
-      const idx = (daySeed + i) % validQuests.length;
-      const candidate = validQuests[idx];
-      if (!usedIds.has(candidate.id)) {
-        selected.push(candidate);
-        usedIds.add(candidate.id);
-      }
-    }
-
-    // Always keep any task that was already completed today visible as checked
-    validQuests.forEach(q => {
-      if (S.daily && S.daily[q.id] && !usedIds.has(q.id)) {
-        selected.push(q);
-        usedIds.add(q.id);
-      }
-    });
-
-    pool = selected;
-  } else if (typeof ACTIVE_DAILY_TASKS_DEF !== 'undefined') {
-    pool = pool.concat(ACTIVE_DAILY_TASKS_DEF);
-  }
-
-  // Prepend active user custom tasks
-  if (S.customTasks && S.customTasks.length) {
-    const userActive = S.customTasks.filter(t => !t.archived && (t.status === 'today' || t.status === 'in_progress' || (S.daily && S.daily[t.id])));
-    pool = userActive.concat(pool.filter(p => !userActive.some(u => u.id === p.id)));
-  }
-
-  return pool.slice(0, MAX_DAILY_TASKS);
+  return [];
 }
 
 function updateLifeStatus(key, value){
@@ -2682,108 +1829,17 @@ function updateTaskStatus(taskId, newStatus){
 }
 
 function toggleLifeOSTask(taskId, ev){
-  if(ev && ev.stopPropagation) ev.stopPropagation();
-  if(!taskId) return;
-  if(!S.daily) S.daily = {};
-
-  const task = findTaskAnywhere(taskId);
-  const isDone = !!S.daily[taskId];
-  const today = dayKey();
-
-  if(isDone){
-    delete S.daily[taskId];
-    if(!S.taskStatus) S.taskStatus = {};
-    S.taskStatus[taskId] = 'today';
-    if(S.customTasks){
-      const ct = S.customTasks.find(t => t.id === taskId);
-      if(ct) ct.status = 'today';
-    }
-    sfx('uncheck');
-    const actualGain = (S.taskXP && S.taskXP[taskId] != null) ? S.taskXP[taskId] : (task.xp || 25);
-    const stat = task.stat || (task.related === 'b1' ? 'edu' : (task.related === 'b2' ? 'career' : (task.related === 'b3' ? 'creative' : (task.related === 'b4' ? 'tech' : 'career'))));
-    subXP(task.xp || 25, stat, 'task', actualGain);
-    if(S.taskXP) delete S.taskXP[taskId];
-    S.qDone = Math.max(0, (S.qDone || 0) - 1);
-    log('TASK REOPENED', '<b>' + esc(task.name) + '</b> returned to active.');
-  } else {
-    /* If the system was not yet started, initialize */
-    if(!S.started){
-      S.started = true;
-      S.startedOn = today;
-      S.streak = Math.max(S.streak || 0, 1);
-      S.best = Math.max(S.best || 0, 1);
-      S.lastActive = today;
-      sfx('boot');
-      log('SYSTEM', 'System activated. Day 1 logged.');
-    }
-    S.daily[taskId] = today;
-    if(!S.taskStatus) S.taskStatus = {};
-    S.taskStatus[taskId] = 'completed';
-    if(S.customTasks){
-      const ct = S.customTasks.find(t => t.id === taskId);
-      if(ct) ct.status = 'completed';
-    }
-    S.qDone = (S.qDone || 0) + 1;
-    markActive();
-    sfx('check');
-    
-    const xpGain = task.xp || 25;
-    const stat = task.stat || (task.related === 'b1' ? 'edu' : (task.related === 'b2' ? 'career' : (task.related === 'b3' ? 'creative' : (task.related === 'b4' ? 'tech' : 'career'))));
-    const xpBefore = S.xp;
-    addXP(xpGain, stat, false, 'task');
-    if(!S.taskXP) S.taskXP = {};
-    S.taskXP[taskId] = S.xp - xpBefore;
-
-    if(ev && typeof floatXP === 'function' && ev.clientX && ev.clientY){
-      floatXP(ev.clientX, ev.clientY, S.taskXP[taskId] || xpGain, false);
-    }
-    if(typeof growShadow === 'function') growShadow();
-    if(typeof regenMana === 'function') regenMana(3);
-    if(typeof maybeDropLoot === 'function') maybeDropLoot();
-    if(typeof reactTo === 'function') reactTo('missionDone');
-
-    log('TASK COMPLETE', '<b>' + esc(task.name) + '</b> cleared! +' + (S.taskXP[taskId] || xpGain) + ' XP.');
-    
-    /* If task is linked to a project, advance project progress */
-    if(task.project){
-      advanceProject(task.project, 15);
-    }
-    if(task.bossId && task.stageIdx != null && typeof toggleStep === 'function'){
-      if(S.boss && S.boss[task.bossId] && !S.boss[task.bossId][task.stageIdx]){
-        toggleStep(task.bossId, task.stageIdx);
-      }
-    }
+  if(typeof TaskEngine !== 'undefined' && TaskEngine.toggleTask){
+    return TaskEngine.toggleTask(taskId, ev);
   }
-  save();
-  renderAll();
+  return false;
 }
 
 function toggleHabitRoutine(habitId, ev){
-  if(ev && ev.stopPropagation) ev.stopPropagation();
-  if(!S.daily) S.daily = {};
-  const isDone = !!S.daily[habitId];
-  const today = dayKey();
-  
-  if(!S.habitDays) S.habitDays = {};
-  if(!S.habitDays[habitId]) S.habitDays[habitId] = [];
-  
-  if(isDone){
-    delete S.daily[habitId];
-    sfx('uncheck');
-    const idx = S.habitDays[habitId].indexOf(today);
-    if(idx !== -1) S.habitDays[habitId].splice(idx, 1);
-    subXP(10, 'health', 'habit', 10);
-  } else {
-    S.daily[habitId] = today;
-    sfx('check');
-    if(S.habitDays[habitId].indexOf(today) === -1){
-      S.habitDays[habitId].push(today);
-    }
-    addXP(10, 'health', true, 'habit');
-    log('ROUTINE LOGGED', 'Daily habit logged: <b>' + habitId + '</b> (+10 XP).');
+  if(typeof HabitEngine !== 'undefined' && HabitEngine.toggleHabit){
+    return HabitEngine.toggleHabit(habitId, ev);
   }
-  save();
-  renderAll();
+  return false;
 }
 
 function advanceProject(projectId, increment){
@@ -2845,7 +1901,7 @@ function saveKnowledgeNote(title, category, tags, content){
   addXP(15, 'selfdev', true, 'knowledge');
   save();
   renderAll();
-  log('KNOWLEDGE SAVED', 'Note added to Second Brain: <b>' + esc(title) + '</b> (+15 XP).');
+  log('KNOWLEDGE SAVED', 'Note saved to Knowledge Base: <b>' + esc(title) + '</b> (+15 XP).');
 }
 
 function deleteKnowledgeNote(noteId){

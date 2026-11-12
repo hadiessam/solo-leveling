@@ -4,7 +4,7 @@
    Bump CACHE when you change any file, otherwise the phone serves the old one.
    ===================================================================== */
 
-const CACHE   = 'solo-leveling-v51-holographic-arise';
+const CACHE   = 'solo-leveling-v52-unified-core';
 
 /* code + markup — these MUST always be fresh */
 const CORE = [
@@ -26,10 +26,8 @@ const CORE = [
   './uptodate.js',
   './expenses.js',
   './life_health.js',
-  './life_career.js',
   './life_planner.js',
   './life_finance.js',
-  './life_brain.js',
   './bassem_data.js',
   './bassem_engine.js',
   './ui_command_center.js',

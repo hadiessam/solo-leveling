@@ -69,24 +69,23 @@
       const actions = [
         // Navigation Tabs
         { title: 'Go to Command Center (Dashboard)', category: 'Navigation', icon: '🎯', fn: () => window.goTab('dash') },
-        { title: 'Go to Tasks & Quests', category: 'Navigation', icon: '⚔️', fn: () => window.goTab('tasks') },
+        { title: 'Go to Daily Missions (5-7/Day)', category: 'Navigation', icon: '⚔️', fn: () => window.goTab('daily') },
+        { title: 'Go to Daily Habits & History', category: 'Navigation', icon: '🔄', fn: () => window.goTab('habits') },
+        { title: 'Go to Streak & Analytics Insights', category: 'Navigation', icon: '📊', fn: () => window.goTab('insight') },
         { title: 'Go to Bassem School S-Rank Raid Boss', category: 'Navigation', icon: '👑', fn: () => { window.goTab('boss'); } },
         { title: 'Go to 36 Certification Courses', category: 'Navigation', icon: '📜', fn: () => window.goTab('courses') },
         { title: 'Go to Health, Sleep & Recovery Tracker', category: 'Life OS', icon: '🩺', fn: () => window.goTab('health') },
-        { title: 'Go to Job Hunt HQ & Interview Arena', category: 'Life OS', icon: '💼', fn: () => window.goTab('career') },
         { title: 'Go to Time Blocker & Goal Cascades', category: 'Life OS', icon: '⏱️', fn: () => window.goTab('planner') },
         { title: 'Go to Expense Audit & Runway Calculator', category: 'Life OS', icon: '💰', fn: () => window.goTab('expenses') },
-        { title: 'Go to Second Brain, ADRs & Lessons', category: 'Life OS', icon: '🧠', fn: () => window.goTab('brain') },
+        { title: 'Go to Knowledge Base & Skills', category: 'Life OS', icon: '🧠', fn: () => window.goTab('knowledge') },
         { title: 'Go to English Speaking Drills', category: 'Navigation', icon: '🎙️', fn: () => window.goTab('speaking') },
-        { title: 'Go to Vocabulary Vault', category: 'Navigation', icon: '📖', fn: () => window.goTab('vocab') },
-        { title: 'Go to Hunter Status & Shadows', category: 'Navigation', icon: '👤', fn: () => window.goTab('hunter') },
+        { title: 'Go to Daily Vocabulary (15 Words/Day)', category: 'Navigation', icon: '📖', fn: () => window.goTab('vocab') },
+        { title: 'Go to Shadow Army, Relics & Vision', category: 'Navigation', icon: '👤', fn: () => window.goTab('shadow') },
         
         // System Actions
         { title: 'Toggle Recovery Mode (Reduced Workload)', category: 'System Action', icon: '🛡️', fn: () => { if (window.toggleRecoveryMode) window.toggleRecoveryMode(); } },
         { title: 'Export Full Encrypted Backup Snapshot (JSON)', category: 'System Action', icon: '💾', fn: () => { if (window.StorageManager) window.StorageManager.exportToFile(); } },
         { title: 'Open Diagnostics & Health Audit Panel', category: 'System Action', icon: '🔧', fn: () => { if (window.DiagnosticsModal) window.DiagnosticsModal.open(); } },
-        { title: 'Add New Second Brain Note', category: 'Quick Action', icon: '📝', fn: () => { if (window.SecondBrain) window.SecondBrain.openNewNoteModal(); } },
-        { title: 'Log Incident & Failure Lesson (+25 XP)', category: 'Quick Action', icon: '💡', fn: () => { if (window.SecondBrain) window.SecondBrain.openNewLessonModal(); } },
         { title: 'Log Workout / Gym Session', category: 'Quick Action', icon: '🏋️', fn: () => { if (window.HealthSystem) window.HealthSystem.logWorkoutModal(); } },
         { title: 'Log Weight & Body Metrics', category: 'Quick Action', icon: '⚖️', fn: () => { if (window.HealthSystem) window.HealthSystem.logWeightModal(); } }
       ];
@@ -233,17 +232,17 @@
           <span class="mnav-icon">🎯</span>
           <span class="mnav-label">Command</span>
         </div>
-        <div class="mobile-nav-item" onclick="window.goTab('tasks')">
+        <div class="mobile-nav-item" onclick="window.goTab('daily')">
           <span class="mnav-icon">⚔️</span>
-          <span class="mnav-label">Tasks</span>
+          <span class="mnav-label">Missions</span>
         </div>
-        <div class="mobile-nav-item" onclick="window.goTab('boss')">
-          <span class="mnav-icon">👑</span>
-          <span class="mnav-label">Raids</span>
+        <div class="mobile-nav-item" onclick="window.goTab('habits')">
+          <span class="mnav-icon">🔄</span>
+          <span class="mnav-label">Habits</span>
         </div>
-        <div class="mobile-nav-item" onclick="window.goTab('lifestatus')">
-          <span class="mnav-icon">🧭</span>
-          <span class="mnav-label">Life OS</span>
+        <div class="mobile-nav-item" onclick="window.goTab('vocab')">
+          <span class="mnav-icon">📖</span>
+          <span class="mnav-label">Vocab</span>
         </div>
         <div class="mobile-nav-item" onclick="window.CommandPalette.toggle()">
           <span class="mnav-icon">⚡</span>

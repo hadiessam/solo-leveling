@@ -1452,32 +1452,162 @@ const VOCAB = [
 ];
 
 /* ---------------------------------------------------------------
-   DAILY VOCABULARY ENGINE & DYNAMIC ROTATION
-   Deterministic by date so the base 5-word list remains stable,
-   while grinding allows appending 5 extra words on demand.
+   DAILY VOCABULARY ENGINE & DETERMINISTIC ROTATION (15 WORDS/DAY)
+   Cairo-anchored deterministic selection with full history tracking:
+   seenVocabulary, learnedVocabulary, masteredVocabulary, dailyVocabulary.
+   Same day + refresh = exact same 15 words. Next Cairo day = 15 new words.
    --------------------------------------------------------------- */
-const VOCAB_PER_DAY = 5;
+const VOCAB_PER_DAY = 15;
 
-function vocabDay(){
-  const d = new Date();
-  const start = new Date(2026, 0, 1);
-  return Math.floor((d - start) / 86400000);
+function getCairoTodayKey(){
+  if(typeof SystemClock !== 'undefined') return SystemClock.dayKey();
+  if(typeof dayKey === 'function') return dayKey();
+  return new Date().toISOString().slice(0, 10);
 }
 
-function todaysVocab(){
-  const day = vocabDay();
-  const total = VOCAB.length;
-  const extra = (typeof S !== 'undefined' && S.vocabExtraWordsCount) ? S.vocabExtraWordsCount : 0;
-  const count = VOCAB_PER_DAY + extra;
-  const out = [];
-  for(let i = 0; i < count; i++){
-    out.push(VOCAB[((day * VOCAB_PER_DAY) + i) % total]);
+function hashDateSeed(dateStr){
+  let h = 2166136261;
+  const str = String(dateStr || '2026-11-12');
+  for(let i = 0; i < str.length; i++){
+    h ^= str.charCodeAt(i);
+    h = Math.imul(h, 16777619);
   }
-  return out;
+  return h >>> 0;
+}
+
+function vocabDay(dateStr){
+  const k = dateStr || getCairoTodayKey();
+  const [y, m, d] = k.split('-').map(Number);
+  const start = Date.UTC(2026, 0, 1);
+  const cur = Date.UTC(y || 2026, (m || 1) - 1, d || 1);
+  return Math.max(0, Math.floor((cur - start) / 86400000));
 }
 
 function vocabKey(word){
-  return 'v_' + word.replace(/[^A-Za-z0-9]/g, '_');
+  return 'v_' + String(word || '').replace(/[^A-Za-z0-9]/g, '_');
+}
+
+function getVocabStatus(wordText){
+  const k = vocabKey(wordText);
+  if(typeof S === 'undefined' || !S) return 'new';
+  if(S.masteredVocabulary && S.masteredVocabulary[k]) return 'mastered';
+  if(S.learnedVocabulary && S.learnedVocabulary[k]) return 'learning';
+  if(S.vocabStatus && S.vocabStatus[k]) return S.vocabStatus[k];
+  if(S.vocab && S.vocab[k]) return 'mastered';
+  return 'new';
+}
+
+function generateDailyVocabulary(dateStr, forceNew){
+  const targetDate = dateStr || getCairoTodayKey();
+
+  // Deterministic offline fallback if S is absent
+  if(typeof S === 'undefined' || !S){
+    const dayIdx = vocabDay(targetDate);
+    const out = [];
+    for(let i = 0; i < VOCAB_PER_DAY; i++){
+      out.push(VOCAB[((dayIdx * VOCAB_PER_DAY) + i) % VOCAB.length]);
+    }
+    return out;
+  }
+
+  if(!S.seenVocabulary) S.seenVocabulary = [];
+  if(!S.vocabularyHistory) S.vocabularyHistory = {};
+
+  // Return cached 15 words for today if already generated (prevents reshuffle on Refresh)
+  if(!forceNew && S.dailyVocabulary && S.dailyVocabulary.date === targetDate && Array.isArray(S.dailyVocabulary.words) && S.dailyVocabulary.words.length >= VOCAB_PER_DAY){
+    const mapped = S.dailyVocabulary.words
+      .map(term => VOCAB.find(v => v.w === term))
+      .filter(Boolean);
+    if(mapped.length >= VOCAB_PER_DAY){
+      return mapped;
+    }
+  }
+
+  // Determine yesterday's words so we never show consecutive duplicates
+  const yesterdayKey = (typeof SystemClock !== 'undefined') ? SystemClock.shiftDayKey(targetDate, -1) : '';
+  const yesterdaySet = new Set(
+    (S.vocabularyHistory[yesterdayKey] && S.vocabularyHistory[yesterdayKey].shown) ||
+    (S.dailyVocabulary && S.dailyVocabulary.date !== targetDate ? S.dailyVocabulary.words : []) ||
+    []
+  );
+
+  const seenSet = new Set(S.seenVocabulary);
+  const seed = hashDateSeed(targetDate);
+
+  // Deterministically order pool via date seed
+  const indexed = VOCAB.map((item, idx) => ({
+    item,
+    score: ((idx * 2654435761) ^ seed) >>> 0
+  })).sort((a, b) => a.score - b.score).map(x => x.item);
+
+  // Prefer unseen words (and not shown yesterday)
+  let candidates = indexed.filter(v => !seenSet.has(vocabKey(v.w)) && !yesterdaySet.has(v.w));
+
+  // If fewer than 15 unseen words remain, reset cycle smoothly excluding yesterday's words
+  if(candidates.length < VOCAB_PER_DAY){
+    const extras = indexed.filter(v => !candidates.includes(v) && !yesterdaySet.has(v.w));
+    candidates = candidates.concat(extras);
+    if(seenSet.size >= VOCAB.length - VOCAB_PER_DAY){
+      // Fresh rotation cycle once nearly full pool covered
+      S.seenVocabulary = [];
+    }
+  }
+
+  // Pick 15 balanced across categories where possible
+  const selected = [];
+  const usedWords = new Set();
+  const categories = ['Performance Marketing', 'Executive English', 'Tech & AI', 'Advanced Idioms'];
+
+  // Pick at least 3 from each category first (12), then 3 more = 15
+  categories.forEach(cat => {
+    const catPool = candidates.filter(v => v.cat === cat && !usedWords.has(v.w));
+    for(let i = 0; i < Math.min(3, catPool.length) && selected.length < VOCAB_PER_DAY; i++){
+      selected.push(catPool[i]);
+      usedWords.add(catPool[i].w);
+    }
+  });
+  for(let i = 0; i < candidates.length && selected.length < VOCAB_PER_DAY; i++){
+    if(!usedWords.has(candidates[i].w)){
+      selected.push(candidates[i]);
+      usedWords.add(candidates[i].w);
+    }
+  }
+
+  // Persist daily vocabulary and mark words as seen
+  S.dailyVocabulary = {
+    date: targetDate,
+    words: selected.map(x => x.w)
+  };
+  selected.forEach(x => {
+    const k = vocabKey(x.w);
+    if(!S.seenVocabulary.includes(k)) S.seenVocabulary.push(k);
+  });
+  S.vocabularyHistory[targetDate] = {
+    date: targetDate,
+    shown: selected.map(x => x.w)
+  };
+
+  return selected;
+}
+
+function todaysVocab(dateStr){
+  const list = generateDailyVocabulary(dateStr, false);
+  const extra = (typeof S !== 'undefined' && S && S.dailyVocabulary && S.dailyVocabulary.date === (dateStr || getCairoTodayKey()) && S.vocabExtraWordsCount)
+    ? S.vocabExtraWordsCount : 0;
+  if(!extra) return list;
+
+  // Include extra grinded words for today deterministically
+  const used = new Set(list.map(x => x.w));
+  const extras = [];
+  const seed = hashDateSeed((dateStr || getCairoTodayKey()) + '_extra');
+  for(let i = 0; i < VOCAB.length && extras.length < extra; i++){
+    const cand = VOCAB[(seed + i) % VOCAB.length];
+    if(!used.has(cand.w)){
+      extras.push(cand);
+      used.add(cand.w);
+    }
+  }
+  return list.concat(extras);
 }
 
 /* ---------------------------------------------------------------
@@ -1499,46 +1629,64 @@ function speakVocabWord(text){
 }
 
 /* ---------------------------------------------------------------
-   VOCAB STATUS TOGGLES (NEW | LEARNING | MASTERED) + INT XP
+   VOCAB STATUS TOGGLES (NEW | LEARNING | MASTERED) — UNIFIED XP ENGINE
    --------------------------------------------------------------- */
 function setVocabStatus(wordText, status){
-  if(typeof S === 'undefined') return;
+  if(typeof S === 'undefined' || !S) return;
   if(!S.vocab) S.vocab = {};
   if(!S.vocabStatus) S.vocabStatus = {};
-  
+  if(!S.learnedVocabulary) S.learnedVocabulary = {};
+  if(!S.masteredVocabulary) S.masteredVocabulary = {};
+
+  const today = getCairoTodayKey();
   const k = vocabKey(wordText);
-  const oldStatus = S.vocabStatus[k] || 'new';
+  const oldStatus = getVocabStatus(wordText);
   if(oldStatus === status) return;
-  
+
+  const masterSourceId = 'vocab_master:' + k;
+  const learnSourceId = 'vocab_learn:' + k;
+
+  // Reverse previous XP cleanly before applying new state
+  if(oldStatus === 'mastered'){
+    delete S.masteredVocabulary[k];
+    delete S.vocab[k];
+    if(typeof XpEngine !== 'undefined') XpEngine.reverseXP({ sourceId: masterSourceId, stat: 'selfdev', source: 'vocab', reason: 'Vocab unmastered: ' + wordText });
+  } else if(oldStatus === 'learning'){
+    delete S.learnedVocabulary[k];
+    if(typeof XpEngine !== 'undefined') XpEngine.reverseXP({ sourceId: learnSourceId, stat: 'selfdev', source: 'vocab', reason: 'Vocab unlearned: ' + wordText });
+  }
+
   S.vocabStatus[k] = status;
-  
+
   if(status === 'mastered'){
-    S.vocab[k] = typeof dayKey === 'function' ? dayKey() : new Date().toISOString().slice(0,10);
-    S.vocabTotal = Object.values(S.vocabStatus).filter(s => s === 'mastered').length;
-    if(typeof addXP === 'function'){
-      addXP(15, 'selfdev', false, 'vocab_mastery');
+    S.masteredVocabulary[k] = today;
+    S.vocab[k] = today;
+    if(typeof XpEngine !== 'undefined'){
+      XpEngine.grantXP({ amount: 15, baseXP: 15, stat: 'selfdev', source: 'vocab', sourceId: masterSourceId, type: 'VOCAB_MASTERY', reason: 'Mastered vocab: ' + wordText, applyMultiplier: false });
     }
-    if(typeof sfx === 'function') sfx('milestone');
+    if(typeof sfx === 'function') sfx('vocab');
   } else if(status === 'learning'){
-    if(oldStatus === 'mastered' && S.vocab[k]){
-      delete S.vocab[k];
-      S.vocabTotal = Math.max(0, (S.vocabTotal || 1) - 1);
-    }
-    if(typeof addXP === 'function'){
-      addXP(5, 'selfdev', false, 'vocab_practice');
+    S.learnedVocabulary[k] = today;
+    if(typeof XpEngine !== 'undefined'){
+      XpEngine.grantXP({ amount: 5, baseXP: 5, stat: 'selfdev', source: 'vocab', sourceId: learnSourceId, type: 'VOCAB_LEARNING', reason: 'Learning vocab: ' + wordText, applyMultiplier: false });
     }
     if(typeof sfx === 'function') sfx('vocab');
   } else {
-    // reset to 'new'
-    if(S.vocab[k]){
-      delete S.vocab[k];
-      S.vocabTotal = Math.max(0, (S.vocabTotal || 1) - 1);
-    }
     if(typeof sfx === 'function') sfx('uncheck');
   }
-  
+
+  S.vocabTotal = Object.keys(S.masteredVocabulary).length;
   if(typeof save === 'function') save();
-  if(typeof renderAll === 'function') renderAll();
+  if(typeof drawHUD === 'function') drawHUD();
+  if(typeof drawVocab === 'function') drawVocab();
+}
+
+function vocabLearnedTodayCount(){
+  const words = todaysVocab();
+  return words.filter(w => {
+    const st = getVocabStatus(w.w);
+    return st === 'learning' || st === 'mastered';
+  }).length;
 }
 
 /* Load 5 more words on demand (Grinding Feature) */
@@ -1548,6 +1696,21 @@ function loadMoreVocab(){
   if(typeof sfx === 'function') sfx('boot');
   if(typeof save === 'function') save();
   if(typeof drawVocab === 'function') drawVocab();
+}
+
+/* Mark all today's words as mastered in one click */
+function learnAllVocab(){
+  const words = todaysVocab();
+  let changed = 0;
+  words.forEach(w => {
+    if(getVocabStatus(w.w) !== 'mastered'){
+      setVocabStatus(w.w, 'mastered');
+      changed++;
+    }
+  });
+  if(changed > 0 && typeof log === 'function'){
+    log('VOCAB', `Mastered <b>${changed}</b> new vocabulary words today!`);
+  }
 }
 
 /* ---------------------------------------------------------------
@@ -1561,17 +1724,17 @@ let _vocabCurrentQuestion = null;
 function openVocabQuizModal(){
   _vocabQuizScore = 0;
   _vocabQuizSeconds = 60;
-  
+
   let modal = document.getElementById('vocab-quiz-modal');
   if(!modal){
     modal = document.createElement('div');
     modal.id = 'vocab-quiz-modal';
     document.body.appendChild(modal);
   }
-  
+
   modal.style.display = 'flex';
   renderVocabQuizQuestion();
-  
+
   clearInterval(_vocabQuizTimer);
   _vocabQuizTimer = setInterval(() => {
     _vocabQuizSeconds--;
@@ -1586,21 +1749,31 @@ function openVocabQuizModal(){
 function finishVocabQuiz(){
   clearInterval(_vocabQuizTimer);
   const xpEarned = _vocabQuizScore * 10;
-  if(xpEarned > 0 && typeof addXP === 'function'){
-    addXP(xpEarned, 'selfdev', false, 'vocab_quiz_victory');
+  if(xpEarned > 0 && typeof XpEngine !== 'undefined'){
+    XpEngine.grantXP({
+      amount: xpEarned,
+      baseXP: xpEarned,
+      stat: 'selfdev',
+      source: 'vocab',
+      type: 'VOCAB_QUIZ',
+      reason: `60s Vocab Quiz (${_vocabQuizScore} correct)`,
+      applyMultiplier: false
+    });
+    if(typeof save === 'function') save();
   }
   if(typeof sfx === 'function') sfx('perfect');
-  
+
   const modal = document.getElementById('vocab-quiz-modal');
   if(modal){
     modal.innerHTML = `
-      <div class="holographic-panel-glass" style="max-width:480px;width:90%;margin:auto;padding:24px;text-align:center;border:1px solid var(--glow);background:rgba(2,6,13,0.96);border-radius:12px;box-shadow:0 0 30px rgba(0,240,255,0.3);">
-        <div style="font-family:'Orbitron',sans-serif;font-size:1.4rem;color:var(--glow);margin-bottom:8px;">[ QUIZ COMPLETE ]</div>
-        <div style="color:#cbd5e1;font-size:0.95rem;margin-bottom:16px;">You conquered ${_vocabQuizScore} words in 60 seconds!</div>
-        <div style="font-size:1.8rem;font-weight:800;color:var(--gold);margin-bottom:16px;">+${xpEarned} INT XP</div>
-        <button class="btn" style="background:var(--glow);color:#02060d;font-weight:800;padding:10px 24px;" onclick="closeVocabQuizModal()">CLAIM INTELLECT & RETURN</button>
-      </div>
-    `;
+      <div style="position:fixed;inset:0;background:rgba(0,0,0,0.85);backdrop-filter:blur(10px);z-index:100001;display:flex;align-items:center;justify-content:center;padding:20px;">
+        <div class="holographic-panel-glass" style="max-width:480px;width:90%;margin:auto;padding:24px;text-align:center;border:1px solid var(--glow);background:rgba(2,6,13,0.96);border-radius:12px;box-shadow:0 0 30px rgba(0,240,255,0.3);">
+          <div style="font-family:'Orbitron',sans-serif;font-size:1.4rem;color:var(--glow);margin-bottom:8px;">[ QUIZ COMPLETE ]</div>
+          <div style="color:#cbd5e1;font-size:0.95rem;margin-bottom:16px;">You answered ${_vocabQuizScore} words correctly in 60 seconds!</div>
+          <div style="font-size:1.8rem;font-weight:800;color:var(--gold);margin-bottom:16px;">+${xpEarned} XP</div>
+          <button class="btn" style="background:var(--glow);color:#02060d;font-weight:800;padding:10px 24px;" onclick="closeVocabQuizModal()">CLAIM XP & RETURN</button>
+        </div>
+      </div>`;
   }
 }
 
@@ -1608,63 +1781,57 @@ function closeVocabQuizModal(){
   clearInterval(_vocabQuizTimer);
   const modal = document.getElementById('vocab-quiz-modal');
   if(modal) modal.style.display = 'none';
-  if(typeof renderAll === 'function') renderAll();
+  if(typeof drawHUD === 'function') drawHUD();
+  if(typeof drawVocab === 'function') drawVocab();
 }
 
 function renderVocabQuizQuestion(){
   const modal = document.getElementById('vocab-quiz-modal');
   if(!modal) return;
-  
-  // Pick random target word from VOCAB
-  const targetIdx = Math.floor(Math.random() * VOCAB.length);
-  const target = VOCAB[targetIdx];
+
+  const todayPool = todaysVocab();
+  const sourcePool = todayPool.length >= 4 && Math.random() < 0.6 ? todayPool : VOCAB;
+  const target = sourcePool[Math.floor(Math.random() * sourcePool.length)];
   _vocabCurrentQuestion = target;
-  
-  // Pick 3 distractors
+
   const distractors = [];
   while(distractors.length < 3){
-    const rIdx = Math.floor(Math.random() * VOCAB.length);
-    if(rIdx !== targetIdx && !distractors.includes(rIdx)){
-      distractors.push(rIdx);
+    const cand = VOCAB[Math.floor(Math.random() * VOCAB.length)];
+    if(cand.w !== target.w && !distractors.some(d => d.w === cand.w)){
+      distractors.push(cand);
     }
   }
-  
-  const options = [target, ...distractors.map(i => VOCAB[i])].sort(() => Math.random() - 0.5);
-  
+
+  const options = [target, ...distractors].sort(() => Math.random() - 0.5);
+
   modal.innerHTML = `
     <div style="position:fixed;inset:0;background:rgba(0,0,0,0.85);backdrop-filter:blur(10px);z-index:100001;display:flex;align-items:center;justify-content:center;padding:20px;">
       <div class="holographic-panel-glass" style="max-width:540px;width:95%;background:#02060d;border:1px solid var(--glow);border-radius:12px;padding:24px;box-shadow:0 0 30px rgba(0,240,255,0.25);">
         <div style="display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid rgba(255,255,255,0.1);padding-bottom:12px;margin-bottom:16px;">
           <div>
-            <span style="font-family:'Orbitron',sans-serif;font-size:0.8rem;color:var(--glow);letter-spacing:1px;">INTELLECT AUDIT &middot; 60s SPEED RUN</span>
+            <span style="font-family:'Orbitron',sans-serif;font-size:0.8rem;color:var(--glow);letter-spacing:1px;">VOCABULARY SPEED AUDIT &middot; 60s</span>
             <div style="font-size:0.75rem;color:var(--muted);">Score: ${_vocabQuizScore} Correct</div>
           </div>
           <div id="vqTimer" style="font-family:'Orbitron',sans-serif;font-weight:800;color:var(--red);font-size:1.2rem;">${_vocabQuizSeconds}s</div>
         </div>
-        
         <div style="text-align:center;margin-bottom:20px;">
           <div style="font-size:0.75rem;color:var(--glow2);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;">${target.cat}</div>
-          <div style="font-size:1.6rem;font-weight:800;color:#fff;letter-spacing:0.5px;">${target.w}</div>
+          <div style="font-size:1.55rem;font-weight:800;color:#fff;">${target.w}</div>
           <div style="font-size:0.85rem;color:#94a3b8;font-style:italic;margin-top:2px;">${target.phonetic || ''}</div>
-          <div style="margin-top:10px;font-size:0.9rem;color:#cbd5e1;line-height:1.4;">"${target.ex}"</div>
+          <div style="margin-top:10px;font-size:0.88rem;color:#cbd5e1;line-height:1.4;">"${target.ex}"</div>
         </div>
-        
-        <div style="font-size:0.8rem;color:#94a3b8;margin-bottom:10px;text-align:center;">Select the matching Arabic meaning:</div>
-        
         <div style="display:grid;grid-template-columns:1fr;gap:10px;margin-bottom:18px;">
           ${options.map(opt => `
-            <button class="btn" onclick="checkVocabQuizAnswer('${opt.w.replace(/'/g, "\\'")}')" style="text-align:right;direction:rtl;font-family:'Cairo',sans-serif;font-size:1rem;font-weight:700;padding:12px 16px;background:rgba(255,255,255,0.04);border:1px solid rgba(0,240,255,0.2);color:#f1f5f9;transition:all 0.2s;" onmouseover="this.style.borderColor='var(--glow)'" onmouseout="this.style.borderColor='rgba(0,240,255,0.2)'">
+            <button class="btn" onclick="checkVocabQuizAnswer('${opt.w.replace(/'/g, "\\'")}')" style="text-align:right;direction:rtl;font-family:'Cairo',sans-serif;font-size:1rem;font-weight:700;padding:12px 16px;background:rgba(255,255,255,0.04);border:1px solid rgba(0,240,255,0.2);color:#f1f5f9;">
               ${opt.ar}
             </button>
           `).join('')}
         </div>
-        
         <div style="display:flex;justify-content:center;">
           <button onclick="closeVocabQuizModal()" style="background:transparent;border:none;color:#64748b;font-size:0.8rem;cursor:pointer;">Cancel Quiz</button>
         </div>
       </div>
-    </div>
-  `;
+    </div>`;
 }
 
 function checkVocabQuizAnswer(selectedWord){
@@ -1681,20 +1848,30 @@ function checkVocabQuizAnswer(selectedWord){
 // Auto-expose on window for browser environment
 if(typeof window !== 'undefined'){
   window.VOCAB = VOCAB;
+  window.VOCAB_PER_DAY = VOCAB_PER_DAY;
   window.todaysVocab = todaysVocab;
+  window.generateDailyVocabulary = generateDailyVocabulary;
   window.vocabDay = vocabDay;
   window.vocabKey = vocabKey;
+  window.getVocabStatus = getVocabStatus;
+  window.vocabLearnedTodayCount = vocabLearnedTodayCount;
   window.speakVocabWord = speakVocabWord;
   window.setVocabStatus = setVocabStatus;
+  window.learnAllVocab = learnAllVocab;
+  window.loadMoreVocab = loadMoreVocab;
+  window.openVocabQuizModal = openVocabQuizModal;
 }
 
 // Module export for test runners
 if(typeof module !== 'undefined' && module.exports){
   module.exports = {
     VOCAB,
+    VOCAB_PER_DAY,
     todaysVocab,
+    generateDailyVocabulary,
     vocabDay,
     vocabKey,
+    getVocabStatus,
     speakVocabWord,
     setVocabStatus
   };

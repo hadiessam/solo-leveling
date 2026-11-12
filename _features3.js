@@ -190,10 +190,10 @@ function checkNegativeHabit(habitId){
   habit.done = true;
   habit.date = dayKey();
 
-  /* Apply HP damage using the existing damage system */
-  const applied = damageHP(habit.damage, false);
+  const applied = habit.damage || 10;
+  if(typeof XpEngine !== "undefined") XpEngine.applyPenalty({ baseXP: Math.round(applied / 2), sourceId: "neghabit:" + dayKey() + ":" + habit.id, date: dayKey(), reason: "Negative habit: " + habit.name });
 
-  log('NEGATIVE HABIT', '<b>' + esc(habit.name) + '</b> — <b>-' + applied + ' HP</b>', true);
+  log('DISCIPLINE SLIP', '<b>' + esc(habit.name) + '</b> — <b>-' + applied + ' XP</b>', true);
   sfx('damage');
 
   save();

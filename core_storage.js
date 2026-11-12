@@ -83,7 +83,7 @@ const StorageManager = (function(){
       const raw = localStorage.getItem(LOCAL_CACHE_KEY);
       if(raw){
         const parsed = JSON.parse(raw);
-        if(parsed && parsed.xp && parsed.xp >= 1000){
+        if(parsed && typeof parsed.xp === 'number'){
           return parsed;
         }
       }
@@ -293,66 +293,23 @@ const StorageManager = (function(){
     }
   }
 
-  /* Non-destructive Data Recovery Migration & Infinite Progression Unlock */
+  /* Non-destructive Versioned Migration Runner (replaces hardcoded streak overrides) */
   function runRecoveryMigration(state){
     const s = state || (typeof S !== 'undefined' ? S : null);
     if(!s) return null;
 
-    // 1. Create immediate safety backup in localStorage before any mutation
     if(typeof localStorage !== 'undefined'){
-      try {
+      try{
         if(!localStorage.getItem('sl_backup_state')){
           const currentRaw = localStorage.getItem(LOCAL_CACHE_KEY) || JSON.stringify(s);
           localStorage.setItem('sl_backup_state', currentRaw);
-          console.log('[RecoveryMigration] Safety backup saved to localStorage key: sl_backup_state');
         }
-      } catch(e) {
-        console.warn('[RecoveryMigration] Safety backup error:', e);
-      }
+      }catch(e){}
     }
 
-    // 2. Restore broken streak and unlock 30+ Day Infinite Progression
-    const today = typeof SystemClock !== 'undefined' ? SystemClock.dayKey() : new Date().toISOString().slice(0, 10);
-    const prevStreak = s.streak || 0;
-    
-    // User started on 2026-10-06 and had 28 days on 2026-11-02 with 438+ quests completed.
-    // Ensure streak is restored to at least 32 days with infinite progression
-    if((s.started || s.streak !== undefined) && (s.streak < 32 || !s.infiniteProgressionActive)){
-      s.streak = Math.max(s.streak || 0, 32);
-      s.best = Math.max(s.best || 0, s.streak);
-      s.infiniteProgressionActive = true;
-
-      // 3. Post system recovery notification
-      if(!s.msgs) s.msgs = [];
-      const recMsgId = 'sys_rec_streak_32';
-      if(!s.msgs.some(m => m.id === recMsgId)){
-        s.msgs.unshift({
-          id: recMsgId,
-          type: 'system',
-          title: '[SYSTEM RECOVERY] STREAK RESTORED (32 DAYS)',
-          body: 'Infinite Progression Engine unlocked. Partial-clear protection active (50% Standard Clear / 100% S-Rank).',
-          date: today,
-          read: false
-        });
-      }
-      console.log(`[RecoveryMigration] Restored streak from ${prevStreak} to ${s.streak} Days (Infinite Progression Active).`);
+    if(typeof migrateState === 'function'){
+      return migrateState(s);
     }
-
-    // 4. Ensure infinite dayIndex (never capped at 14 or 30)
-    if(!s.foundationProfile) s.foundationProfile = { dayIndex: 1, foundationActive: true };
-    s.foundationProfile.dayIndex = Math.max(s.foundationProfile.dayIndex || 1, s.streak || 32);
-
-    // 5. Initialize game systems currency and passive points
-    if(typeof s.gold === 'undefined') s.gold = Math.max(5000, (s.xp || 8028) * 2);
-    if(typeof s.statPoints === 'undefined') s.statPoints = 5;
-    if(typeof s.questRerollsRemaining === 'undefined') s.questRerollsRemaining = 1;
-    if(!s.vocabStatus) s.vocabStatus = {};
-    if(!s.shadowsArmy) s.shadowsArmy = {
-      unlocked: ['igris', 'beru', 'tank', 'iron', 'tusk', 'kaisel'],
-      levels: { igris: 3, beru: 2, tank: 2, iron: 1, tusk: 1, kaisel: 1 }
-    };
-
-    s.lastModified = Date.now();
     return s;
   }
 
@@ -370,9 +327,9 @@ const StorageManager = (function(){
     audit: function(){
       let size = 0;
       try{
-        size = Math.round(((localStorage.getItem('solo_system_v3') || '').length * 2) / 1024);
+        size = Math.round(((localStorage.getItem(LOCAL_CACHE_KEY) || '').length * 2) / 1024);
       }catch(e){}
-      return { healthy: true, localSizeKB: size, snapshotCount: 5 };
+      return { healthy: true, localSizeKB: size, snapshotCount: MAX_SNAPSHOTS };
     },
     runRecoveryMigration: runRecoveryMigration
   };

@@ -1368,7 +1368,39 @@ body{font-family:var(--body);background:var(--bg);color:var(--text);min-height:1
   letter-spacing: 1.2px;
 }
 
-/* VITALS ROW (HP & MANA GAUGES) */
+/* HUNTER PROGRESS SUMMARY BAR (REPLACES HP/MANA VITALS) */
+.hunter-progress-panel {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(115px, 1fr));
+  gap: 10px;
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(0, 240, 255, 0.14);
+}
+.hp-pill {
+  background: rgba(5, 11, 24, 0.72);
+  border: 1px solid rgba(0, 240, 255, 0.16);
+  border-radius: 6px;
+  padding: 8px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.hp-k {
+  font-size: 10px;
+  letter-spacing: 1px;
+  color: var(--muted);
+  font-family: var(--hud);
+}
+.hp-v {
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--glow);
+}
+.hp-v.gold { color: var(--gold); }
+.hp-v.green { color: var(--green); }
+
+/* VITALS ROW (LEGACY FALLBACK) */
 .vitals-row {
   display: grid;
   grid-template-columns: 1fr 1fr;

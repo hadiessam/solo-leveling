@@ -88,9 +88,7 @@ const HealthSystem = (function(){
       });
     }
 
-    // Regenerate HP
-    if(typeof regenHP === 'function') regenHP(15);
-    else if(typeof S.hp === 'number') S.hp = Math.min(100, S.hp + 15);
+    
 
     if(typeof SystemEvents !== 'undefined'){
       SystemEvents.emit('WORKOUT_LOGGED', workout);

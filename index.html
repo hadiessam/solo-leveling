@@ -231,22 +231,15 @@
       </div>
     </div>
 
-    <!-- VITALS: HP & MANA GAUGES -->
-    <div class="vitals-row">
-      <div class="vital-col">
-        <div class="vital-meta">
-          <span class="vital-label"><i class="ico-hp"></i> HEALTH (HP)</span>
-          <span class="vital-val" id="hpVal">94 / 100</span>
-        </div>
-        <div class="bar vital-bar hp-bar"><i id="hpBar" style="width:94%"></i></div>
-      </div>
-      <div class="vital-col">
-        <div class="vital-meta">
-          <span class="vital-label"><i class="ico-mp"></i> MANA (MP)</span>
-          <span class="vital-val" id="manaVal">50 / 50</span>
-        </div>
-        <div class="bar vital-bar mana-bar"><i id="manaBar" style="width:100%"></i></div>
-      </div>
+    <!-- HUNTER PROGRESS SUMMARY (XP-CORE PROGRESSION) -->
+    <div class="hunter-progress-panel">
+      <div class="hp-pill"><span class="hp-k">LEVEL</span><b class="hp-v" id="hpLevelVal">LEVEL 1</b></div>
+      <div class="hp-pill"><span class="hp-k">TOTAL XP</span><b class="hp-v" id="hpXpVal">0 XP</b></div>
+      <div class="hp-pill"><span class="hp-k">NEXT LEVEL</span><b class="hp-v" id="hpNextLvVal">400 XP remaining</b></div>
+      <div class="hp-pill"><span class="hp-k">RANK</span><b class="hp-v" id="hpRankVal">E-RANK</b></div>
+      <div class="hp-pill"><span class="hp-k">TODAY XP</span><b class="hp-v gold" id="hpDailyVal">+0 XP</b></div>
+      <div class="hp-pill"><span class="hp-k">WEEK XP</span><b class="hp-v" id="hpWeeklyVal">+0 XP</b></div>
+      <div class="hp-pill"><span class="hp-k">STREAK</span><b class="hp-v green" id="hpStreakVal">0 Days</b></div>
     </div>
 
     <div class="rankTease" id="rankTease">&nbsp;</div>
@@ -283,32 +276,32 @@
     <div class="portal-btn active" data-portal="dash" onclick="switchPortal('dash', 'dash')">
       <span class="p-icon">⚡</span>
       <span class="p-name">COMMAND</span>
-      <span class="p-desc">HUD & Priorities</span>
+      <span class="p-desc">Today &amp; Progress</span>
     </div>
-    <div class="portal-btn" data-portal="quests" onclick="switchPortal('quests', 'tasks')">
+    <div class="portal-btn" data-portal="quests" onclick="switchPortal('quests', 'daily')">
       <span class="p-icon">⚔️</span>
-      <span class="p-name">TASKS</span>
-      <span class="p-desc">List & Kanban</span>
+      <span class="p-name">MISSIONS</span>
+      <span class="p-desc">Daily, Weekly &amp; Raids</span>
     </div>
     <div class="portal-btn" data-portal="habits" onclick="switchPortal('habits', 'habits')">
       <span class="p-icon">🔄</span>
       <span class="p-name">HABITS</span>
-      <span class="p-desc">21-Day Routines</span>
+      <span class="p-desc">Habits, Health &amp; Insights</span>
     </div>
     <div class="portal-btn" data-portal="roadmap" onclick="switchPortal('roadmap', 'roadmap')">
       <span class="p-icon">🎯</span>
-      <span class="p-name">ROADMAP</span>
-      <span class="p-desc">Saudi & Projects</span>
+      <span class="p-name">PROGRESS</span>
+      <span class="p-desc">Roadmap, Projects &amp; Courses</span>
     </div>
-    <div class="portal-btn" data-portal="knowledge" onclick="switchPortal('knowledge', 'knowledge')">
+    <div class="portal-btn" data-portal="knowledge" onclick="switchPortal('knowledge', 'vocab')">
       <span class="p-icon">🧠</span>
       <span class="p-name">KNOWLEDGE</span>
-      <span class="p-desc">Second Brain & Skills</span>
+      <span class="p-desc">Vocab (15/day) &amp; Skills</span>
     </div>
     <div class="portal-btn" data-portal="resources" onclick="switchPortal('resources', 'expenses')">
       <span class="p-icon">💎</span>
-      <span class="p-name">OPERATIONS</span>
-      <span class="p-desc">Runway & Journal</span>
+      <span class="p-name">SYSTEM</span>
+      <span class="p-desc">Runway, Journal &amp; Shadows</span>
     </div>
   </div>
 
@@ -319,7 +312,7 @@
   <div class="page active" id="dash">
     <div class="panel">
       <div class="st"><h2>Today's Missions</h2><span class="tag" id="todayTag">TODAY</span></div>
-      <div class="hint">Complete missions to earn XP. The daily quest resets at midnight. Your streak starts at <b>1</b> on your first day and grows by one each day you complete at least one mission. Tap <b>?</b> on any mission for exact instructions.</div>
+      <div class="hint">Complete at least <b>1 mission</b> to secure an Active Day and keep your streak alive. Unchecked missions at midnight Cairo time (00:00 AM) cost <b>-2&times; Base XP</b>.</div>
       <div class="quest-progress-container" style="margin-bottom:16px;">
         <div class="bar thin quest-bar-relative">
           <i id="dashBar"></i>
@@ -374,14 +367,8 @@
 
     <div class="panel">
       <div class="st"><h2>Habit Strength Index</h2><span class="tag">DYNAMIC 0-100</span></div>
-      <div class="hint">Consistent completion strengthens your daily habits (+5). Skipping weakens them (-10).</div>
+      <div class="hint">Consistent completion strengthens your daily habits. Unchecked daily missions at Cairo midnight deduct <b>-2&times; Base XP</b> via the unified XP ledger.</div>
       <div id="strengthBars"></div>
-    </div>
-
-    <div class="panel">
-      <div class="st"><h2>Negative Habits &amp; HP Penalties</h2><span class="tag">HP DAMAGE</span></div>
-      <div class="hint">Slacking or indulging in bad habits directly inflicts HP damage. Stay vigilant.</div>
-      <div id="negativeHabits"></div>
     </div>
   </div>
 
@@ -661,50 +648,45 @@
   <!-- ============ VOCABULARY ============ -->
   <div class="page" id="vocab">
     <div class="panel">
-      <div class="st"><h2>Today's Vocabulary</h2><span class="tag" id="vocabTag">0 / 5</span></div>
-      <div class="hint">Five words a day, chosen for your actual job &mdash; media buying, reporting, client work and the interview room. Tap a word when you have learned it. <b>+8 XP</b> each.</div>
+      <div class="st"><h2>Today's Vocabulary</h2><span class="tag" id="vocabTag">0 / 15 LEARNED</span></div>
+      <div class="hint">Fifteen new words a day for media buying, performance marketing, analytics, and client communication. Rotates automatically at Cairo midnight (00:00 AM).</div>
       <div id="vocabToday"></div>
-      <button class="btn" style="margin-top:14px" onclick="learnAllVocab()">Mark All Learned &mdash; +40 XP</button>
+      <button class="btn" style="margin-top:14px" onclick="learnAllVocab()">Mark All Learned Today</button>
     </div>
     <div class="panel">
       <div class="st"><h2>Progress</h2><span class="tag" id="vocabTotalTag">0 WORDS</span></div>
       <div class="grid">
-        <div class="stat"><div class="h"><span class="n">Words Learned</span><span class="lv" id="vTotal">0</span></div><div class="sb">All time, across every day</div></div>
-        <div class="stat"><div class="h"><span class="n">Today</span><span class="lv" id="vToday">0 / 5</span></div><div class="sb">Resets at midnight</div></div>
-        <div class="stat"><div class="h"><span class="n">Days Completed</span><span class="lv" id="vDays">0</span></div><div class="sb">Days where all five were learned</div></div>
+        <div class="stat"><div class="h"><span class="n">Words Mastered</span><span class="lv" id="vTotal">0</span></div><div class="sb">Mastered across all days</div></div>
+        <div class="stat"><div class="h"><span class="n">Today</span><span class="lv" id="vToday">0 / 15</span></div><div class="sb">Rotates at midnight Cairo</div></div>
+        <div class="stat"><div class="h"><span class="n">Days Practiced</span><span class="lv" id="vDays">0</span></div><div class="sb">Daily sets recorded in history</div></div>
         <div class="stat"><div class="h"><span class="n">Vocabulary Pool</span><span class="lv" id="vPool">0</span></div><div class="sb">Total words available in the system</div></div>
       </div>
     </div>
     <div class="panel">
       <div class="st"><h2>Word Bank</h2><span class="tag" id="bankTag">ALL</span></div>
-      <div class="hint">Every word in the system, grouped by category. Search or scan it &mdash; you will meet them again in the daily five.</div>
+      <div class="hint">Every word in the system, grouped by category. Unseen words are prioritized in each day's 15-word rotation.</div>
       <div id="vocabBank"></div>
     </div>
   </div>
 
-  <!-- ============ HUNTER (merged: class + HP/mana + vision) ============ -->
-  <div class="page" id="hunter">
+  <!-- ============ SHADOW ARMY, VISION & RELICS ============ -->
+  <div class="page" id="shadow">
     <div class="panel">
-      <div class="st"><h2>Your Class</h2><span class="tag" id="classTag">LEVEL 10+</span></div>
-      <div class="hint">At level 10 you pick a path. Each class has a passive bonus that applies automatically and an ability you spend mana on. This is permanent.</div>
-      <div id="classList"></div>
+      <div class="st"><h2>Eggs</h2><span class="tag" id="eggTag">0 READY</span></div>
+      <div class="hint">Eggs are earned by playing &mdash; they cost nothing and there is nothing to farm. Clear missions, keep your streak, finish raids, and they pile up on their own. Open them whenever you like.</div>
+      <div id="eggList"></div>
     </div>
 
     <div class="panel">
-      <div class="st"><h2>Health &amp; Mana</h2><span class="tag">CLASS RESOURCES</span></div>
-      <div class="grid">
-        <div class="stat">
-          <div class="h"><span class="n">Health</span><span class="lv" id="classHpVal">100/100</span></div>
-          <div class="bar thin"><i id="classHpBar"></i></div>
-          <div class="sb">Missed missions cost HP. Heal with potions from loot, or by completing a full day.</div>
-        </div>
-        <div class="stat">
-          <div class="h"><span class="n">Mana</span><span class="lv" id="classManaVal">50/50</span></div>
-          <div class="bar thin"><i id="classManaBar"></i></div>
-          <div class="sb">+3 mana per completed mission. Spend it on your class ability.</div>
-        </div>
-      </div>
-      <button class="btn" style="margin-top:14px" onclick="useAbility()">Use Class Ability</button>
+      <div class="st"><h2>Shadow Soldier</h2><span class="tag" id="shadowTag">LEVEL 0</span></div>
+      <div class="hint">Your Shadow grows automatically as you complete missions &mdash; one level every 8 missions. Keep working and it evolves.</div>
+      <div id="shadowDisplay" style="text-align:center;padding:20px;"></div>
+    </div>
+
+    <div class="panel">
+      <div class="st"><h2>Shadow Army</h2><span class="tag" id="charTag">0 / 15 UNLOCKED</span></div>
+      <div class="hint">Every character you have summoned. Duplicates raise a character's star rating instead of going to waste &mdash; five stars is the ceiling.</div>
+      <div id="charList"></div>
     </div>
 
     <div class="panel">
@@ -723,27 +705,6 @@
       <div class="st"><h2 style="color:#d8b4fe">Prestige Awakening</h2><span class="tag" style="border-color:var(--glow2);color:#d8b4fe">LEVEL 10+</span></div>
       <div class="hint">Reset Level and XP to 1 in exchange for a permanent <b>+0.1x XP multiplier</b> across the entire System. Badges, shadow army, and achievements remain untouched.</div>
       <button class="btn" style="border-color:var(--glow2);background:rgba(157,0,255,0.18);color:#fff;" onclick="doPrestige()">Perform Prestige Awakening</button>
-    </div>
-  </div>
-
-  <!-- ============ SHADOW ARMY (merged: eggs + shadow + characters) ============ -->
-  <div class="page" id="shadow">
-    <div class="panel">
-      <div class="st"><h2>Eggs</h2><span class="tag" id="eggTag">0 READY</span></div>
-      <div class="hint">Eggs are earned by playing &mdash; they cost nothing and there is nothing to farm. Clear missions, keep your streak, finish raids, and they pile up on their own. Open them whenever you like.</div>
-      <div id="eggList"></div>
-    </div>
-
-    <div class="panel">
-      <div class="st"><h2>Shadow Soldier</h2><span class="tag" id="shadowTag">LEVEL 0</span></div>
-      <div class="hint">Your Shadow grows automatically as you complete missions &mdash; one level every 8 missions. Keep working and it evolves.</div>
-      <div id="shadowDisplay" style="text-align:center;padding:20px;"></div>
-    </div>
-
-    <div class="panel">
-      <div class="st"><h2>Shadow Army</h2><span class="tag" id="charTag">0 / 15 UNLOCKED</span></div>
-      <div class="hint">Every character you have summoned. Duplicates raise a character's star rating instead of going to waste &mdash; five stars is the ceiling.</div>
-      <div id="charList"></div>
     </div>
   </div>
 
@@ -823,38 +784,28 @@
     <div id="health-portal-content"></div>
   </div>
 
-  <!-- ============ JOB HUNT HQ & CAREER ARENA ============ -->
-  <div class="page" id="career">
-    <div id="career-portal-content"></div>
-  </div>
-
   <!-- ============ TIME & GOAL PLANNER ============ -->
   <div class="page" id="planner">
     <div id="planner-portal-content"></div>
   </div>
 
-  <!-- ============ SECOND BRAIN, ADRs & LESSONS ============ -->
-  <div class="page" id="brain">
-    <div id="second-brain-portal-content"></div>
-  </div>
-
   <div class="foot">
     <b>&ldquo;ARISE.&rdquo;</b><br>
-    Solo Leveling Player System &middot; built for Hadi &middot; v4.0
+    Solo Leveling Player System &middot; built for Hadi &middot; v5.2
   </div>
 </div>
 
 <script src="seed_data.js"></script>
 <script src="data.js"></script>
-<script src="vocab.js"></script>
-<script src="icons.js"></script>
-<script src="podcasts.js"></script>
-<script src="core_storage.js"></script>
 <script src="core_system.js"></script>
+<script src="core_storage.js"></script>
 <script src="app.js"></script>
 <script src="core_xp.js"></script>
-<script src="core_tasks.js"></script>
+<script src="vocab.js"></script>
 <script src="habits.js"></script>
+<script src="core_tasks.js"></script>
+<script src="icons.js"></script>
+<script src="podcasts.js"></script>
 <script src="speaking.js"></script>
 <script src="_features1.js"></script>
 <script src="_features2.js"></script>
@@ -862,10 +813,8 @@
 <script src="uptodate.js"></script>
 <script src="expenses.js"></script>
 <script src="life_health.js"></script>
-<script src="life_career.js"></script>
 <script src="life_planner.js"></script>
 <script src="life_finance.js"></script>
-<script src="life_brain.js"></script>
 <script src="bassem_data.js"></script>
 <script src="render.js"></script>
 <script src="bassem_engine.js"></script>
@@ -951,41 +900,11 @@ boot();
   }
 })();
 
-/* ------------------------------------------------------------------
-   FALLBACK: if the service worker is unavailable (private mode, blocked
-   browser), the app still shows the newest data on a normal refresh —
-   because GitHub Pages serves code files with cache:reload from the SW,
-   and without an SW the browser's own cache applies. This stamp lets us
-   detect a long-lived tab so we can nudge a reload.
-   ------------------------------------------------------------------ */
-(function(){
-  const KEY = 'slPageStamp';
-  const now = Date.now();
-  const seen = parseInt(localStorage.getItem(KEY) || '0', 10);
-  const STALE_MS = 30 * 60 * 1000;   /* 30 minutes */
-
-  /* if the tab has been open much longer than the stamp, the data on
-     screen may be old. Ask the service worker to re-check, and if there
-     is no worker, refresh once so the missions come back correct. */
-  if(seen && (now - seen) > STALE_MS){
-    localStorage.setItem(KEY, String(now));
-    /* only reload if the page has been idle a while — never mid-session */
-    setTimeout(() => {
-      if(!document.hidden && navigator.onLine !== false){
-        window.location.reload();
-      }
-    }, 4000);
-  } else {
-    localStorage.setItem(KEY, String(now));
-  }
-})();
-
-/* open a specific tab straight from the URL, e.g. #daily */
+/* Open a specific tab straight from the URL, e.g. #daily */
 window.addEventListener('load', () => {
-  const h = (location.hash || '').replace('#','');
+  const h = (location.hash || '').replace('#', '');
   if (!h) return;
-  const t = document.querySelector('.tab[data-page="' + h + '"]');
-  if (t) t.click();
+  if (typeof switchTab === 'function') switchTab(h);
 });
 </script>
 </body>

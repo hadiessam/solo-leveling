@@ -33,11 +33,11 @@
     runSelfRepair: function () {
       if (window.SystemEvents && typeof window.SystemEvents.repairState === 'function') {
         const repaired = window.SystemEvents.repairState();
-        alert('Self-Repair executed successfully. State integrity verified. Version: ' + (repaired.version || 'v51'));
+        alert('Self-Repair executed successfully. State integrity verified. Version: ' + (repaired.stateVersion || 6) + ' (v52)');
         this.open();
       } else if (window.StorageManager && typeof window.StorageManager.runRecoveryMigration === 'function') {
         const repaired = window.StorageManager.runRecoveryMigration(window.S);
-        alert('StorageManager recovery executed. Streak verified at: ' + (repaired ? repaired.streak : (window.S ? window.S.streak : 32)));
+        alert('StorageManager recovery executed. Streak verified at: ' + (repaired ? (repaired.streak ?? 0) : (window.S ? (window.S.streak ?? 0) : 0)));
         this.open();
       } else {
         alert('Self-Repair modules operational.');
@@ -91,9 +91,9 @@
 
           const confirmed = confirm(
             `CONFIRM BACKUP RESTORATION:\n` +
-            `• Level: ${parsed.level || 21}\n` +
-            `• XP: ${parsed.xp}\n` +
-            `• Streak: ${parsed.streak || 0} Days\n\n` +
+            `• Level: ${parsed.level ?? 1}\n` +
+            `• XP: ${parsed.xp ?? 0}\n` +
+            `• Streak: ${parsed.streak ?? 0} Days\n\n` +
             `A recovery snapshot of your current state will be saved before restoring.`
           );
 
@@ -101,7 +101,7 @@
 
           // Snapshot current before restoring
           try {
-            localStorage.setItem('sl_backup_pre_import_' + Date.now(), localStorage.getItem('solo_system_v3') || '');
+            localStorage.setItem('sl_backup_pre_import_' + Date.now(), localStorage.getItem('soloV6') || '');
           } catch (err) {}
 
           window.S = parsed;
@@ -142,16 +142,15 @@
         ? window.StorageManager.audit()
         : { healthy: true, localSizeKB: 0, snapshotCount: 0 };
       const xpLedgerCount = (s.xpLedger && s.xpLedger.length) || 0;
-      const streak = s.streak !== undefined ? s.streak : 32;
-      const level = s.level || 21;
-      const xp = s.xp || 8028;
-      const gold = s.gold !== undefined ? s.gold : 1450;
-      const statPoints = s.statPoints !== undefined ? s.statPoints : 5;
+      const streak = s.streak !== undefined ? s.streak : 0;
+      const level = s.level !== undefined ? s.level : 1;
+      const xp = s.xp !== undefined ? s.xp : 0;
+      const gold = s.gold !== undefined ? s.gold : 0;
+      const statPoints = s.statPoints !== undefined ? s.statPoints : 0;
       const isOnline = navigator.onLine;
       const swActive = 'serviceWorker' in navigator && !!navigator.serviceWorker.controller;
       const bassemCount = (s.bassemProgress && s.bassemProgress.completedLessons) ? Object.keys(s.bassemProgress.completedLessons).length : 0;
-      const notesCount = (s.secondBrain && s.secondBrain.notes) ? s.secondBrain.notes.length : 0;
-      const jobsCount = (s.jobHunt && s.jobHunt.targets) ? s.jobHunt.targets.length : 0;
+      const masteredVocab = s.masteredVocabulary ? Object.keys(s.masteredVocabulary).length : (s.vocabTotal || 0);
       const recentHistory = (s.history || []).slice(-5).reverse();
 
       return `
@@ -200,8 +199,8 @@
                 <div style="font-size: 0.8rem; color: #cbd5e1; line-height: 1.6;">
                   • <b>localStorage:</b> Healthy<br>
                   • <b>IndexedDB:</b> solo_leveling_db (Active)<br>
-                  • <b>Auto-Recovery:</b> Active (32+ Days Verified)<br>
-                  • <b>Checksum:</b> SHA-256 Engine Verified
+                  • <b>Auto-Recovery:</b> Versioned Migration v${s.stateVersion || 6} Active<br>
+                  • <b>XP Ledger:</b> ${xpLedgerCount} recorded transactions
                 </div>
               </div>
 
@@ -211,7 +210,7 @@
                 <div style="font-size: 0.8rem; color: #cbd5e1; line-height: 1.6;">
                   • <b>Network State:</b> ${isOnline ? 'Online 🌐' : 'Offline 📴'}<br>
                   • <b>Service Worker:</b> ${swActive ? 'Active & Caching ✅' : 'Installed'}<br>
-                  • <b>Cache Version:</b> solo-leveling-v51-holographic-arise<br>
+                  • <b>Cache Version:</b> solo-leveling-v52-unified-core<br>
                   • <b>Offline Readiness:</b> 100% Native
                 </div>
               </div>
@@ -222,8 +221,8 @@
                 <div style="font-size: 0.8rem; color: #cbd5e1; line-height: 1.6;">
                   • <b>Bassem School:</b> ${bassemCount} / 357 lessons<br>
                   • <b>Certifications:</b> 36 Courses loaded<br>
-                  • <b>Vocabulary Arsenal:</b> 180 Words (4 Tracks)<br>
-                  • <b>Shadow Army:</b> 6 Soldiers Summoned
+                  • <b>Vocabulary Arsenal:</b> ${masteredVocab} Mastered (15/day &middot; 180 Pool)<br>
+                  • <b>Shadow Army:</b> ${Object.keys(s.shadowChars || {}).length} Unlocked
                 </div>
               </div>
             </div>
